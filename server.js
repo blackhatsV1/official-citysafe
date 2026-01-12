@@ -464,9 +464,10 @@ app.post('/login', (req, res) => {
 app.get('/responder', (req, res) => {
   if (req.session.loggedin && req.session.role === 'responder') {
     const query = `
-      SELECT id, disaster_type, location, latitude, longitude, status, reported_at 
-      FROM disaster_reports 
-      WHERE status NOT IN ('resolved', 'cancelled by user', 'cancelled by admin')
+      SELECT dr.id, dr.disaster_type, dr.location, dr.latitude, dr.longitude, dr.status, dr.reported_at, u.firstname, u.lastname
+      FROM disaster_reports dr
+      LEFT JOIN users u ON dr.user_id = u.id
+      WHERE dr.status NOT IN ('resolved', 'cancelled by user', 'cancelled by admin')
     `;
     db.query(query, (err, results) => {
       if (err) {
@@ -1615,6 +1616,6 @@ app.get('/api/status-overview', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server started on http://localhost:${PORT}`);
 });

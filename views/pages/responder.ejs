@@ -67,7 +67,35 @@
       <div class="container-fluid pt-4 px-4">
           <div id="map" style="height: 600px; width: 100%; border-radius: 10px; border: 1px solid #ccc;"></div>
       </div>
-      <!-- Blank Screen End -->
+      
+      <!-- Nearby Reports Table Start -->
+      <div class="container-fluid pt-4 px-4">
+          <div class="bg-secondary text-center rounded p-4">
+              <div class="d-flex align-items-center justify-content-between mb-4">
+                  <h6 class="mb-0 text-white">Nearby Disaster Reports (Within 2km)</h6>
+              </div>
+              <div class="table-responsive">
+                  <table class="table text-start align-middle table-bordered table-hover mb-0">
+                      <thead>
+                          <tr class="text-white">
+                              <th scope="col">Date & Time</th>
+                              <th scope="col">Reporter</th>
+                              <th scope="col">Type</th>
+                              <th scope="col">Address</th>
+                              <th scope="col">Action</th>
+                          </tr>
+                      </thead>
+                      <tbody id="reportsTableBody">
+                          <tr>
+                              <td colspan="5" class="text-center">Getting your location...</td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+              <p id="locationStatus" class="mt-3 text-muted">Locating you...</p>
+          </div>
+      </div>
+      <!-- Nearby Reports Table End -->
 
       <!-- Footer Start -->
       <%- include('../partials/footer'); %>
@@ -145,6 +173,286 @@
               });
           }
       });
+
+      // --- Nearby Reports Table Logic ---
+
+      function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+          const R = 6371; // Radius of the earth in km
+          const dLat = deg2rad(lat2 - lat1);
+          const dLon = deg2rad(lon2 - lon1);
+          const a = 
+              Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+              Math.sin(dLon/2) * Math.sin(dLon/2); 
+          const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+          const d = R * c; // Distance in km
+          return d;
+      }
+
+      function deg2rad(deg) {
+          return deg * (Math.PI/180);
+      }
+
+      function respondToReport(id, type) {
+          if(!confirm('Are you sure you want to respond to this ' + type + ' report?')) return;
+          
+          fetch('/api/respond', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ reportId: id })
+          })
+          .then(res => res.json())
+          .then(data => {
+              if(data.success) {
+                  // Set flag to auto-open nav after reload
+                  sessionStorage.setItem('shouldOpenNav', 'true');
+                  alert(data.message);
+                  location.reload();
+              } else {
+                  alert('Error: ' + (data.message || data.error));
+              }
+          })
+          .catch(err => alert('Network Error'));
+      }
+
+      if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(position => {
+              const userLat = position.coords.latitude;
+              const userLon = position.coords.longitude;
+              
+              // Send location to server to update responder status (optional but good)
+              fetch('/api/responder/location', {
+                    method: 'POST', 
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({lat: userLat, lng: userLon})
+              });
+
+              document.getElementById('locationStatus').innerText = "Your location: " + userLat.toFixed(4) + ", " + userLon.toFixed(4);
+
+              // Add Responder Marker and Circle
+              const responderIcon = L.icon({
+                  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                  iconSize: [25, 41],
+                  iconAnchor: [12, 41],
+                  popupAnchor: [1, -34],
+                  shadowSize: [41, 41]
+              });
+
+              L.marker([userLat, userLon], { icon: responderIcon })
+                .addTo(map)
+                .bindPopup("<b>You are here</b>").openPopup();
+
+              L.circle([userLat, userLon], {
+                  color: 'blue',
+                  fillColor: '#30f',
+                  fillOpacity: 0.1,
+                  radius: 2000 // 2km radius
+              }).addTo(map);
+
+              const tbody = document.getElementById('reportsTableBody');
+              tbody.innerHTML = ''; // Clear loading message
+
+              let hasNearby = false;
+
+              reports.forEach(report => {
+                  if (!report.latitude || !report.longitude) return;
+
+                  const dist = getDistanceFromLatLonInKm(userLat, userLon, report.latitude, report.longitude);
+                  
+                  if (dist <= 2) { // 2km Filter
+                      hasNearby = true;
+                      const row = document.createElement('tr');
+                      
+                      const dateStr = new Date(report.reported_at).toLocaleString();
+                      const reporterName = (report.firstname && report.lastname) ? `${report.firstname} ${report.lastname}` : 'Unknown';
+
+                      row.innerHTML = `
+                          <td>${dateStr}</td>
+                          <td>${reporterName}</td>
+                          <td>${report.disaster_type}</td>
+                          <td id="table-addr-${report.id}"><span class="fa fa-spinner fa-spin"></span> Loading...</td>
+                          <td>
+                              <button class="btn btn-sm btn-primary" onclick="respondToReport(${report.id}, '${report.disaster_type}')">Respond Here</button>
+                          </td>
+                      `;
+                      tbody.appendChild(row);
+
+                      // Fetch Address for Table
+                      setTimeout(() => {
+                          fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${report.latitude}&lon=${report.longitude}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                const cell = document.getElementById(`table-addr-${report.id}`);
+                                if(data && data.display_name) {
+                                    cell.innerText = data.display_name;
+                                } else {
+                                    cell.innerText = "Address not found";
+                                }
+                            })
+                            .catch(err => {
+                                const cell = document.getElementById(`table-addr-${report.id}`);
+                                if(cell) cell.innerText = "Error loading address";
+                            });
+                      }, 500 * Math.random()); // Stagger slightly
+                  }
+              });
+
+              if (!hasNearby) {
+                  tbody.innerHTML = '<tr><td colspan="5" class="text-center">No reports found within 2km.</td></tr>';
+              }
+
+          }, error => {
+              console.error("Geolocation error:", error);
+              document.getElementById('locationStatus').innerText = "Error getting your location. Cannot filter nearby reports.";
+              document.getElementById('reportsTableBody').innerHTML = '<tr><td colspan="5" class="text-center text-danger">Location access denied or unavailable.</td></tr>';
+          });
+      } else {
+          document.getElementById('locationStatus').innerText = "Geolocation is not supported by this browser.";
+      }
+
+      // --- Navigation Popup Logic ---
+      
+      // Check for active mission on load
+      fetch('/api/my-current-mission')
+        .then(res => res.json())
+        .then(mission => {
+            if (mission && mission.id) {
+                // Show Navigation Button
+                document.getElementById('nav-toggle-btn').style.display = 'block';
+                
+                // Initialize Navigation Map Logic
+                initNavigation(mission);
+
+                // Auto-open if redirected from respond action
+                if (sessionStorage.getItem('shouldOpenNav') === 'true') {
+                    sessionStorage.removeItem('shouldOpenNav');
+                    // Simulate click to open
+                    document.getElementById('nav-toggle-btn').click();
+                }
+            }
+        })
+        .catch(err => console.error("Error checking mission:", err));
+
+      let navMap, routingControl;
+      let navWatchId;
+
+      function initNavigation(mission) {
+          const navModal = document.getElementById('navModal');
+          const navBtn = document.getElementById('nav-toggle-btn');
+          const closeBtn = document.getElementById('closeNavBtn');
+
+          // Toggle Modal
+          navBtn.addEventListener('click', () => {
+              navModal.style.display = 'block';
+              navBtn.style.display = 'none'; // Hide button when modal is open
+              
+              // Leaflet needs visible container to size correctly
+              setTimeout(() => {
+                  if (!navMap) {
+                      startNavMap(mission);
+                  } else {
+                      navMap.invalidateSize();
+                  }
+              }, 200);
+          });
+
+          closeBtn.addEventListener('click', () => {
+              navModal.style.display = 'none';
+              navBtn.style.display = 'block'; // Show button again
+          });
+      }
+
+      function startNavMap(mission) {
+          // Prevent re-init
+          if (navMap) return;
+
+          navMap = L.map('nav-map').setView([mission.latitude, mission.longitude], 13);
+          
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+              attribution: 'OSM'
+          }).addTo(navMap);
+
+          const incidentIcon = L.icon({
+              iconUrl: '/images/fire-icon.png',
+              iconSize: [40, 40]
+          });
+
+          // Destination Marker
+          L.marker([mission.latitude, mission.longitude], {icon: incidentIcon})
+              .addTo(navMap)
+              .bindPopup("<b>Incident Location</b><br>" + mission.disaster_type)
+              .openPopup();
+
+          // Real-time Routing
+          if (navigator.geolocation) {
+              navWatchId = navigator.geolocation.watchPosition(pos => {
+                  const lat = pos.coords.latitude;
+                  const lng = pos.coords.longitude;
+                  const myLatLng = L.latLng(lat, lng);
+
+                  if (!routingControl) {
+                      // Init Routing
+                      routingControl = L.Routing.control({
+                          waypoints: [
+                              myLatLng,
+                              L.latLng(mission.latitude, mission.longitude)
+                          ],
+                          router: L.Routing.osrmv1({
+                              serviceUrl: 'https://router.project-osrm.org/route/v1'
+                          }),
+                          lineOptions: {
+                              styles: [{color: '#00cc00', opacity: 0.8, weight: 6}]
+                          },
+                          routeWhileDragging: false,
+                          addWaypoints: false,
+                          draggableWaypoints: false,
+                          fitSelectedRoutes: true,
+                          showAlternatives: false,
+                          createMarker: function(i, wp, nWps) {
+                              if (i === 0) {
+                                  return L.marker(wp.latLng, {
+                                      draggable: false,
+                                      icon: L.icon({
+                                          iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                                          iconSize: [25, 41],
+                                          iconAnchor: [12, 41]
+                                      })
+                                  }).bindPopup("<b>You</b>");
+                              } else {
+                                  return null; 
+                              }
+                          }
+                      }).addTo(navMap);
+                  } else {
+                      // Update Start Point
+                      routingControl.setWaypoints([
+                          myLatLng,
+                          L.latLng(mission.latitude, mission.longitude)
+                      ]);
+                  }
+
+              }, err => console.error(err), {
+                  enableHighAccuracy: true,
+                  maximumAge: 2000 // Update frequently
+              });
+          }
+      }
   </script>
+
+  <!-- Navigation Popup HTML -->
+  <div id="nav-toggle-btn" style="display: none; position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
+      <button class="btn btn-warning btn-lg rounded-circle shadow-lg" style="width: 60px; height: 60px;">
+          <i class="fa fa-location-arrow fa-lg"></i>
+      </button>
+  </div>
+
+  <div id="navModal" style="display: none; position: fixed; bottom: 20px; right: 20px; width: 350px; height: 450px; background: white; z-index: 10000; border-radius: 12px; box-shadow: 0 0 20px rgba(0,0,0,0.5); overflow: hidden; border: 2px solid #ffaa00;">
+      <div class="d-flex justify-content-between align-items-center p-2 bg-secondary text-white">
+          <h6 class="mb-0 text-white"><i class="fa fa-route me-2"></i>Navigation</h6>
+          <button id="closeNavBtn" class="btn btn-sm btn-outline-light text-white border-0">&times;</button>
+      </div>
+      <div id="nav-map" style="width: 100%; height: 400px;"></div>
+  </div>
 </body>
 </html>
