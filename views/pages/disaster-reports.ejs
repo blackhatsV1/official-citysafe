@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head'); %>
+</head>
+<body>
+  <div class="container-fluid position-relative d-flex p-0">
+    <!-- Spinner Start -->
+    <%- include('../partials/spinner'); %>
+    <!-- Spinner End -->
+
+
+    <!-- Sidebar Start -->
+    <%- include('../partials/admin-sidebar'); %>
+      <!-- Sidebar End -->
+
+
+      <!-- Content Start -->
+      <div class="content">
+        <!-- Navbar Start -->
+        <%- include('../partials/admin-navbar'); %>
+          <!-- Navbar End -->
+
+          <!-- Widgets Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+                    <div class="col-12">
+                        <div class="bg-secondary rounded h-100 p-4">
+                            <h6 class="mb-4">Disaster Reports</h6>
+                            <div class="table-responsive">
+                                <table class="table table-hover text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Deploy</th>
+                                            <th scope="col">Sender</th>
+                                            <th scope="col">Disaster Type</th>
+                                            <th scope="col">Location</th>
+                                            <th scope="col">Date Reported</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% reports.forEach(report => { %>
+                                        <tr>
+                                          <td>
+                                              <% if (report.status === 'responding') { %>
+                                                  <span class="badge bg-warning text-dark">Responding</span>
+                                                  <button class="btn btn-sm btn-danger ms-1" onclick="cancelReportAdmin('<%= report.id %>')">Cancel</button>
+                                              <% } else if (report.status === 'resolved') { %>
+                                                  <span class="badge bg-success">Resolved</span>
+                                              <% } else if (report.status === 'cancelled by user') { %>
+                                                  <span class="badge bg-danger">Cancelled (User)</span>
+                                              <% } else if (report.status === 'cancelled by admin') { %>
+                                                  <span class="badge bg-danger">Cancelled (Admin)</span>
+                                              <% } else if (report.status === 'cancelled') { %>
+                                                  <span class="badge bg-danger">Cancelled</span>
+                                              <% } else { %>
+                                                  <div class="d-flex gap-2">
+                                                      <button class="btn btn-sm btn-primary deploy-btn" 
+                                                          data-id="<%= report.id %>" 
+                                                          data-location="<%= report.location %>"
+                                                          data-lat="<%= report.latitude %>"
+                                                          data-lon="<%= report.longitude %>"
+                                                          data-type="<%= report.disaster_type %>"
+                                                          data-date="<%= new Date(report.reported_at).toLocaleString() %>"
+                                                          onclick="initiateDeploy(this)">
+                                                          Deploy
+                                                      </button>
+                                                      <button class="btn btn-sm btn-outline-danger" onclick="cancelReportAdmin('<%= report.id %>')">
+                                                          Cancel
+                                                      </button>
+                                                  </div>
+                                              <% } %>
+                                          </td>
+                                          <td><%= report.sender %></td>
+                                          <td class="
+                                                <% if (report.disaster_type === 'Fire') { %> bg-danger text-white 
+                                                <% } else if (report.disaster_type === 'Flood') { %> bg-info text-dark 
+                                                <% } else if (report.disaster_type === 'Earthquake') { %> bg-warning text-dark 
+                                                <% } else if (report.disaster_type === 'Landslide') { %> bg-light text-white 
+                                                <% } else { %> bg-light text-dark 
+                                                <% } %>
+                                                ">
+                                                <%= report.disaster_type %>
+                                            </td>
+
+                                          <td>
+                                            <span id="loc-display-<%= report.id %>">
+                                                <%= report.latitude && report.longitude ? `(${report.latitude}, ${report.longitude})` : (report.location || "No Location") %>
+                                            </span>
+                                            <% if (report.latitude && report.longitude) { %>
+                                                <br>
+                                                <small>
+                                                    <a href="#" class="text-primary" onclick="fetchFormattedAddress(this, <%= report.latitude %>, <%= report.longitude %>, 'loc-display-<%= report.id %>'); return false;">
+                                                        Show Address
+                                                    </a>
+                                                </small>
+                                            <% } %>
+                                          </td>
+                                          <td><%= new Date(report.reported_at).toLocaleString() %></td>
+
+                                        </tr>
+                                      <% }) %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          <!-- Widgets End -->     
+
+          <!-- Footer Start -->
+          <%- include('../partials/footer'); %>
+            <!-- Footer End -->
+
+      </div>
+      <!-- Content End -->
+
+
+      <!-- Back to Top -->
+      <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+  </div>
+
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/js/script.js"></script>
+    
+    <script>
+        let deployMap = null;
+
+        async function initiateDeploy(btn) {
+            const reportId = btn.getAttribute('data-id');
+            let locationStr = btn.getAttribute('data-location');
+            const storedLat = btn.getAttribute('data-lat');
+            const storedLon = btn.getAttribute('data-lon');
+            const reportType = btn.getAttribute('data-type') || 'General';
+            const reportDate = btn.getAttribute('data-date') || 'N/A';
+            
+            // Try to grab from the rendered table cell if available
+            const cellSpan = document.getElementById(`loc-${reportId}`);
+            if (cellSpan && cellSpan.innerText && cellSpan.innerText !== "Loading..." && cellSpan.innerText !== "No Location" && !cellSpan.innerText.includes("Lat:") && !cellSpan.innerText.includes("waiting")) {
+                locationStr = cellSpan.innerText;
+            } else if (storedLat && storedLat !== 'null') {
+                 locationStr = `Lat: ${storedLat}, Lon: ${storedLon}`;
+            } else if (!locationStr || locationStr === "null") {
+                 locationStr = "Usage Location"; // Fallback placeholder
+            }
+            
+            Swal.fire({
+                title: 'Scanning Area...',
+                text: 'Searching for stations within 4km...',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading() }
+            });
+
+            try {
+                // 1. Get Coordinates
+                let incLat = null;
+                let incLon = null;
+
+                if (storedLat && storedLon && storedLat !== 'null') {
+                    incLat = parseFloat(storedLat);
+                    incLon = parseFloat(storedLon);
+                } else if (locationStr) {
+                     // Check if locationStr is just text that needs geocoding
+                     if(locationStr === "Usage Location") {
+                         // do nothing, error catch later
+                     } else {
+                        // Attempt Geocode
+                         const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationStr)}`;
+                         const res = await fetch(url);
+                         const geoData = await res.json();
+                         if (geoData && geoData.length > 0) {
+                            incLat = parseFloat(geoData[0].lat);
+                            incLon = parseFloat(geoData[0].lon);
+                         }
+                     }
+                }
+
+                // Fallback catch if no coords
+                if (!incLat && !incLon) {
+                   // Try fallback or error out. 
+                   // The original code had a geocoding block in the else, let's preserve that logic flow carefully.
+                   if (locationStr && locationStr !== "Usage Location") {
+                        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationStr)}`;
+                        const res = await fetch(url);
+                        const geoData = await res.json();
+                         if (geoData && geoData.length > 0) {
+                            incLat = parseFloat(geoData[0].lat);
+                            incLon = parseFloat(geoData[0].lon);
+                         }
+                   }
+                }
+
+                // 2. Fetch Data (Parallel) ... (unchanged)
+                const [respRes, stnRes] = await Promise.all([
+                    fetch('/api/responders'),
+                    fetch('/api/stations')
+                ]);
+
+                if (!respRes.ok || !stnRes.ok) throw new Error('Failed to fetch data');
+                
+                const responders = await respRes.json();
+                const stations = await stnRes.json();
+
+                // 3. Process Stations ... (unchanged)
+                const processedStations = stations.map(s => {
+                    let lat = parseFloat(s.latitude);
+                    let lng = parseFloat(s.longitude);
+                    let dist = 99999;
+                    if (!isNaN(lat) && !isNaN(lng) && incLat && incLon) {
+                        dist = calculateDistance(lat, lng, incLat, incLon);
+                    }
+                    return { ...s, lat, lng, dist, responders: [] };
+                }).sort((a,b) => a.dist - b.dist); 
+
+                // 4. Map Responders to Stations ... (unchanged)
+                 responders.forEach(r => {
+                    const stn = processedStations.find(s => s.id === r.station_id);
+                    if (stn) {
+                        stn.responders.push(r);
+                    }
+                });
+
+                // 5. Build Flat List ... (unchanged)
+                 let deployableResponders = [];
+                
+                processedStations.forEach(stn => {
+                    stn.responders.forEach(r => {
+                        r.distStation = stn.dist;
+                        r.station_name = stn.name;
+                        r.station_lat = stn.lat;
+                        r.station_lng = stn.lng;
+                        const currentLoad = stn.responders.filter(rx => rx.status === 'deployed').length;
+                        r.currentLoad = currentLoad;
+                        r.isStationFull = currentLoad >= 3;
+                        deployableResponders.push(r);
+                    });
+                });
+
+                // Check: Are there any stations within 4km?
+                if (processedStations.length === 0 || processedStations[0].dist > 4.0) {
+                     Swal.fire({
+                        icon: 'warning',
+                        title: 'No Nearby Stations',
+                        html: `
+                            <div class="text-center">
+                                <p class="mb-2" style="font-size: 1.1rem; color: #fff;">No registered stations or responders found in your area.</p>
+                                <p class="text-muted small mb-4">Nearest station is <strong>${processedStations.length > 0 ? processedStations[0].dist.toFixed(1) + 'km' : 'N/A'}</strong> away.</p>
+                                
+                                <div style="border-top: 1px solid rgba(255, 170, 0, 0.3); margin: 20px 0;"></div>
+                                
+                                <p class="mb-3 text-uppercase" style="letter-spacing: 1px; font-size: 0.9rem; color: #aaa;">Emergency Hotlines</p>
+                                
+                                <div class="row g-3">
+                                    <div class="col-6">
+                                        <div class="p-3" style="background: rgba(255, 255, 255, 0.05); border: 1px solid #ffaa00; border-radius: 8px;">
+                                            <div class="mb-1 text-uppercase" style="font-weight: 600; font-size: 0.9rem; color: #fff;">PNP / Police</div>
+                                            <div style="font-size: 3.5rem; font-weight: 900; line-height: 1; color: #ffaa00;">117</div>
+                                            <div style="font-size: 0.85rem; color: #aaa;">(02) 8722-0650</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="p-3" style="background: rgba(255, 255, 255, 0.05); border: 1px solid #ffaa00; border-radius: 8px;">
+                                            <div class="mb-1 text-uppercase" style="font-weight: 600; font-size: 0.9rem; color: #fff;">BFP / Fire</div>
+                                            <div style="font-size: 3.5rem; font-weight: 900; line-height: 1; color: #ffaa00;">911</div>
+                                            <div style="font-size: 0.85rem; color: #aaa;">Emergency</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `,
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
+                // 6. Build Modal HTML
+                const html = `
+                    <div id="deployMap" style="height: 300px; width: 100%; margin-bottom: 15px; border-radius: 5px;"></div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <small class="text-muted">Showing All Stations</small>
+                        <small class="text-muted">Sort: Nearest Station</small>
+                    </div>
+                    <div class="list-group text-start" style="max-height: 250px; overflow-y: auto;">
+                        ${deployableResponders.length > 0 ? deployableResponders.map(r => {
+                            const isDeployed = r.status === 'deployed';
+                            const isFull = r.isStationFull;
+                            const isLocKnown = (r.station_lat != null);
+                            
+                            let isDisabled = isDeployed || isFull || !isLocKnown;
+                            let btnClass = isDisabled ? 'list-group-item-secondary' : 'list-group-item-action';
+                            let disabledAttr = isDisabled ? 'disabled style="opacity: 0.7; cursor: not-allowed;"' : `onclick="confirmDeploy(${r.id}, ${incLat}, ${incLon}, '${reportId}')"`;
+                            
+                            let statusBadge = `<span class="badge ${isDeployed ? 'bg-secondary' : 'bg-success'}">${r.status.toUpperCase()}</span>`;
+                            
+                            let note = '';
+                            const loadColor = r.currentLoad >= 3 ? 'text-danger' : 'text-success';
+                            note += `<br><small class="${loadColor}">Station Deploys Today: <strong>${r.currentLoad}/3</strong></small>`;
+
+                            if (isDeployed) {
+                                note += '<br><small class="text-muted">Already Deployed</small>';
+                            } else if (isFull) {
+                                note += `<br><small class="text-danger"><i class="fa fa-ban"></i> Max Capacity Reached</small>`;
+                            }
+                            
+                            return `
+                            <button type="button" class="list-group-item ${btnClass}" ${disabledAttr}>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>${r.firstname} ${r.lastname}</strong>
+                                        <br>
+                                        <small class="text-muted">Station: ${r.station_name} • ${r.distStation.toFixed(2)} km away</small>
+                                        ${note}
+                                    </div>
+                                    ${statusBadge}
+                                </div>
+                            </button>
+                            `;
+                        }).join('') : '<div class="list-group-item">No active responders found in any station.</div>'}
+                    </div>
+                `;
+
+                // 7. Show Modal
+                Swal.fire({
+                    title: 'Deploy Responder',
+                    html: html,
+                    width: '800px',
+                    showConfirmButton: false,
+                    showCloseButton: true,
+                    didOpen: () => {
+                        // Initialize Map
+                        if(deployMap) { 
+                             deployMap.off(); 
+                             deployMap.remove(); 
+                             deployMap = null;
+                        } 
+                        
+                        deployMap = L.map('deployMap').setView([incLat, incLon], 13);
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(deployMap);
+
+                        // Determine Icon & Color
+                        let markerColor = '#dc3545'; // Default Red
+                        let iconClass = 'fa-exclamation-triangle';
+
+                        const typeLower = reportType.toLowerCase();
+                        
+                        if (typeLower.includes('flood')) {
+                            markerColor = '#0dcaf0'; // Info Cyan
+                            iconClass = 'fa-water';
+                        }
+                        else if (typeLower.includes('earthquake')) {
+                            markerColor = '#fd7e14'; // Orange
+                            iconClass = 'fa-globe-americas';
+                        }
+                        else if (typeLower.includes('landslide')) {
+                            markerColor = '#795548'; // Brown
+                            iconClass = 'fa-mountain';
+                        }
+                        else if (typeLower.includes('fire')) {
+                            markerColor = '#dc3545'; // Danger Red
+                            iconClass = 'fa-fire';
+                        }
+                        else if (typeLower.includes('accident') || typeLower.includes('crash')) {
+                            markerColor = '#6f42c1'; // Purple
+                            iconClass = 'fa-car-crash';
+                        }
+
+                        const incidentIcon = L.divIcon({
+                            className: 'custom-div-icon',
+                            html: `<div style="background-color:${markerColor}; width: 32px; height: 32px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; color: white; font-size: 14px;">
+                                     <i class="fa ${iconClass}"></i>
+                                   </div>`,
+                            iconSize: [32, 32],
+                            iconAnchor: [16, 32], // Bottom Center-ish? No, Circle is better centered.
+                            popupAnchor: [0, -16]
+                        });
+                        
+                        // Recenter anchor for circle
+                        incidentIcon.options.iconAnchor = [16, 16];
+                        incidentIcon.options.popupAnchor = [0, -20];
+
+                        // Incident Marker
+                        L.marker([incLat, incLon], {icon: incidentIcon}).addTo(deployMap)
+                            .bindPopup(`
+                                <b>Disaster: ${reportType}</b><br>
+                                Location: ${locationStr}<br>
+                                Time: ${reportDate}
+                            `).openPopup();
+
+                        // Plot ALL Stations
+                        // Use processedStations which is sorted by distance
+                        const nearestStation = processedStations[0]; // Nearest
+                        
+                        processedStations.forEach(s => {
+                            if (!s.lat || !s.lng) return;
+                            
+                            // Color Logic: Red if FULL (>=3 deployed), Green otherwise
+                            const deployedCount = s.responders.filter(rx => rx.status === 'deployed').length;
+                            const isFull = deployedCount >= 3;
+                            let color = isFull ? 'red' : 'green';
+
+                            const icon = L.divIcon({
+                                className: 'custom-div-icon',
+                                html: `<div style="background-color:${color}; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 4px black;"></div>`,
+                                iconSize: [12, 12]
+                            });
+                            
+                            L.marker([s.lat, s.lng], {icon: icon})
+                                .addTo(deployMap)
+                                .bindTooltip(`<b>${s.name}</b><br>${s.dist.toFixed(2)}km<br>Active: ${s.responders.length}`);
+                        });
+
+                        // Smart Routing: Compare Top 3 Geometrically Nearest Stations by Road Distance
+                        // This ensures we don't pick a station that is "close" by air but "far" due to rivers/roads.
+                        if (processedStations.length > 0) {
+                            // Take top 3 candidates (or fewer if not enough stations)
+                            const candidates = processedStations.slice(0, 3).filter(s => s.lat && s.lng);
+                            
+                            // Create bounds group to eventually include Incident + Best Station
+                            const group = new L.featureGroup([L.marker([incLat, incLon])]);
+
+                            // Fallback Line (Immediate Visual)
+                            const fallbackStation = candidates[0];
+                            const fallbackLine = L.polyline([[fallbackStation.lat, fallbackStation.lng], [incLat, incLon]], 
+                                {color: 'grey', weight: 2, dashArray: '5, 10'}).addTo(deployMap);
+                            group.addLayer(L.marker([fallbackStation.lat, fallbackStation.lng]));
+                            deployMap.fitBounds(group.getBounds(), {padding: [50, 50]});
+
+                            // Parallel Fetch
+                            const routeRequests = candidates.map(s => {
+                                const url = `https://router.project-osrm.org/route/v1/driving/${s.lng},${s.lat};${incLon},${incLat}?overview=full&geometries=geojson`;
+                                return fetch(url)
+                                    .then(res => res.json())
+                                    .then(data => {
+                                        if (data.routes && data.routes.length > 0) {
+                                            return { station: s, route: data.routes[0] };
+                                        }
+                                        return null;
+                                    })
+                                    .catch(err => null);
+                            });
+
+                            Promise.all(routeRequests).then(results => {
+                                // Filter valid results
+                                const validRoutes = results.filter(r => r !== null);
+                                
+                                if (validRoutes.length > 0) {
+                                    // Sort by DRIVING distance
+                                    validRoutes.sort((a,b) => a.route.distance - b.route.distance);
+                                    
+                                    const best = validRoutes[0];
+                                    const bestRoute = best.route;
+                                    const bestStation = best.station;
+
+                                    // Remove fallback
+                                    deployMap.removeLayer(fallbackLine);
+
+                                    // Draw Best Route
+                                    const routeLayer = L.geoJSON(bestRoute.geometry, {
+                                        style: { color: 'blue', weight: 5, opacity: 0.8 }
+                                    }).addTo(deployMap);
+
+                                    const durationMins = Math.round(bestRoute.duration / 60);
+                                    const distanceKm = (bestRoute.distance / 1000).toFixed(1);
+                                    
+                                    routeLayer.bindPopup(`
+                                        <strong>Shortest Traced Route</strong><br>
+                                        From: ${bestStation.name}<br>
+                                        Driving Dist: ${distanceKm} km<br>
+                                        Est. Time: ${durationMins} mins
+                                    `).openPopup();
+
+                                    // Update Bounds to fit best route
+                                    deployMap.fitBounds(routeLayer.getBounds(), {padding: [50, 50]});
+                                }
+                            });
+                        }
+                    }
+                });
+
+            } catch (error) {
+                console.error(error);
+                Swal.fire('System Error', 'Failed to initialize deployment interface: ' + error.message, 'error');
+            }
+        }
+
+        // Helper for Haversine Distance (in km)
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+             if(!lat1 || !lon1 || !lat2 || !lon2) return 99999;
+            const R = 6371; 
+            const dLat = deg2rad(lat2 - lat1);
+            const dLon = deg2rad(lon2 - lon1);
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2); 
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+            const d = R * c; 
+            return d;
+        }
+
+        function deg2rad(deg) {
+            return deg * (Math.PI/180);
+        }
+
+        function confirmDeploy(responderId, lat, lng, incidentId) {
+             // Disable all buttons to prevent double click
+             const btns = document.querySelectorAll('.list-group-item');
+             btns.forEach(b => b.setAttribute('disabled', 'true'));
+             
+             fetch('/api/deploy', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ responderId, lat, lng, incidentId, type: 'disaster_report' })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    Swal.fire('Deployed!', 'Responder has been notified.', 'success')
+                        .then(() => location.reload()); 
+                } else {
+                    Swal.fire('Error', data.message || 'Failed to deploy.', 'error');
+                }
+            })
+            .catch(err => Swal.fire('Error', 'Network error deploying responder.', 'error'));
+        }
+
+        function cancelReportAdmin(id) {
+            Swal.fire({
+                title: 'Confirm Admin Cancellation',
+                text: "Are you sure you want to cancel this SOS report as an administrator?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, cancel it'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/api/admin/cancel_report', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: id })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire('Cancelled', 'The report has been cancelled by admin.', 'success')
+                            .then(() => location.reload());
+                        } else {
+                            Swal.fire('Error', 'Failed to cancel report.', 'error');
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+
+    <script>
+        // Lazy load address function
+        async function fetchFormattedAddress(linkEl, lat, lon, targetId) {
+            const targetEl = document.getElementById(targetId);
+            if(!targetEl) return;
+
+            // Change link to loading
+            linkEl.innerText = "Loading...";
+            linkEl.style.pointerEvents = "none";
+            linkEl.style.color = "grey";
+
+            try {
+                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
+                const data = await res.json();
+                if (data.display_name) {
+                    targetEl.innerText = data.display_name;
+                    linkEl.style.display = 'none'; // Hide the button after success
+                } else {
+                    targetEl.innerText = `(${lat}, ${lon}) - Unknown Address`;
+                    linkEl.innerText = "Retry";
+                    linkEl.style.pointerEvents = "auto";
+                }
+            } catch (e) {
+                console.error(e);
+                linkEl.innerText = "Failed. Retry?";
+                linkEl.style.pointerEvents = "auto";
+                linkEl.style.color = "red";
+            }
+        }
+    </script>
+</body>
+
+</html>
+

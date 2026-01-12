@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head'); %>
+</head>
+
+<body>
+  <div class="container-fluid position-relative d-flex p-0">
+    <%- include('../partials/spinner'); %>
+
+    <%- include('../partials/admin-sidebar'); %>
+
+    <div class="content">
+      <%- include('../partials/admin-navbar'); %>
+
+      <div class="container-fluid pt-4 px-4">
+        <div class="row g-4">
+          <!-- Responders Status Table -->
+          <div class="col-12 col-xl-6">
+            <div class="bg-secondary rounded h-100 p-4">
+              <div class="d-flex align-items-center justify-content-between mb-4">
+                <h6 class="mb-0">Responders Status</h6>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">Responder</th>
+                      <th scope="col">Station</th>
+                      <th scope="col">Session</th>
+                      <th scope="col">Duty Status</th>
+                      <th scope="col">Contact</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% responders.forEach(r => { %>
+                    <tr data-id="<%= r.id %>" data-role="responder">
+                      <td><%= r.firstname %> <%= r.lastname %></td>
+                      <td><%= r.station_name || 'Unassigned' %></td>
+                      <td>
+                        <span class="badge <%= r.status !== 'offline' ? 'bg-success' : 'bg-dark text-white' %>">
+                          <%= r.status !== 'offline' ? 'logged in' : 'logged out' %>
+                        </span>
+                      </td>
+                      <td>
+                        <span class="badge <%= r.status === 'deployed' ? 'bg-warning' : 'bg-primary' %>">
+                          <%= r.status === 'deployed' ? 'deployed' : 'active' %>
+                        </span>
+                      </td>
+                      <td><%= r.contact_number %></td>
+                    </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Users Status Table -->
+          <div class="col-12 col-xl-6">
+            <div class="bg-secondary rounded h-100 p-4">
+              <div class="d-flex align-items-center justify-content-between mb-4">
+                <h6 class="mb-0">Users Status</h6>
+              </div>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col">User</th>
+                      <th scope="col">Location</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Contact</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% users.forEach(u => { %>
+                    <tr data-id="<%= u.id %>" data-role="user">
+                      <td><%= u.firstname %> <%= u.lastname %></td>
+                      <td><%= u.barangay %>, <%= u.city %></td>
+                      <td>
+                        <span class="badge <%= u.status !== 'offline' ? 'bg-success' : 'bg-dark text-white' %>">
+                          <%= u.status !== 'offline' ? 'logged in' : 'logged out' %>
+                        </span>
+                      </td>
+                      <td><%= u.contact_number %></td>
+                    </tr>
+                    <% }) %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <%- include('../partials/footer'); %>
+    </div>
+
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+  </div>
+
+  <script src="/js/script.js"></script>
+  <script>
+    async function updateStatuses() {
+        try {
+            const response = await fetch('/api/status-overview');
+            const data = await response.json();
+
+            // Update Responders
+            data.responders.forEach(r => {
+                const row = document.querySelector(`tr[data-id="${r.id}"][data-role="responder"]`);
+                if (row) {
+                    const sessionBadge = row.cells[2].querySelector('.badge');
+                    const dutyBadge = row.cells[3].querySelector('.badge');
+
+                    // Update Session Badge
+                    sessionBadge.textContent = r.status !== 'offline' ? 'logged in' : 'logged out';
+                    sessionBadge.className = r.status !== 'offline' ? 'badge bg-success' : 'badge bg-dark text-white';
+
+                    // Update Duty Badge
+                    dutyBadge.textContent = r.status === 'deployed' ? 'deployed' : 'active';
+                    dutyBadge.className = r.status === 'deployed' ? 'badge bg-warning' : 'badge bg-primary';
+                }
+            });
+
+            // Update Users
+            data.users.forEach(u => {
+                const row = document.querySelector(`tr[data-id="${u.id}"][data-role="user"]`);
+                if (row) {
+                    const statusBadge = row.cells[2].querySelector('.badge');
+                    statusBadge.textContent = u.status !== 'offline' ? 'logged in' : 'logged out';
+                    statusBadge.className = u.status !== 'offline' ? 'badge bg-success' : 'badge bg-dark text-white';
+                }
+            });
+        } catch (error) {
+            console.error('Error fetching statuses:', error);
+        }
+    }
+
+    // Poll every 1 second
+    setInterval(updateStatuses, 1000);
+  </script>
+</body>
+
+</html>

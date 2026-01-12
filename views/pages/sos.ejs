@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head'); %>
+</head>
+
+<body>
+    <div class="container-fluid position-relative d-flex p-0">
+        <!-- Spinner Start -->
+        <%- include('../partials/spinner'); %>
+            <!-- Spinner End -->
+
+
+            <!-- Sidebar Start -->
+            <%- include('../partials/user-sidebar'); %>
+                <!-- Sidebar End -->
+
+
+                <!-- Content Start -->
+                <div class="content">
+                    <!-- Navbar Start -->
+                    <%- include('../partials/user-navbar'); %>
+                        <!-- Navbar End -->
+
+
+                        <!-- Map Start -->
+                        <div class="container-fluid pt-4 px-4">
+                            <div class="row g-4">
+                                <div class="col-sm-12 col-xl-6">
+                                    <div class="h-100 bg-secondary rounded p-4">
+                                        <div class="d-flex align-items-center justify-content-between mb-4">
+                                            <h6 class="mb-0">Live Location</h6>
+                                            <hr>
+                                        </div>
+                                        <%- include('../partials/selectloc'); %>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-xl-6">
+                                    <div class="h-100 bg-secondary rounded p-4">
+                                        <div class="d-flex align-items-center justify-content-between mb-4">
+                                            <h6 class="mb-0 text-uppercase" style="letter-spacing: 1px; color: #ffaa00;">Send SOS</h6>
+                                        </div>
+                                        <form action="/report" method="POST">
+                                            <label class="form-label mb-3 text-white text-center w-100">
+                                                What is your emergency?
+                                            </label>
+
+                                            <div class="row g-3 mb-4">
+                                                <div class="col-6">
+                                                    <button type="submit" name="disaster_type" value="Fire" class="btn p-0 w-100 h-100 border-0 bg-transparent">
+                                                        <div class="disaster-card p-4 text-center">
+                                                            <div class="icon-wrapper">
+                                                                <i class="fa fa-fire"></i>
+                                                            </div>
+                                                            <h5>Fire</h5>
+                                                        </div>
+                                                    </button>
+                                                </div>
+
+                                                <div class="col-6">
+                                                    <button type="submit" name="disaster_type" value="Flood" class="btn p-0 w-100 h-100 border-0 bg-transparent">
+                                                        <div class="disaster-card p-4 text-center">
+                                                            <div class="icon-wrapper">
+                                                                <i class="fa fa-water"></i>
+                                                            </div>
+                                                            <h5>Flood</h5>
+                                                        </div>
+                                                    </button>
+                                                </div>
+
+                                                <div class="col-6">
+                                                    <button type="submit" name="disaster_type" value="Earthquake" class="btn p-0 w-100 h-100 border-0 bg-transparent">
+                                                        <div class="disaster-card p-4 text-center">
+                                                            <div class="icon-wrapper">
+                                                                <i class="fa fa-globe-americas"></i>
+                                                            </div>
+                                                            <h5>Earthquake</h5>
+                                                        </div>
+                                                    </button>
+                                                </div>
+
+                                                <div class="col-6">
+                                                    <button type="submit" name="disaster_type" value="Landslide" class="btn p-0 w-100 h-100 border-0 bg-transparent">
+                                                        <div class="disaster-card p-4 text-center">
+                                                            <div class="icon-wrapper">
+                                                                <i class="fa fa-mountain"></i>
+                                                            </div>
+                                                            <h5>Landslide</h5>
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <label class="form-label mb-1">Your Location:</label>
+                                            <textarea class="form-control mb-0" id="location" name="location" placeholder="Your Location" required></textarea>
+                                            <input type="hidden" id="lat" name="lat">
+                                            <input type="hidden" id="lon" name="lon">
+                                        </form>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Map End -->
+
+                        <!-- Footer Start -->
+                        <%- include('../partials/footer'); %>
+                            <!-- Footer End -->
+
+                </div>
+                <!-- Content End -->
+
+
+                <!-- Back to Top -->
+                <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+    <script src="/js/script.js"></script>
+</body>
+
+</html>
+
+<!-- <h1><i class="bi bi-cloud-sun"></i>CitySafe Weather View</h1>
+<hr class="grey-line">
+<h4 class="mb-5">Please <a href="/login">Login</a> to experience full feature!</h4>
+<p id="address"></p>
+<p id="coords"></p>
+<div class="rounded p-3" id="weather-info">Loading weather data...</div>
+<div id="weather-map"></div>
+<p><%- include('../partials/selectloc-visitor'); %></p> -->

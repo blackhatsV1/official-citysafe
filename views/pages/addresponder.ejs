@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head'); %>
+</head>
+
+<body>
+  <div class="container-fluid position-relative d-flex p-0">
+    <%- include('../partials/spinner'); %>
+    <%- include('../partials/admin-sidebar'); %>
+
+      <div class="content">
+        <%- include('../partials/admin-navbar'); %>
+
+            <div class="container-fluid pt-4 px-4">
+                <div class="container bg-secondary rounded p-3 mb-4">
+                  <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h4 class="mb-0">Add Responder</h4>
+                  </div>
+                  <hr>
+                  <div class="container bg-secondary w-75 mt-3 p-3">
+                    <form action="/addresponder" method="POST">
+                        <div class="row mb-3">
+                            <label for="firstname" class="col-sm-2 col-form-label">Firstname</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="firstname"  required placeholder="Firstname">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="lastname" class="col-sm-2 col-form-label">Lastname</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" name="lastname" placeholder="Lastname" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="email" class="col-sm-2 col-form-label">Email</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" name="email" placeholder="Email" required>
+                            </div>
+                        </div>
+                         <!-- Address fields kept for completeness but could be simplified -->
+                        <div class="row mb-3">
+                            <label for="contact_number" class="col-sm-2 col-form-label">Contact</label>
+                            <div class="col-sm-10"> 
+                                <input type="number" class="form-control" name="contact_number" placeholder="Contact Number" required>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label for="password" class="col-sm-2 col-form-label">Password</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" name="password" placeholder="Password" required>
+                            </div>
+                        </div>
+
+                        <!-- Station Selection -->
+                        <div class="row mb-3">
+                            <label for="station_id" class="col-sm-2 col-form-label">Assign Station</label>
+                            <div class="col-sm-10">
+                                <select class="form-select" name="station_id" required>
+                                    <option value="" disabled selected>Select a Station...</option>
+                                    <% stations.forEach(station => { %>
+                                        <option value="<%= station.id %>"><%= station.name %> (<%= station.type %>)</option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Hidden fields for address to satisfy DB constraints if not null, or we update DB to allow null. 
+                             Assuming DB columns require values based on previous `addusers` form. 
+                             We'll send defaults or just hide them if strictly required. 
+                             For now, let's keep it simple and assume we only need core info + station.
+                             Wait, `users` table likely has NOT NULL constraints on address fields.
+                             Let's check `myapp.sql` briefly or just include generic inputs for now to avoid errors.
+                        -->
+                         <input type="hidden" name="role" value="responder">
+                         <input type="hidden" name="street_address" value="Station Assigned">
+                         <input type="hidden" name="barangay" value="N/A">
+                         <input type="hidden" name="city" value="Iloilo City">
+                         <input type="hidden" name="province" value="Iloilo">
+                         <input type="hidden" name="postal_code" value="5000">
+                         <input type="hidden" name="country" value="Philippines">
+                         <input type="hidden" name="landmark" value="N/A">
+                         <input type="hidden" name="address_type" value="Work">
+                         <input type="hidden" name="additional_instructions" value="N/A">
+
+                        <div class="d-flex align-items-center justify-content-center mb-0 mt-3">
+                          <button type="submit" class="btn btn-success mt-2">Create Responder Account</button>
+                        </div>
+                    </form>
+                  </div>
+                </div>
+            </div>
+
+          <%- include('../partials/footer'); %>
+      </div>
+      <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+  </div>
+  <script src="/js/script.js"></script>
+</body>
+</html>

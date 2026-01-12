@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('../partials/head'); %>
+    <!-- Routing Machine -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.min.js"></script>
+    <style>
+        #trackMap { height: 350px; width: 100%; border-radius: 8px; }
+        .blink-bg { animation: blink 2s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div class="container-fluid position-relative d-flex p-0">
+        <!-- Spinner Start -->
+        <%- include('../partials/spinner'); %>
+        <!-- Spinner End -->
+
+        <!-- Sidebar Start -->
+        <%- include('../partials/user-sidebar'); %>
+        <!-- Sidebar End -->
+
+        <!-- Content Start -->
+        <div class="content">
+            <!-- Navbar Start -->
+            <%- include('../partials/user-navbar'); %>
+            <!-- Navbar End -->
+
+            <!-- Active Report Section -->
+            <% 
+                // Find the first active report (Responding or Pending)
+                let activeReport = reports.find(r => r.status === 'responding' || r.status === 'pending');
+            %>
+            
+            <% if (activeReport) { %>
+            <div class="container-fluid pt-4 px-4">
+                <div class="bg-secondary rounded p-4 border border-<%= activeReport.status === 'responding' ? 'warning' : 'danger' %>">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h4 class="mb-0 text-white">
+                            <i class="fa <%= activeReport.status === 'responding' ? 'fa-ambulance' : 'fa-exclamation-circle' %> me-2"></i>
+                            Current Status: <span class="text-<%= activeReport.status === 'responding' ? 'warning' : 'danger' %>"><%= activeReport.status.toUpperCase() %></span>
+                        </h4>
+                        <% if (activeReport.status === 'responding' && activeReport.user_confirmed_at) { %>
+                             <span class="badge bg-info p-2">Waiting for Responder Confirmation</span>
+                        <% } else if (activeReport.status === 'responding') { %>
+                             <button class="btn btn-success fw-bold blink-bg" onclick="markResolved(<%= activeReport.id %>)">
+                                 <i class="fa fa-check-circle me-2"></i>I AM SAFE / RESOLVED
+                             </button>
+                        <% } else if (activeReport.status === 'pending') { %>
+                             <button class="btn btn-outline-danger" disabled>Cannot Cancel (Finding Responder...)</button>
+                        <% } %>
+                    </div>
+
+                    <% if (activeReport.status === 'responding') { %>
+                        <div class="row g-3">
+                             <div class="col-md-4">
+                                 <div class="p-3 bg-dark rounded">
+                                     <small class="text-muted">RESPONDER DETAILS</small>
+                                     <h5 class="text-white mb-1"><%= activeReport.responder_name %> <%= activeReport.responder_last %></h5>
+                                     <p class="mb-0 text-white"><i class="fa fa-envelope me-2"></i><%= activeReport.responder_email || 'No email' %></p>
+                                     <p class="mb-0 text-warning"><i class="fa fa-phone me-2"></i><%= activeReport.responder_contact || 'No contact' %></p>
+                                 </div>
+                             </div>
+                             <div class="col-md-8">
+                                 <div id="trackMap"></div>
+                             </div>
+                        </div>
+                        <input type="hidden" id="activeReportId" value="<%= activeReport.id %>">
+                        <input type="hidden" id="userLat" value="<%= activeReport.latitude %>">
+                        <input type="hidden" id="userLng" value="<%= activeReport.longitude %>">
+                        <input type="hidden" id="responderId" value="<%= activeReport.responder_id %>">
+                    <% } else { %>
+                        <div class="alert alert-dark mb-0 text-center">
+                            <h5><i class="fa fa-spinner fa-spin me-2"></i>Contacting nearest units...</h5>
+                            <p>Please stay in a safe location. Do not panic.</p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+            <% } %>
+
+            <!-- Table Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="bg-secondary text-center rounded p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h6 class="mb-0">My SOS History</h6>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table text-start align-middle table-bordered table-hover mb-0">
+                            <thead>
+                                <tr class="text-white">
+                                    <th scope="col">Date/Time</th>
+                                    <th scope="col">Type</th>
+                                    <th scope="col">Location</th>
+                                    <th scope="col">Responder</th>
+                                    <th scope="col">Status</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (reports.length > 0) { %>
+                                    <% reports.forEach(function(report) { %>
+                                    <tr>
+                                        <td><%= new Date(report.reported_at).toLocaleString() %></td>
+                                        <td><%= report.disaster_type %></td>
+                                        <td><%= report.location || 'Unknown' %></td>
+                                        <td>
+                                            <% if (report.responder_name) { %>
+                                                <%= report.responder_name %> <%= report.responder_last %>
+                                                <br><small class="text-muted"><%= report.station_name || 'Station' %></small>
+                                            <% } else { %>
+                                                <span class="text-muted">Pending Assignment</span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <% if (report.status === 'pending') { %>
+                                                <span class="badge bg-warning text-dark">Pending</span>
+                                            <% } else if (report.status === 'responding') { %>
+                                                <span class="badge bg-info text-dark">Responding</span>
+                                            <% } else if (report.status === 'resolved') { %>
+                                                <span class="badge bg-success">Resolved</span>
+                                            <% } else if (report.status === 'cancelled by user') { %>
+                                                <span class="badge bg-danger">Cancelled by User</span>
+                                            <% } else if (report.status === 'cancelled by admin') { %>
+                                                <span class="badge bg-danger">Cancelled by Admin</span>
+                                            <% } else if (report.status === 'cancelled') { %>
+                                                <span class="badge bg-danger">Cancelled</span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <!-- ACTIONS -->
+                                        <td>
+                                            <!-- ACTIONS -->
+                                            <% if (report.status === 'pending') { %>
+                                                <button onclick="markResolved(<%= report.id %>)" class="btn btn-sm btn-success">Resolve</button>
+                                                <button onclick="cancelReport(<%= report.id %>)" class="btn btn-sm btn-outline-danger">Cancel</button>
+                                            <% } else if (report.status === 'responding') { %>
+                                                <% if (!report.user_confirmed_at) { %>
+                                                    <button onclick="markResolved(<%= report.id %>)" class="btn btn-sm btn-success">Resolve</button>
+                                                <% } else { %>
+                                                    <span class="text-muted small">Waiting for Responder</span>
+                                                <% } %>
+                                            <% } else { %>
+                                                <span class="text-muted">-</span>
+                                            <% } %>
+                                        </td>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="6" class="text-center">No reports found.</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- Table End -->
+
+            <!-- Footer Start -->
+            <%- include('../partials/footer'); %>
+            <!-- Footer End -->
+        </div>
+        <!-- Content End -->
+        
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+    <script src="/js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function cancelReport(id) {
+            Swal.fire({
+                title: 'Cancel Request?',
+                text: "Are you sure you want to cancel this pending request?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'Yes, Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/api/cancel_report', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ id: id })
+                    }).then(res => res.json()).then(data => {
+                        if(data.success) {
+                            Swal.fire('Cancelled!', 'Report cancelled.', 'success').then(() => location.reload());
+                        } else {
+                            Swal.fire('Error', 'Failed to cancel.', 'error');
+                        }
+                    });
+                }
+            })
+        }
+        
+        function markResolved(id) {
+            Swal.fire({
+                title: 'Confirm Resolution',
+                text: "Please provide feedback or a short message describing how you were helped:",
+                input: 'textarea',
+                inputPlaceholder: 'Type your feedback here...',
+                inputAttributes: {
+                    'aria-label': 'Type your feedback here'
+                },
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Submit & Mark Safe',
+                confirmButtonColor: '#198754',
+                showLoaderOnConfirm: true,
+                preConfirm: (feedback) => {
+                    if (!feedback) {
+                        Swal.showValidationMessage('Feedback cannot be empty');
+                    }
+                    return fetch('/api/resolve', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ incidentId: id, remarks: 'User confirmed via History', feedback: feedback })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(response.statusText)
+                        }
+                        return response.json()
+                    })
+                    .catch(error => {
+                        Swal.showValidationMessage(
+                            `Request failed: ${error}`
+                        )
+                    })
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            }).then((result) => {
+                if (result.isConfirmed && result.value.success) {
+                      let msg = 'Thank you for your feedback. ';
+                      if(result.value.status === 'resolved') {
+                          msg += 'The report has been fully resolved.';
+                      } else {
+                          msg += 'Waiting for the responder to confirm.';
+                      }
+                      Swal.fire('Submitted!', msg, 'success').then(() => location.reload());
+                }
+            })
+        }
+
+        // MAP TRACKING LOGIC
+        const trackMapEl = document.getElementById('trackMap');
+        if (trackMapEl) {
+            const userLat = parseFloat(document.getElementById('userLat').value);
+            const userLng = parseFloat(document.getElementById('userLng').value);
+            const responderId = document.getElementById('responderId').value;
+            
+            const map = L.map('trackMap').setView([userLat, userLng], 14);
+             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                 attribution: '© OpenStreetMap'
+             }).addTo(map);
+
+             // User Marker
+             L.marker([userLat, userLng]).addTo(map).bindPopup("<b>Your Location</b>").openPopup();
+
+             let responderMarker;
+             let routingControl;
+
+             function updateResponderLocation() {
+                 fetch(`/api/responder-track/${responderId}`)
+                 .then(res => res.json())
+                 .then(data => {
+                     if(data.latitude && data.longitude) {
+                         const rLat = data.latitude;
+                         const rLng = data.longitude;
+
+                         if (!responderMarker) {
+                             const ambIcon = L.divIcon({
+                                 className: 'custom-div-icon',
+                                 html: "<div style='background-color:orange; width: 15px; height: 15px; border-radius: 50%; border: 2px solid white;'></div>",
+                                 iconSize: [20, 20]
+                             });
+                             responderMarker = L.marker([rLat, rLng], {icon: ambIcon}).addTo(map).bindPopup("Responder");
+                         } else {
+                             responderMarker.setLatLng([rLat, rLng]);
+                         }
+
+                         // Route
+                         if (routingControl) {
+                             routingControl.setWaypoints([
+                                 L.latLng(rLat, rLng),
+                                 L.latLng(userLat, userLng)
+                             ]);
+                         } else {
+                             routingControl = L.Routing.control({
+                                waypoints: [
+                                    L.latLng(rLat, rLng), // Start at Responder
+                                    L.latLng(userLat, userLng) // End at User
+                                ],
+                                lineOptions: { styles: [{color: '#0dcaf0', opacity: 0.8, weight: 6}] },
+                                show: false, 
+                                addWaypoints: false,
+                                draggableWaypoints: false,
+                                createMarker: function() { return null; }
+                           }).addTo(map);
+                         }
+                     }
+                 })
+                 .catch(err => console.error("Tracking error", err));
+             }
+
+             // Start tracking
+             updateResponderLocation();
+             setInterval(updateResponderLocation, 1000); // 1s refresh
+        }
+    </script>
+</body>
+</html>

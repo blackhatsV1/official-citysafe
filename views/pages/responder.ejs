@@ -1,0 +1,150 @@
+<head>
+  <%- include('../partials/head'); %>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+  <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.min.js"></script>
+
+  <style>
+      #map { 
+          height: 550px; 
+          width: 100%; 
+          border-radius: 10px; 
+          border: 1px solid #444;
+      }
+      
+      .leaflet-routing-container {
+          background-color: #191C24 !important;
+          color: #ffffff !important;
+          border: 2px solid #ffaa00 !important;
+          border-radius: 8px !important;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+          font-family: inherit !important;
+      }
+      .leaflet-routing-alt {
+          background-color: #191C24 !important;
+          max-height: 200px;
+          color: white !important;
+      }
+      .leaflet-routing-alt table {
+          color: #ffffff !important;
+      }
+
+      .assigned-icon {
+          background-color: #ffaa00 !important;
+          border: 2px solid white;
+          border-radius: 50%;
+          box-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+      }
+
+      .status-dot {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          display: inline-block;
+          margin-right: 10px;
+      }
+      .dot-active { background-color: #00f2fe; box-shadow: 0 0 10px #00f2fe; }
+      .dot-deployed { background-color: #ffaa00; box-shadow: 0 0 10px #ffaa00; }
+  </style>
+</head>
+
+<body>
+  <div class="container-fluid position-relative d-flex p-0">
+    <!-- Spinner Start -->
+    <%- include('../partials/spinner'); %>
+    <!-- Spinner End -->
+
+    <!-- Sidebar Start -->
+    <%- include('../partials/responder-sidebar'); %>
+    <!-- Sidebar End -->
+
+    <!-- Content Start -->
+    <div class="content"> 
+      <!-- Navbar Start -->
+      <%- include('../partials/responder-navbar'); %>
+      <!-- Navbar End -->
+
+      <!-- Blank Screen -->
+      <div class="container-fluid pt-4 px-4">
+          <div id="map" style="height: 600px; width: 100%; border-radius: 10px; border: 1px solid #ccc;"></div>
+      </div>
+      <!-- Blank Screen End -->
+
+      <!-- Footer Start -->
+      <%- include('../partials/footer'); %>
+      <!-- Footer End -->
+    </div>
+    <!-- Content End -->
+  </div>
+
+  <script>
+      // Initialize Map
+      const map = L.map('map').setView([10.7202, 122.5621], 13); // Centered on Iloilo
+      
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+
+      // Disaster Reports Data passed from Server
+      const reports = <%- JSON.stringify(reports) %>;
+
+      // Custom Icons
+      const icons = {
+          'Fire': L.icon({ iconUrl: '/images/fire-icon.png', iconSize: [30, 30] }), // Ensure these exist or use default
+          'Flood': L.icon({ iconUrl: '/images/flood-icon.png', iconSize: [30, 30] }),
+          'default': L.icon({
+              iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+              shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+              iconSize: [25, 41],
+              iconAnchor: [12, 41],
+              popupAnchor: [1, -34],
+              shadowSize: [41, 41]
+          })
+      };
+
+      reports.forEach(report => {
+          if (report.latitude && report.longitude) {
+              const marker = L.marker([report.latitude, report.longitude], {
+                  icon: icons['default'] // Using default red marker for visibility
+              }).addTo(map);
+
+              // Initial Popup Content
+              const date = new Date(report.reported_at).toLocaleString();
+              let popupContent = `
+                  <div class="p-2" style="color: black;">
+                      <h6 class="text-danger fw-bold mb-1">${report.disaster_type}</h6>
+                      <p class="mb-1 text-muted small">Status: <strong>${report.status}</strong></p>
+                      <p class="mb-1 text-muted small">Reported: ${date}</p>
+                      <hr class="my-1">
+                      <p class="mb-0 small" id="addr-${report.id}">
+                          <i class="fa fa-spinner fa-spin"></i> Loading address...
+                      </p>
+                  </div>
+              `;
+
+              marker.bindPopup(popupContent);
+
+              // Reverse Geocoding on Popup Open
+              marker.on('popupopen', async function() {
+                  const addrElem = document.getElementById(`addr-${report.id}`);
+                  if (addrElem && addrElem.innerText.includes('Loading')) {
+                      try {
+                          // Using Nominatim for Reverse Geocoding
+                          const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${report.latitude}&lon=${report.longitude}`);
+                          const data = await response.json();
+                          
+                          if (data && data.display_name) {
+                              addrElem.innerHTML = `<strong>Address:</strong><br>${data.display_name}`;
+                          } else {
+                              addrElem.innerText = "Address not found.";
+                          }
+                      } catch (error) {
+                          console.error('Geocoding error:', error);
+                          addrElem.innerText = "Failed to load address.";
+                      }
+                  }
+              });
+          }
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head'); %>
+</head>
+<body>
+  <div class="container-fluid position-relative d-flex p-0">
+    <!-- Spinner Start -->
+    <%- include('../partials/spinner'); %>
+    <!-- Spinner End -->
+
+
+    <!-- Sidebar Start -->
+    <%- include('../partials/user-sidebar'); %>
+      <!-- Sidebar End -->
+
+
+      <!-- Content Start -->
+      <div class="content">
+        <!-- Navbar Start -->
+        <%- include('../partials/user-navbar'); %>
+          <!-- Navbar End -->
+
+
+            <!-- Dashboard Content -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="row g-4">
+                    <div class="col-sm-12 col-xl-12">
+                        <div class="bg-secondary text-center rounded p-4">
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                <h6 class="mb-0">Welcome to CitySafe</h6>
+                            </div>
+                            <div class="p-5">
+                                <i class="fa fa-shield-alt fa-5x text-primary mb-4"></i>
+                                <h4>Emergency Response System</h4>
+                                <p class="mb-4">If you are in danger, please click the button below immediately.</p>
+                                <a href="/send-sos" class="btn btn-lg btn-primary pulsate-btn">SEND SOS NOW</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Dashboard Content End -->
+
+          <!-- Footer Start -->
+          <%- include('../partials/footer'); %>
+            <!-- Footer End -->
+
+      </div>
+      <!-- Content End -->
+
+
+      <!-- Back to Top -->
+      <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+  </div>
+
+  <script src="/js/script.js"></script>
+</body>
+
+</html>
+
+<!-- <h1><i class="bi bi-cloud-sun"></i>CitySafe Weather View</h1>
+<hr class="grey-line">
+<h4 class="mb-5">Please <a href="/login">Login</a> to experience full feature!</h4>
+<p id="address"></p>
+<p id="coords"></p>
+<div class="rounded p-3" id="weather-info">Loading weather data...</div>
+<div id="weather-map"></div>
+<p><%- include('../partials/selectloc-visitor'); %></p> -->
