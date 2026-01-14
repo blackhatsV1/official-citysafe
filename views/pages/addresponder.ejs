@@ -14,74 +14,78 @@
         <%- include('../partials/admin-navbar'); %>
 
             <div class="container-fluid pt-4 px-4">
-                  <div class="h-100 bg-secondary rounded p-4">
-                      <div class="d-flex align-items-center justify-content-between mb-4">
-                            <h4 class="mb-0 text-white">Create New Responder</h4>
-                      </div>
-                      <form action="/addresponder" method="POST">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control bg-dark text-white border-0" name="firstname" id="firstname" placeholder="Firstname" required>
-                                    <label for="firstname">Firstname</label>
-                                </div>
+                  <div class="row justify-content-center">
+                    <div class="col-12 col-xl-6">
+                        <div class="h-100 bg-secondary rounded p-4">
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                <h4 class="mb-0 text-white">Create New Responder</h4>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control bg-dark text-white border-0" name="lastname" id="lastname" placeholder="Lastname" required>
-                                    <label for="lastname">Lastname</label>
-                                </div>
-                            </div>
-                            
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="email" class="form-control bg-dark text-white border-0" name="email" id="email" placeholder="Email" required>
-                                    <label for="email">Email Address</label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="number" class="form-control bg-dark text-white border-0" name="contact_number" id="contact" placeholder="Contact" required>
-                                    <label for="contact">Contact Number</label>
-                                </div>
-                            </div>
+                            <form action="/addresponder" method="POST">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control bg-dark text-white border-0" name="firstname" id="firstname" placeholder="Firstname" required>
+                                            <label for="firstname">Firstname</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control bg-dark text-white border-0" name="lastname" id="lastname" placeholder="Lastname" required>
+                                            <label for="lastname">Lastname</label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="email" class="form-control bg-dark text-white border-0" name="email" id="email" placeholder="Email" required>
+                                            <label for="email">Email Address</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="number" class="form-control bg-dark text-white border-0" name="contact_number" id="contact" placeholder="Contact" required>
+                                            <label for="contact">Contact Number</label>
+                                        </div>
+                                    </div>
 
-                            <div class="col-md-12">
-                                <div class="form-floating">
-                                    <select class="form-select bg-dark text-white border-0" id="station" name="station_id" required>
-                                        <option value="" disabled selected>Select a Station...</option>
-                                        <% stations.forEach(station => { %>
-                                            <option value="<%= station.id %>"><%= station.name %> (<%= station.type %>)</option>
-                                        <% }) %>
-                                    </select>
-                                    <label for="station">Assign Station</label>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <select class="form-select bg-dark text-white border-0" id="station" name="station_id" required>
+                                                <option value="" disabled selected>Select a Station...</option>
+                                                <% stations.forEach(station => { %>
+                                                    <option value="<%= station.id %>"><%= station.name %> (<%= station.type %>)</option>
+                                                <% }) %>
+                                            </select>
+                                            <label for="station">Assign Station</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="password" class="form-control bg-dark text-white border-0" name="password" id="password" placeholder="Password" required>
+                                            <label for="password">Password</label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Hidden Fields -->
+                                    <input type="hidden" name="role" value="responder">
+                                    <input type="hidden" name="street_address" value="Station Assigned">
+                                    <input type="hidden" name="barangay" value="N/A">
+                                    <input type="hidden" name="city" value="Iloilo City">
+                                    <input type="hidden" name="province" value="Iloilo">
+                                    <input type="hidden" name="postal_code" value="5000">
+                                    <input type="hidden" name="country" value="Philippines">
+                                    <input type="hidden" name="landmark" value="N/A">
+                                    <input type="hidden" name="address_type" value="Work">
+                                    <input type="hidden" name="additional_instructions" value="N/A">
+
+                                    <div class="col-12 mt-4">
+                                        <button type="submit" class="btn btn-primary w-100 py-3 shadow">Create Responder Account</button>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="col-md-12">
-                                <div class="form-floating">
-                                    <input type="password" class="form-control bg-dark text-white border-0" name="password" id="password" placeholder="Password" required>
-                                    <label for="password">Password</label>
-                                </div>
-                            </div>
-
-                            <!-- Hidden Fields -->
-                             <input type="hidden" name="role" value="responder">
-                             <input type="hidden" name="street_address" value="Station Assigned">
-                             <input type="hidden" name="barangay" value="N/A">
-                             <input type="hidden" name="city" value="Iloilo City">
-                             <input type="hidden" name="province" value="Iloilo">
-                             <input type="hidden" name="postal_code" value="5000">
-                             <input type="hidden" name="country" value="Philippines">
-                             <input type="hidden" name="landmark" value="N/A">
-                             <input type="hidden" name="address_type" value="Work">
-                             <input type="hidden" name="additional_instructions" value="N/A">
-
-                            <div class="col-12 mt-4">
-                                <button type="submit" class="btn btn-primary w-100 py-3 shadow">Create Responder Account</button>
-                            </div>
+                            </form>
                         </div>
-                    </form>
+                    </div>
                   </div>
             </div>
 
