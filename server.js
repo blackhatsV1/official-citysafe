@@ -495,11 +495,126 @@ app.get('/responder', (req, res) => {
   }
 });
 
+// [NEW] Dedicated Responding Page (Active Mission)
+app.get('/responding', (req, res) => {
+  if (req.session.loggedin && req.session.role === 'responder') {
+    const responderId = req.session.userId;
+
+    // 1. Get Active Mission Details
+    const missionSql = `
+      SELECT d.*, 
+        dr.disaster_type, 
+        dr.location,
+        dr.latitude AS incident_lat, 
+        dr.longitude AS incident_lng,
+        dr.status AS incident_status,
+        dr.reported_at,
+        dr.user_confirmed_at,
+        u.firstname, u.lastname, u.contact_number, u.email
+      FROM deploys d
+      JOIN disaster_reports dr ON d.incident_id = dr.id
+      LEFT JOIN users u ON d.user_id = u.id
+      WHERE d.responder_id = ? AND d.status = 'pending'
+      LIMIT 1
+    `;
+
+    db.query(missionSql, [responderId], (err, missionRows) => {
+      if (err) { console.error(err); return res.redirect('/responder'); }
+
+      if (missionRows.length === 0) {
+        // No active mission, go back to dashboard
+        return res.redirect('/responder');
+      }
+
+      const mission = missionRows[0];
+
+      // 2. Get Nearby Reports (Same logic as responder dashboard, for reference)
+      const nearbySql = `
+        SELECT dr.id, dr.disaster_type, dr.location, dr.latitude, dr.longitude, dr.status, dr.reported_at, u.firstname, u.lastname
+        FROM disaster_reports dr
+        LEFT JOIN users u ON dr.user_id = u.id
+        WHERE dr.status NOT IN ('resolved', 'cancelled by user', 'cancelled by admin') 
+        AND dr.id != ?
+      `;
+
+      db.query(nearbySql, [mission.incident_id], (err, reportRows) => {
+        res.render('pages/responding', {
+          username: req.session.username,
+          apiKey: process.env.OWM_API_KEY,
+          page: 'responding', // Special page identifier
+          role: 'responder',
+          mission: mission,
+          reports: reportRows || []
+        });
+      });
+    });
+  } else {
+    res.redirect('/login');
+  }
+});
+
 app.get('/aboutresponder', (req, res) => {
   if (req.session.loggedin && req.session.role === 'responder') {
     res.render('pages/aboutresponder', { username: req.session.username, page: 'about', role: 'responder' });
   } else {
     res.redirect('/login');
+  }
+});
+
+// [NEW] Responder History
+app.get('/responder-history', (req, res) => {
+  if (req.session.loggedin && req.session.role === 'responder') {
+    const responderId = req.session.userId;
+    const sql = `
+      SELECT 
+        dr.id, 
+        dr.disaster_type, 
+        dr.location, 
+        dr.reported_at, 
+        dr.resolution_remarks,
+        dr.responder_message,
+        dr.user_message,
+        dr.resolved_by,
+        d.resolved_at,
+        d.status
+      FROM deploys d
+      JOIN disaster_reports dr ON d.incident_id = dr.id
+      WHERE d.responder_id = ? AND d.status = 'resolved'
+      ORDER BY d.resolved_at DESC
+    `;
+
+    db.query(sql, [responderId], (err, results) => {
+      if (err) { console.error(err); return res.redirect('/responder'); }
+
+      res.render('pages/responder-history', {
+        username: req.session.username,
+        page: 'history', // Sidebar active state
+        role: 'responder',
+        reports: results
+      });
+    });
+  } else {
+    res.redirect('/login');
+  }
+});
+
+// Legacy Redirect (in case of cached sidebar)
+app.get('/responder/history', (req, res) => res.redirect('/responder-history'));
+
+app.get('/api/responder-reports', (req, res) => {
+  if (req.session.loggedin && req.session.role === 'responder') {
+    const query = `
+      SELECT dr.id, dr.disaster_type, dr.location, dr.latitude, dr.longitude, dr.status, dr.reported_at, u.firstname, u.lastname
+      FROM disaster_reports dr
+      LEFT JOIN users u ON dr.user_id = u.id
+      WHERE dr.status NOT IN ('resolved', 'cancelled by user', 'cancelled by admin')
+    `;
+    db.query(query, (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(results);
+    });
+  } else {
+    res.status(401).json({ error: 'Unauthorized' });
   }
 });
 
@@ -750,6 +865,29 @@ app.get('/api/me', (req, res) => {
   }
 });
 
+// [NEW] API for User History Polling
+app.get('/api/my-reports-list', (req, res) => {
+  if (req.session.loggedin && req.session.role === 'user') {
+    const userId = req.session.userId;
+    const query = `
+      SELECT dr.*, 
+             r.firstname as responder_name, r.lastname as responder_last, 
+             s.name as station_name 
+      FROM disaster_reports dr
+      LEFT JOIN responders r ON dr.responder_id = r.id
+      LEFT JOIN stations s ON r.station_id = s.id
+      WHERE dr.user_id = ?
+      ORDER BY dr.reported_at DESC
+    `;
+    db.query(query, [userId], (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(results);
+    });
+  } else {
+    res.status(401).json({ error: 'Unauthorized' });
+  }
+});
+
 // [NEW] Dual-Confirmation Resolution
 app.post('/api/resolve', (req, res) => {
   if (!req.session.loggedin) return res.status(401).json({ error: 'Unauthorized' });
@@ -759,27 +897,42 @@ app.post('/api/resolve', (req, res) => {
   const now = new Date();
 
   let updateField = '';
-  if (role === 'responder') updateField = 'responder_confirmed_at = ?';
-  else if (role === 'user') updateField = 'user_confirmed_at = ?';
-  else return res.status(403).json({ error: 'Invalid role' });
+  let msgField = '';
 
-  db.query(`UPDATE disaster_reports SET ${updateField} WHERE id = ?`, [now, incidentId], (err) => {
+  if (role === 'responder') {
+    updateField = 'responder_confirmed_at = ?';
+    msgField = 'responder_message = ?';
+  } else if (role === 'user') {
+    updateField = 'user_confirmed_at = ?';
+    msgField = 'user_message = ?';
+  } else {
+    return res.status(403).json({ error: 'Invalid role' });
+  }
+
+  // Update status and save specific message
+  db.query(`UPDATE disaster_reports SET ${updateField}, ${msgField} WHERE id = ?`, [now, remarks, incidentId], (err) => {
     if (err) return res.status(500).json({ error: 'DB Error' });
 
     // Check if BOTH confirmed
-    db.query('SELECT responder_confirmed_at, user_confirmed_at, responder_id FROM disaster_reports WHERE id = ?', [incidentId], (err, rows) => {
+    db.query('SELECT responder_confirmed_at, user_confirmed_at, responder_id, responder_message, user_message FROM disaster_reports WHERE id = ?', [incidentId], (err, rows) => {
       if (rows.length > 0) {
         const r = rows[0];
         if (r.responder_confirmed_at && r.user_confirmed_at) {
           // Full Resolution
           const responderId = r.responder_id;
-          const q1 = `UPDATE disaster_reports SET status = 'resolved' WHERE id = ?`;
-          const q2 = `UPDATE responders SET status = 'active' WHERE id = ?`; // Free the responder
-          const q3 = `UPDATE deploys SET status = 'resolved', resolved_at = NOW(), remarks = ? WHERE incident_id = ? AND status = 'pending'`; // Close deploy record
+          const resolvedByName = req.session.username || 'Unknown';
 
-          db.query(q1, [incidentId]);
+          // Combine remarks for general view
+          const combinedRemarks = `Responder: ${r.responder_message || '-'} | User: ${r.user_message || '-'}`;
+
+          const q1 = `UPDATE disaster_reports SET status = 'resolved', resolution_remarks = ?, resolved_by = ? WHERE id = ?`;
+          const q2 = `UPDATE responders SET status = 'active' WHERE id = ?`; // Free the responder
+          // Save Responder's own message in their deploy log
+          const q3 = `UPDATE deploys SET status = 'resolved', resolved_at = NOW(), remarks = ? WHERE incident_id = ? AND status = 'pending'`;
+
+          db.query(q1, [combinedRemarks, resolvedByName, incidentId]);
           db.query(q2, [responderId]);
-          db.query(q3, [remarks || 'Resolved', incidentId]);
+          db.query(q3, [r.responder_message || 'Resolved', incidentId]);
 
           return res.json({ success: true, status: 'resolved' });
         }

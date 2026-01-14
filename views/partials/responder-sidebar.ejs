@@ -17,6 +17,8 @@
         </div>
         <div class="navbar-nav w-100">
             <a href="/responder" class="nav-item nav-link <%= page === 'dashboard' ? 'active' : '' %>"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
+            <a href="/responder#nearby-reports" class="nav-item nav-link"><i class="fa fa-map-marked-alt me-2"></i>Nearby Disasters</a>
+            <a href="/responder-history" class="nav-item nav-link <%= page === 'history' ? 'active' : '' %>"><i class="fa fa-history me-2"></i>Reaction History</a>
             <a href="/aboutresponder" class="nav-item nav-link <%= page === 'about' ? 'active' : '' %>"><i class="fa fa-info-circle me-2"></i>About</a>
             <hr class="dropdown-divider">
             <a href="/logout" class="nav-item nav-link"><i class="fa fa-sign-out-alt me-2"></i>Logout</a>

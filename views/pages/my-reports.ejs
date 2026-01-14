@@ -95,6 +95,8 @@
                                     <th scope="col">Location</th>
                                     <th scope="col">Responder</th>
                                     <th scope="col">Status</th>
+                                    <th scope="col">Resolved By</th>
+                                    <th scope="col">Message</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -128,8 +130,11 @@
                                                 <span class="badge bg-danger">Cancelled</span>
                                             <% } %>
                                         </td>
+                                        <td class="text-info"><%= report.resolved_by || '-' %></td>
                                         <td>
-                                            <!-- ACTIONS -->
+                                            <small><strong>Resp:</strong> <%= report.responder_message || '-' %></small><br>
+                                            <small><strong>User:</strong> <%= report.user_message || '-' %></small>
+                                        </td>
                                         <td>
                                             <!-- ACTIONS -->
                                             <% if (report.status === 'pending') { %>
@@ -144,7 +149,6 @@
                                             <% } else { %>
                                                 <span class="text-muted">-</span>
                                             <% } %>
-                                        </td>
                                         </td>
                                     </tr>
                                     <% }); %>
@@ -219,7 +223,7 @@
                     return fetch('/api/resolve', {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({ incidentId: id, remarks: 'User confirmed via History', feedback: feedback })
+                        body: JSON.stringify({ incidentId: id, remarks: feedback })
                     })
                     .then(response => {
                         if (!response.ok) {
