@@ -14,82 +14,75 @@
         <%- include('../partials/admin-navbar'); %>
 
             <div class="container-fluid pt-4 px-4">
-                <div class="container bg-secondary rounded p-3 mb-4">
-                  <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h4 class="mb-0">Add Responder</h4>
-                  </div>
-                  <hr>
-                  <div class="container bg-secondary w-75 mt-3 p-3">
-                    <form action="/addresponder" method="POST">
-                        <div class="row mb-3">
-                            <label for="firstname" class="col-sm-2 col-form-label">Firstname</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" name="firstname"  required placeholder="Firstname">
+                  <div class="h-100 bg-secondary rounded p-4">
+                      <div class="d-flex align-items-center justify-content-between mb-4">
+                            <h4 class="mb-0 text-white">Create New Responder</h4>
+                      </div>
+                      <form action="/addresponder" method="POST">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-dark text-white border-0" name="firstname" id="firstname" placeholder="Firstname" required>
+                                    <label for="firstname">Firstname</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="lastname" class="col-sm-2 col-form-label">Lastname</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" name="lastname" placeholder="Lastname" required>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control bg-dark text-white border-0" name="lastname" id="lastname" placeholder="Lastname" required>
+                                    <label for="lastname">Lastname</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="email" class="col-sm-2 col-form-label">Email</label>
-                            <div class="col-sm-10">
-                                <input type="email" class="form-control" name="email" placeholder="Email" required>
+                            
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control bg-dark text-white border-0" name="email" id="email" placeholder="Email" required>
+                                    <label for="email">Email Address</label>
+                                </div>
                             </div>
-                        </div>
-                         <!-- Address fields kept for completeness but could be simplified -->
-                        <div class="row mb-3">
-                            <label for="contact_number" class="col-sm-2 col-form-label">Contact</label>
-                            <div class="col-sm-10"> 
-                                <input type="number" class="form-control" name="contact_number" placeholder="Contact Number" required>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="number" class="form-control bg-dark text-white border-0" name="contact_number" id="contact" placeholder="Contact" required>
+                                    <label for="contact">Contact Number</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="password" class="col-sm-2 col-form-label">Password</label>
-                            <div class="col-sm-10">
-                                <input type="password" class="form-control" name="password" placeholder="Password" required>
-                            </div>
-                        </div>
 
-                        <!-- Station Selection -->
-                        <div class="row mb-3">
-                            <label for="station_id" class="col-sm-2 col-form-label">Assign Station</label>
-                            <div class="col-sm-10">
-                                <select class="form-select" name="station_id" required>
-                                    <option value="" disabled selected>Select a Station...</option>
-                                    <% stations.forEach(station => { %>
-                                        <option value="<%= station.id %>"><%= station.name %> (<%= station.type %>)</option>
-                                    <% }) %>
-                                </select>
+                            <div class="col-md-12">
+                                <div class="form-floating">
+                                    <select class="form-select bg-dark text-white border-0" id="station" name="station_id" required>
+                                        <option value="" disabled selected>Select a Station...</option>
+                                        <% stations.forEach(station => { %>
+                                            <option value="<%= station.id %>"><%= station.name %> (<%= station.type %>)</option>
+                                        <% }) %>
+                                    </select>
+                                    <label for="station">Assign Station</label>
+                                </div>
                             </div>
-                        </div>
 
-                        <!-- Hidden fields for address to satisfy DB constraints if not null, or we update DB to allow null. 
-                             Assuming DB columns require values based on previous `addusers` form. 
-                             We'll send defaults or just hide them if strictly required. 
-                             For now, let's keep it simple and assume we only need core info + station.
-                             Wait, `users` table likely has NOT NULL constraints on address fields.
-                             Let's check `myapp.sql` briefly or just include generic inputs for now to avoid errors.
-                        -->
-                         <input type="hidden" name="role" value="responder">
-                         <input type="hidden" name="street_address" value="Station Assigned">
-                         <input type="hidden" name="barangay" value="N/A">
-                         <input type="hidden" name="city" value="Iloilo City">
-                         <input type="hidden" name="province" value="Iloilo">
-                         <input type="hidden" name="postal_code" value="5000">
-                         <input type="hidden" name="country" value="Philippines">
-                         <input type="hidden" name="landmark" value="N/A">
-                         <input type="hidden" name="address_type" value="Work">
-                         <input type="hidden" name="additional_instructions" value="N/A">
+                            <div class="col-md-12">
+                                <div class="form-floating">
+                                    <input type="password" class="form-control bg-dark text-white border-0" name="password" id="password" placeholder="Password" required>
+                                    <label for="password">Password</label>
+                                </div>
+                            </div>
 
-                        <div class="d-flex align-items-center justify-content-center mb-0 mt-3">
-                          <button type="submit" class="btn btn-success mt-2">Create Responder Account</button>
+                            <!-- Hidden Fields -->
+                             <input type="hidden" name="role" value="responder">
+                             <input type="hidden" name="street_address" value="Station Assigned">
+                             <input type="hidden" name="barangay" value="N/A">
+                             <input type="hidden" name="city" value="Iloilo City">
+                             <input type="hidden" name="province" value="Iloilo">
+                             <input type="hidden" name="postal_code" value="5000">
+                             <input type="hidden" name="country" value="Philippines">
+                             <input type="hidden" name="landmark" value="N/A">
+                             <input type="hidden" name="address_type" value="Work">
+                             <input type="hidden" name="additional_instructions" value="N/A">
+
+                            <div class="col-12 mt-4">
+                                <button type="submit" class="btn btn-primary w-100 py-3 shadow">Create Responder Account</button>
+                            </div>
                         </div>
                     </form>
                   </div>
-                </div>
             </div>
 
           <%- include('../partials/footer'); %>

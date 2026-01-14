@@ -1,15 +1,17 @@
 /********** Template CSS **********/
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+
 :root {
-    --primary: #ffaa00;
-    /* Golden Orange - Action/Highlight */
+    --primary: #EB1616;
+    /* Red - Main Action */
     --secondary: #191C24;
     /* Dark Card Background */
-    --light: #6C7293;
-    /* Muted Text */
+    --light: #A0A6B5;
+    /* Improved Contrast Text */
     --dark: #000000;
     /* Main Background */
     --danger: #EB1616;
-    /* Emergency Red */
+    /* Emergency Red - Same as primary now */
     --success: #00d25b;
     --warning: #ffab00;
     --info: #0090e7;
@@ -19,7 +21,8 @@
 body {
     background-color: var(--dark);
     color: var(--light);
-    font-family: 'Roboto', sans-serif;
+    font-family: 'Roboto', 'Open Sans', sans-serif;
+    font-size: 17px;
 }
 
 /* Scrollbar Styling */
@@ -71,8 +74,8 @@ a {
 }
 
 a:hover {
-    color: #ffd700;
-    text-shadow: 0 0 5px rgba(255, 170, 0, 0.5);
+    color: #ff3333;
+    text-shadow: 0 0 5px rgba(235, 22, 22, 0.5);
 }
 
 /* Back to Top */
@@ -88,12 +91,13 @@ a:hover {
     background: var(--primary);
     border: none;
     color: var(--dark);
-    box-shadow: 0 0 15px rgba(255, 170, 0, 0.5);
+    box-shadow: 0 0 15px rgba(235, 22, 22, 0.5);
 }
 
 /* Maps */
 #weather-map,
-#map {
+#map,
+#admin-map {
     height: 400px;
     width: 100%;
     border-radius: 15px;
@@ -109,6 +113,12 @@ a:hover {
     border-radius: 10px;
     margin-top: 15px;
     border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.weather-temp-highlight {
+    color: var(--success) !important;
+    font-weight: bold;
+    font-size: 1.2em;
 }
 
 /*** Spinner ***/
@@ -137,15 +147,15 @@ a:hover {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary), #e69900);
-    color: var(--dark);
-    box-shadow: 0 4px 15px rgba(255, 170, 0, 0.3);
+    background: linear-gradient(135deg, var(--primary), #b91111);
+    color: var(--white);
+    box-shadow: 0 4px 15px rgba(235, 22, 22, 0.3);
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, #e69900, var(--primary));
-    color: var(--dark);
-    box-shadow: 0 6px 20px rgba(255, 170, 0, 0.5);
+    background: linear-gradient(135deg, #b91111, var(--primary));
+    color: var(--white);
+    box-shadow: 0 6px 20px rgba(235, 22, 22, 0.5);
     transform: translateY(-2px);
 }
 
@@ -189,8 +199,8 @@ a:hover {
 .bg-secondary {
     background-color: var(--secondary) !important;
     border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.03);
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.02);
 }
 
 .rounded {
@@ -268,7 +278,7 @@ a:hover {
 .sidebar .navbar .navbar-nav .nav-link:hover,
 .sidebar .navbar .navbar-nav .nav-link.active {
     color: var(--primary);
-    background: rgba(255, 170, 0, 0.1);
+    background: rgba(235, 22, 22, 0.1);
     border-color: var(--primary);
     box-shadow: 5px 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -319,9 +329,55 @@ a:hover {
     letter-spacing: 1px;
 }
 
+/* Visibility Fixes for Data Tables */
+.table-danger,
+.table-danger th,
+.table-danger td {
+    background-color: rgba(235, 22, 22, 0.2) !important;
+    color: #ffffff !important;
+    border-color: rgba(235, 22, 22, 0.3) !important;
+    font-family: 'Roboto', 'Open Sans', sans-serif !important;
+    font-size: 17px !important;
+}
+
+.table-warning,
+.table-warning th,
+.table-warning td {
+    background-color: rgba(255, 171, 0, 0.2) !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 171, 0, 0.3) !important;
+    font-family: 'Roboto', 'Open Sans', sans-serif !important;
+    font-size: 17px !important;
+}
+
+.table-success,
+.table-success th,
+.table-success td {
+    background-color: rgba(0, 210, 91, 0.2) !important;
+    color: #ffffff !important;
+    border-color: rgba(0, 210, 91, 0.3) !important;
+    font-family: 'Roboto', 'Open Sans', sans-serif !important;
+    font-size: 17px !important;
+}
+
+/* Dropdown Visibility */
+.dropdown-menu {
+    background-color: var(--secondary) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.dropdown-item {
+    color: var(--light) !important;
+}
+
+.dropdown-item:hover {
+    background-color: rgba(235, 22, 22, 0.1) !important;
+    color: var(--white) !important;
+}
+
 .table-hover tbody tr:hover {
     color: var(--white);
-    background-color: rgba(255, 170, 0, 0.05);
+    background-color: rgba(235, 22, 22, 0.05);
 }
 
 /*** Inputs ***/
@@ -339,7 +395,8 @@ a:hover {
     background-color: var(--dark);
     color: var(--white);
     border-color: var(--primary);
-    box-shadow: 0 0 0 0.25rem rgba(255, 170, 0, 0.25);
+    /* box-shadow: 0 0 0 0.25rem rgba(255, 170, 0, 0.25); replaced with red below */
+    box-shadow: 0 0 0 0.25rem rgba(235, 22, 22, 0.25);
 }
 
 .form-control::placeholder {
@@ -371,7 +428,7 @@ a:hover {
 .swal2-confirm {
     background: linear-gradient(135deg, var(--primary), #e69900) !important;
     color: var(--dark) !important;
-    box-shadow: 0 4px 15px rgba(255, 170, 0, 0.3) !important;
+    box-shadow: 0 4px 15px rgba(235, 22, 22, 0.3) !important;
     border: none !important;
 }
 
@@ -452,7 +509,7 @@ a:hover {
 .leaflet-routing-container {
     background-color: var(--secondary) !important;
     color: var(--white) !important;
-    border: 1px solid rgba(255, 170, 0, 0.3) !important;
+    border: 1px solid rgba(235, 22, 22, 0.3) !important;
     border-radius: 15px !important;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
     font-family: 'Roboto', sans-serif !important;
@@ -484,7 +541,7 @@ a:hover {
 }
 
 .leaflet-routing-alt tr:hover {
-    background-color: rgba(255, 170, 0, 0.05) !important;
+    background-color: rgba(235, 22, 22, 0.05) !important;
     cursor: pointer;
     color: var(--white) !important;
 }
@@ -505,7 +562,7 @@ a:hover {
 /* Premium Table */
 .table-premium thead th {
     background-color: rgba(0, 0, 0, 0.2);
-    border-bottom: 2px solid rgba(255, 170, 0, 0.2);
+    border-bottom: 2px solid rgba(235, 22, 22, 0.2);
     color: var(--primary);
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -517,7 +574,7 @@ a:hover {
 }
 
 .table-premium tbody tr:hover {
-    background-color: rgba(255, 170, 0, 0.08) !important;
+    background-color: rgba(235, 22, 22, 0.08) !important;
     transform: scale(1.005);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }

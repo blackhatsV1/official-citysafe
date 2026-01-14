@@ -1,6 +1,7 @@
 const axios = require("axios");
 const express = require('express');
 const app = express();
+const cors = require('cors');
 const session = require('express-session');
 const bodyparser = require('body-parser');
 const db = require('./db');
@@ -9,7 +10,7 @@ require("dotenv").config();
 
 const PORT = process.env.PORT || 9000;
 
-
+app.use(cors());
 app.use(session({
   secret: 'capstone',
   resave: false,

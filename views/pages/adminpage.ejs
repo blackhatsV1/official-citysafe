@@ -62,20 +62,20 @@
                                 <a href="">Show All</a>
                             </div>
                             <div class="table-responsive">
-                              <table class="table table-hover table-premium text-danger">
+                              <table class="table table-hover table-premium">
                                   <thead>
                                       <tr>
                                           
-                                          <th scope="col">Fullname</th>
-                                          <th scope="col">Risk Score</th>
-                                          <th scope="col">Date Assessed</th>
+                                          <th scope="col" class="text-danger">Fullname</th>
+                                          <th scope="col" class="text-danger">Risk Score</th>
+                                          <th scope="col" class="text-danger">Date Assessed</th>
                                       </tr>
                                   </thead>
                                   <tbody>
                                       <% riskTables['High'].forEach(user => { %>
                                       <tr>
                                         <td><%= user.username %></td>
-                                        <td><%= user.risk_score %></td>
+                                        <td><span class="text-danger fw-bold"><%= user.risk_score %></span></td>
                                         <td><%= user.assessed_at.toLocaleString() %></td>
                                       </tr>
                                       <% }) %>
@@ -91,20 +91,20 @@
                                 <a href="">Show All</a>
                             </div>
                             <div class="table-responsive">
-                              <table class="table table-hover table-premium text-warning">
+                              <table class="table table-hover table-premium">
                                   <thead>
                                       <tr>
                                           
-                                          <th scope="col">Fullname</th>
-                                          <th scope="col">Risk Score</th>
-                                          <th scope="col">Date Assessed</th>
+                                          <th scope="col" class="text-warning">Fullname</th>
+                                          <th scope="col" class="text-warning">Risk Score</th>
+                                          <th scope="col" class="text-warning">Date Assessed</th>
                                       </tr>
                                   </thead>
                                   <tbody>
                                       <% riskTables['Moderate'].forEach(user => { %>
                                       <tr>
                                         <td><%= user.username %></td>
-                                        <td><%= user.risk_score %></td>
+                                        <td><span class="text-warning fw-bold"><%= user.risk_score %></span></td>
                                         <td><%= user.assessed_at.toLocaleString() %></td>
                                       </tr>
                                       <% }) %>
@@ -120,20 +120,20 @@
                                 <a href="/reports">Show All</a>
                             </div>
                             <div class="table-responsive">
-                              <table class="table table-hover table-premium text-success">
+                              <table class="table table-hover table-premium">
                                   <thead>
                                       <tr>
                                           
-                                          <th scope="col">Fullname</th>
-                                          <th scope="col">Risk Score</th>
-                                          <th scope="col">Date Assessed</th>
+                                          <th scope="col" class="text-success">Fullname</th>
+                                          <th scope="col" class="text-success">Risk Score</th>
+                                          <th scope="col" class="text-success">Date Assessed</th>
                                       </tr>
                                   </thead>
                                   <tbody>
                                       <% riskTables['Low'].forEach(user => { %>
                                       <tr>
                                         <td><%= user.username %></td>
-                                        <td><%= user.risk_score %></td>
+                                        <td><span class="text-success fw-bold"><%= user.risk_score %></span></td>
                                         <td><%= user.assessed_at.toLocaleString() %></td>
                                       </tr>
                                       <% }) %>
@@ -207,8 +207,9 @@
     "use strict";
 
     // Chart Global Color
-    Chart.defaults.color = "#6C7293";
+    Chart.defaults.color = "#A0A6B5";
     Chart.defaults.borderColor = "#000000";
+    Chart.defaults.font.family = "'Roboto', 'Open Sans', sans-serif";
 
     // --- User Chart ---
     var ctx1 = $("#userChart").get(0).getContext("2d");

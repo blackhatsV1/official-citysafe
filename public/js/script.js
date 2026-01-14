@@ -235,30 +235,35 @@ function interpretWeather(data) {
   const clouds = data.clouds.all;
   const shortDesc = getShortDescription(description);
 
-  let message = `<strong><i class="bi bi-thermometer-half"></i> Temp:</strong> ${temp}°C (Feels like ${feelsLike}°C)<br>`;
+  /* Hacker Green Theme */
+  const hackerStyle = 'color: #00FF00; font-family: "Roboto", sans-serif; text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);';
+
+  let message = `<div style="${hackerStyle}">`;
+  message += `<strong><i class="bi bi-thermometer-half"></i> Temp:</strong> ${temp}°C (Feels like ${feelsLike}°C)<br>`;
   message += `<strong><i class="bi bi-cloud"></i> Weather:</strong> ${description}<br>`;
   message += `<strong><i class="bi bi-droplet"></i> Humidity:</strong> ${humidity}%<br>`;
   message += `<strong><i class="bi bi-cloud-sun"></i> Cloud coverage:</strong> ${clouds}%<br>`;
   message += `<strong><i class="bi bi-wind"></i> Wind:</strong> ${windSpeed} m/s<br>`;
-  message += `<em>Temp: ${temp}°C, ${description}. ${shortDesc}</em><br>`;
+  message += `<em>Temp: ${temp}°C, ${shortDesc}</em><br>`;
 
   //======================
   if (description.includes("rain") && clouds > 70) {
-    message += `<i class="bi bi-umbrella-fill" style="color:#00BFFF;"></i> Possible heavy rain!<br>`;
+    message += `<i class="bi bi-umbrella-fill" style="color:#00FF00;"></i> Possible heavy rain!<br>`;
   }
   if (windSpeed > 15) {
-    message += `<i class="bi bi-wind" style="color:#FFA500;"></i> Strong winds!<br>`;
+    message += `<i class="bi bi-wind" style="color:#00FF00;"></i> Strong winds!<br>`;
   }
   if (temp > 40) {
-    message += `<i class="bi bi-thermometer-high" style="color:#FF4500;"></i> Extremely hot!<br>`;
+    message += `<i class="bi bi-thermometer-high" style="color:#00FF00;"></i> Extremely hot!<br>`;
   }
   if (temp < 5) {
-    message += `<i class="bi bi-thermometer-low" style="color:#1E90FF;"></i> Extremely cold!<br>`;
+    message += `<i class="bi bi-thermometer-low" style="color:#00FF00;"></i> Extremely cold!<br>`;
   }
 
   const now = new Date();
   const formattedTime = formatDateTime(now);
   message += `<br><strong>Updated:</strong> ${formattedTime}<br>`;
+  message += `</div>`;
 
   document.getElementById("weather-info").innerHTML = message;
 

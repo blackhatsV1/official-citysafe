@@ -27,110 +27,118 @@
           <!-- Widgets Start -->
             <div class="container-fluid pt-4 px-4">
               
-                <div class="container bg-secondary rounded p-3 mb-4">
-                  <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h4 class="mb-0">Edit Profile</h4>
-                  </div>
+                    <div class="bg-secondary rounded h-100 p-4">
+                        <h4 class="mb-4 text-white">Update Profile Information</h4>
+                        <form action="/update-account" method="POST">
+                            <div class="row g-3">
+                                <!-- Personal Info -->
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control bg-dark text-white border-0" name="firstname" id="firstname" value="<%= user.firstname %>" placeholder="Firstname" required>
+                                        <label for="firstname">Firstname</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control bg-dark text-white border-0" name="lastname" id="lastname" value="<%= user.lastname %>" placeholder="Lastname" required>
+                                        <label for="lastname">Lastname</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="email" class="form-control bg-dark text-white border-0" name="email" id="email" value="<%= user.email %>" placeholder="Email" required>
+                                        <label for="email">Email</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="number" class="form-control bg-dark text-white border-0" name="contact_number" id="contact_number" value="<%= user.contact_number %>" placeholder="Contact" required>
+                                        <label for="contact_number">Contact Number</label>
+                                    </div>
+                                </div>
 
-                  <hr>
+                                <div class="col-12"><hr class="dropdown-divider bg-light"></div>
+                                <h5 class="mb-1 text-white">Address Details</h5>
 
-                  <div class="container bg-secondary w-75 mt-3 p-3">
-                    <form action="/update-account" method="POST">
-                        <div class="row mb-3">
-                            <label for="firstname" class="col-sm-2 col-form-label">Firstname</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" name="firstname" value="<%= user.firstname %>" required  id="firstname">
+                                <!-- Address Info -->
+                                <div class="col-md-12">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control bg-dark text-white border-0" name="street_address" id="street_address" value="<%= user.street_address %>" placeholder="Street" required>
+                                        <label for="street_address">Street Address</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control bg-dark text-white border-0" name="barangay" id="barangay" value="<%= user.barangay %>" placeholder="Barangay" required>
+                                        <label for="barangay">Barangay</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control bg-dark text-white border-0" name="city" id="city" value="<%= user.city %>" placeholder="City" required>
+                                        <label for="city">City</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control bg-dark text-white border-0" name="province" id="province" value="<%= user.province %>" placeholder="Province" required>
+                                        <label for="province">Province</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control bg-dark text-white border-0" name="postal_code" id="postal_code" value="<%= user.postal_code %>" placeholder="Postal Code" required>
+                                        <label for="postal_code">Postal Code</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control bg-dark text-white border-0" name="country" id="country" value="<%= user.country %>" placeholder="Country" required>
+                                        <label for="country">Country</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control bg-dark text-white border-0" name="landmark" id="landmark" value="<%= user.landmark %>" placeholder="Landmark" required>
+                                        <label for="landmark">Landmark</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control bg-dark text-white border-0" name="address_type" id="address_type" value="<%= user.address_type %>" placeholder="Address Type" required>
+                                        <label for="address_type">Address Type</label>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control bg-dark text-white border-0" name="additional_instructions" id="additional_instructions" value="<%= user.additional_instructions %>" placeholder="Instructions" required>
+                                        <label for="additional_instructions">Additional Instructions</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12"><hr class="dropdown-divider bg-light"></div>
+                                
+                                <div class="col-md-12">
+                                    <div class="input-group">
+                                        <div class="form-floating flex-grow-1">
+                                            <input type="password" class="form-control bg-dark text-white border-0" name="password" id="password" value="<%= user.password %>" placeholder="Password" required>
+                                            <label for="password">Password</label>
+                                        </div>
+                                        <button class="btn btn-outline-primary" type="button" id="togglePassword">
+                                            <i class="bi bi-eye-slash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mt-4 d-flex justify-content-end gap-2">
+                                    <a class="btn btn-outline-light" href="/weather">Cancel</a>
+                                    <button type="submit" class="btn btn-primary px-4">Update Profile</button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="lastname" class="col-sm-2 col-form-label">Lastname</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="lastname" name="lastname" value="<%= user.lastname %>" required>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="street_address" class="col-sm-2 col-form-label">Street Address</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="street_address" name="street_address" value="<%= user.street_address %>" required>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="barangay" class="col-sm-2 col-form-label">Barangay</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="barangay" name="barangay" value="<%= user.barangay %>" required>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="city" class="col-sm-2 col-form-label">City</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="city" name="city" value="<%= user.city %>" required>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="province" class="col-sm-2 col-form-label">Province</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="province" name="province" value="<%= user.province %>" required>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="postal_code" class="col-sm-2 col-form-label">Postal Code</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="postal_code" name="postal_code" value="<%= user.postal_code %>" required>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="country" class="col-sm-2 col-form-label">Country</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="country" name="country" value="<%= user.country %>" required>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="email" class="col-sm-2 col-form-label">Email</label>
-                            <div class="col-sm-10">
-                                <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>" required>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="contact_number" class="col-sm-2 col-form-label">Contact Number</label>
-                            <div class="col-sm-10">
-                                <input type="number" class="form-control" id="contact_number" name="contact_number" value="<%= user.contact_number %>" required>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="landmark" class="col-sm-2 col-form-label">Landmark</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="landmark" name="landmark" value="<%= user.landmark %>" required>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="address_type" class="col-sm-2 col-form-label">Address Type</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="address_type" name="address_type" value="<%= user.address_type %>" required>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="additional_instructions" class="col-sm-2 col-form-label">Additional Instructions</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="additional_instructions" name="additional_instructions" value="<%= user.additional_instructions %>" required>                                
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <label for="password" class="col-sm-2 col-form-label">Password</label>
-                            <div class="col-sm-10">
-                                <input type="password" class="form-control" id="password" name="password" value="<%= user.password %>" required>
-                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                  <i class="bi bi-eye-slash text-primary"> Show Password</i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="d-flex align-items-center justify-content-between mb-0 mt-3">
-                          <button type="submit" class="btn btn-success mt-2">Update</button>
-                          <a class="btn btn-outline-primary m-2" href="/weather">Cancel</a>       
-                        </div>
-                    </form>
-                  </div>
-                </div>
+                        </form>
+                    </div>
             </div>
             <!-- Widgets End -->
 
