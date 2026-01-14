@@ -33,33 +33,37 @@
                 let activeReport = reports.find(r => r.status === 'responding' || r.status === 'pending');
             %>
             
+            <div id="activeReportContainer">
             <% if (activeReport) { %>
             <div class="container-fluid pt-4 px-4">
-                <div class="bg-secondary rounded p-4 border border-<%= activeReport.status === 'responding' ? 'warning' : 'danger' %>">
+                <div class="bg-secondary rounded p-4 border border-<%= activeReport.status === 'responding' ? 'warning' : 'danger' %>" id="statusBoxBorder">
                     <div class="d-flex align-items-center justify-content-between mb-3">
                         <h4 class="mb-0 text-white">
-                            <i class="fa <%= activeReport.status === 'responding' ? 'fa-ambulance' : 'fa-exclamation-circle' %> me-2"></i>
-                            Current Status: <span class="text-<%= activeReport.status === 'responding' ? 'warning' : 'danger' %>"><%= activeReport.status.toUpperCase() %></span>
+                            <i class="fa <%= activeReport.status === 'responding' ? 'fa-ambulance' : 'fa-exclamation-circle' %> me-2" id="statusIcon"></i>
+                            Current Status: <span class="<%= activeReport.status === 'responding' ? 'text-warning' : 'text-danger' %>" id="statusText"><%= activeReport.status.toUpperCase() %></span>
                         </h4>
-                        <% if (activeReport.status === 'responding' && activeReport.user_confirmed_at) { %>
-                             <span class="badge bg-info p-2">Waiting for Responder Confirmation</span>
-                        <% } else if (activeReport.status === 'responding') { %>
-                             <button class="btn btn-success fw-bold blink-bg" onclick="markResolved(<%= activeReport.id %>)">
-                                 <i class="fa fa-check-circle me-2"></i>I AM SAFE / RESOLVED
-                             </button>
-                        <% } else if (activeReport.status === 'pending') { %>
-                             <button class="btn btn-outline-danger" disabled>Cannot Cancel (Finding Responder...)</button>
-                        <% } %>
+                        <div id="actionButtonContainer">
+                            <% if (activeReport.status === 'responding' && activeReport.user_confirmed_at) { %>
+                                 <span class="badge bg-info p-2">Waiting for Responder Confirmation</span>
+                            <% } else if (activeReport.status === 'responding') { %>
+                                 <button class="btn btn-success fw-bold blink-bg" onclick="markResolved(<%= activeReport.id %>)">
+                                     <i class="fa fa-check-circle me-2"></i>I AM SAFE / RESOLVED
+                                 </button>
+                            <% } else if (activeReport.status === 'pending') { %>
+                                 <button class="btn btn-outline-danger" disabled>Cannot Cancel (Finding Responder...)</button>
+                            <% } %>
+                        </div>
                     </div>
 
+                    <div id="dynamicContent">
                     <% if (activeReport.status === 'responding') { %>
                         <div class="row g-3">
                              <div class="col-md-4">
                                  <div class="p-3 bg-dark rounded">
                                      <small class="text-muted">RESPONDER DETAILS</small>
-                                     <h5 class="text-white mb-1"><%= activeReport.responder_name %> <%= activeReport.responder_last %></h5>
-                                     <p class="mb-0 text-white"><i class="fa fa-envelope me-2"></i><%= activeReport.responder_email || 'No email' %></p>
-                                     <p class="mb-0 text-warning"><i class="fa fa-phone me-2"></i><%= activeReport.responder_contact || 'No contact' %></p>
+                                     <h5 class="text-white mb-1" id="respName"><%= activeReport.responder_name %> <%= activeReport.responder_last %></h5>
+                                     <p class="mb-0 text-white"><i class="fa fa-envelope me-2"></i><span id="respEmail"><%= activeReport.responder_email || 'No email' %></span></p>
+                                     <p class="mb-0 text-warning"><i class="fa fa-phone me-2"></i><span id="respContact"><%= activeReport.responder_contact || 'No contact' %></span></p>
                                  </div>
                              </div>
                              <div class="col-md-8">
@@ -75,10 +79,13 @@
                             <h5><i class="fa fa-spinner fa-spin me-2"></i>Contacting nearest units...</h5>
                             <p>Please stay in a safe location. Do not panic.</p>
                         </div>
+                        <input type="hidden" id="activeReportId" value="<%= activeReport.id %>">
                     <% } %>
+                    </div>
                 </div>
             </div>
             <% } %>
+            </div>
 
             <!-- Table Start -->
             <div class="container-fluid pt-4 px-4">
@@ -100,7 +107,7 @@
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="historyTableBody">
                                 <% if (reports.length > 0) { %>
                                     <% reports.forEach(function(report) { %>
                                     <tr>
@@ -177,6 +184,104 @@
     <script src="/js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        // Real-time Poll for Reports
+        let previousReportsJSON = '';
+
+        // Initialize status
+        <% 
+            let initialStatus = 'none';
+            let jsActive = reports.find(r => r.status === 'responding' || r.status === 'pending');
+            if(jsActive) { initialStatus = jsActive.status; }
+        %>
+        let currentPageStatus = "<%= initialStatus %>";
+
+        function pollReports() {
+            fetch('/api/my-reports-list')
+                .then(res => res.json())
+                .then(reports => {
+                    const currentJSON = JSON.stringify(reports);
+                    if (currentJSON === previousReportsJSON) return; // No change
+                    previousReportsJSON = currentJSON;
+
+                    // CHECK FOR STATUS CHANGE (Active Report Section)
+                    const latestActive = reports.find(r => r.status === 'responding' || r.status === 'pending');
+                    const newStatus = latestActive ? latestActive.status : 'none';
+
+                    if (newStatus !== currentPageStatus) {
+                         console.log("Status changed. Reloading...");
+                         location.reload();
+                         return;
+                    }
+
+                    const tbody = document.querySelector('tbody');
+                    if(reports.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="8" class="text-center">No reports found.</td></tr>';
+                        return;
+                    }
+
+                    let html = '';
+                    reports.forEach(report => {
+                        // Date
+                        const date = new Date(report.reported_at).toLocaleString();
+                        
+                        // Responder Info
+                        let responderInfo = '<span class="text-muted">Pending Assignment</span>';
+                        if (report.responder_name) {
+                            responderInfo = `${report.responder_name} ${report.responder_last || ''}<br><small class="text-muted">${report.station_name || 'Station'}</small>`;
+                        }
+
+                        // Status Badge
+                        let badge = '';
+                        if (report.status === 'pending') badge = '<span class="badge bg-warning text-dark">Pending</span>';
+                        else if (report.status === 'responding') badge = '<span class="badge bg-info text-dark">Responding</span>';
+                        else if (report.status === 'resolved') badge = '<span class="badge bg-success">Resolved</span>';
+                        else if (report.status === 'cancelled by user') badge = '<span class="badge bg-danger">Cancelled by User</span>';
+                        else if (report.status === 'cancelled by admin') badge = '<span class="badge bg-danger">Cancelled by Admin</span>';
+                        else badge = '<span class="badge bg-danger">Cancelled</span>';
+
+                        // Messages
+                        const msgs = `
+                            <small><strong>Resp:</strong> ${report.responder_message || '-'}</small><br>
+                            <small><strong>User:</strong> ${report.user_message || '-'}</small>
+                        `;
+
+                        // Actions
+                        let actions = '';
+                        if (report.status === 'pending') {
+                            actions = `
+                                <button onclick="markResolved(${report.id})" class="btn btn-sm btn-success">Resolve</button>
+                                <button onclick="cancelReport(${report.id})" class="btn btn-sm btn-outline-danger">Cancel</button>
+                            `;
+                        } else if (report.status === 'responding') {
+                            if (!report.user_confirmed_at) {
+                                actions = `<button onclick="markResolved(${report.id})" class="btn btn-sm btn-success">Resolve</button>`;
+                            } else {
+                                actions = `<span class="text-muted small">Waiting for Responder</span>`;
+                            }
+                        } else {
+                            actions = '<span class="text-muted">-</span>';
+                        }
+
+                        html += `
+                            <tr>
+                                <td>${date}</td>
+                                <td>${report.disaster_type}</td>
+                                <td>${report.location || 'Unknown'}</td>
+                                <td>${responderInfo}</td>
+                                <td>${badge}</td>
+                                <td class="text-info">${report.resolved_by || '-'}</td>
+                                <td>${msgs}</td>
+                                <td>${actions}</td>
+                            </tr>
+                        `;
+                    });
+                    tbody.innerHTML = html;
+                })
+                .catch(err => console.error(err));
+        }
+
+        setInterval(pollReports, 3000);
+
         function cancelReport(id) {
             Swal.fire({
                 title: 'Cancel Request?',
@@ -300,7 +405,7 @@
                                     L.latLng(rLat, rLng), // Start at Responder
                                     L.latLng(userLat, userLng) // End at User
                                 ],
-                                lineOptions: { styles: [{color: '#0dcaf0', opacity: 0.8, weight: 6}] },
+                                lineOptions: { styles: [{color: '#00d400', opacity: 0.9, weight: 6}] },
                                 show: false, 
                                 addWaypoints: false,
                                 draggableWaypoints: false,
@@ -316,6 +421,244 @@
              updateResponderLocation();
              setInterval(updateResponderLocation, 1000); // 1s refresh
         }
+    </script>
+     <script>
+        // Real-time Status Update
+        let previousStatus = null;
+        let mapInstance = null;
+        
+        function updateUI(data) {
+            const container = document.getElementById('activeReportContainer');
+            if (!data.exists) {
+                container.innerHTML = ''; // Clear if resolved/cancelled
+                return;
+            }
+
+            // Create Container if missing (First Load)
+            if (!container.innerHTML.trim()) {
+                location.reload(); // Simplest way to hydrate initial layout
+                return;
+            }
+
+            // Update Status Header
+            const statusText = document.getElementById('statusText');
+            if(statusText) {
+                statusText.innerText = data.status.toUpperCase();
+                statusText.className = data.status === 'responding' ? 'text-warning' : 'text-danger';
+            }
+            
+            const statusIcon = document.getElementById('statusIcon');
+            if(statusIcon) {
+                statusIcon.className = `fa ${data.status === 'responding' ? 'fa-ambulance' : 'fa-exclamation-circle'} me-2`;
+            }
+            
+            const borderBox = document.getElementById('statusBoxBorder');
+            if(borderBox) {
+                borderBox.classList.remove('border-danger', 'border-warning');
+                borderBox.classList.add(data.status === 'responding' ? 'border-warning' : 'border-danger');
+            }
+
+            // Update Action Button
+            const actionContainer = document.getElementById('actionButtonContainer');
+            if(actionContainer) {
+                if (data.status === 'responding' && data.user_confirmed_at) {
+                    actionContainer.innerHTML = '<span class="badge bg-info p-2">Waiting for Responder Confirmation</span>';
+                } else if (data.status === 'responding') {
+                    actionContainer.innerHTML = `<button class="btn btn-success fw-bold blink-bg" onclick="markResolved(${data.id})"><i class="fa fa-check-circle me-2"></i>I AM SAFE / RESOLVED</button>`;
+                } else {
+                    actionContainer.innerHTML = '<button class="btn btn-outline-danger" disabled>Cannot Cancel (Finding Responder...)</button>';
+                }
+            }
+
+            // Switch Content View (Pending to Responding)
+            const dynamicContent = document.getElementById('dynamicContent');
+            if(dynamicContent) {
+                if(data.status === 'responding') {
+                    // Check if we are already showing responding view
+                    if(!document.getElementById('trackMap')) {
+                       // Inject Responding HTML
+                       dynamicContent.innerHTML = `
+                        <div class="row g-3">
+                             <div class="col-md-4">
+                                 <div class="p-3 bg-dark rounded">
+                                     <small class="text-muted">RESPONDER DETAILS</small>
+                                     <h5 class="text-white mb-1" id="respName">${data.responder.name}</h5>
+                                     <p class="mb-0 text-white"><i class="fa fa-envelope me-2"></i><span id="respEmail">${data.responder.email || 'No email'}</span></p>
+                                     <p class="mb-0 text-warning"><i class="fa fa-phone me-2"></i><span id="respContact">${data.responder.contact || 'No contact'}</span></p>
+                                 </div>
+                             </div>
+                             <div class="col-md-8">
+                                 <div id="trackMap" style="height: 350px; width: 100%; border-radius: 8px;"></div>
+                             </div>
+                        </div>
+                        <input type="hidden" id="activeReportId" value="${data.id}">
+                        <input type="hidden" id="userLat" value="${data.location.lat}">
+                        <input type="hidden" id="userLng" value="${data.location.lng}">
+                        <input type="hidden" id="responderId" value="${data.responder.id}">
+                       `;
+                       
+                       // Initialize Map immediately after injection
+                       initTrackMap(data.location.lat, data.location.lng, data.responder.id);
+                    } else {
+                        // Just update Text
+                        const rName = document.getElementById('respName');
+                        if(rName) rName.innerText = data.responder.name;
+                        const rEmail = document.getElementById('respEmail');
+                        if(rEmail) rEmail.innerText = data.responder.email || 'No email';
+                        const rContact = document.getElementById('respContact');
+                        if(rContact) rContact.innerText = data.responder.contact || 'No contact';
+                        
+                        // Map updates handled by its own loop, just ensure ID matches
+                    }
+                } else {
+                    // Pending View
+                    if(document.getElementById('trackMap')) {
+                        // Revert to Pending
+                        dynamicContent.innerHTML = `
+                            <div class="alert alert-dark mb-0 text-center">
+                                <h5><i class="fa fa-spinner fa-spin me-2"></i>Contacting nearest units...</h5>
+                                <p>Please stay in a safe location. Do not panic.</p>
+                            </div>
+                            <input type="hidden" id="activeReportId" value="${data.id}">
+                        `;
+                    }
+                }
+            }
+        }
+
+        // Map Initialization Function (extracted)
+        function initTrackMap(userLat, userLng, responderId) {
+             if(mapInstance) { mapInstance.off(); mapInstance.remove(); }
+             
+             const mapEl = document.getElementById('trackMap');
+             if(!mapEl) return;
+             
+             mapInstance = L.map('trackMap').setView([userLat, userLng], 14);
+             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapInstance);
+             L.marker([userLat, userLng]).addTo(mapInstance).bindPopup("<b>Your Location</b>").openPopup();
+
+             // Start tracking helper
+             trackResponderOnMap(mapInstance, responderId, userLat, userLng);
+        }
+
+        let routingControl = null;
+        let responderMarker = null;
+
+        function trackResponderOnMap(map, rId, uLat, uLng) {
+             function pollLoc() {
+                 fetch(`/api/responder-track/${rId}`)
+                 .then(res => res.json())
+                 .then(d => {
+                     if(d.latitude && d.longitude) {
+                         if (!responderMarker) {
+                             const icon = L.divIcon({
+                                 className: 'custom-div-icon',
+                                 html: "<div style='background-color:orange; width: 15px; height: 15px; border-radius: 50%; border: 2px solid white;'></div>",
+                                 iconSize: [20, 20]
+                             });
+                             responderMarker = L.marker([d.latitude, d.longitude], {icon: icon}).addTo(map).bindPopup("Responder");
+                         } else {
+                             responderMarker.setLatLng([d.latitude, d.longitude]);
+                         }
+                         
+                         if (routingControl) {
+                             routingControl.setWaypoints([L.latLng(d.latitude, d.longitude), L.latLng(uLat, uLng)]);
+                         } else {
+                             routingControl = L.Routing.control({
+                                waypoints: [L.latLng(d.latitude, d.longitude), L.latLng(uLat, uLng)],
+                                lineOptions: { styles: [{color: '#00d400', opacity: 0.9, weight: 6}] },
+                                show: false, addWaypoints: false, draggableWaypoints: false, createMarker: function() { return null; }
+                           }).addTo(map);
+                         }
+                     }
+                 });
+             }
+             pollLoc();
+             setInterval(pollLoc, 2000);
+        }
+
+        // History Polling
+        let previousHistoryJSON = '';
+        
+        function updateHistoryTable() {
+            fetch('/api/user/reports-history?t=' + Date.now())
+            .then(res => res.json())
+            .then(data => {
+                const currentJSON = JSON.stringify(data);
+                if(currentJSON === previousHistoryJSON) return;
+                previousHistoryJSON = currentJSON;
+                
+                const tbody = document.getElementById('historyTableBody');
+                if(!tbody) return;
+                
+                if(data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">No reports found.</td></tr>';
+                    return;
+                }
+                
+                tbody.innerHTML = data.map(r => {
+                    let statusBadge = '';
+                    if(r.status === 'pending') statusBadge = '<span class="badge bg-warning text-dark">Pending</span>';
+                    else if(r.status === 'responding') statusBadge = '<span class="badge bg-info text-dark">Responding</span>';
+                    else if(r.status === 'resolved') statusBadge = '<span class="badge bg-success">Resolved</span>';
+                    else if(r.status.includes('cancelled')) statusBadge = '<span class="badge bg-danger text-white">' + r.status + '</span>';
+                    
+                    let actionBtn = '';
+                    if(r.status === 'pending') {
+                         actionBtn = `<button class="btn btn-sm btn-outline-danger" disabled>Finding Responder...</button>`;
+                    } else if(r.status === 'responding' && !r.user_confirmed_at) {
+                         actionBtn = `<button class="btn btn-sm btn-success fw-bold" onclick="markResolved(${r.id})">Mark Safe</button>`;
+                    } else if(r.status === 'responding') {
+                         actionBtn = `<span class="badge bg-info">Processing</span>`;
+                    }
+                    
+                    return `
+                        <tr>
+                            <td>${new Date(r.reported_at).toLocaleString()}</td>
+                            <td>${r.disaster_type}</td>
+                            <td>${r.location || 'Unknown'}</td>
+                            <td>${r.responder_name ? (r.responder_name + '<br><small class="text-muted">' + (r.station_name || 'Station') + '</small>') : '<span class="text-muted">Pending Assignment</span>'}</td>
+                            <td>${statusBadge}</td>
+                            <td class="text-info">${r.resolved_by || '-'}</td>
+                            <td>${r.resolution_remarks ? '<small>' + r.resolution_remarks + '</small>' : '-'}</td>
+                            <td>${actionBtn}</td>
+                        </tr>
+                    `;
+                }).join('');
+            })
+            .catch(e => console.error("History Poll Error", e));
+        }
+
+        // Main Polling Loop
+        function checkStatus() {
+            // Poll Active Report
+            fetch('/api/user/active-report?t=' + Date.now())
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    // Update Active UI
+                    if(document.getElementById('activeReportContainer')) {
+                         updateUI(data); // Handles existence and non-existence
+                    }
+                    previousStatus = data.status || 'none';
+                }
+            })
+            .catch(e => console.error("Poll Error", e));
+            
+            // Poll History
+            updateHistoryTable();
+        }
+        
+        setInterval(checkStatus, 2000);
+        
+        // Init map on load if already present
+        if(document.getElementById('trackMap')) {
+            const uLt = parseFloat(document.getElementById('userLat').value);
+            const uLn = parseFloat(document.getElementById('userLng').value);
+            const rId = document.getElementById('responderId').value;
+            initTrackMap(uLt, uLn, rId);
+        }
+
     </script>
 </body>
 </html>

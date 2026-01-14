@@ -88,6 +88,7 @@ app.get('/setup_db', (req, res) => {
     // Separate ALTERs and remove IF NOT EXISTS to be safe, relying on error suppression
     `ALTER TABLE disaster_reports ADD COLUMN responder_confirmed_at TIMESTAMP NULL`,
     `ALTER TABLE disaster_reports ADD COLUMN user_confirmed_at TIMESTAMP NULL`
+    // ACTION COLUMN ADDED VIA MIGRATION SCRIPT
   ];
 
   let logs = [];
@@ -141,7 +142,7 @@ app.get('/weather', (req, res) => {
   if (req.session.loggedin && req.session.role === 'user') {
     db.query('SELECT * FROM requests ORDER BY created_at DESC', (err, results) => {
       if (err) throw err;
-      res.render('pages/weather', { users: results, username: req.session.username, apiKey: process.env.OWM_API_KEY });
+      res.render('pages/weather', { users: results, username: req.session.username, apiKey: process.env.OWM_API_KEY, page: 'weather' });
     });
   } else {
     res.redirect('/visitor');
@@ -152,9 +153,18 @@ app.get('/weather', (req, res) => {
 // index
 app.get('/', (req, res) => {
   if (req.session.loggedin && req.session.role === 'user') {
-    res.render('pages/index', { username: req.session.username, apiKey: process.env.OWM_API_KEY });
+    res.render('pages/index', { username: req.session.username, apiKey: process.env.OWM_API_KEY, page: 'home' });
   } else {
     res.redirect('/visitor');
+  }
+});
+
+// index
+app.get('/home', (req, res) => {
+  if (req.session.loggedin && req.session.role === 'user') {
+    res.redirect('/send-sos');
+  } else {
+    res.redirect('/login');
   }
 });
 
@@ -187,7 +197,7 @@ app.get('/send-sos', (req, res) => {
   if (req.session.loggedin && req.session.role === 'user') {
     db.query('SELECT * FROM users', (err, results) => {
       if (err) throw err;
-      res.render('pages/sos', { users: results, username: req.session.username });
+      res.render('pages/sos', { users: results, username: req.session.username, page: 'send-sos' });
     });
   } else {
     res.redirect('/login');
@@ -238,23 +248,14 @@ app.post('/report', async (req, res) => {
     const sql = `INSERT INTO disaster_reports (user_id, disaster_type, location, latitude, longitude) VALUES (?, ?, ?, ?, ?)`;
     db.query(sql, [userId, disaster_type, locationToStore, finalLat, finalLon], (err, result) => {
       if (err) throw err;
-      res.send(`<script>alert('Disaster Reported Successfully!'); window.location.href='/sos-otw';</script>`);
+      res.send(`<script>alert('Disaster Reported Successfully!'); window.location.href='/my-reports';</script>`);
     });
   } else {
     res.redirect('/login');
   }
 });
 
-app.get('/sos-otw', (req, res) => {
-  if (req.session.loggedin && req.session.role === 'user') {
-    db.query('SELECT * FROM users', (err, results) => {
-      if (err) throw err;
-      res.render('pages/sos-otw', { users: results, username: req.session.username });
-    });
-  } else {
-    res.redirect('/login');
-  }
-});
+// Removed /sos-otw route as per request (replaced by my-reports)
 
 // [NEW] API to track responder location
 app.get('/api/responder-track/:id', (req, res) => {
@@ -269,13 +270,83 @@ app.get('/api/responder-track/:id', (req, res) => {
   }
 });
 
+// [NEW] API for User Polling (Auto-refresh & Data)
+app.get('/api/user/active-report', (req, res) => {
+  if (req.session.loggedin && req.session.role === 'user') {
+    const userId = req.session.userId;
+    // Get the most recent active report with FULL details
+    const sql = `
+      SELECT dr.*, 
+             u.firstname as reporter_first, u.lastname as reporter_last,
+             r.firstname as responder_first, r.lastname as responder_last, 
+             r.contact_number as responder_contact, r.email as responder_email,
+             r.id as responder_id
+      FROM disaster_reports dr
+      LEFT JOIN users u ON dr.user_id = u.id
+      LEFT JOIN responders r ON dr.responder_id = r.id
+      WHERE dr.user_id = ? AND dr.status IN ('pending', 'responding')
+      ORDER BY dr.reported_at DESC LIMIT 1
+    `;
+
+    db.query(sql, [userId], (err, results) => {
+      if (err) return res.status(500).json({ error: "DB Error" });
+
+      if (results.length > 0) {
+        const r = results[0];
+        res.json({
+          success: true,
+          exists: true,
+          id: r.id,
+          status: r.status,
+          user_confirmed_at: r.user_confirmed_at,
+          responder: {
+            id: r.responder_id,
+            name: r.responder_first ? (r.responder_first + ' ' + r.responder_last) : 'Pending',
+            email: r.responder_email,
+            contact: r.responder_contact,
+          },
+          location: {
+            lat: r.latitude,
+            lng: r.longitude
+          }
+        });
+      } else {
+        res.json({ success: true, exists: false });
+      }
+    });
+  } else {
+    res.status(401).json({ error: 'Unauthorized' });
+  }
+});
+
+app.get('/api/user/reports-history', (req, res) => {
+  if (req.session.loggedin && req.session.role === 'user') {
+    const userId = req.session.userId;
+    const sql = `
+      SELECT dr.*, 
+             CONCAT(r.firstname, ' ', r.lastname) as responder_name,
+             dr.resolved_by
+      FROM disaster_reports dr
+      LEFT JOIN responders r ON dr.responder_id = r.id
+      WHERE dr.user_id = ?
+      ORDER BY dr.reported_at DESC
+    `;
+    db.query(sql, [userId], (err, results) => {
+      if (err) return res.status(500).json({ error: "DB Error" });
+      res.json(results);
+    });
+  } else {
+    res.status(401).json({ error: 'Unauthorized' });
+  }
+});
+
 // ********************************************************* test *** nearby stations ********************************************
 //NEARBY LOCS
 app.get('/nearby-stations', (req, res) => {
   if (req.session.loggedin && req.session.role === 'user') {
     db.query('SELECT * FROM users', (err, results) => {
       if (err) throw err;
-      res.render('pages/nearby-stations', { users: results, username: req.session.username });
+      res.render('pages/nearby-stations', { users: results, username: req.session.username, page: 'stations' });
     });
   } else {
     res.redirect('/login');
@@ -343,7 +414,7 @@ app.get('/editaccount', (req, res) => {
     db.query('SELECT * FROM users WHERE id = ?', [userId], (err, results) => {
       if (err) throw err;
       if (results.length > 0) {
-        res.render('pages/editprofile', { user: results[0], username: req.session.username });
+        res.render('pages/editprofile', { user: results[0], username: req.session.username, page: 'edit-account' });
       } else {
         res.send(`<script>alert('Not Found user!');</script>`);
       }
@@ -377,7 +448,7 @@ app.get('/help-user', (req, res) => {
   if (req.session.loggedin && req.session.role === 'user') {
     db.query('SELECT * FROM users', (err, results) => {
       if (err) throw err;
-      res.render('pages/help-user', { users: results, username: req.session.username });
+      res.render('pages/help-user', { users: results, username: req.session.username, page: 'help-user' });
     });
   } else {
     res.redirect('/login');
@@ -463,32 +534,68 @@ app.post('/login', (req, res) => {
 
 app.get('/responder', (req, res) => {
   if (req.session.loggedin && req.session.role === 'responder') {
-    const query = `
-      SELECT dr.id, dr.disaster_type, dr.location, dr.latitude, dr.longitude, dr.status, dr.reported_at, u.firstname, u.lastname
-      FROM disaster_reports dr
-      LEFT JOIN users u ON dr.user_id = u.id
-      WHERE dr.status NOT IN ('resolved', 'cancelled by user', 'cancelled by admin')
+    const responderId = req.session.userId;
+
+    // 1. Check for Active Mission FIRST
+    const checkMissionSql = `
+      SELECT d.id 
+      FROM deploys d
+      JOIN disaster_reports dr ON d.incident_id = dr.id
+      WHERE d.responder_id = ? AND d.status = 'pending' 
+      LIMIT 1
     `;
-    db.query(query, (err, results) => {
-      if (err) {
-        console.error("Error fetching reports for responder:", err);
-        // Fallback with empty reports if DB fails, to avoid crashing the page
-        res.render('pages/responder', {
-          username: req.session.username,
-          apiKey: process.env.OWM_API_KEY,
-          page: 'dashboard',
-          role: 'responder',
-          reports: []
-        });
-      } else {
-        res.render('pages/responder', {
-          username: req.session.username,
-          apiKey: process.env.OWM_API_KEY,
-          page: 'dashboard',
-          role: 'responder',
-          reports: results
-        });
+
+    db.query(checkMissionSql, [responderId], (err, missionRows) => {
+      if (err) { console.error(err); }
+
+      if (missionRows && missionRows.length > 0) {
+        // Active mission exists! Redirect to responding page immediately.
+        return res.redirect('/responding');
       }
+
+      // 2. No Active Mission? Render Dashboard
+      const query = `
+          SELECT dr.id, dr.disaster_type, dr.location, dr.latitude, dr.longitude, dr.status, dr.reported_at, u.firstname, u.lastname
+          FROM disaster_reports dr
+          LEFT JOIN users u ON dr.user_id = u.id
+          WHERE dr.status IN ('pending') 
+          AND dr.responder_id IS NULL
+        `;
+      // Note: Filtered to only 'pending' and unassigned reports to be cleaner? 
+      // Or keep original query: status NOT IN resolved/cancelled
+      // Original: status NOT IN ('resolved', 'cancelled by user', 'cancelled by admin')
+      // Let's stick to original to be safe, but maybe filter out ones assigned to others?
+      // Actually, "Respond Here" implies claiming it. If it's already "responding", can you claim it?
+      // Usually no. The 'nearby-reports' table implies available reports.
+      // Let's refine the query to only show available reports to avoid confusion too.
+
+      const safeQuery = `
+          SELECT dr.id, dr.disaster_type, dr.location, dr.latitude, dr.longitude, dr.status, dr.reported_at, u.firstname, u.lastname
+          FROM disaster_reports dr
+          LEFT JOIN users u ON dr.user_id = u.id
+          WHERE dr.status = 'pending' 
+        `;
+
+      db.query(safeQuery, (err, results) => {
+        if (err) {
+          console.error("Error fetching reports for responder:", err);
+          res.render('pages/responder', {
+            username: req.session.username,
+            apiKey: process.env.OWM_API_KEY,
+            page: 'dashboard',
+            role: 'responder',
+            reports: []
+          });
+        } else {
+          res.render('pages/responder', {
+            username: req.session.username,
+            apiKey: process.env.OWM_API_KEY,
+            page: 'dashboard',
+            role: 'responder',
+            reports: results
+          });
+        }
+      });
     });
   } else {
     res.redirect('/login');
@@ -640,7 +747,7 @@ app.get('/api/responders', (req, res) => {
   // Query RESPONDERS table
   const query = `
     SELECT 
-      r.id, r.firstname, r.lastname, r.latitude, r.longitude, r.status, r.contact_number, r.station_id,
+      r.id, r.firstname, r.lastname, r.latitude, r.longitude, r.status, r.action, r.contact_number, r.station_id,
       s.latitude as station_lat, s.longitude as station_lng, s.name as station_name,
       (SELECT COUNT(*) FROM deploys d WHERE d.responder_id = r.id) as deploys_count
     FROM responders r
@@ -681,8 +788,8 @@ app.post('/api/deploy', (req, res) => {
       if (resRes.length === 0) return res.status(404).json({ error: 'Responder not found' });
 
       const responder = resRes[0];
-      if (responder.status === 'deployed') {
-        return res.status(400).json({ success: false, message: 'Responder is already deployed and cannot be reassigned until the current incident is resolved.' });
+      if (responder.status === 'deployed' || responder.action === 'responding') {
+        return res.status(400).json({ success: false, message: 'Responder is already responding and cannot be reassigned.' });
       }
 
       const stationId = responder.station_id;
@@ -692,7 +799,7 @@ app.post('/api/deploy', (req, res) => {
 
         // 2. Transaction Queries
         const insertDeploy = `INSERT INTO deploys (responder_id, station_id, incident_id, user_id, status) VALUES (?, ?, ?, ?, 'pending')`;
-        const updateResponder = `UPDATE responders SET status = 'deployed' WHERE id = ?`;
+        const updateResponder = `UPDATE responders SET status = 'deployed', action = 'responding' WHERE id = ?`;
         const updateIncident = `UPDATE disaster_reports SET status = 'responding', responder_id = ? WHERE id = ?`;
 
         db.beginTransaction(err => {
@@ -736,10 +843,15 @@ app.get('/api/incidents', (req, res) => {
             dr.responder_id,
             dr.responder_confirmed_at,
             dr.user_confirmed_at,
+            dr.user_message,
+            dr.responder_message,
+            dr.resolution_remarks,
             "disaster_report" as type,
-            CONCAT(r.firstname, ' ', r.lastname) as responder_name
+            CONCAT(r.firstname, ' ', r.lastname) as responder_name,
+            CONCAT(u.firstname, ' ', u.lastname) as sender
         FROM disaster_reports dr
         LEFT JOIN responders r ON dr.responder_id = r.id
+        LEFT JOIN users u ON dr.user_id = u.id
         ORDER BY dr.reported_at DESC
     `;
 
@@ -775,7 +887,7 @@ app.post('/api/respond', (req, res) => {
 
         db.beginTransaction(err => {
           const q1 = 'UPDATE disaster_reports SET status = "responding", responder_id = ? WHERE id = ?';
-          const q2 = 'UPDATE responders SET status = "deployed" WHERE id = ?';
+          const q2 = 'UPDATE responders SET status = "deployed", action = "responding" WHERE id = ?';
           const q3 = 'INSERT INTO deploys (responder_id, station_id, incident_id, user_id, status) VALUES (?, ?, ?, ?, "pending")';
 
           db.query(q1, [responderId, reportId], (err) => {
@@ -811,7 +923,8 @@ app.get('/api/my-current-mission', (req, res) => {
         dr.longitude,
         CONCAT(u.firstname, ' ', u.lastname) as reported_by,
         u.contact_number as reporter_contact,
-        dr.reported_at
+        dr.reported_at,
+        dr.user_confirmed_at
       FROM deploys d
       JOIN disaster_reports dr ON d.incident_id = dr.id
       LEFT JOIN users u ON d.user_id = u.id
@@ -828,6 +941,35 @@ app.get('/api/my-current-mission', (req, res) => {
 });
 
 
+
+// [NEW] API for Admin Map - Responders
+app.get('/api/responders', (req, res) => {
+  if (req.session.loggedin && (req.session.role === 'admin' || req.session.role === 'responder')) {
+    db.query('SELECT id, firstname, lastname, latitude, longitude, status, station_id, contact_number FROM responders', (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(results);
+    });
+  } else {
+    res.status(401).json({ error: 'Unauthorized' });
+  }
+});
+
+// [NEW] API for Admin Dashboard Stats
+app.get('/api/admin/stats', (req, res) => {
+  if (req.session.loggedin && req.session.role === 'admin') {
+    const sql = `
+       SELECT 
+         (SELECT COUNT(*) FROM users) as totalUsers,
+         (SELECT COUNT(*) FROM disaster_reports) as totalRequests
+     `;
+    db.query(sql, (err, results) => {
+      if (err) return res.status(500).json({ error: err.message });
+      res.json(results[0]);
+    });
+  } else {
+    res.status(401).json({ error: 'Unauthorized' });
+  }
+});
 
 // *************************************** login end **********************************
 
@@ -926,7 +1068,7 @@ app.post('/api/resolve', (req, res) => {
           const combinedRemarks = `Responder: ${r.responder_message || '-'} | User: ${r.user_message || '-'}`;
 
           const q1 = `UPDATE disaster_reports SET status = 'resolved', resolution_remarks = ?, resolved_by = ? WHERE id = ?`;
-          const q2 = `UPDATE responders SET status = 'active' WHERE id = ?`; // Free the responder
+          const q2 = `UPDATE responders SET status = 'active', action = 'standby' WHERE id = ?`; // Free the responder
           // Save Responder's own message in their deploy log
           const q3 = `UPDATE deploys SET status = 'resolved', resolved_at = NOW(), remarks = ? WHERE incident_id = ? AND status = 'pending'`;
 
@@ -966,7 +1108,8 @@ app.get('/my-reports', (req, res) => {
       if (err) console.error(err);
       res.render('pages/my-reports', {
         reports: results || [],
-        username: req.session.username
+        username: req.session.username,
+        page: 'my-reports'
       });
     });
   } else {
@@ -990,7 +1133,7 @@ app.post('/api/cancel_report', (req, res) => {
         // Transaction
         db.beginTransaction(err => {
           db.query('UPDATE disaster_reports SET status = "cancelled by user" WHERE id = ?', [id]);
-          db.query('UPDATE responders SET status = "active" WHERE id = ?', [responderId]);
+          db.query('UPDATE responders SET status = "active", action = "standby" WHERE id = ?', [responderId]);
           db.query('UPDATE deploys SET status = "cancelled by user", remarks = "User Cancelled" WHERE incident_id = ? AND status = "pending"', [id]);
 
           db.commit(err => {
@@ -1021,7 +1164,7 @@ app.post('/api/admin/cancel_report', (req, res) => {
         const responderId = report.responder_id;
         db.beginTransaction(err => {
           db.query('UPDATE disaster_reports SET status = "cancelled by admin" WHERE id = ?', [id]);
-          db.query('UPDATE responders SET status = "active" WHERE id = ?', [responderId]);
+          db.query('UPDATE responders SET status = "active", action = "standby" WHERE id = ?', [responderId]);
           db.query('UPDATE deploys SET status = "cancelled by admin", remarks = "Admin Cancelled" WHERE incident_id = ? AND status = "pending"', [id]);
 
           db.commit(err => {
@@ -1595,9 +1738,16 @@ app.get('/disaster-reports', (req, res) => {
         dr.latitude,
         dr.longitude,
         dr.reported_at,
-        dr.status
+        dr.status,
+        dr.user_message,
+        dr.responder_message,
+        dr.resolution_remarks,
+        dr.user_confirmed_at,
+        dr.responder_confirmed_at,
+        CONCAT(r.firstname, ' ', r.lastname) as responder_name
       FROM disaster_reports dr
       JOIN users ON users.id = dr.user_id
+      LEFT JOIN responders r ON dr.responder_id = r.id
       ORDER BY dr.reported_at DESC;
     `;
 
@@ -1757,16 +1907,24 @@ app.get('/logout', (req, res) => {
 });
 
 app.get('/api/status-overview', (req, res) => {
-  const usersQuery = 'SELECT id, status FROM users';
-  const respondersQuery = 'SELECT id, status FROM responders';
+  if (req.session.loggedin && req.session.role === 'admin') {
+    const usersQuery = 'SELECT id, firstname, lastname, city, barangay, contact_number, status FROM users';
+    const respondersQuery = `
+      SELECT r.id, r.firstname, r.lastname, r.status, r.contact_number, s.name as station_name 
+      FROM responders r 
+      LEFT JOIN stations s ON r.station_id = s.id
+    `;
 
-  db.query(usersQuery, (err, users) => {
-    if (err) return res.status(500).json({ error: err.message });
-    db.query(respondersQuery, (err, responders) => {
+    db.query(usersQuery, (err, users) => {
       if (err) return res.status(500).json({ error: err.message });
-      res.json({ users, responders });
+      db.query(respondersQuery, (err, responders) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ users, responders });
+      });
     });
-  });
+  } else {
+    res.status(401).json({ error: 'Unauthorized' });
+  }
 });
 
 app.listen(PORT, '0.0.0.0', () => {

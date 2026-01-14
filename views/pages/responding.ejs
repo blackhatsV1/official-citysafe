@@ -46,15 +46,17 @@
                    <small>Go to the incident location. Once resolved, click the button.</small>
                 </div>
                 
-                <% if (!mission.user_confirmed_at) { %>
-                    <button class="btn btn-secondary text-white" disabled>
-                        <i class="fa fa-hourglass-half me-2"></i>Waiting for User Report...
-                    </button>
-                <% } else { %>
-                    <button onclick="resolveMission(<%= mission.incident_id %>)" class="btn btn-success fw-bold">
-                        <i class="fa fa-check-circle me-2"></i>MARK AS RESOLVED
-                    </button>
-                <% } %>
+                <div id="resolve-btn-container">
+                    <% if (!mission.user_confirmed_at) { %>
+                        <button class="btn btn-secondary text-white" disabled>
+                            <i class="fa fa-hourglass-half me-2"></i>Waiting for User Report...
+                        </button>
+                    <% } else { %>
+                        <button onclick="resolveMission(<%= mission.incident_id %>)" class="btn btn-success fw-bold">
+                            <i class="fa fa-check-circle me-2"></i>MARK AS RESOLVED
+                        </button>
+                    <% } %>
+                </div>
             </div>
 
             <div class="row g-4">
@@ -251,22 +253,22 @@
                 }
 
                 // Update Resolve Button State
-                const actionDiv = document.querySelector('.alert-dark');
-                if (actionDiv) {
-                    const currentBtn = actionDiv.querySelector('button');
+                const container = document.getElementById('resolve-btn-container');
+                if (container) {
+                    const currentBtn = container.querySelector('button');
+                    // Check if we need to Enable
                     if (mission.user_confirmed_at) {
-                        // User Confirmed -> Enable Button if not already enabled
                         if (currentBtn.disabled) {
-                            actionDiv.querySelector('div:last-child').innerHTML = `
+                            container.innerHTML = `
                                 <button onclick="resolveMission(${mission.incident_id})" class="btn btn-success fw-bold">
                                     <i class="fa fa-check-circle me-2"></i>MARK AS RESOLVED
                                 </button>
                             `;
                         }
                     } else {
-                        // User Not Confirmed -> Ensure Disabled
+                        // Check if we need to Disable
                         if (!currentBtn.disabled) {
-                             actionDiv.querySelector('div:last-child').innerHTML = `
+                             container.innerHTML = `
                                 <button class="btn btn-secondary text-white" disabled>
                                     <i class="fa fa-hourglass-half me-2"></i>Waiting for User Report...
                                 </button>

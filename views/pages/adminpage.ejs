@@ -80,8 +80,8 @@
           <div class="container-fluid pt-4 px-4">
             <div class="bg-secondary text-center rounded p-4">
               <p>Full-size version on the <a href="/reports">Charts Tab</a>.</p>
-              <p>CitySafe Total Users: <strong class="text-primary"><%= totalUsers %></strong></p>
-              <p>There are currently <strong><a href="/disaster-reports"><%= totalRequests %></strong> SOS Reports</a>.</p>
+              <p>CitySafe Total Users: <strong class="text-primary" id="total-users-count"><%= totalUsers %></strong></p>
+              <p>There are currently <strong><a href="/disaster-reports"><span id="total-requests-count"><%= totalRequests %></span></strong> SOS Reports</a>.</p>
             </div>
           </div>
           <!-- Weather Info End -->
@@ -403,7 +403,7 @@ var trendChart = new Chart(ctx4, {
         adminMarkersLayer = L.layerGroup().addTo(adminMap);
         
         refreshMapData();
-        setInterval(refreshMapData, 30000); // Auto-refresh
+        setInterval(refreshMapData, 5000); // Auto-refresh every 5s
     }
 
     function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -423,24 +423,37 @@ var trendChart = new Chart(ctx4, {
 
     async function refreshMapData() {
         // Fetch Data
-        const [resResponders, resIncidents] = await Promise.all([
-            fetch('/api/responders'),
-            fetch('/api/incidents')
-        ]);
-        
-        responders = await resResponders.json();
-        incidents = await resIncidents.json();
-        
-        plotMap();
+        try {
+            const [resResponders, resIncidents, resStats] = await Promise.all([
+                fetch('/api/responders'),
+                fetch('/api/incidents'),
+                fetch('/api/admin/stats')
+            ]);
+            
+            responders = await resResponders.json();
+            incidents = await resIncidents.json();
+            const stats = await resStats.json();
+
+            // Update Stats
+            if(stats) {
+                const uCount = document.getElementById('total-users-count');
+                const rCount = document.getElementById('total-requests-count');
+                if(uCount) uCount.innerText = stats.totalUsers;
+                if(rCount) rCount.innerText = stats.totalRequests;
+            }
+            
+            plotMap();
+        } catch(e) { console.error("Refresh error:", e); }
     }
 
     async function plotMap() {
         adminMarkersLayer.clearLayers();
         if(oms) oms.clearMarkers();
 
-        // Plot Responders
+        // Plot Responders (Logged In Only)
         responders.forEach(r => {
-             if(r.latitude && r.longitude) {
+             // Show only active or deployed (exclude offline)
+             if(r.latitude && r.longitude && r.status !== 'offline') {
                  const statusColor = r.status === 'active' ? 'green' : (r.status === 'deployed' ? 'yellow' : 'gray');
                  const icon = L.divIcon({
                      className: 'custom-pd-icon',
@@ -453,8 +466,12 @@ var trendChart = new Chart(ctx4, {
              }
         });
 
-        // Plot Incidents
+        // Plot Incidents (Unresolved Only)
         for(let incident of incidents) {
+            // Filter: Show only pending or responding
+            const isUnresolved = incident.status === 'pending' || incident.status === 'responding';
+            if (!isUnresolved) continue;
+
             if(incident.latitude && incident.longitude) {
                 addIncidentMarker({lat: incident.latitude, lon: incident.longitude}, incident);
             } else if(incident.location) {
@@ -573,234 +590,24 @@ var trendChart = new Chart(ctx4, {
 
     let deployMap = null; // Global for modal map
 
-    window.openDeployModal = async function(id, type, lat, lng, disasterType, reportDate) {
-        Swal.fire({
-            title: 'Scanning Area...',
-            text: 'Searching for stations within 4km...',
-            allowOutsideClick: false,
-            didOpen: () => { Swal.showLoading() }
-        });
-
-        try {
-             // Fetch Data (Parallel)
-             const [respRes, stnRes] = await Promise.all([
-                 fetch('/api/responders'),
-                 fetch('/api/stations')
-             ]);
-
-             if (!respRes.ok || !stnRes.ok) throw new Error('Failed to fetch data');
-             
-             const responders = await respRes.json();
-             const stations = await stnRes.json();
-
-             // Process Stations
-             const processedStations = stations.map(s => {
-                 let sLat = parseFloat(s.latitude);
-                 let sLng = parseFloat(s.longitude);
-                 let dist = 99999;
-                 if (!isNaN(sLat) && !isNaN(sLng)) {
-                     dist = calculateDistance(sLat, sLng, lat, lng);
-                 }
-                 return { ...s, lat: sLat, lng: sLng, dist, responders: [] };
-             }).sort((a,b) => a.dist - b.dist); 
-
-             // Map Responders to Stations
-             responders.forEach(r => {
-                 const stn = processedStations.find(s => s.id === r.station_id);
-                 if (stn) {
-                     stn.responders.push(r);
-                 }
-             });
-
-             // Build Flat List of Deployable Responders
-             let deployableResponders = [];
-             processedStations.forEach(stn => {
-                 stn.responders.forEach(r => {
-                     r.distStation = stn.dist;
-                     r.station_name = stn.name;
-                     r.station_lat = stn.lat;
-                     r.station_lng = stn.lng;
-                     const currentLoad = stn.responders.filter(rx => rx.status === 'deployed').length;
-                     r.currentLoad = currentLoad;
-                     r.isStationFull = currentLoad >= 3;
-                     deployableResponders.push(r);
-                 });
-             });
-
-             // Check 4km Radius
-             if (processedStations.length === 0 || processedStations[0].dist > 4.0) {
-                 Swal.fire({
-                    icon: 'warning',
-                    title: 'No Nearby Stations',
-                    html: `
-                        <div class="text-center">
-                            <p class="mb-2" style="font-size: 1.1rem; color: #fff;">No registered stations or responders found in your area.</p>
-                            <p class="text-muted small mb-4">Nearest station is <strong>${processedStations.length > 0 ? processedStations[0].dist.toFixed(1) + 'km' : 'N/A'}</strong> away.</p>
-                            
-                            <div style="border-top: 1px solid rgba(255, 170, 0, 0.3); margin: 20px 0;"></div>
-                            
-                            <p class="mb-3 text-uppercase" style="letter-spacing: 1px; font-size: 0.9rem; color: #aaa;">Emergency Hotlines</p>
-                            <div class="row g-3">
-                                <div class="col-6"><div class="p-3" style="background: rgba(255, 255, 255, 0.05); border: 1px solid #ffaa00; border-radius: 8px;"><div class="mb-1 text-uppercase" style="font-weight: 600; font-size: 0.9rem;">PNP / Police</div><div style="font-size: 3.5rem; font-weight: 900; line-height: 1; color: #ffaa00;">117</div></div></div>
-                                <div class="col-6"><div class="p-3" style="background: rgba(255, 255, 255, 0.05); border: 1px solid #ffaa00; border-radius: 8px;"><div class="mb-1 text-uppercase" style="font-weight: 600; font-size: 0.9rem;">BFP / Fire</div><div style="font-size: 3.5rem; font-weight: 900; line-height: 1; color: #ffaa00;">911</div></div></div>
-                            </div>
-                        </div>
-                    `,
-                    confirmButtonText: 'OK'
-                 });
-                 return;
-             }
-
-             // Build Modal HTML
-             const html = `
-                 <div id="deployMap" style="height: 300px; width: 100%; margin-bottom: 15px; border-radius: 5px;"></div>
-                 <div class="d-flex justify-content-between mb-2">
-                     <small class="text-muted">Showing All Stations</small>
-                     <small class="text-muted">Sort: Nearest Station</small>
-                 </div>
-                     ${processedStations.map(stn => {
-                         // Only show stations with responders? User said "each station must have at least one responder... to be deployed"
-                         // But we can show the station header and "No responders" if empty, or just skip it.
-                         // Let's show it for completeness but indicate empty.
-                         const hasResponders = stn.responders && stn.responders.length > 0;
-                         if (!hasResponders) return ''; // Skip empty stations to reduce clutter
-
-                         return `
-                             <div class="mb-3 border rounded p-2 bg-light text-dark">
-                                 <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-1">
-                                     <strong><i class="fa fa-hospital me-1"></i> ${stn.name}</strong>
-                                     <span class="badge bg-secondary">${stn.dist.toFixed(2)} km</span>
-                                 </div>
-                                 <div class="list-group list-group-flush">
-                                     ${stn.responders.map(r => {
-                                         const isDeployed = r.status === 'deployed';
-                                         const isOffline = r.status === 'offline';
-                                         const isBusy = isDeployed || isOffline;
-                                         
-                                         // If offline, maybe don't show? Or show as disabled.
-                                         // User said: "regarding how they are" (status)
-                                         
-                                         let btnClass = isBusy ? 'list-group-item-secondary' : 'list-group-item-action list-group-item-success';
-                                         let disabledAttr = isBusy ? 'disabled' : `onclick="confirmDeploy(${r.id}, ${lat}, ${lng}, '${id}', '${type}')"`;
-                                         let statusBadge = '';
-                                         if(isDeployed) statusBadge = '<span class="badge bg-warning text-dark">DEPLOYED</span>';
-                                         else if(isOffline) statusBadge = '<span class="badge bg-dark">OFFLINE</span>';
-                                         else statusBadge = '<span class="badge bg-success">READY</span>';
-                                         
-                                         return `
-                                         <button type="button" class="list-group-item ${btnClass} d-flex justify-content-between align-items-center" ${disabledAttr}>
-                                             <div>
-                                                 <strong>${r.firstname} ${r.lastname}</strong>
-                                                 <!-- <small class="d-block text-muted">Contact: ${r.contact_number}</small> -->
-                                             </div>
-                                             <div>
-                                                 <small class="me-2">${r.deploys_count || 0} Missions</small>
-                                                 ${statusBadge}
-                                             </div>
-                                         </button>
-                                         `;
-                                     }).join('')}
-                                 </div>
-                             </div>
-                         `;
-                     }).join('') || '<div class="alert alert-warning">No operational stations with responders found nearby.</div>'}
-                 </div>
-             `;
-
-             // Show Modal
-             Swal.fire({
-                 title: 'Deploy Responder',
-                 html: html,
-                 width: '800px',
-                 showConfirmButton: false,
-                 showCloseButton: true,
-                 didOpen: () => {
-                     if(deployMap) { deployMap.off(); deployMap.remove(); deployMap = null; }
-                     
-                     deployMap = L.map('deployMap').setView([lat, lng], 13);
-                     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(deployMap);
-
-                     // Incident Marker (Match Style)
-                     let markerColor = '#dc3545'; 
-                     let iconClass = 'fa-exclamation-triangle';
-                     const typeLower = (disasterType || 'General').toLowerCase();
-                     if (typeLower.includes('flood')) { markerColor = '#0dcaf0'; iconClass = 'fa-water'; }
-                     else if (typeLower.includes('earthquake')) { markerColor = '#fd7e14'; iconClass = 'fa-globe-americas'; }
-                     else if (typeLower.includes('landslide')) { markerColor = '#795548'; iconClass = 'fa-mountain'; }
-                     else if (typeLower.includes('fire')) { markerColor = '#dc3545'; iconClass = 'fa-fire'; }
-                     else if (typeLower.includes('accident')) { markerColor = '#6f42c1'; iconClass = 'fa-car-crash'; }
-
-                     const incidentIcon = L.divIcon({
-                        className: 'custom-div-icon',
-                        html: `<div style="background-color:${markerColor}; width: 32px; height: 32px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; color: white; font-size: 14px;"><i class="fa ${iconClass}"></i></div>`,
-                        iconSize: [32, 32],
-                        iconAnchor: [16, 32],
-                        popupAnchor: [0, -20]
-                     });
-                     
-                     L.marker([lat, lng], {icon: incidentIcon}).addTo(deployMap)
-                      .bindPopup(`<b>${disasterType}</b><br>Time: ${reportDate}`).openPopup();
-
-                    // Plot Stations
-                    processedStations.forEach(s => {
-                        if (!s.lat || !s.lng) return;
-                        const deployedCount = s.responders.filter(rx => rx.status === 'deployed').length;
-                        let color = deployedCount >= 3 ? 'red' : 'green';
-                        const icon = L.divIcon({
-                            className: 'custom-div-icon',
-                            html: `<div style="background-color:${color}; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 4px black;"></div>`,
-                            iconSize: [12, 12]
-                        });
-                        L.marker([s.lat, s.lng], {icon: icon}).addTo(deployMap);
-                    });
-                    
-                    // Real Route to Nearest (Visual)
-                    if (processedStations.length > 0 && processedStations[0].lat && processedStations[0].lng) {
-                        const s = processedStations[0];
-                        
-                        // Use Routing Machine
-                        L.Routing.control({
-                            waypoints: [
-                                L.latLng(s.lat, s.lng),
-                                L.latLng(lat, lng)
-                            ],
-                            lineOptions: { styles: [{color: 'blue', opacity: 0.6, weight: 4}] },
-                            createMarker: function() { return null; },
-                            addWaypoints: false,
-                            draggableWaypoints: false,
-                            fitSelectedRoutes: true,
-                            show: false // Try to minimize, use CSS to hide if needed
-                        }).addTo(deployMap);
-                        
-                        // Add CSS to hide the routing panel in this modal (it's too small)
-                        const style = document.createElement('style');
-                        style.innerHTML = '#deployMap .leaflet-routing-container { display: none; }';
-                        document.head.appendChild(style);
-                    }
-                 }
-             });
-
-        } catch(e) {
-            Swal.fire('Error', 'Failed to load deployment data: ' + e.message, 'error');
+    window.openDeployModal = async function(reportId, type, incLat, incLon, reportType, reportDate) {
+        if (typeof window.openSharedDeployModal === 'function') {
+            await window.openSharedDeployModal({
+                reportId: reportId,
+                lat: incLat,
+                lng: incLon,
+                type: reportType || type,
+                dateStr: reportDate,
+                locationStr: `Lat: ${incLat.toFixed(5)}, Lon: ${incLon.toFixed(5)}`
+            });
+        } else {
+            console.error("Shared deploy functionality (script.js) not loaded.");
+            Swal.fire('Error', 'Deployment system not initialized. Please refresh.', 'error');
         }
-    };
+    }
 
-    window.confirmDeploy = function(responderId, lat, lng, incidentId, type) {
-        fetch('/api/deploy', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ responderId, lat, lng, incidentId, type })
-        })
-        .then(res => res.json())
-        .then(data => {
-            if(data.success) {
-                Swal.fire('Deployed!', 'Responder has been deployed.', 'success');
-                refreshMapData();
-            } else {
-                Swal.fire('Error', 'Failed to deploy.', 'error');
-            }
-        });
-    };
+
+    // confirmDeploy is now confirmDeployShared in script.js
 
 
     // Initialize Map on Load if container exists

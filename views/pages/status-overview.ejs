@@ -107,32 +107,46 @@
             const response = await fetch('/api/status-overview');
             const data = await response.json();
 
-            // Update Responders
+            // Rebuild Responders Table
+            const respTbody = document.querySelector('div.col-12.col-xl-6:first-child tbody');
+            let respHtml = '';
             data.responders.forEach(r => {
-                const row = document.querySelector(`tr[data-id="${r.id}"][data-role="responder"]`);
-                if (row) {
-                    const sessionBadge = row.cells[2].querySelector('.badge');
-                    const dutyBadge = row.cells[3].querySelector('.badge');
-
-                    // Update Session Badge
-                    sessionBadge.textContent = r.status !== 'offline' ? 'logged in' : 'logged out';
-                    sessionBadge.className = r.status !== 'offline' ? 'badge bg-success' : 'badge bg-dark text-white';
-
-                    // Update Duty Badge
-                    dutyBadge.textContent = r.status === 'deployed' ? 'deployed' : 'active';
-                    dutyBadge.className = r.status === 'deployed' ? 'badge bg-warning' : 'badge bg-primary';
-                }
+                const sessionClass = r.status !== 'offline' ? 'bg-success' : 'bg-dark text-white';
+                const sessionText = r.status !== 'offline' ? 'logged in' : 'logged out';
+                
+                const dutyClass = r.status === 'deployed' ? 'bg-warning' : 'bg-primary';
+                const dutyText = r.status === 'deployed' ? 'deployed' : 'active';
+                
+                respHtml += `
+                    <tr>
+                      <td>${r.firstname} ${r.lastname}</td>
+                      <td>${r.station_name || 'Unassigned'}</td>
+                      <td><span class="badge ${sessionClass}">${sessionText}</span></td>
+                      <td><span class="badge ${dutyClass}">${dutyText}</span></td>
+                      <td>${r.contact_number}</td>
+                    </tr>
+                `;
             });
+            if(respTbody) respTbody.innerHTML = respHtml;
 
-            // Update Users
+            // Rebuild Users Table
+            const userTbody = document.querySelector('div.col-12.col-xl-6:last-child tbody');
+            let userHtml = '';
             data.users.forEach(u => {
-                const row = document.querySelector(`tr[data-id="${u.id}"][data-role="user"]`);
-                if (row) {
-                    const statusBadge = row.cells[2].querySelector('.badge');
-                    statusBadge.textContent = u.status !== 'offline' ? 'logged in' : 'logged out';
-                    statusBadge.className = u.status !== 'offline' ? 'badge bg-success' : 'badge bg-dark text-white';
-                }
+                const statusClass = u.status !== 'offline' ? 'bg-success' : 'bg-dark text-white';
+                const statusText = u.status !== 'offline' ? 'logged in' : 'logged out';
+                
+                userHtml += `
+                    <tr>
+                      <td>${u.firstname} ${u.lastname}</td>
+                      <td>${u.barangay}, ${u.city}</td>
+                      <td><span class="badge ${statusClass}">${statusText}</span></td>
+                      <td>${u.contact_number}</td>
+                    </tr>
+                `;
             });
+            if(userTbody) userTbody.innerHTML = userHtml;
+
         } catch (error) {
             console.error('Error fetching statuses:', error);
         }

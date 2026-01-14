@@ -374,6 +374,221 @@
           });
       }
 
+      // --- Optimized Polling & Map Logic ---
+      
+      const currentMarkers = {};
+      const addressCache = {}; // Strict Cache for Addresses
+      let userLocation = null; 
+      let userMarker = null; 
+      let userCircle = null; 
+
+      // Initialize markers
+      reports.forEach(r => {
+          if (r.latitude && r.longitude) addMarker(r);
+      });
+
+      function addMarker(report) {
+          if (currentMarkers[report.id]) return; 
+
+          const marker = L.marker([report.latitude, report.longitude], {
+              icon: icons['default']
+          }).addTo(map);
+
+          // ... Popup Content ...
+          const date = new Date(report.reported_at).toLocaleString();
+          const popupContent = `
+               <div class="p-2" style="color: black;">
+                   <h6 class="text-danger fw-bold mb-1">${report.disaster_type}</h6>
+                   <p class="mb-1 text-muted small">Status: <strong>${report.status}</strong></p>
+                   <p class="mb-1 text-muted small">Reported: ${date}</p>
+                   <hr class="my-1">
+                   <p class="mb-0 small" id="addr-${report.id}">Loading address...</p>
+               </div>
+          `;
+          marker.bindPopup(popupContent);
+          
+          marker.on('popupopen', () => {
+              const el = document.getElementById(`addr-${report.id}`);
+              if(el && el.innerText.includes('Loading')){
+                  // Check Cache First
+                  if (addressCache[report.id]) {
+                      el.innerHTML = `<strong>Address:</strong><br>${addressCache[report.id]}`;
+                  } else {
+                      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${report.latitude}&lon=${report.longitude}`)
+                      .then(r=>r.json()).then(d => { 
+                          const addr = d.display_name || "Address not found";
+                          addressCache[report.id] = addr; // Save to cache
+                          if(el) el.innerHTML = `<strong>Address:</strong><br>${addr}`; 
+                      });
+                  }
+              }
+          });
+
+          currentMarkers[report.id] = marker;
+      }
+
+      function updateNearbyTable(reportsList) {
+          if (!userLocation) return;
+          const { lat, lon } = userLocation;
+
+          const tbody = document.getElementById('reportsTableBody');
+          let html = '';
+          let hasNearby = false;
+
+          reportsList.forEach(report => {
+               if(!report.latitude || !report.longitude) return;
+               const dist = getDistanceFromLatLonInKm(lat, lon, report.latitude, report.longitude);
+               if(dist <= 2) {
+                   hasNearby = true;
+                   const dateStr = new Date(report.reported_at).toLocaleString();
+                   const reporterName = (report.firstname && report.lastname) ? `${report.firstname} ${report.lastname}` : 'Unknown';
+                   
+                   // Use Cached Address if available
+                   let addrDisplay = '<span class="fa fa-spinner fa-spin"></span> Loading...';
+                   let rowClass = 'table-addr-lazy'; // Marker class for lazy loader
+                   
+                   if (addressCache[report.id]) {
+                       addrDisplay = addressCache[report.id];
+                       rowClass = ''; // No need to lazy load
+                   }
+
+                   html += `
+                       <tr>
+                          <td>${dateStr}</td>
+                          <td>${reporterName}</td>
+                          <td>${report.disaster_type}</td>
+                          <td class="${rowClass}" data-id="${report.id}" data-lat="${report.latitude}" data-lon="${report.longitude}">
+                              ${addrDisplay}
+                          </td>
+                          <td>
+                              <button class="btn btn-sm btn-primary" onclick="respondToReport(${report.id}, '${report.disaster_type}')">Respond Here</button>
+                          </td>
+                       </tr>
+                   `;
+               }
+          });
+
+          if(!hasNearby) html = '<tr><td colspan="5" class="text-center">No reports found within 2km.</td></tr>';
+          
+          if (tbody.innerHTML !== html) { 
+              tbody.innerHTML = html;
+              
+              // Only fetch for those that are truly missing (have class table-addr-lazy)
+              document.querySelectorAll('.table-addr-lazy').forEach(td => {
+                  const id = td.getAttribute('data-id');
+                  const lat = td.getAttribute('data-lat');
+                  const lon = td.getAttribute('data-lon');
+                  
+                  if (addressCache[id]) {
+                      td.innerText = addressCache[id];
+                      td.classList.remove('table-addr-lazy');
+                  } else {
+                      // Fetch only if not already cached/fetching
+                      // We can assume if it's here it needs fetch or is fetching.
+                      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+                        .then(r=>r.json()).then(d => {
+                            const addr = d.display_name || "Address not found";
+                            addressCache[id] = addr; // Store permanently
+                            td.innerText = addr;
+                            td.classList.remove('table-addr-lazy');
+                        })
+                        .catch(() => {
+                             td.innerText = "Error loading";
+                        });
+                  }
+              });
+          }
+      }
+
+      function pollResponder() {
+          fetch('/api/responder-reports')
+            .then(res => res.json())
+            .then(newReports => {
+                 const newIds = new Set(newReports.map(r => r.id));
+
+                 // 1. Add New / Update
+                 newReports.forEach(r => addMarker(r));
+
+                 // 2. Remove Old
+                 Object.keys(currentMarkers).forEach(id => {
+                     if(!newIds.has(parseInt(id))) {
+                         map.removeLayer(currentMarkers[id]);
+                         delete currentMarkers[id];
+                     }
+                 });
+
+                 // 3. Update Table
+                 updateNearbyTable(newReports);
+            })
+            .catch(err => console.error(err));
+      }
+
+      // Initial poll and then every 3 seconds
+      pollResponder();
+      setInterval(pollResponder, 3000);
+
+      // Optimized Geolocation
+      if (navigator.geolocation) {
+           const geoOptions = {
+               enableHighAccuracy: true,
+               maximumAge: 10000, // Reuse cache for 10s
+               timeout: 5000
+           };
+
+           // Watch Position for real-time movement updates without polling loop
+           navigator.geolocation.watchPosition(pos => {
+               userLocation = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+               
+               // Send location to server to update responder status
+               fetch('/api/responder/location', {
+                     method: 'POST', 
+                     headers: {'Content-Type': 'application/json'},
+                     body: JSON.stringify({lat: userLocation.lat, lng: userLocation.lon})
+               });
+
+               document.getElementById('locationStatus').innerText = `Your location: ${userLocation.lat.toFixed(4)}, ${userLocation.lon.toFixed(4)}`;
+
+               // Add/Update Responder Marker and Circle
+               const responderIcon = L.icon({
+                   iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                   iconSize: [25, 41],
+                   iconAnchor: [12, 41],
+                   popupAnchor: [1, -34],
+                   shadowSize: [41, 41]
+               });
+
+               if (userMarker) {
+                   userMarker.setLatLng([userLocation.lat, userLocation.lon]);
+                   userCircle.setLatLng([userLocation.lat, userLocation.lon]);
+               } else {
+                   userMarker = L.marker([userLocation.lat, userLocation.lon], { icon: responderIcon })
+                     .addTo(map)
+                     .bindPopup("<b>You are here</b>").openPopup();
+
+                   userCircle = L.circle([userLocation.lat, userLocation.lon], {
+                       color: 'blue',
+                       fillColor: '#30f',
+                       fillOpacity: 0.1,
+                       radius: 2000 // 2km radius
+                   }).addTo(map);
+               }
+
+               // Trigger table update with the latest user location
+               // The pollResponder already calls updateNearbyTable, so this might be redundant
+               // unless we want immediate table update on location change.
+               // For now, let the poller handle it to avoid too many updates.
+               // updateNearbyTable(Object.values(currentMarkers).map(m => m.options.reportData)); // If markers stored report data
+           }, err => {
+               console.error("Geolocation error:", err);
+               document.getElementById('locationStatus').innerText = "Error getting your location. Cannot filter nearby reports.";
+               document.getElementById('reportsTableBody').innerHTML = '<tr><td colspan="5" class="text-center text-danger">Location access denied or unavailable.</td></tr>';
+           }, geoOptions);
+      } else {
+          document.getElementById('locationStatus').innerText = "Geolocation is not supported by this browser.";
+          document.getElementById('reportsTableBody').innerHTML = '<tr><td colspan="5" class="text-center text-danger">Geolocation is not supported by this browser.</td></tr>';
+      }
+
       function startNavMap(mission) {
           // Prevent re-init
           if (navMap) return;

@@ -297,3 +297,259 @@ function interpretWeather(data) {
 function handleError(err) {
   console.warn(`ERROR(${err.code}): ${err.message}`);
 }
+
+// ==========================================
+// SHARED DEPLOYMENT LOGIC (Admin Map & Table)
+// ==========================================
+
+let globalDeployMap = null;
+
+// Helper: Haversine Distance
+function calculateDistanceShared(lat1, lon1, lat2, lon2) {
+  if (!lat1 || !lon1 || !lat2 || !lon2) return 99999;
+  const R = 6371;
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLon = (lon2 - lon1) * (Math.PI / 180);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+window.openSharedDeployModal = async function ({ reportId, lat, lng, type, dateStr, locationStr }) {
+  // Ensure lat/lng are floats
+  const incLat = parseFloat(lat);
+  const incLon = parseFloat(lng);
+
+  // Fallback location string
+  if (!locationStr) locationStr = `Lat: ${incLat.toFixed(5)}, Lon: ${incLon.toFixed(5)}`;
+
+  Swal.fire({
+    title: 'Scanning Area...',
+    text: 'Searching for stations within 4km...',
+    allowOutsideClick: false,
+    didOpen: () => { Swal.showLoading() }
+  });
+
+  try {
+    // Parallel Fetch
+    const [respRes, stnRes] = await Promise.all([
+      fetch('/api/responders'),
+      fetch('/api/stations')
+    ]);
+
+    if (!respRes.ok || !stnRes.ok) throw new Error('Failed to fetch data');
+
+    const responders = await respRes.json();
+    const stations = await stnRes.json();
+
+    // Process Stations
+    const processedStations = stations.map(s => {
+      let sLat = parseFloat(s.latitude);
+      let sLng = parseFloat(s.longitude);
+      let dist = 99999;
+      if (!isNaN(sLat) && !isNaN(sLng)) {
+        dist = calculateDistanceShared(sLat, sLng, incLat, incLon);
+      }
+      return { ...s, lat: sLat, lng: sLng, dist, responders: [] };
+    }).sort((a, b) => a.dist - b.dist);
+
+    // Map Responders
+    responders.forEach(r => {
+      const stn = processedStations.find(s => s.id === r.station_id);
+      if (stn) {
+        stn.responders.push(r);
+      }
+    });
+
+    // Build Flat List
+    let deployableResponders = [];
+    processedStations.forEach(stn => {
+      stn.responders.forEach(r => {
+        r.distStation = stn.dist;
+        r.station_name = stn.name;
+        r.station_lat = stn.lat;
+        r.station_lng = stn.lng;
+
+        const currentLoad = stn.responders.filter(rx => rx.status === 'deployed').length;
+        r.currentLoad = currentLoad;
+        r.isStationFull = currentLoad >= 3;
+        deployableResponders.push(r);
+      });
+    });
+
+    // Safety Check 4km
+    if (processedStations.length === 0 || processedStations[0].dist > 4.0) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'No Nearby Stations',
+        html: `
+                    <div class="text-center">
+                        <p class="mb-2" style="font-size: 1.1rem; color: #fff;">No registered stations or responders found in your area.</p>
+                        <p class="text-muted small mb-4">Nearest station is <strong>${processedStations.length > 0 ? processedStations[0].dist.toFixed(1) + 'km' : 'N/A'}</strong> away.</p>
+                        <div style="border-top: 1px solid rgba(255, 170, 0, 0.3); margin: 20px 0;"></div>
+                        <p class="mb-3 text-uppercase" style="letter-spacing: 1px; font-size: 0.9rem; color: #aaa;">Emergency Hotlines</p>
+                        <div class="row g-3">
+                            <div class="col-6"><div class="p-3" style="background: rgba(255, 255, 255, 0.05); border: 1px solid #ffaa00; border-radius: 8px;"><div class="mb-1 text-uppercase" style="font-weight: 600; font-size: 0.9rem;">PNP / Police</div><div style="font-size: 3.5rem; font-weight: 900; line-height: 1; color: #ffaa00;">117</div></div></div>
+                            <div class="col-6"><div class="p-3" style="background: rgba(255, 255, 255, 0.05); border: 1px solid #ffaa00; border-radius: 8px;"><div class="mb-1 text-uppercase" style="font-weight: 600; font-size: 0.9rem;">BFP / Fire</div><div style="font-size: 3.5rem; font-weight: 900; line-height: 1; color: #ffaa00;">911</div></div></div>
+                        </div>
+                    </div>
+                `,
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
+
+    // Build HTML
+    const html = `
+            <div id="globalDeployMap" style="height: 300px; width: 100%; margin-bottom: 15px; border-radius: 5px;"></div>
+            <div class="d-flex justify-content-between mb-2">
+                <small class="text-muted">Showing All Stations</small>
+                <small class="text-muted">Sort: Nearest Station</small>
+            </div>
+            <div class="list-group text-start" style="max-height: 250px; overflow-y: auto;">
+                ${deployableResponders.length > 0 ? deployableResponders.map(r => {
+      const isDeployed = r.status === 'deployed';
+      const isResponding = r.action === 'responding'; // New Check
+      const isFull = r.isStationFull;
+      const isLocKnown = (r.station_lat != null);
+
+      let isDisabled = isDeployed || isResponding || isFull || !isLocKnown;
+      let btnClass = isDisabled ? 'list-group-item-secondary' : 'list-group-item-action';
+      let disabledAttr = isDisabled ? 'disabled style="opacity: 0.7; cursor: not-allowed;"' : "";
+      let clickHandler = isDisabled ? "" : 'onclick="confirmDeployShared(' + r.id + ', ' + incLat + ', ' + incLon + ', \'' + reportId + '\', \'' + type + '\')"';
+
+      let statusText = r.status.toUpperCase();
+      let statusClass = isDeployed ? 'bg-secondary' : 'bg-success';
+
+      if (isResponding) {
+        statusText = 'RESPONDING';
+        statusClass = 'bg-warning text-dark';
+      }
+
+      let statusBadge = `<span class="badge ${statusClass}">${statusText}</span>`;
+
+      let note = '';
+      const loadColor = r.currentLoad >= 3 ? 'text-danger' : 'text-success';
+      note += `<br><small class="${loadColor}">Station Deploys Today: <strong>${r.currentLoad}/3</strong></small>`;
+
+      if (isDeployed) note += '<br><small class="text-muted">Already Deployed</small>';
+      else if (isResponding) note += '<br><small class="text-warning">Currently Responding</small>';
+      else if (isFull) note += `<br><small class="text-danger"><i class="fa fa-ban"></i> Max Capacity Reached</small>`;
+
+      return `
+                            <button type="button" class="list-group-item ${btnClass}" ${disabledAttr} ${clickHandler}>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>${r.firstname} ${r.lastname}</strong>
+                                        <br>
+                                        <small class="text-muted">Station: ${r.station_name} • ${r.distStation.toFixed(2)} km away</small>
+                                        ${note}
+                                    </div>
+                                    ${statusBadge}
+                                </div>
+                            </button>
+                      `;
+    }).join('') : '<div class="list-group-item">No active responders found.</div>'}
+            </div>
+        `;
+
+    Swal.fire({
+      title: 'Deploy Responder',
+      html: html,
+      width: '800px',
+      showConfirmButton: false,
+      showCloseButton: true,
+      didOpen: () => {
+        if (globalDeployMap) { globalDeployMap.off(); globalDeployMap.remove(); globalDeployMap = null; }
+
+        globalDeployMap = L.map('globalDeployMap').setView([incLat, incLon], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(globalDeployMap);
+
+        // Incident Marker
+        let markerColor = '#dc3545';
+        let iconClass = 'fa-exclamation-triangle';
+        const typeLower = (type || 'General').toLowerCase();
+        if (typeLower.includes('flood')) { markerColor = '#0dcaf0'; iconClass = 'fa-water'; }
+        else if (typeLower.includes('earthquake')) { markerColor = '#fd7e14'; iconClass = 'fa-globe-americas'; }
+        else if (typeLower.includes('landslide')) { markerColor = '#795548'; iconClass = 'fa-mountain'; }
+        else if (typeLower.includes('fire')) { markerColor = '#dc3545'; iconClass = 'fa-fire'; }
+        else if (typeLower.includes('accident')) { markerColor = '#6f42c1'; iconClass = 'fa-car-crash'; }
+
+        const incidentIcon = L.divIcon({
+          className: 'custom-div-icon',
+          html: `<div style="background-color:${markerColor}; width: 32px; height: 32px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; color: white; font-size: 14px;"><i class="fa ${iconClass}"></i></div>`,
+          iconSize: [32, 32],
+          iconAnchor: [16, 16],
+          popupAnchor: [0, -20]
+        });
+
+        L.marker([incLat, incLon], { icon: incidentIcon }).addTo(globalDeployMap)
+          .bindPopup(`<b>${type}</b><br>Time: ${dateStr}`).openPopup();
+
+        // Stations
+        processedStations.forEach(s => {
+          if (!s.lat || !s.lng) return;
+          const deployedCount = s.responders.filter(rx => rx.status === 'deployed').length;
+          let color = deployedCount >= 3 ? 'red' : 'green';
+          const icon = L.divIcon({
+            className: 'custom-div-icon',
+            html: `<div style="background-color:${color}; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 4px black;"></div>`,
+            iconSize: [12, 12]
+          });
+          L.marker([s.lat, s.lng], { icon: icon }).addTo(globalDeployMap);
+        });
+
+        // Smart Route (OSRM)
+        if (processedStations.length > 0) {
+          const candidates = processedStations.slice(0, 3).filter(s => s.lat && s.lng);
+          const group = new L.featureGroup([L.marker([incLat, incLon])]);
+          const fallbackStation = candidates[0];
+          const fallbackLine = L.polyline([[fallbackStation.lat, fallbackStation.lng], [incLat, incLon]], { color: 'grey', weight: 2, dashArray: '5, 10' }).addTo(globalDeployMap);
+          group.addLayer(L.marker([fallbackStation.lat, fallbackStation.lng]));
+          globalDeployMap.fitBounds(group.getBounds(), { padding: [50, 50] });
+
+          const routeRequests = candidates.map(s => {
+            const url = `https://router.project-osrm.org/route/v1/driving/${s.lng},${s.lat};${incLon},${incLat}?overview=full&geometries=geojson`;
+            return fetch(url).then(res => res.json()).then(data => (data.routes && data.routes.length > 0 ? { station: s, route: data.routes[0] } : null)).catch(e => null);
+          });
+
+          Promise.all(routeRequests).then(results => {
+            const validRoutes = results.filter(r => r !== null);
+            if (validRoutes.length > 0) {
+              validRoutes.sort((a, b) => a.route.distance - b.route.distance);
+              const best = validRoutes[0];
+              globalDeployMap.removeLayer(fallbackLine);
+              const routeLayer = L.geoJSON(best.route.geometry, { style: { color: 'blue', weight: 5, opacity: 0.8 } }).addTo(globalDeployMap);
+              globalDeployMap.fitBounds(routeLayer.getBounds(), { padding: [50, 50] });
+            }
+          });
+        }
+      }
+    });
+
+  } catch (err) {
+    console.error(err);
+    Swal.fire('Error', 'Failed to load deployment data.', 'error');
+  }
+};
+
+window.confirmDeployShared = function (responderId, lat, lng, incidentId, type) {
+  fetch('/api/deploy', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ responderId, lat, lng, incidentId, type })
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        Swal.fire('Deployed!', 'Responder has been notified.', 'success')
+          .then(() => location.reload());
+      } else {
+        Swal.fire('Error', data.message || 'Failed to deploy.', 'error');
+      }
+    })
+    .catch(err => Swal.fire('Error', 'Network error deploying responder.', 'error'));
+};
