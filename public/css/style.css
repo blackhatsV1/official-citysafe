@@ -583,3 +583,28 @@ a:hover {
     vertical-align: middle;
     border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 }
+
+/* =========================================
+   PERFORMANCE OPTIMIZATION: REMOVE ANIMATIONS
+   ========================================= */
+*, *::before, *::after {
+    transition: none !important;
+    animation: none !important;
+}
+
+/* Exception: Loading Spinner */
+#spinner {
+    transition: opacity .5s ease-out, visibility 0s linear .5s !important;
+}
+
+#spinner.show {
+    transition: opacity .5s ease-out, visibility 0s linear 0s !important;
+}
+
+.spinner-border {
+    animation: spinner-border .75s linear infinite !important;
+}
+
+@keyframes spinner-border {
+    to { transform: rotate(360deg); }
+}
