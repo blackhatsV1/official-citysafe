@@ -478,6 +478,44 @@ app.get('/help', (req, res) => {
   res.render('pages/help')
 });
 
+// [NEW] Contact Form Handler
+const nodemailer = require('nodemailer');
+
+app.post('/send-message', async (req, res) => {
+  const { name, email, message } = req.body;
+
+  if (!name || !email || !message) {
+    return res.send(`<script>alert('All fields are required.'); window.history.back();</script>`);
+  }
+
+  // Create Transporter (Using Gmail)
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS
+    }
+  });
+
+  const mailOptions = {
+    from: email, // Sender's email (from form)
+    to: 'jayroldtabalina@gmail.com', // Admin receive email (Fixed as requested)
+    subject: `New CitySafe Message from ${name}`,
+    text: `You received a new message from CitySafe Contact Form.\n\nName: ${name}\nEmail: ${email}\n\nMessage:\n${message}`
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`Email sent from ${email}`);
+    // Redirect with success status
+    res.redirect('/contact?status=success');
+  } catch (err) {
+    console.error('Email Error:', err);
+    // Redirect with error status
+    res.redirect('/contact?status=error');
+  }
+});
+
 app.get('/login', (req, res) => {
   res.render('pages/login')
 });
