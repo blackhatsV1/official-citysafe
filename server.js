@@ -25,6 +25,57 @@ app.use(express.static('public'));
 app.set('views', './views');
 
 
+// [NEW] Web Push Setup
+const webpush = require('web-push');
+
+// Load VAPID Keys from Env or use placeholders
+const publicVapidKey = process.env.VAPID_PUBLIC_KEY;
+const privateVapidKey = process.env.VAPID_PRIVATE_KEY;
+
+if (publicVapidKey && privateVapidKey) {
+  webpush.setVapidDetails(
+    'mailto:citysafe.official@example.com',
+    publicVapidKey,
+    privateVapidKey
+  );
+}
+
+app.get('/api/vapid-public-key', (req, res) => {
+  res.json({ publicKey: process.env.VAPID_PUBLIC_KEY });
+});
+
+app.post('/api/subscribe', (req, res) => {
+  const subscription = req.body;
+  const userId = req.session.userId;
+  const role = req.session.role; // 'user' or 'responder'
+
+  if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+
+  // Store subscription in DB
+  const table = 'push_subscriptions';
+  const idColumn = role === 'responder' ? 'responder_id' : 'user_id';
+
+  // Minimal check to avoid duplicates (simplified)
+  db.query(`SELECT id FROM ${table} WHERE endpoint = ?`, [subscription.endpoint], (err, exists) => {
+    if (!err && exists.length === 0) {
+      const sql = `INSERT INTO ${table} (${idColumn}, endpoint, keys_p256dh, keys_auth) VALUES (?, ?, ?, ?)`;
+      db.query(sql, [userId, subscription.endpoint, subscription.keys.p256dh, subscription.keys.auth], (err) => {
+        if (err) console.error('Sub Error:', err);
+      });
+    }
+  });
+
+  res.status(201).json({});
+});
+
+// Helper to send notification
+const sendNotificationObj = (subscription, payload) => {
+  webpush.sendNotification(subscription, JSON.stringify(payload)).catch(err => {
+    console.error('Push Error:', err);
+    // TODO: cleanup invalid subscriptions
+  });
+};
+
 // [NEW] Database Setup Route (Run once)
 app.get('/clean_whitespace', (req, res) => {
   // One-time cleanup script to TRIM all identifying fields in users and responders

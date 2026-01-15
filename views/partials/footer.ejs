@@ -27,5 +27,12 @@
 <!-- Template Javascript -->
 <script src="js/main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="/js/notifications.js"></script>
+<script src="/js/push-client.js"></script>
+<script>
+    // Request permission on load (or you can move this to a button click)
+    // For now, we ask immediately to ensure subscription
+    if(typeof subscribeUser === 'function') {
+        subscribeUser(); 
+    }
+</script>
 </content>
