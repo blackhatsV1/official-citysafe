@@ -100,15 +100,19 @@
     // Loading Spinner
     function showLoading() {
       Swal.fire({
-        title: 'Sending Message...',
-        text: 'Please wait while we send your email.',
+        title: 'Sending Message',
+        html: `
+          <div class="dots-loading">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <p class="mt-2 text-muted">Please wait...</p>
+        `,
         allowOutsideClick: false,
         showConfirmButton: false, 
         background: '#191C24',
-        color: '#fff',
-        willOpen: () => {
-          Swal.showLoading();
-        }
+        color: '#fff'
       });
       return true; // Allow form submission
     }

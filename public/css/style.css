@@ -587,7 +587,9 @@ a:hover {
 /* =========================================
    PERFORMANCE OPTIMIZATION: REMOVE ANIMATIONS
    ========================================= */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     transition: none !important;
     animation: none !important;
 }
@@ -606,5 +608,45 @@ a:hover {
 }
 
 @keyframes spinner-border {
-    to { transform: rotate(360deg); }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 3-Dots Animation */
+.dots-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    background-color: var(--primary);
+    border-radius: 50%;
+    animation: bounce 1.4s infinite ease-in-out both !important;
+}
+
+.dot:nth-child(1) {
+    animation-delay: -0.32s !important;
+}
+
+.dot:nth-child(2) {
+    animation-delay: -0.16s !important;
+}
+
+@keyframes bounce {
+
+    0%,
+    80%,
+    100% {
+        transform: scale(0);
+    }
+
+    40% {
+        transform: scale(1);
+    }
 }
