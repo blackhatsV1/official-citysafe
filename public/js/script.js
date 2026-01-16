@@ -85,7 +85,7 @@ function showMap(position) {
   fetchCurrentWeather(lat, lon);
 
   //===========refreshh
-  setInterval(() => fetchCurrentWeather(lat, lon), 600000);
+  setInterval(() => fetchCurrentWeather(lat, lon), 1800000); // 30 mins
 
 
   //=============map only==

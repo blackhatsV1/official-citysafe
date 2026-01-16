@@ -26,7 +26,7 @@ app.use(helmet({
 // [SECURITY] Global Rate Limiter
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 300, // Limit each IP to 300 requests per windowMs
+  max: 5000, // Increased to 5000 to accommodate polling (1s intervals)
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -343,7 +343,10 @@ app.post('/report', async (req, res) => {
 
     // 2. If Coords provided (or found) -> Reverse Geocode (Lat/Lon to Address)
     // This overrides the text location to be precise, or fills it if empty.
-    if (finalLat && finalLon) {
+    // 2. If Coords provided but NO Text Location -> Reverse Geocode (Lat/Lon to Address)
+    // [OPTIMIZATION] Only call API if we don't have a text location yet. 
+    // This reduces external API calls and speeds up submission.
+    if (finalLat && finalLon && !locationToStore) {
       try {
         const revRes = await axios.get(`https://nominatim.openstreetmap.org/reverse`, {
           params: { lat: finalLat, lon: finalLon, format: "json" },
@@ -542,11 +545,22 @@ app.post('/update-account', (req, res) => {
     const userId = req.session.userId;
     let { firstname, lastname, street_address, barangay, city, province, postal_code, country, email, contact_number, landmark, address_type, additional_instructions, password } = req.body;
 
-    // Trim names and primary IDs
-    firstname = firstname ? firstname.trim() : "";
-    lastname = lastname ? lastname.trim() : "";
-    email = email ? email.trim() : "";
-    contact_number = contact_number ? contact_number.trim() : "";
+    // Clean Input
+    const clean = (str) => str ? str.trim().replace(/\s+/g, ' ') : "";
+
+    firstname = clean(firstname);
+    lastname = clean(lastname);
+    street_address = clean(street_address);
+    barangay = clean(barangay);
+    city = clean(city);
+    province = clean(province);
+    postal_code = clean(postal_code);
+    country = clean(country);
+    email = clean(email);
+    contact_number = clean(contact_number);
+    landmark = clean(landmark);
+    address_type = clean(address_type);
+    additional_instructions = clean(additional_instructions);
 
     // Fetch current user to handle password logic
     db.query('SELECT password FROM users WHERE id = ?', [userId], async (err, results) => {

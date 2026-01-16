@@ -126,8 +126,8 @@
                                     <div class="col-12">
                                         <div class="input-group">
                                             <div class="form-floating flex-grow-1">
-                                                <input type="password" class="form-control bg-dark text-white border-0" name="password" id="password" value="<%= user.password %>" placeholder="Password" required>
-                                                <label for="password">Password</label>
+                                                <input type="password" class="form-control bg-dark text-white border-0" name="password" id="password" placeholder="Leave empty to keep existing password" autocomplete="new-password">
+                                                <label for="password">Password (Leave empty to keep current)</label>
                                             </div>
                                             <button class="btn btn-outline-primary" type="button" id="togglePassword">
                                                 <i class="bi bi-eye-slash"></i>
