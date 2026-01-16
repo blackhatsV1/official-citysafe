@@ -28,7 +28,8 @@ const globalLimiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
-app.use(globalLimiter);
+// Rate Limiter Definition (Applied later)
+
 
 app.use(cors());
 app.use(session({
@@ -47,6 +48,10 @@ app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(express.static('public'));
+
+// [SECURITY] Global Rate Limiter (Applied AFTER static files to save quota)
+app.use(globalLimiter);
+
 app.set('views', './views');
 
 
@@ -230,7 +235,9 @@ app.get('/weather', (req, res) => {
 // index
 app.get('/', (req, res) => {
   if (req.session.loggedin && req.session.role === 'user') {
-    res.render('pages/index', { username: req.session.username, apiKey: process.env.OWM_API_KEY, page: 'home' });
+    const welcome = req.session.welcome || null;
+    req.session.welcome = null; // Consume flag
+    res.render('pages/index', { username: req.session.username, apiKey: process.env.OWM_API_KEY, page: 'home', welcome: welcome });
   } else {
     res.redirect('/visitor');
   }
@@ -652,6 +659,7 @@ app.post('/login', loginLimiter, (req, res) => {
         req.session.username = user.firstname + ' ' + user.lastname;
         req.session.role = user.role;
         req.session.userId = user.id;
+        req.session.welcome = 'back'; // Flag for 'Welcome back' toast
 
         db.query('UPDATE users SET status = "active" WHERE id = ?', [user.id]);
 
@@ -1159,9 +1167,18 @@ app.post('/register', async (req, res) => {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    db.query('INSERT INTO users (firstname, lastname, contact_number, password) VALUES (?, ?, ?, ?)', [firstname, lastname, contact_number, hashedPassword], (err) => {
+    db.query('INSERT INTO users (firstname, lastname, contact_number, password) VALUES (?, ?, ?, ?)', [firstname, lastname, contact_number, hashedPassword], (err, result) => {
       if (err) throw err;
-      res.send(`<script>window.location.href='/login'; alert('Registered Successfully! Please Login.');</script>`);
+
+      // [OPTIMIZATION] Auto-Login after Register
+      req.session.loggedin = true;
+      req.session.username = firstname + ' ' + lastname;
+      req.session.role = 'user'; // Default to user
+      req.session.userId = result.insertId;
+      req.session.welcome = 'new'; // Flag for 'Please remember password' popup
+
+      db.query('UPDATE users SET status = "active" WHERE id = ?', [result.insertId]);
+      res.redirect('/');
     });
   } catch (err) {
     console.error(err);

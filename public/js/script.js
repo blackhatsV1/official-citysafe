@@ -45,15 +45,37 @@ function showMap(position) {
   weatherMap = L.map("weather-map").setView([lat, lon], 6);
 
   //==============openweather data======
+  //==============openweather data======
   function fetchCurrentWeather(lat, lon) {
+    const cacheKey = `weather_${lat.toFixed(2)}_${lon.toFixed(2)}`;
+    const cacheTime = 10 * 60 * 1000; // 10 minutes
+
+    // 1. Try Cache First
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      try {
+        const { timestamp, data } = JSON.parse(cached);
+        if (Date.now() - timestamp < cacheTime) {
+          console.log("Using cached weather data");
+          interpretWeather(data);
+          return; // Skip fetch if cache is valid
+        }
+      } catch (e) { console.error("Cache parse error", e); }
+    }
+
+    // 2. Fetch Fresh if no cache
+    const weatherInfo = document.getElementById("weather-info");
+    if (weatherInfo && !cached) weatherInfo.innerHTML = "Loading weather data..."; // Only show loading if no cache
+
     fetch(`/api/weather?lat=${lat}&lon=${lon}`)
       .then(res => res.json())
       .then(data => {
+        // Save to Cache
+        localStorage.setItem(cacheKey, JSON.stringify({ timestamp: Date.now(), data: data }));
         interpretWeather(data);
       })
       .catch(err => {
         console.error("Weather API error:", err);
-        const weatherInfo = document.getElementById("weather-info");
         if (weatherInfo) {
           weatherInfo.innerHTML = "Unable to load weather data.";
         }

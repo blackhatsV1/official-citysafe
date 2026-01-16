@@ -41,21 +41,48 @@
 
         document.getElementById("coords").textContent = coords;
 
+        document.getElementById("coords").textContent = coords;
+        document.getElementById('address').innerHTML = `<i>Fetching location...</i>`;
         
-        fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
-            .then(res => res.json())
-            .then(data => {
-                const address = data.display_name;
-                document.getElementById('address').innerHTML = `<b>${address}</b> `;
-                document.getElementById("location").value = address;
-                // Populate hidden inputs if they exist (in sos.ejs)
-                if(document.getElementById("lat")) document.getElementById("lat").value = lat;
-                if(document.getElementById("lon")) document.getElementById("lon").value = lng;
-            })
-            .catch(err => {
-                console.error("Failed to fetch address:", err);
-                document.getElementById('address').innerText = "Address not found.";
-            });
+        // Caching Logic
+        const cacheKey = `addr_${lat.toFixed(4)}_${lng.toFixed(4)}`; // Approx 11m precision
+        const cachedAddr = localStorage.getItem(cacheKey);
+
+        if (cachedAddr) {
+            console.log("Using cached address");
+            updateAddressUI(cachedAddr, lat, lng);
+        } else {
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+                .then(res => res.json())
+                .then(data => {
+                    const address = data.display_name;
+                    localStorage.setItem(cacheKey, address); // Save to cache
+                    updateAddressUI(address, lat, lng);
+                })
+                .catch(err => {
+                    console.error("Failed to fetch address:", err);
+                    document.getElementById('address').innerText = "Address not found.";
+                });
+        }
+    }
+
+    function updateAddressUI(address, lat, lng) {
+        // Optimize address display (Shorten if too long)
+        // Split by comma, take first 3 parts if too long
+        let shortAddress = address; 
+        const parts = address.split(',');
+        if (parts.length > 5) {
+             shortAddress = parts.slice(0, 4).join(',') + '...';
+        }
+
+        document.getElementById('address').innerHTML = `<b>${shortAddress}</b>`;
+        // Keep full address in hidden input
+        const locInput = document.getElementById("location");
+        if(locInput && locInput.value === "") locInput.value = address;
+        
+        if(document.getElementById("lat")) document.getElementById("lat").value = lat;
+        if(document.getElementById("lon")) document.getElementById("lon").value = lng;
+    }
     }
 
 

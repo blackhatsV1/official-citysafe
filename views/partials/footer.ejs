@@ -25,7 +25,44 @@
 <script src="lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js"></script>
 
 <!-- Template Javascript -->
-<script src="js/main.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/script.js"></script>
+
+<!-- [OPTIMIZATION] Welcome Popups -->
+<% if (typeof welcome !== 'undefined' && welcome) { %>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const wType = "<%= welcome %>";
+      const username = "<%= username %>";
+
+      if (wType === 'new') {
+        Swal.fire({
+          icon: 'success',
+          title: `Welcome, ${username}!`,
+          text: 'Please remember your password.',
+          timer: 5000,
+          showConfirmButton: true
+        });
+      } else if (wType === 'back') {
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+          }
+        });
+
+        Toast.fire({
+          icon: 'success',
+          title: `Welcome, ${username}!`
+        });
+      }
+    });
+  </script>
+<% } %>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/js/push-client.js"></script>
-</content>
