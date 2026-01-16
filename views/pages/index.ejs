@@ -40,7 +40,7 @@
                                         <div class="d-flex align-items-center justify-content-between mb-4">
                                             <h6 class="mb-0 text-uppercase" style="letter-spacing: 1px; color: var(--primary);">Send SOS</h6>
                                         </div>
-                                        <form action="/report" method="POST">
+                                        <form action="/report" method="POST" onsubmit="const btns = this.querySelectorAll('button[type=submit]'); btns.forEach(b => {const val=b.value; const hidden = document.createElement('input'); hidden.type='hidden'; hidden.name='disaster_type'; hidden.value=val; this.appendChild(hidden); b.disabled=true; b.innerHTML='<span class=\'spinner-border spinner-border-sm\'></span> Sending...';});">
                                             <label class="form-label mb-3 text-white text-center w-100">
                                                 What is your emergency?
                                             </label>

@@ -676,8 +676,11 @@ app.post('/login', loginLimiter, (req, res) => {
       db.query('SELECT * FROM responders WHERE (TRIM(email) = ? OR TRIM(username) = ? OR TRIM(CONCAT(TRIM(firstname), " ", TRIM(lastname))) = ? OR TRIM(contact_number) = ?)', [cleanIdentifier, cleanIdentifier, cleanIdentifier, cleanIdentifier], async (err, responders) => {
         if (err) { console.error("Login Responder Error:", err); throw err; }
 
+        console.log("Responder Login Attempt:", cleanIdentifier); // [DEBUG]
+
         if (responders.length > 0) {
           const resp = responders[0];
+          console.log("Responder Found:", resp.username); // [DEBUG]
           let match = false;
 
           // 1. Try Bcrypt Compare
