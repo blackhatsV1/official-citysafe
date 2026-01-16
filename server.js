@@ -11,7 +11,9 @@ require("dotenv").config();
 const PORT = process.env.PORT || 9000;
 
 const helmet = require('helmet');
+
 const rateLimit = require('express-rate-limit');
+const bcrypt = require('bcrypt');
 
 // [SECURITY] Trust Proxy (Required for Railway/Load Balancers)
 app.set('trust proxy', 1);
@@ -1159,7 +1161,7 @@ app.get('/api/admin/stats', (req, res) => {
 
 
 //**************************************** register processs *********************************
-const bcrypt = require('bcrypt');
+
 
 app.post('/register', async (req, res) => {
   let { firstname, lastname, contact_number, password } = req.body;
