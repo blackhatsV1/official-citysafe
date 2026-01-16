@@ -319,7 +319,12 @@ app.get('/send-sos', (req, res) => {
 app.post('/report', async (req, res) => {
   if (req.session.loggedin && req.session.role === 'user') {
     const userId = req.session.userId;
-    const { disaster_type, location, lat, lon } = req.body; // Expecting lat/lon from hidden inputs
+    let { disaster_type, location, lat, lon } = req.body; // Expecting lat/lon from hidden inputs
+
+    // [FIX] Handle Edge Case where disaster_type comes as array
+    if (Array.isArray(disaster_type)) {
+      disaster_type = disaster_type[0];
+    }
 
     let finalLat = lat;
     let finalLon = lon;
@@ -1020,7 +1025,8 @@ app.post('/api/deploy', (req, res) => {
       const stationId = responder.station_id;
 
       db.query('SELECT user_id FROM disaster_reports WHERE id = ?', [incidentId], (err, incRes) => {
-        const reporterId = incRes.length > 0 ? incRes[0].user_id : null;
+        if (err) return res.status(500).json({ error: 'DB Error fetching incident' });
+        const reporterId = (incRes && incRes.length > 0) ? incRes[0].user_id : null;
 
         // 2. Transaction Queries
         const insertDeploy = `INSERT INTO deploys (responder_id, station_id, incident_id, user_id, status) VALUES (?, ?, ?, ?, 'pending')`;
@@ -1031,16 +1037,28 @@ app.post('/api/deploy', (req, res) => {
           if (err) return res.status(500).json({ error: err.message });
 
           db.query(insertDeploy, [responderId, stationId, incidentId, reporterId], (err, result) => {
-            if (err) return db.rollback(() => res.status(500).json({ error: err.message }));
+            if (err) {
+              console.error("[DEPLOY ERROR] Insert Deploys Failed:", err);
+              return db.rollback(() => res.status(500).json({ error: 'Deploy Insert Failed: ' + err.message }));
+            }
 
             db.query(updateResponder, [responderId], (err) => {
-              if (err) return db.rollback(() => res.status(500).json({ error: err.message }));
+              if (err) {
+                console.error("[DEPLOY ERROR] Update Responder Failed:", err);
+                return db.rollback(() => res.status(500).json({ error: 'Responder Update Failed: ' + err.message }));
+              }
 
               db.query(updateIncident, [responderId, incidentId], (err) => {
-                if (err) return db.rollback(() => res.status(500).json({ error: err.message }));
+                if (err) {
+                  console.error("[DEPLOY ERROR] Update Incident Failed:", err);
+                  return db.rollback(() => res.status(500).json({ error: 'Incident Update Failed: ' + err.message }));
+                }
 
                 db.commit(err => {
-                  if (err) return db.rollback(() => res.status(500).json({ error: err.message }));
+                  if (err) {
+                    console.error("[DEPLOY ERROR] Commit Failed:", err);
+                    return db.rollback(() => res.status(500).json({ error: 'Commit Failed: ' + err.message }));
+                  }
                   res.json({ success: true, message: 'Deployed successfully' });
                 });
               });
@@ -1108,7 +1126,8 @@ app.post('/api/respond', (req, res) => {
 
       // 2. Transact: Update Report, Update Responder, Insert Deploy
       db.query('SELECT user_id FROM disaster_reports WHERE id = ?', [reportId], (err, incRes) => {
-        const reporterId = incRes.length > 0 ? incRes[0].user_id : null;
+        if (err) return res.status(500).json({ error: 'DB Error fetching incident' });
+        const reporterId = (incRes && incRes.length > 0) ? incRes[0].user_id : null;
 
         db.beginTransaction(err => {
           const q1 = 'UPDATE disaster_reports SET status = "responding", responder_id = ? WHERE id = ?';
@@ -1116,14 +1135,25 @@ app.post('/api/respond', (req, res) => {
           const q3 = 'INSERT INTO deploys (responder_id, station_id, incident_id, user_id, status) VALUES (?, ?, ?, ?, "pending")';
 
           db.query(q1, [responderId, reportId], (err) => {
-            if (err) return db.rollback(() => res.json({ success: false }));
+            if (err) {
+              console.error("[RESPOND ERROR] Update Incident Failed:", err);
+              return db.rollback(() => res.json({ success: false, message: err.message }));
+            }
             db.query(q2, [responderId], (err) => {
-              if (err) return db.rollback(() => res.json({ success: false }));
+              if (err) {
+                console.error("[RESPOND ERROR] Update Responder Failed:", err);
+                return db.rollback(() => res.json({ success: false, message: err.message }));
+              }
               db.query(q3, [responderId, stationId, reportId, reporterId], (err) => {
-                if (err) return db.rollback(() => res.json({ success: false }));
-
+                if (err) {
+                  console.error("[RESPOND ERROR] Insert Deploy Failed:", err);
+                  return db.rollback(() => res.json({ success: false, message: err.message }));
+                }
                 db.commit(err => {
-                  if (err) return db.rollback(() => res.json({ success: false }));
+                  if (err) {
+                    console.error("[RESPOND ERROR] Commit Failed:", err);
+                    return db.rollback(() => res.json({ success: false, message: err.message }));
+                  }
                   res.json({ success: true, message: 'You are now responding to this SOS.' });
                 });
               });
@@ -1204,15 +1234,16 @@ app.get('/api/admin/stats', (req, res) => {
 
 
 app.post('/register', async (req, res) => {
-  let { firstname, lastname, contact_number, password } = req.body;
+  let { firstname, lastname, email, contact_number, password } = req.body;
 
   firstname = firstname ? firstname.trim().replace(/\s+/g, ' ') : "";
   lastname = lastname ? lastname.trim().replace(/\s+/g, ' ') : "";
+  email = email ? email.trim() : "";
   contact_number = contact_number ? contact_number.trim().replace(/\s+/g, ' ') : "";
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    db.query('INSERT INTO users (firstname, lastname, contact_number, password) VALUES (?, ?, ?, ?)', [firstname, lastname, contact_number, hashedPassword], (err, result) => {
+    db.query('INSERT INTO users (firstname, lastname, email, contact_number, password) VALUES (?, ?, ?, ?, ?)', [firstname, lastname, email, contact_number, hashedPassword], (err, result) => {
       if (err) throw err;
 
       // [OPTIMIZATION] Auto-Login after Register

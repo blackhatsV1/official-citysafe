@@ -466,13 +466,20 @@ window.openSharedDeployModal = async function ({ reportId, lat, lng, type, dateS
       else if (isResponding) note += '<br><small class="text-warning">Currently Responding</small>';
       else if (isFull) note += `<br><small class="text-danger"><i class="fa fa-ban"></i> Max Capacity Reached</small>`;
 
+      // Calculate Live Distance
+      let liveDist = 99999;
+      if (r.latitude && r.longitude) {
+        liveDist = calculateDistanceShared(parseFloat(r.latitude), parseFloat(r.longitude), incLat, incLon);
+      }
+      let liveDistStr = (liveDist < 9000) ? ` • Live: <strong>${liveDist.toFixed(2)} km</strong>` : '';
+
       return `
                             <button type="button" class="list-group-item ${btnClass}" ${disabledAttr} ${clickHandler}>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
                                         <strong>${r.firstname} ${r.lastname}</strong>
                                         <br>
-                                        <small class="text-muted">Station: ${r.station_name} • ${r.distStation.toFixed(2)} km away</small>
+                                        <small class="text-muted">Station: ${r.station_name} • Base: ${r.distStation.toFixed(2)} km${liveDistStr}</small>
                                         ${note}
                                     </div>
                                     ${statusBadge}
