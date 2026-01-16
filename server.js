@@ -14,6 +14,16 @@ const helmet = require('helmet');
 
 const rateLimit = require('express-rate-limit');
 const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
+
+// Email Transporter Configuration
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
 
 // [SECURITY] Trust Proxy (Required for Railway/Load Balancers)
 app.set('trust proxy', 1);
@@ -621,7 +631,6 @@ app.get('/help', (req, res) => {
 });
 
 // [NEW] Contact Form Handler
-const nodemailer = require('nodemailer');
 
 app.post('/send-message', async (req, res) => {
   const { name, email, message } = req.body;
@@ -630,14 +639,7 @@ app.post('/send-message', async (req, res) => {
     return res.send(`<script>alert('All fields are required.'); window.history.back();</script>`);
   }
 
-  // Create Transporter (Using Gmail)
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS
-    }
-  });
+  // Use Global Transporter
 
   const mailOptions = {
     from: email, // Sender's email (from form)
@@ -1235,31 +1237,165 @@ app.get('/api/admin/stats', (req, res) => {
 
 app.post('/register', async (req, res) => {
   let { firstname, lastname, email, contact_number, password } = req.body;
+  const verification_method = 'email'; // Force email
 
   firstname = firstname ? firstname.trim().replace(/\s+/g, ' ') : "";
   lastname = lastname ? lastname.trim().replace(/\s+/g, ' ') : "";
   email = email ? email.trim() : "";
   contact_number = contact_number ? contact_number.trim().replace(/\s+/g, ' ') : "";
 
+  if (!firstname || !lastname || !email || !contact_number || !password) {
+    return res.json({ success: false, message: 'All fields are required.' });
+  }
+
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    db.query('INSERT INTO users (firstname, lastname, email, contact_number, password) VALUES (?, ?, ?, ?, ?)', [firstname, lastname, email, contact_number, hashedPassword], (err, result) => {
-      if (err) throw err;
 
-      // [OPTIMIZATION] Auto-Login after Register
-      req.session.loggedin = true;
-      req.session.username = firstname + ' ' + lastname;
-      req.session.role = 'user'; // Default to user
-      req.session.userId = result.insertId;
-      req.session.welcome = 'new'; // Flag for 'Please remember password' popup
+    // Check if user already exists
+    db.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.json({ success: false, message: 'Database error checking user.' });
+      }
+      if (results.length > 0) return res.json({ success: false, message: 'Email already registered.' });
 
-      db.query('UPDATE users SET status = "active" WHERE id = ?', [result.insertId]);
-      res.redirect('/');
+      // Generate Code
+      const code = Math.floor(1000 + Math.random() * 9000).toString(); // 4 digit
+      const expiry = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
+
+      // Store in Session (Temporary)
+      req.session.tempUser = {
+        firstname,
+        lastname,
+        email,
+        contact_number,
+        password: hashedPassword,
+        verification_code: code,
+        verification_expiry: expiry
+      };
+
+      // Send Real Email
+      const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: email,
+        subject: 'CitySafe Verification Code',
+        text: `Your CitySafe verification code is: ${code}. It expires in 10 minutes.`
+      };
+
+      transporter.sendMail(mailOptions, (error, info) => {
+        if (error) console.log("Email Error:", error);
+        else console.log('Email sent: ' + info.response);
+      });
+
+      // Return JSON Success
+      res.json({ success: true, email: email, message: 'OTP sent to email.' });
     });
   } catch (err) {
     console.error(err);
-    res.send(`<script>alert('Error registering user.'); window.history.back();</script>`);
+    res.json({ success: false, message: 'Server error during registration.' });
   }
+});
+
+app.get('/verify', (req, res) => {
+  const { email, method, error } = req.query;
+  res.render('pages/verify', { email, method, error });
+});
+
+app.post('/verify-code-json', (req, res) => {
+  const { email, code } = req.body;
+  const tempUser = req.session.tempUser;
+
+  if (!tempUser || tempUser.email !== email) {
+    // Fallback check DB just in case logic fails or session expired but user exists? 
+    // Actually strictly checking session is safer for "Clean DB" requirement.
+    return res.json({ success: false, message: 'Session expired or invalid. Please register again.' });
+  }
+
+  if (tempUser.verification_code === code && new Date(tempUser.verification_expiry) > new Date()) {
+    // INSERT INTO DB
+    db.query('INSERT INTO users (firstname, lastname, email, contact_number, password, verification_code, verification_expiry, is_verified, verification_method, status) VALUES (?, ?, ?, ?, ?, NULL, NULL, 1, ?, ?)',
+      [tempUser.firstname, tempUser.lastname, tempUser.email, tempUser.contact_number, tempUser.password, 'email', 'active'],
+      (err, result) => {
+        if (err) {
+          console.error(err);
+          return res.json({ success: false, message: 'Database Error: ' + err.message });
+        }
+
+        // Clear Session Temp
+        delete req.session.tempUser;
+
+        // Log User In
+        req.session.loggedin = true;
+        req.session.userId = result.insertId;
+        req.session.username = tempUser.firstname + ' ' + tempUser.lastname;
+        req.session.role = 'user'; // Default role
+
+        res.json({ success: true, redirect: '/' });
+      });
+  } else {
+    res.json({ success: false, message: 'Invalid or Expired Code' });
+  }
+});
+
+app.post('/verify-code', (req, res) => {
+  const { email, code } = req.body;
+  db.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
+    if (err || results.length === 0) return res.redirect('/signup');
+    const user = results[0];
+
+    if (user.is_verified) {
+      req.session.loggedin = true;
+      req.session.userId = user.id;
+      req.session.username = user.firstname + ' ' + user.lastname;
+      req.session.role = user.role;
+      return res.redirect('/');
+    }
+
+    if (user.verification_code === code && new Date(user.verification_expiry) > new Date()) {
+      db.query('UPDATE users SET is_verified = 1, verification_code = NULL WHERE id = ?', [user.id], (err) => {
+        if (err) throw err;
+        req.session.loggedin = true;
+        req.session.userId = user.id;
+        req.session.username = user.firstname + ' ' + user.lastname;
+        req.session.role = user.role;
+        res.redirect('/');
+      });
+    } else {
+      res.redirect(`/verify?email=${email}&error=Invalid Code`);
+    }
+  });
+});
+
+app.get('/resend-code', (req, res) => {
+  const { email } = req.query;
+  if (!email) return res.redirect('/signup');
+
+  db.query('SELECT * FROM users WHERE email = ?', [email], (err, results) => {
+    if (err || results.length === 0) return res.redirect('/signup');
+    const user = results[0];
+
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiry = new Date(Date.now() + 10 * 60 * 1000);
+
+    db.query('UPDATE users SET verification_code = ?, verification_expiry = ? WHERE id = ?', [code, expiry, user.id], (err) => {
+      if (err) throw err;
+
+      if (user.verification_method === 'email') {
+        const mailOptions = {
+          from: process.env.EMAIL_USER,
+          to: email,
+          subject: 'CitySafe Verification Code (Resent)',
+          text: `Your new code is: ${code}`
+        };
+        transporter.sendMail(mailOptions, (error, info) => {
+          if (error) console.log("Email Error:", error);
+        });
+      } else {
+        console.log(`[MOCK SMS RESEND] To: ${user.contact_number}, CODE: ${code}`);
+      }
+      res.redirect(`/verify?email=${email}&method=${user.verification_method}&error=Code Resent!`);
+    });
+  });
 });
 // ****************************************register end ********************************************
 

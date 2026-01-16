@@ -74,6 +74,26 @@
                 </div>
             </div>
         </div>
+        <!-- OTP Modal -->
+        <div class="modal fade" id="otpModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-secondary text-white">
+              <div class="modal-header border-0">
+                <h5 class="modal-title" id="otpModalLabel">Verify Your Email</h5>
+              </div>
+              <div class="modal-body text-center">
+                <p>We sent a 4-digit code to <strong id="otpEmailDisplay" class="text-primary"></strong></p>
+                <div class="my-4">
+                    <input type="text" id="otpInput" class="form-control bg-dark text-white text-center border-0 fs-2" maxlength="4" placeholder="0000" style="letter-spacing: 10px;">
+                </div>
+                <div id="otpError" class="text-danger mb-2" style="display:none;">Invalid Code</div>
+              </div>
+              <div class="modal-footer border-0 justify-content-center">
+                <button type="button" class="btn btn-primary py-2 px-4" onclick="verifyOtp()">Verify & Login</button>
+              </div>
+            </div>
+          </div>
+        </div>
         <!-- Sign Up End -->
     </div>
 
@@ -106,16 +126,93 @@
         setupToggle("#toggleConfirmPass", "#confirmPassword");
 
         function validateSignup() {
+            const form = document.querySelector('form');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return false;
+            }
+
             const p1 = document.getElementById("signupPassword").value;
             const p2 = document.getElementById("confirmPassword").value;
             const err = document.getElementById("passError");
 
             if (p1 !== p2) {
                 err.style.display = "block";
-                return false; // Prevent submit
+                return false; 
             }
             err.style.display = "none";
-            return true;
+            
+            // AJAX Submission
+            const btn = document.querySelector('button[type="submit"]');
+            const spinner = document.getElementById('spinner');
+            
+            // Show Spinner
+            spinner.classList.add('show');
+            btn.disabled = true;
+
+            const formData = {
+                firstname: document.querySelector('input[name="firstname"]').value,
+                lastname: document.querySelector('input[name="lastname"]').value,
+                email: document.querySelector('input[name="email"]').value,
+                contact_number: document.querySelector('input[name="contact_number"]').value,
+                password: p1
+            };
+
+            fetch('/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(res => res.json())
+            .then(data => {
+                spinner.classList.remove('show');
+                btn.disabled = false;
+
+                if (data.success) {
+                    // Show Modal
+                    document.getElementById('otpEmailDisplay').innerText = data.email;
+                    const otpModal = new bootstrap.Modal(document.getElementById('otpModal'));
+                    otpModal.show();
+                } else {
+                    alert(data.message || 'Registration failed');
+                }
+            })
+            .catch(err => {
+                spinner.classList.remove('show');
+                btn.disabled = false;
+                alert('Error connecting to server');
+                console.error(err);
+            });
+
+            return false; // Prevent default form submit
+        }
+
+        function verifyOtp() {
+            const code = document.getElementById('otpInput').value;
+            const email = document.getElementById('otpEmailDisplay').innerText;
+            const errorDiv = document.getElementById('otpError');
+            
+            if(code.length !== 4) {
+                errorDiv.innerText = "Please enter 4 digits";
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            fetch('/verify-code-json', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, code })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    window.location.href = data.redirect;
+                } else {
+                    errorDiv.innerText = data.message || "Invalid Code";
+                    errorDiv.style.display = 'block';
+                }
+            })
+            .catch(err => console.error(err));
         }
     </script>
 </body>
