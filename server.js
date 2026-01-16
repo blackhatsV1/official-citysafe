@@ -34,7 +34,7 @@ const privateVapidKey = process.env.VAPID_PRIVATE_KEY;
 
 if (publicVapidKey && privateVapidKey) {
   webpush.setVapidDetails(
-    'mailto:citysafe.official@example.com',
+    'mailto:citysafe.official@gmail.com',
     publicVapidKey,
     privateVapidKey
   );
