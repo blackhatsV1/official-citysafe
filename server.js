@@ -1670,10 +1670,22 @@ app.post('/add', async (req, res) => {
       country, email, contact_number, landmark,
       address_type, additional_instructions, password, role } = req.body;
 
-    firstname = firstname ? firstname.trim() : "";
-    lastname = lastname ? lastname.trim() : "";
-    email = email ? email.trim() : "";
-    contact_number = contact_number ? contact_number.trim() : "";
+    // Clean Input
+    const clean = (str) => str ? str.trim().replace(/\s+/g, ' ') : "";
+
+    firstname = clean(firstname);
+    lastname = clean(lastname);
+    street_address = clean(street_address);
+    barangay = clean(barangay);
+    city = clean(city);
+    province = clean(province);
+    postal_code = clean(postal_code);
+    country = clean(country);
+    email = clean(email);
+    contact_number = clean(contact_number);
+    landmark = clean(landmark);
+    address_type = clean(address_type);
+    additional_instructions = clean(additional_instructions);
 
     try {
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -2098,14 +2110,26 @@ app.post('/update-responder/:id', (req, res) => {
     const responderId = req.params.id;
     let { firstname, lastname, email, contact_number, password, station_id } = req.body;
 
-    firstname = firstname ? firstname.trim().replace(/\s+/g, ' ') : "";
-    lastname = lastname ? lastname.trim().replace(/\s+/g, ' ') : "";
-    email = email ? email.trim().replace(/\s+/g, ' ') : "";
-    contact_number = contact_number ? contact_number.trim().replace(/\s+/g, ' ') : "";
+    // Clean Input
+    const clean = (str) => str ? str.trim().replace(/\s+/g, ' ') : "";
 
-    db.query('UPDATE responders SET firstname = ?, lastname = ?, email = ?, contact_number = ?, password = ?, station_id = ? WHERE id = ?', [firstname, lastname, email, contact_number, password, station_id, responderId], (err) => {
+    firstname = clean(firstname);
+    lastname = clean(lastname);
+    email = clean(email);
+    contact_number = clean(contact_number);
+
+    db.query('SELECT password FROM responders WHERE id = ?', [responderId], async (err, results) => {
       if (err) throw err;
-      res.redirect('/userslist');
+      let finalPassword = results[0].password;
+
+      if (password && password.trim() !== "") {
+        finalPassword = await bcrypt.hash(password, 10);
+      }
+
+      db.query('UPDATE responders SET firstname = ?, lastname = ?, email = ?, contact_number = ?, password = ?, station_id = ? WHERE id = ?', [firstname, lastname, email, contact_number, finalPassword, station_id, responderId], (err) => {
+        if (err) throw err;
+        res.redirect('/userslist');
+      });
     });
   } else {
     res.redirect('/login')
