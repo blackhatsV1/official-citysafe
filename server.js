@@ -501,6 +501,7 @@ app.get('/editaccount', (req, res) => {
   }
 });
 // update profile 
+// update profile 
 app.post('/update-account', (req, res) => {
   if (req.session.loggedin && req.session.role === 'user') {
     const userId = req.session.userId;
@@ -512,9 +513,20 @@ app.post('/update-account', (req, res) => {
     email = email ? email.trim() : "";
     contact_number = contact_number ? contact_number.trim() : "";
 
-    db.query('UPDATE users SET firstname = ?, lastname = ?, street_address = ?, barangay = ?, city = ?, province = ?, postal_code = ?, country = ?, email = ?,contact_number = ?, landmark = ?, address_type = ?, additional_instructions = ?, password = ? WHERE id = ?', [firstname, lastname, street_address, barangay, city, province, postal_code, country, email, contact_number, landmark, address_type, additional_instructions, password, userId], (err) => {
+    // Fetch current user to handle password logic
+    db.query('SELECT password FROM users WHERE id = ?', [userId], async (err, results) => {
       if (err) throw err;
-      res.redirect('/');
+      let finalPassword = results[0].password; // Default to existing
+
+      if (password && password.trim() !== "") {
+        // New password provided -> Hash it
+        finalPassword = await bcrypt.hash(password, 10);
+      }
+
+      db.query('UPDATE users SET firstname = ?, lastname = ?, street_address = ?, barangay = ?, city = ?, province = ?, postal_code = ?, country = ?, email = ?,contact_number = ?, landmark = ?, address_type = ?, additional_instructions = ?, password = ? WHERE id = ?', [firstname, lastname, street_address, barangay, city, province, postal_code, country, email, contact_number, landmark, address_type, additional_instructions, finalPassword, userId], (err) => {
+        if (err) throw err;
+        res.redirect('/');
+      });
     });
   } else {
     res.redirect('/login')
@@ -616,36 +628,72 @@ app.post('/login', loginLimiter, (req, res) => {
   const { identifier, password } = req.body;
   const cleanIdentifier = identifier ? identifier.trim().replace(/\s+/g, ' ') : '';
 
-  // Check Users Table First (Email, Full Name, or Contact Number)
-  db.query('SELECT * FROM users WHERE (TRIM(email) = ? OR TRIM(CONCAT(TRIM(firstname), " ", TRIM(lastname))) = ? OR TRIM(contact_number) = ?) AND password = ?', [cleanIdentifier, cleanIdentifier, cleanIdentifier, password], (err, users) => {
+  // Check Users Table First
+  db.query('SELECT * FROM users WHERE (TRIM(email) = ? OR TRIM(CONCAT(TRIM(firstname), " ", TRIM(lastname))) = ? OR TRIM(contact_number) = ?)', [cleanIdentifier, cleanIdentifier, cleanIdentifier], async (err, users) => {
     if (err) { console.error("Login User Error:", err); throw err; }
 
     if (users.length > 0) {
-      req.session.loggedin = true;
-      req.session.username = users[0].firstname + ' ' + users[0].lastname;
-      req.session.role = users[0].role; // 'user' or 'admin'
-      req.session.userId = users[0].id;
+      const user = users[0];
+      let match = false;
 
-      db.query('UPDATE users SET status = "active" WHERE id = ?', [users[0].id]);
+      // 1. Try Bcrypt Compare
+      match = await bcrypt.compare(password, user.password);
 
-      if (users[0].role === 'admin') {
-        res.redirect('/adminpage');
+      // 2. If Failed, Try Legacy Plaintext (Migration)
+      if (!match && password === user.password) {
+        console.log(`[MIGRATION] Upgrading password for user ${user.id}`);
+        const newHash = await bcrypt.hash(password, 10);
+        db.query('UPDATE users SET password = ? WHERE id = ?', [newHash, user.id]);
+        match = true;
+      }
+
+      if (match) {
+        req.session.loggedin = true;
+        req.session.username = user.firstname + ' ' + user.lastname;
+        req.session.role = user.role;
+        req.session.userId = user.id;
+
+        db.query('UPDATE users SET status = "active" WHERE id = ?', [user.id]);
+
+        if (user.role === 'admin') {
+          res.redirect('/adminpage');
+        } else {
+          res.redirect('/');
+        }
       } else {
-        res.redirect('/');
+        res.send(`<script>window.location.href='/login'; alert('Wrong Password or Identity!');</script>`);
       }
     } else {
-      // Check Responders Table (Email, Username, Full Name, or Contact Number)
-      db.query('SELECT * FROM responders WHERE (TRIM(email) = ? OR TRIM(username) = ? OR TRIM(CONCAT(TRIM(firstname), " ", TRIM(lastname))) = ? OR TRIM(contact_number) = ?) AND password = ?', [cleanIdentifier, cleanIdentifier, cleanIdentifier, cleanIdentifier, password], (err, responders) => {
+      // Check Responders Table
+      db.query('SELECT * FROM responders WHERE (TRIM(email) = ? OR TRIM(username) = ? OR TRIM(CONCAT(TRIM(firstname), " ", TRIM(lastname))) = ? OR TRIM(contact_number) = ?)', [cleanIdentifier, cleanIdentifier, cleanIdentifier, cleanIdentifier], async (err, responders) => {
         if (err) { console.error("Login Responder Error:", err); throw err; }
 
         if (responders.length > 0) {
-          req.session.loggedin = true;
-          req.session.username = responders[0].firstname + ' ' + responders[0].lastname;
-          req.session.role = 'responder';
-          req.session.userId = responders[0].id;
+          const resp = responders[0];
+          let match = false;
 
-          db.query('UPDATE responders SET status = "active" WHERE id = ?', [responders[0].id]);
-          res.redirect('/responder');
+          // 1. Try Bcrypt Compare
+          match = await bcrypt.compare(password, resp.password);
+
+          // 2. If Failed, Try Legacy Plaintext (Migration)
+          if (!match && password === resp.password) {
+            console.log(`[MIGRATION] Upgrading password for responder ${resp.id}`);
+            const newHash = await bcrypt.hash(password, 10);
+            db.query('UPDATE responders SET password = ? WHERE id = ?', [newHash, resp.id]);
+            match = true;
+          }
+
+          if (match) {
+            req.session.loggedin = true;
+            req.session.username = resp.firstname + ' ' + resp.lastname;
+            req.session.role = 'responder';
+            req.session.userId = resp.id;
+
+            db.query('UPDATE responders SET status = "active" WHERE id = ?', [resp.id]);
+            res.redirect('/responder');
+          } else {
+            res.send(`<script>window.location.href='/login'; alert('Wrong Password or Identity!');</script>`);
+          }
         } else {
           res.send(`<script>window.location.href='/login'; alert('Wrong Password or Identity!');</script>`);
         }
@@ -1100,18 +1148,25 @@ app.get('/api/admin/stats', (req, res) => {
 
 
 //**************************************** register processs *********************************
-app.post('/register', (req, res) => {
+const bcrypt = require('bcrypt');
+
+app.post('/register', async (req, res) => {
   let { firstname, lastname, contact_number, password } = req.body;
 
   firstname = firstname ? firstname.trim().replace(/\s+/g, ' ') : "";
   lastname = lastname ? lastname.trim().replace(/\s+/g, ' ') : "";
   contact_number = contact_number ? contact_number.trim().replace(/\s+/g, ' ') : "";
 
-  db.query('INSERT INTO users (firstname, lastname, contact_number, password) VALUES (?, ?, ?, ?)', [firstname, lastname, contact_number, password], (err) => {
-    if (err) throw err;
-    res.send(`<script>window.location.href='/login'; alert('Registered Successfully! Please Login.');</script>`);
-
-  });
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    db.query('INSERT INTO users (firstname, lastname, contact_number, password) VALUES (?, ?, ?, ?)', [firstname, lastname, contact_number, hashedPassword], (err) => {
+      if (err) throw err;
+      res.send(`<script>window.location.href='/login'; alert('Registered Successfully! Please Login.');</script>`);
+    });
+  } catch (err) {
+    console.error(err);
+    res.send(`<script>alert('Error registering user.'); window.history.back();</script>`);
+  }
 });
 // ****************************************register end ********************************************
 
@@ -1560,7 +1615,7 @@ app.get('/addusers', (req, res) => {
 });
 
 // add user
-app.post('/add', (req, res) => {
+app.post('/add', async (req, res) => {
   if (req.session.loggedin && req.session.role === 'admin') {
     let { firstname, lastname, street_address,
       barangay, city, province, postal_code,
@@ -1572,10 +1627,16 @@ app.post('/add', (req, res) => {
     email = email ? email.trim() : "";
     contact_number = contact_number ? contact_number.trim() : "";
 
-    db.query('INSERT INTO users (firstname, lastname, street_address, barangay, city, province, postal_code, country, email, contact_number, landmark, address_type, additional_instructions, password, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [firstname, lastname, street_address, barangay, city, province, postal_code, country, email, contact_number, landmark, address_type, additional_instructions, password, role], (err) => {
-      if (err) throw err;
-      res.redirect('/adminpage');
-    });
+    try {
+      const hashedPassword = await bcrypt.hash(password, 10);
+      db.query('INSERT INTO users (firstname, lastname, street_address, barangay, city, province, postal_code, country, email, contact_number, landmark, address_type, additional_instructions, password, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [firstname, lastname, street_address, barangay, city, province, postal_code, country, email, contact_number, landmark, address_type, additional_instructions, hashedPassword, role], (err) => {
+        if (err) throw err;
+        res.redirect('/adminpage');
+      });
+    } catch (e) {
+      console.error(e);
+      res.redirect('/addusers');
+    }
   } else {
     res.redirect('/login')
   }
@@ -1631,17 +1692,27 @@ app.post('/update/:id', (req, res) => {
 
     firstname = firstname ? firstname.trim() : "";
     lastname = lastname ? lastname.trim() : "";
-    email = email ? email.trim() : "";
-    contact_number = contact_number ? contact_number.trim() : "";
 
-    db.query('UPDATE users SET firstname = ?, lastname = ?, street_address = ?, barangay = ?, city = ?, province = ?, postal_code = ?, country = ?, email = ?,contact_number = ?, landmark = ?, address_type = ?, additional_instructions = ?, password = ?, role = ? WHERE id = ?', [firstname, lastname, street_address, barangay, city, province, postal_code, country, email, contact_number, landmark, address_type, additional_instructions, password, role, userId], (err) => {
+    // Fetch current user to handle password logic
+    db.query('SELECT password FROM users WHERE id = ?', [userId], async (err, results) => {
       if (err) throw err;
-      res.redirect('/userslist');
+      let finalPassword = results[0].password; // Default to existing
+
+      if (password && password.trim() !== "") {
+        // New password provided -> Hash it
+        finalPassword = await bcrypt.hash(password, 10);
+      }
+
+      db.query('UPDATE users SET firstname = ?, lastname = ?, street_address = ?, barangay = ?, city = ?, province = ?, postal_code = ?, country = ?, email = ?,contact_number = ?, landmark = ?, address_type = ?, additional_instructions = ?, password = ?, role = ? WHERE id = ?', [firstname, lastname, street_address, barangay, city, province, postal_code, country, email, contact_number, landmark, address_type, additional_instructions, finalPassword, role, userId], (err) => {
+        if (err) throw err;
+        res.redirect('/userslist');
+      });
     });
   } else {
     res.redirect('/login')
   }
 });
+
 
 app.get('/aboutadmin', (req, res) => {
   if (req.session.loggedin && req.session.role === 'admin') {

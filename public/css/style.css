@@ -18,6 +18,31 @@
     --white: #ffffff;
 }
 
+/* [UI SIMPLIFICATION] Global Overrides */
+* {
+    box-shadow: none !important;
+}
+
+/* Specific Overrides for Rounded Corners */
+.navbar,
+header,
+footer,
+.card,
+.sidebar,
+.sidenav,
+.btn,
+.form-control,
+.swal2-popup,
+.disaster-card,
+#map,
+#weather-map,
+#admin-map,
+.bg-secondary,
+.rounded,
+.leaflet-routing-container {
+    border-radius: 0 !important;
+}
+
 body {
     background-color: var(--dark);
     color: var(--light);
