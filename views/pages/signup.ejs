@@ -51,11 +51,23 @@
                               <input type="number" name="contact_number" class="form-control bg-dark text-white border-0" id="floatingContact" placeholder="Contact Number" required>
                               <label for="floatingContact">Contact Number</label>
                           </div>
-                          <div class="form-floating mb-4">
-                              <input type="password" name="password" class="form-control bg-dark text-white border-0" id="floatingPassword" placeholder="Password" required>
-                              <label for="floatingPassword">Password</label>
+                          <div class="form-floating mb-3 position-relative">
+                              <input type="password" name="password" class="form-control bg-dark text-white border-0" id="signupPassword" placeholder="Password" required>
+                              <label for="signupPassword">Password</label>
+                              <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 text-primary" id="toggleSignupPass" style="cursor: pointer; z-index: 10;"></i>
                           </div>
-                          <button type="submit" class="btn btn-primary py-3 w-100 mb-4 shadow">Sign Up</button>
+                          
+                          <div class="form-floating mb-4 position-relative">
+                              <input type="password" name="confirm_password" class="form-control bg-dark text-white border-0" id="confirmPassword" placeholder="Confirm Password" required>
+                              <label for="confirmPassword">Confirm Password</label>
+                              <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 text-primary" id="toggleConfirmPass" style="cursor: pointer; z-index: 10;"></i>
+                          </div>
+
+                          <div id="passError" class="text-danger mb-3" style="display:none; font-size: 0.9rem;">
+                              Passwords do not match!
+                          </div>
+
+                          <button type="submit" class="btn btn-primary py-3 w-100 mb-4 shadow" onclick="return validateSignup()">Sign Up</button>
                           <p class="text-center mb-0">Already have an Account? <a href="/login" class="text-primary fw-bold">Sign In</a></p>
                         </form>
                     </div>
@@ -78,6 +90,34 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script>
+        function setupToggle(toggleId, inputId) {
+            const toggle = document.querySelector(toggleId);
+            const input = document.querySelector(inputId);
+            toggle.addEventListener("click", function () {
+                const isPassword = input.getAttribute("type") === "password";
+                input.setAttribute("type", isPassword ? "text" : "password");
+                this.classList.toggle("bi-eye");
+                this.classList.toggle("bi-eye-slash");
+            });
+        }
+
+        setupToggle("#toggleSignupPass", "#signupPassword");
+        setupToggle("#toggleConfirmPass", "#confirmPassword");
+
+        function validateSignup() {
+            const p1 = document.getElementById("signupPassword").value;
+            const p2 = document.getElementById("confirmPassword").value;
+            const err = document.getElementById("passError");
+
+            if (p1 !== p2) {
+                err.style.display = "block";
+                return false; // Prevent submit
+            }
+            err.style.display = "none";
+            return true;
+        }
+    </script>
 </body>
 
 </html>

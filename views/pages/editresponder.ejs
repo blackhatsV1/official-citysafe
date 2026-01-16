@@ -65,7 +65,10 @@
               <div class="row mb-3">
                 <label for="password" class="col-sm-3 col-form-label">Password</label>
                 <div class="col-sm-9">
-                  <input type="text" class="form-control" id="password" name="password" value="<%= responder.password %>" required>
+                  <input type="password" class="form-control" id="password" name="password" placeholder="Leave empty to keep existing password" autocomplete="new-password">
+                  <button class="btn btn-outline-secondary mt-2" type="button" id="togglePassword">
+                    <i class="bi bi-eye-slash text-primary"> Show Password</i>
+                  </button>
                 </div>
               </div>
 
@@ -105,6 +108,19 @@
   </div>
 
   <script src="/js/script.js"></script>
+  <script src="/js/script.js"></script>
+  <script>
+    const togglePassword = document.querySelector("#togglePassword");
+    const passwordInput = document.querySelector("#password");
+    const icon = togglePassword.querySelector("i");
+  
+    togglePassword.addEventListener("click", function () {
+      const isPassword = passwordInput.getAttribute("type") === "password";
+      passwordInput.setAttribute("type", isPassword ? "text" : "password");
+      icon.classList.toggle("bi-eye");
+      icon.classList.toggle("bi-eye-slash");
+    });
+  </script>
   <script src="/js/main.js"></script>
 </body>
 

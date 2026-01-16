@@ -32,9 +32,10 @@
                               <input type="text" name="identifier" class="form-control bg-dark text-white border-0" id="floatingInput" placeholder="Email or Full Name" required>
                               <label for="floatingInput">Email or Full Name</label>
                           </div>
-                          <div class="form-floating mb-4">
-                              <input type="password" name="password" class="form-control bg-dark text-white border-0" id="floatingPassword" placeholder="Password" required>
+                          <div class="form-floating mb-4 position-relative">
+                              <input type="password" name="password" class="form-control bg-dark text-white border-0" id="floatingPassword" placeholder="Password" required style="padding-right: 40px;">
                               <label for="floatingPassword">Password</label>
+                              <i class="bi bi-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 text-primary" id="toggleLoginPass" style="cursor: pointer; z-index: 10;"></i>
                           </div>
                           
                           <button type="submit" id="login-btn" class="btn btn-primary py-3 w-100 mb-4 shadow">Sign In</button>
@@ -62,6 +63,17 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
+    <script>
+        const toggleLoginPass = document.querySelector("#toggleLoginPass");
+        const loginPassInput = document.querySelector("#floatingPassword");
+
+        toggleLoginPass.addEventListener("click", function () {
+            const isPassword = loginPassInput.getAttribute("type") === "password";
+            loginPassInput.setAttribute("type", isPassword ? "text" : "password");
+            this.classList.toggle("bi-eye");
+            this.classList.toggle("bi-eye-slash");
+        });
+    </script>
 </body>
 
 </html>
