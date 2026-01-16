@@ -10,11 +10,36 @@ require("dotenv").config();
 
 const PORT = process.env.PORT || 9000;
 
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+
+// [SECURITY] Trust Proxy (Required for Railway/Load Balancers)
+app.set('trust proxy', 1);
+
+// [SECURITY] Helmet - Secure HTTP Headers
+app.use(helmet({
+  contentSecurityPolicy: false, // Disabled for now to prevent breaking maps/scripts
+}));
+
+// [SECURITY] Global Rate Limiter
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 300, // Limit each IP to 300 requests per windowMs
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use(globalLimiter);
+
 app.use(cors());
 app.use(session({
-  secret: 'capstone',
+  secret: process.env.SESSION_SECRET || 'fallback_secret_change_me',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: false, // Changed to false for GDPR compliance / efficiency
+  cookie: {
+    secure: process.env.NODE_ENV === 'production', // Only true if HTTPS
+    httpOnly: true, // Prevents XSS
+    maxAge: 1000 * 60 * 60 * 24 // 1 day
+  }
 }));
 
 
@@ -578,7 +603,16 @@ app.get('/register', (req, res) => {
 // **************************************** visitor end **********************************
 
 // *************************************** login process **********************************
-app.post('/login', (req, res) => {
+// [SECURITY] Login Rate Limiter
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // Limit each IP to 10 login requests per windowMs
+  message: "Too many login attempts, please try again after 15 minutes",
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.post('/login', loginLimiter, (req, res) => {
   const { identifier, password } = req.body;
   const cleanIdentifier = identifier ? identifier.trim().replace(/\s+/g, ' ') : '';
 
