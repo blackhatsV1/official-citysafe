@@ -137,6 +137,32 @@ app.get('/clean_whitespace', (req, res) => {
   runNext();
 });
 
+// [SETUP] One-time route to create the first admin
+app.get('/setup-admin', async (req, res) => {
+  const secretKey = req.query.key;
+  if (secretKey !== process.env.SESSION_SECRET) {
+    return res.status(403).send("Unauthorized. Please provide the correct session secret as a key query parameter.");
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash("admin123", 10);
+    // Check if admin already exists to prevent duplicates
+    db.query('SELECT * FROM users WHERE role="admin"', (err, results) => {
+      if (results.length > 0) return res.send("Admin already exists.");
+
+      const sql = `INSERT INTO users (firstname, lastname, email, password, role, contact_number, street_address, barangay, city, province, postal_code, country, address_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+      const values = ["System", "Admin", "admin@citysafe.com", hashedPassword, "admin", "09123456789", "City Hall", "Poblacion", "Iloilo City", "Iloilo", "5000", "Philippines", "Office"];
+
+      db.query(sql, values, (err) => {
+        if (err) return res.send("Error creating admin: " + err.message);
+        res.send("<h1>Admin Created!</h1><p>Email: <b>admin@citysafe.com</b></p><p>Password: <b>admin123</b></p><a href='/login'>Login Now</a>");
+      });
+    });
+  } catch (err) {
+    res.send("Error: " + err.message);
+  }
+});
+
 app.get('/setup_db', (req, res) => {
   const queries = [
     `CREATE TABLE IF NOT EXISTS responders (
