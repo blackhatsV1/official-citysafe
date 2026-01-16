@@ -26,47 +26,52 @@
 
           <!-- Widgets Start -->
             <div class="container-fluid pt-4 px-4">
-                <div class="container bg-secondary rounded p-3 mb-4">
+                <div class="container bg-secondary rounded p-4 mb-4">
                     <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h3 class="text-white mb-0 mt-3">Assessment History</h3>
-                        <!-- <button type="button" class="btn btn-primary mt-3 me-1 w-auto" onclick="window.location.href='/assess-risk'">New Assessment</button> -->
-                         <a href="/assess-risk">Take new Assessment</a>
+                        <h3 class="text-white mb-0">Assessment History</h3>
+                        <a href="/assess-risk" class="btn btn-primary">Take New Assessment</a>
                     </div>
                   
-                  
-                  <hr class="grey-line">
                   <% if (assessments.length > 0) { %>
-                    <div class="mb-0 ms-5 text-white">
-                        <h4>Your assessment results</h4>
+                    <div class="table-responsive">
+                        <table class="table table-hover text-start align-middle table-bordered table-sm mb-0">
+                            <thead>
+                                <tr class="text-white">
+                                    <th scope="col">Date Assessed</th>
+                                    <th scope="col">Risk Score</th>
+                                    <th scope="col">Risk Level</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for (let i = 0; i < assessments.length; i++) { %>
+                                <tr>
+                                    <td><%= assessments[i].assessed_at %></td>
+                                    <td><%= assessments[i].risk_score %></td>
+                                    <td>
+                                        <% if(assessments[i].risk_level === 'High') { %>
+                                            <span class="text-danger fw-bold"><%= assessments[i].risk_level %></span>
+                                        <% } else if(assessments[i].risk_level === 'Medium') { %>
+                                            <span class="text-warning fw-bold"><%= assessments[i].risk_level %></span>
+                                        <% } else { %>
+                                            <span class="text-success fw-bold"><%= assessments[i].risk_level %></span>
+                                        <% } %>
+                                    </td>
+                                    <td>
+                                        <form action="/delete-result/<%= assessments[i].id %>" method="POST" class="d-inline">
+                                            <button type="submit" onclick="return confirm('Delete this Assessment?')" class="btn btn-sm btn-danger">Delete</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
                     </div>
-
-                    <div class="container text-dark w-75 rounded p-3 ">
-                        <% for (let i = 0; i < assessments.length; i++) { %>
-                            <div class="mb-3">
-                                <div class="bg-light rounded p-3" style="border: 1px solid black;">
-                                    <p><%= assessments[i].assessed_at %></p>
-                                    <p><strong>Risk Score:</strong> <%= assessments[i].risk_score %></p>
-                                    <p><strong>Risk Level:</strong> <%= assessments[i].risk_level %></p>
-                                </div>
-                                <span class="d-flex">
-                                    <form action="/delete-result/<%= assessments[i].id %>" method="POST" class="ms-auto">
-                                        <button type="submit" onclick="return confirm('Delete this Assessment?')" class="btn btn-danger mt-2 w-auto">Delete</button>
-                                    </form>
-                                </span>
-                                
-                                
-                                <hr class="grey-line">
-                            </div>
-
-                        <% } %>
-                    </div>
-
                 <% } else { %>
-                    <div class="my-container w-60 mt-5">
-                    <p>No risk assessment results found.</p>
+                    <div class="text-center p-4">
+                        <p class="text-white">No prior assessment results found.</p>
                     </div>
                 <% } %>
-
                 </div>
             </div>
             <!-- Widgets End -->
