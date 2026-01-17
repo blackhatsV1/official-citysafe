@@ -24,41 +24,91 @@
 
 
 
-    function onLocationFound(e) {
-        var radius = e.accuracy;
-        var lat = e.latlng.lat;
-        var lng = e.latlng.lng;
-        var coords = "Latitude: " + lat + ", " + "Longitude: " + lng;
-
-        L.marker(e.latlng).addTo(map)
-            .bindPopup("You are within " + radius + " meters from this point").openPopup();
-        L.circle(e.latlng, radius).addTo(map);
-
-        document.getElementById("coords").textContent = coords;
-
-        document.getElementById("coords").textContent = coords;
-        document.getElementById('address').innerHTML = `<i>Fetching location...</i>`;
-        
-        // Caching Logic
-        const cacheKey = `addr_${lat.toFixed(4)}_${lng.toFixed(4)}`; // Approx 11m precision
-        const cachedAddr = localStorage.getItem(cacheKey);
-
-        if (cachedAddr) {
-            console.log("Using cached address");
-            updateAddressUI(cachedAddr, lat, lng);
-        } else {
-            fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
-                .then(res => res.json())
-                .then(data => {
-                    const address = data.display_name;
-                    localStorage.setItem(cacheKey, address); // Save to cache
-                    updateAddressUI(address, lat, lng);
-                })
-                .catch(err => {
-                    console.error("Failed to fetch address:", err);
-                    document.getElementById('address').innerText = "Address not found.";
-                });
+    // Create a custom control for the refresh button
+    var refreshControl = L.Control.extend({
+        options: {
+            position: 'topright'
+        },
+        onAdd: function (map) {
+            var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+            container.innerHTML = '<button type="button" onclick="refreshLocation()" style="background-color: white; border: none; padding: 5px 10px; cursor: pointer; font-weight: bold;"><i class="fa fa-sync-alt"></i> Restart GPS</button>';
+            container.style.backgroundColor = 'white'; 
+            container.style.padding = '5px';
+            container.style.cursor = 'pointer';
+            
+            // Prevent clicks from propagating to the map
+            L.DomEvent.disableClickPropagation(container);
+            return container;
         }
+    });
+    map.addControl(new refreshControl());
+
+    let watchId = null;
+
+    function refreshLocation() {
+        if (watchId) navigator.geolocation.clearWatch(watchId);
+        document.getElementById('address').innerHTML = `<i>Initializing GPS...</i>`;
+        document.getElementById('coords').innerHTML = `<span class="text-muted">Wait for fix...</span>`;
+        // Clear hidden inputs to prevent bad submission
+        if(document.getElementById("location")) document.getElementById("location").value = "";
+        if(document.getElementById("lat")) document.getElementById("lat").value = "";
+        if(document.getElementById("lon")) document.getElementById("lon").value = "";
+        
+        if (navigator.geolocation) {
+             watchId = navigator.geolocation.watchPosition(
+                onLocationFound, 
+                onLocationError, 
+                { 
+                    enableHighAccuracy: true, 
+                    timeout: 30000, 
+                    maximumAge: 0 
+                }
+            );
+        } else {
+             document.getElementById('address').innerHTML = "Geolocation is not supported.";
+        }
+    }
+
+    function onLocationFound(pos) {
+        var radius = pos.coords.accuracy;
+        var lat = pos.coords.latitude;
+        var lng = pos.coords.longitude;
+        var coords = "Latitude: " + lat.toFixed(6) + ", " + "Longitude: " + lng.toFixed(6);
+        
+        // Time
+        var now = new Date();
+        var timeString = now.toLocaleTimeString();
+
+        var latlng = L.latLng(lat, lng);
+
+        // Clear existing markers
+        map.eachLayer(function (layer) {
+            if (layer instanceof L.Marker || layer instanceof L.Circle) {
+                map.removeLayer(layer);
+            }
+        });
+
+        // Add new marker
+        L.marker(latlng).addTo(map)
+            .bindPopup("You are within " + radius.toFixed(1) + " meters from this point").openPopup();
+        L.circle(latlng, radius).addTo(map);
+
+        map.setView(latlng, 16); // Follow user
+
+        document.getElementById("coords").innerHTML = `${coords} <br><small class='text-muted'>(Accuracy: ±${radius.toFixed(1)}m) - Last Update: ${timeString}</small>`;
+        document.getElementById('address').innerHTML = `<i>Refining address...</i>`;
+        
+        // Fetch Address
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+            .then(res => res.json())
+            .then(data => {
+                const address = data.display_name;
+                updateAddressUI(address, lat, lng);
+            })
+            .catch(err => {
+                console.error("Failed to fetch address:", err);
+                document.getElementById('address').innerText = "Address not found.";
+            });
     }
 
     function updateAddressUI(address, lat, lng) {
@@ -73,48 +123,26 @@
         document.getElementById('address').innerHTML = `<b>${shortAddress}</b>`;
         // Keep full address in hidden input
         const locInput = document.getElementById("location");
-        if(locInput && locInput.value === "") locInput.value = address;
+        if(locInput) locInput.value = address; // Always update the input
         
         if(document.getElementById("lat")) document.getElementById("lat").value = lat;
         if(document.getElementById("lon")) document.getElementById("lon").value = lng;
     }
 
 
-    function onLocationError(e) {
-        console.warn("Leaflet Geolocation Error:", e.message);
-        // Fallback to manual navigator.geolocation if Leaflet's map.locate fails
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (pos) => {
-                    const latlng = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-                    map.setView(latlng, 16);
-                    // Manually trigger success handler
-                    onLocationFound({ latlng: latlng, accuracy: pos.coords.accuracy });
-                },
-                (err) => {
-                    let msg = "Unable to retrieve location.";
-                    if (err.code === 1) msg = "Location permission denied. Please enable location in browser settings.";
-                    else if (err.code === 2) msg = "Location unavailable.";
-                    else if (err.code === 3) msg = "Location request timed out.";
-                    
-                    document.getElementById('address').innerHTML = `<span class="text-danger">${msg}</span>`;
-                },
-                { enableHighAccuracy: false, timeout: 15000, maximumAge: 60000 }
-            );
-        } else {
-             document.getElementById('address').innerHTML = `<span class="text-danger">${e.message}</span>`;
-        }
+    function onLocationError(err) {
+        console.warn("Geolocation Error:", err.message);
+        let msg = "Unable to retrieve location.";
+        if (err.code === 1) msg = "Location permission denied. Please enable location in browser settings.";
+        else if (err.code === 2) msg = "Location unavailable.";
+        else if (err.code === 3) msg = "Location request timed out.";
+        
+        document.getElementById('address').innerHTML = `<span class="text-danger">${msg}</span> <button class='btn btn-sm btn-outline-primary ms-2' onclick='refreshLocation()'>Retry</button>`;
     }
 
-    map.on('locationfound', onLocationFound);
-    map.on('locationerror', onLocationError);
+    // map.on('locationfound', onLocationFound); // Removed Leaflet locate event
+    // map.on('locationerror', onLocationError);
 
-    // Reliable start configuration (copied from Visitor Page for speed)
-    map.locate({
-        setView: true, 
-        maxZoom: 16,
-        enableHighAccuracy: false, // Better for Chrome & mobile reliability (Visitor Page Setting)
-        timeout: 15000,
-        maximumAge: 60000 // Cache for 1 min
-    });
+    // Initial Locate
+    refreshLocation();
 </script>

@@ -329,12 +329,33 @@ app.get('/send-sos', (req, res) => {
 app.post('/report', async (req, res) => {
   if (req.session.loggedin && req.session.role === 'user') {
     const userId = req.session.userId;
-    let { disaster_type, location, lat, lon } = req.body; // Expecting lat/lon from hidden inputs
+    // Renamed disaster_type to type_of_disaster to fix autofill bug
+    // We explicitly destructure disaster_type too, to use as a fallback but prioritize type_of_disaster
+    let { type_of_disaster, disaster_type, location, lat, lon } = req.body;
 
-    // [FIX] Handle Edge Case where disaster_type comes as array
-    if (Array.isArray(disaster_type)) {
-      disaster_type = disaster_type[0];
+    // Priority: New Input -> Old Input -> Default
+    let finalDisaster = type_of_disaster;
+
+    // [FIX] Handle Edge Case where disaster_type comes as array (The "Fire" Bug)
+    if (!finalDisaster && disaster_type) {
+      if (Array.isArray(disaster_type)) {
+        // If we have an array (e.g. ['Fire', 'Flood'...]), it means the Ghost Inputs are present.
+        // We can't trust the array index 0 (Fire).
+        // But we have no choice if type_of_disaster is missing.
+        // Log this critical failure state.
+        console.warn("WARNING: Received disaster_type array but no type_of_disaster. Defaulting to first element (Fire).");
+        finalDisaster = disaster_type[0];
+      } else {
+        finalDisaster = disaster_type;
+      }
     }
+
+    // Safety check to prevent NULL crash
+    if (!finalDisaster) {
+      finalDisaster = "General"; // Ultimate fallback
+    }
+
+    let disasterTypeToStore = finalDisaster;
 
     let finalLat = lat;
     let finalLon = lon;
@@ -375,8 +396,16 @@ app.post('/report', async (req, res) => {
       }
     }
 
+    // Debugging SOS mismatch
+    console.log("SOS REPORT RECEIVED:", {
+      body_disaster: req.body.disaster_type,
+      body_location: req.body.location,
+      body_lat: req.body.lat,
+      body_lon: req.body.lon
+    });
+
     const sql = `INSERT INTO disaster_reports (user_id, disaster_type, location, latitude, longitude) VALUES (?, ?, ?, ?, ?)`;
-    db.query(sql, [userId, disaster_type, locationToStore, finalLat, finalLon], (err, result) => {
+    db.query(sql, [userId, disasterTypeToStore, locationToStore, finalLat, finalLon], (err, result) => {
       if (err) throw err;
       res.send(`<script>alert('Disaster Reported Successfully!'); window.location.href='/my-reports';</script>`);
     });

@@ -531,8 +531,8 @@
       if (navigator.geolocation) {
            const geoOptions = {
                enableHighAccuracy: true,
-               maximumAge: 10000, // Reuse cache for 10s
-               timeout: 5000
+               maximumAge: 0,
+               timeout: 30000
            };
 
            // Watch Position for real-time movement updates without polling loop

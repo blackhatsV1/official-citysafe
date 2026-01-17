@@ -18,7 +18,7 @@ if ("Notification" in window && Notification.permission === "default") {
 // Only auto-run geolocation if not explicitly skipped (e.g., on visitor page)
 if (!window.skipAutoLocation) {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showMap, handleError);
+    navigator.geolocation.getCurrentPosition(showMap, handleError, { enableHighAccuracy: true, timeout: 30000, maximumAge: 0 });
   } else {
     // alert("Cannot get location, not supported.");
     console.warn("Geolocation not supported or skipped.");

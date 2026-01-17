@@ -75,7 +75,7 @@
                     
                     alert(msg);
                 },
-                { enableHighAccuracy: false, timeout: 15000, maximumAge: 60000 }
+                { enableHighAccuracy: true, timeout: 30000, maximumAge: 0 }
             );
         } else {
             alert(e.message);
@@ -93,8 +93,8 @@
     map.locate({
         setView: true, 
         maxZoom: 16,
-        enableHighAccuracy: false, // Better for Chrome & mobile reliability
-        timeout: 15000,
-        maximumAge: 60000 // Cache for 1 min
+        enableHighAccuracy: true, // Better for Chrome & mobile reliability
+        timeout: 30000,
+        maximumAge: 0 // Cache for 1 min
     });
 </script>

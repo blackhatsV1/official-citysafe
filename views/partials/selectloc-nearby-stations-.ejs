@@ -22,7 +22,7 @@
       attribution: '© OpenStreetMap'
     }).addTo(map);
 
-    map.locate({ setView: true, maxZoom: 16 });
+    map.locate({ setView: true, maxZoom: 16, enableHighAccuracy: true, timeout: 30000, maximumAge: 0 });
 
     function onLocationFound(e) {
       const { lat, lng } = e.latlng;

@@ -190,7 +190,7 @@
                      ]);
                  }
 
-             }, err => console.error(err), { enableHighAccuracy: true });
+             }, err => console.error(err), { enableHighAccuracy: true, timeout: 30000, maximumAge: 0 });
           }
       } else {
           document.getElementById('missionMap').innerHTML = '<div class="d-flex align-items-center justify-content-center h-100"><p class="text-danger">Invalid Incident Coordinates</p></div>';

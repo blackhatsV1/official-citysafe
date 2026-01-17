@@ -41,14 +41,19 @@
                                         <div class="d-flex align-items-center justify-content-between mb-4">
                                             <h6 class="mb-0 text-uppercase" style="letter-spacing: 1px; color: var(--primary);">Send SOS</h6>
                                         </div>
-                                        <form action="/report" method="POST">
+                                        <form action="/report" method="POST" id="sosForm" autocomplete="off">
                                             <label class="form-label mb-3 text-white text-center w-100">
                                                 What is your emergency?
                                             </label>
+                                            
+                                            <!-- Hidden Input for Disaster Type -->
+                                            <!-- Renamed ID to avoid conflicts and added autocomplete=off -->
+                                            <!-- Changed name to type_of_disaster to break autofill -->
+                                            <input type="hidden" name="type_of_disaster" id="selected_disaster_type" autocomplete="off">
 
                                             <div class="row g-3 mb-4">
                                                 <div class="col-6">
-                                                    <button type="submit" name="disaster_type" value="Fire" class="btn p-0 w-100 h-100 border-0 bg-transparent">
+                                                    <button type="button" onclick="triggerSosReport('Fire')" class="btn p-0 w-100 h-100 border-0 bg-transparent">
                                                         <div class="disaster-card p-4 text-center">
                                                             <div class="icon-wrapper">
                                                                 <i class="fa fa-fire"></i>
@@ -59,7 +64,7 @@
                                                 </div>
 
                                                 <div class="col-6">
-                                                    <button type="submit" name="disaster_type" value="Flood" class="btn p-0 w-100 h-100 border-0 bg-transparent">
+                                                    <button type="button" onclick="triggerSosReport('Flood')" class="btn p-0 w-100 h-100 border-0 bg-transparent">
                                                         <div class="disaster-card p-4 text-center">
                                                             <div class="icon-wrapper">
                                                                 <i class="fa fa-water"></i>
@@ -70,7 +75,7 @@
                                                 </div>
 
                                                 <div class="col-6">
-                                                    <button type="submit" name="disaster_type" value="Earthquake" class="btn p-0 w-100 h-100 border-0 bg-transparent">
+                                                    <button type="button" onclick="triggerSosReport('Earthquake')" class="btn p-0 w-100 h-100 border-0 bg-transparent">
                                                         <div class="disaster-card p-4 text-center">
                                                             <div class="icon-wrapper">
                                                                 <i class="fa fa-globe-americas"></i>
@@ -81,7 +86,7 @@
                                                 </div>
 
                                                 <div class="col-6">
-                                                    <button type="submit" name="disaster_type" value="Landslide" class="btn p-0 w-100 h-100 border-0 bg-transparent">
+                                                    <button type="button" onclick="triggerSosReport('Landslide')" class="btn p-0 w-100 h-100 border-0 bg-transparent">
                                                         <div class="disaster-card p-4 text-center">
                                                             <div class="icon-wrapper">
                                                                 <i class="fa fa-mountain"></i>
@@ -97,6 +102,33 @@
                                             <input type="hidden" id="lat" name="lat">
                                             <input type="hidden" id="lon" name="lon">
                                         </form>
+
+                                        <script>
+                                            // Force clear on load to prevent browser cache "remembering" old values
+                                            window.onload = function() {
+                                                const input = document.getElementById('selected_disaster_type');
+                                                if(input) input.value = "";
+                                            };
+
+                                            function triggerSosReport(type) {
+                                                const input = document.getElementById('selected_disaster_type');
+                                                if(input) {
+                                                    input.value = type;
+                                                    console.log("Disaster Type Set:", type); // Debug
+                                                } else {
+                                                    console.error("Disaster input not found!");
+                                                    return;
+                                                }
+
+                                                // Validate location before submitting
+                                                const loc = document.getElementById('location').value;
+                                                if(!loc || loc.trim() === "") {
+                                                    alert("Please wait for location or enter it manually.");
+                                                    return;
+                                                }
+                                                document.getElementById('sosForm').submit();
+                                            }
+                                        </script>
 
 
                                     </div>
