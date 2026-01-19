@@ -31,7 +31,7 @@ app.set('trust proxy', 1);
 
 // [SECURITY] Helmet - Secure HTTP Headers
 app.use(helmet({
-  contentSecurityPolicy: true, // Disabled for now to prevent breaking maps/scripts
+  contentSecurityPolicy: false, // Disabled to allow inline scripts (fixes spinner)
 }));
 
 // [SECURITY] Global Rate Limiter

@@ -150,11 +150,13 @@ a:hover {
 #spinner {
     opacity: 0;
     visibility: hidden;
-    transition: opacity .5s ease-out, visibility 0s linear .5s;
+    transition: opacity .5s ease-out, visibility 0s linear .5s !important;
     z-index: 99999;
+    pointer-events: none; /* Allow clicks to pass through if stuck invisible */
 }
 
 #spinner.show {
+    pointer-events: all; /* Block clicks only when actively showing */
     transition: opacity .5s ease-out, visibility 0s linear 0s;
     visibility: visible;
     opacity: 1;

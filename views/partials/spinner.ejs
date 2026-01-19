@@ -8,9 +8,11 @@
     // Robust Failsafe: Remove spinner after 3s if JS fails or hangs
     setTimeout(() => {
         const spinner = document.getElementById('spinner');
-        if (spinner && spinner.classList.contains('show')) {
-            spinner.classList.remove('show');
+        if (spinner) {
+            // Nuclear option: Remove from DOM entirely
+            spinner.style.display = 'none'; // Immediate hide
+            spinner.remove(); // DOM removal
             console.warn('Spinner forced hidden by failsafe.');
         }
-    }, 3000);
+    }, 2500); // Reduced to 2.5s for faster feedback
 </script>
