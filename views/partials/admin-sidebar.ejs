@@ -1,50 +1,50 @@
-<div class="sidebar pe-2 pb-3">
-    <nav class="navbar bg-dark navbar-dark">
-        <a href="/adminpage" class="navbar-brand mx-4 mb-3">
-            <h4 class="text-danger text-uppercase" style="letter-spacing: 0.1em;"><i
-                    class="fa fa-shield-alt me-2"></i>CitySafe</h4>
+<div class="sidebar pb-3">
+    <nav class="navbar-dark w-100">
+        <a href="/adminpage" class="navbar-brand mx-4 my-4 d-block">
+            <h4 class="text-white mb-0" style="letter-spacing: 0.05em;"><i class="fa fa-shield-alt me-2"></i>CITYSAFE
+            </h4>
         </a>
 
-        <!-- Compact Admin Info -->
-        <div class="px-4 mb-3">
-            <div class="p-2 border border-secondary" style="background: rgba(255,255,255,0.05);">
+        <!-- System Admin Info -->
+        <div class="px-4 mb-4">
+            <div class="p-3 border border-secondary" style="background: rgba(255,255,255,0.05);">
                 <div class="d-flex align-items-center">
-                    <div class="d-flex align-items-center justify-content-center bg-danger text-white"
+                    <div class="d-flex align-items-center justify-content-center bg-white"
                         style="width: 32px; height: 32px;">
-                        <i class="fa fa-user-shield"></i>
+                        <i class="fa fa-user-shield text-dark"></i>
                     </div>
                     <div class="ms-3">
-                        <h6 class="mb-0 text-white text-uppercase" style="font-size: 0.8rem;">
+                        <h6 class="mb-0 text-white text-uppercase" style="font-size: 0.75rem;">
                             <%= username %>
                         </h6>
-                        <small class="text-muted text-uppercase" style="font-size: 0.7rem;">Administrator</small>
+                        <small class="text-muted text-uppercase" style="font-size: 0.65rem;">ADMIN UNIT</small>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="navbar-nav w-100">
-            <div class="nav-header px-4 mt-2 mb-1 text-muted text-uppercase"
-                style="font-size: 0.7rem; font-weight: 700;">Command</div>
-            <a href="/adminpage" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-            <a href="/status-overview" class="nav-item nav-link"><i class="bi bi-person-badge me-2"></i>Status Grid</a>
+            <small class="px-4 mb-2 text-muted text-uppercase"
+                style="font-size: 0.65rem; font-weight: 800; opacity: 0.6;">COMMAND</small>
+            <a href="/adminpage" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>DASHBOARD</a>
+            <a href="/status-overview" class="nav-item nav-link"><i class="fa fa-th me-2"></i>STATUS GRID</a>
 
-            <div class="nav-header px-4 mt-3 mb-1 text-muted text-uppercase"
-                style="font-size: 0.7rem; font-weight: 700;">Intel</div>
-            <a href="/disaster-reports" class="nav-item nav-link"><i class="fa fa-envelope me-2"></i>SOS Reports</a>
-            <a href="/reports" class="nav-item nav-link"><i class="fa fa-chart-pie me-2"></i>Analytics</a>
+            <small class="px-4 mt-4 mb-2 text-muted text-uppercase"
+                style="font-size: 0.65rem; font-weight: 800; opacity: 0.6;">INTELLIGENCE</small>
+            <a href="/disaster-reports" class="nav-item nav-link"><i class="fa fa-bullhorn me-2"></i>SOS REPORTS</a>
+            <a href="/reports" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>ANALYTICS</a>
             <a href="/assessment-results" class="nav-item nav-link"><i
-                    class="fa fa-file-contract me-2"></i>Assessments</a>
+                    class="fa fa-file-invoice me-2"></i>ASSESSMENTS</a>
 
-            <div class="nav-header px-4 mt-3 mb-1 text-muted text-uppercase"
-                style="font-size: 0.7rem; font-weight: 700;">Personnel</div>
+            <small class="px-4 mt-4 mb-2 text-muted text-uppercase"
+                style="font-size: 0.65rem; font-weight: 800; opacity: 0.6;">PERSONNEL</small>
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
-                        class="far fa-file-alt me-2"></i>Manage Users</a>
-                <div class="dropdown-menu bg-dark border border-secondary m-0">
-                    <a href="/userslist" class="dropdown-item text-light">User List</a>
-                    <a href="/addusers" class="dropdown-item text-light">Register User</a>
-                    <a href="/addresponder" class="dropdown-item text-light">Register Responder</a>
+                        class="fa fa-users-cog me-2"></i>USER OPS</a>
+                <div class="dropdown-menu border border-slate m-0">
+                    <a href="/userslist" class="dropdown-item">Directory</a>
+                    <a href="/addusers" class="dropdown-item">Register Citizen</a>
+                    <a href="/addresponder" class="dropdown-item">Register Responder</a>
                 </div>
             </div>
         </div>

@@ -1,48 +1,48 @@
-<div class="sidebar pe-2 pb-3"> <!-- Reduced padding -->
-    <nav class="navbar bg-dark navbar-dark">
-        <a href="/" class="navbar-brand mx-4 mb-3">
-            <h4 class="text-danger text-uppercase" style="letter-spacing: 0.1em;"><i
-                    class="fa fa-shield-alt me-2"></i>CitySafe</h4>
+<div class="sidebar pb-3">
+    <nav class="navbar-dark w-100">
+        <a href="/" class="navbar-brand mx-4 my-4 d-block">
+            <h4 class="text-white mb-0" style="letter-spacing: 0.05em;"><i class="fa fa-shield-alt me-2"></i>CITYSAFE
+            </h4>
         </a>
 
-        <!-- Compact User Info -->
-        <div class="px-4 mb-3">
-            <div class="p-2 border border-secondary" style="background: rgba(255,255,255,0.05);">
+        <!-- System User Info -->
+        <div class="px-4 mb-4">
+            <div class="p-3 border border-secondary" style="background: rgba(255,255,255,0.05);">
                 <div class="d-flex align-items-center">
-                    <div class="d-flex align-items-center justify-content-center bg-secondary"
+                    <div class="d-flex align-items-center justify-content-center bg-white"
                         style="width: 32px; height: 32px;">
-                        <i class="fa fa-user text-white"></i>
+                        <i class="fa fa-user text-dark"></i>
                     </div>
                     <div class="ms-3">
-                        <h6 class="mb-0 text-white text-uppercase" style="font-size: 0.8rem;">
+                        <h6 class="mb-0 text-white text-uppercase" style="font-size: 0.75rem;">
                             <%= username %>
                         </h6>
-                        <small class="text-muted text-uppercase" style="font-size: 0.7rem;">Operative</small>
+                        <small class="text-muted text-uppercase" style="font-size: 0.65rem;">CITIZEN UNIT</small>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="navbar-nav w-100">
-            <div class="nav-header px-4 mt-2 mb-1 text-muted text-uppercase"
-                style="font-size: 0.7rem; font-weight: 700;">Operations</div>
+            <small class="px-4 mb-2 text-muted text-uppercase"
+                style="font-size: 0.65rem; font-weight: 800; opacity: 0.6;">COMMAND</small>
             <a href="/send-sos"
                 class="nav-item nav-link <%= (typeof page !== 'undefined' && page === 'send-sos') ? 'active' : '' %>">
-                <i class="fa fa-exclamation-triangle me-2"></i>SOS Panel
+                <i class="fa fa-bullhorn me-2"></i>SOS PANEL
             </a>
             <a href="/my-reports"
                 class="nav-item nav-link <%= (typeof page !== 'undefined' && page === 'my-reports') ? 'active' : '' %>">
-                <i class="fa fa-history me-2"></i>History
+                <i class="fa fa-list-alt me-2"></i>ACTIVITY
             </a>
 
-            <div class="nav-header px-4 mt-3 mb-1 text-muted text-uppercase"
-                style="font-size: 0.7rem; font-weight: 700;">Intel</div>
+            <small class="px-4 mt-4 mb-2 text-muted text-uppercase"
+                style="font-size: 0.65rem; font-weight: 800; opacity: 0.6;">INTELLIGENCE</small>
             <a href="/nearby-stations"
                 class="nav-item nav-link <%= (typeof page !== 'undefined' && page === 'stations') ? 'active' : '' %>">
-                <i class="fa fa-map-marker-alt me-2"></i>Stations
+                <i class="fa fa-map me-2"></i>FACILITIES
             </a>
             <a href="/assess-risk" class="nav-item nav-link">
-                <i class="far fa-file-alt me-2"></i>Risk Assess
+                <i class="fa fa-file-contract me-2"></i>ASSESSMENT
             </a>
         </div>
     </nav>

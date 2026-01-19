@@ -1,24 +1,27 @@
-<nav class="navbar navbar-expand bg-dark navbar-dark sticky-top px-4 py-0"
-    style="height: 50px; border-bottom: 1px solid rgba(255,255,255,0.1);">
+<nav class="navbar navbar-expand sticky-top px-4 py-0">
     <a href="/responder" class="navbar-brand d-flex d-lg-none me-4">
-        <h2 class="text-primary mb-0"><i class="fa fa-shield-alt"></i></h2>
+        <h2 class="text-slate mb-0"><i class="fa fa-shield-alt"></i></h2>
     </a>
     <a href="#" class="sidebar-toggler flex-shrink-0 text-decoration-none">
-        <i class="fa fa-bars text-muted"></i>
+        <i class="fa fa-bars text-slate"></i>
     </a>
-    <button class="btn btn-outline-info btn-sm ms-4" id="enableNotifications" style="font-size: 0.75rem;">
-        <i class="fa fa-bell me-2"></i> ALERTS
+    <button class="btn btn-outline-secondary btn-sm ms-4" id="enableNotifications" style="padding: 0.4rem 0.8rem;">
+        <i class="fa fa-satellite-dish me-2"></i>MONITORING
     </button>
     <div class="navbar-nav align-items-center ms-auto">
+        <div class="nav-item">
+            <a href="/aboutresponder" class="nav-link">
+                <i class="fa fa-info-circle me-1"></i>INFO
+            </a>
+        </div>
         <div class="nav-item dropdown ms-3">
-            <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown"
-                style="font-size: 0.85rem;">
+            <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
                 <i class="fa fa-user-md me-2"></i>
                 <span class="d-none d-lg-inline-flex text-uppercase">
                     <%= username %>
                 </span>
             </a>
-            <div class="dropdown-menu dropdown-menu-end bg-dark border border-secondary m-0">
+            <div class="dropdown-menu dropdown-menu-end border border-slate m-0">
                 <a href="/logout" class="dropdown-item text-danger">LOG OUT</a>
             </div>
         </div>

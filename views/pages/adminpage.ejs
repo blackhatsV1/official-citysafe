@@ -33,210 +33,150 @@
                     <%- include('../partials/admin-navbar'); %>
                         <!-- Navbar End -->
 
-                        <!-- Weather Info -->
+                        <!-- System Overview -->
                         <div class="container-fluid pt-4 px-4">
-                            <div class="bg-secondary rounded p-4 border border-secondary">
+                            <div class="card p-3">
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h4 class="mb-0 text-uppercase">System Status</h4>
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-neutral p-2 px-3 border-slate me-3">
+                                            <h5 class="mb-0">OPS CENTER</h5>
+                                        </div>
+                                        <span class="text-slate small fw-bold text-uppercase letter-spacing-1">System
+                                            Health: Nominal</span>
                                     </div>
-                                    <div class="text-end">
-                                        <small class="text-muted d-block uppercase">TOTAL USERS</small>
-                                        <strong class="text-white h5" id="total-users-count">
-                                            <%= totalUsers %>
-                                        </strong>
-                                    </div>
-                                    <div class="text-end ms-4">
-                                        <small class="text-muted d-block uppercase">ACTIVE REPORTS</small>
-                                        <strong class="text-danger h5"><a href="/disaster-reports"
-                                                class="text-danger text-decoration-none"><span
-                                                    id="total-requests-count">
-                                                    <%= totalRequests %>
-                                                </span></a></strong>
+                                    <div class="d-flex gap-4">
+                                        <div class="text-end">
+                                            <small class="text-muted d-block text-uppercase"
+                                                style="font-size: 0.65rem;">Personnel Registry</small>
+                                            <strong class="text-head" id="total-users-count">
+                                                <%= totalUsers %>
+                                            </strong>
+                                        </div>
+                                        <div class="text-end">
+                                            <small class="text-muted d-block text-uppercase"
+                                                style="font-size: 0.65rem;">Active Ops</small>
+                                            <strong class="text-danger"><a href="/disaster-reports"
+                                                    class="text-danger text-decoration-none"><span
+                                                        id="total-requests-count">
+                                                        <%= totalRequests %>
+                                                    </span></a></strong>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!-- Weather Info End -->
 
-                        <!-- Responder Map Start -->
+                        <!-- Operations Map -->
                         <div class="container-fluid pt-4 px-4">
-                            <div class="bg-secondary text-center rounded p-4">
-                                <div class="d-flex align-items-center justify-content-between mb-4">
-                                    <h6 class="mb-0">Responder Management & Live Map</h6>
-                                    <a href="" onclick="refreshMapData(); return false;">Refresh Map</a>
+                            <div class="card p-0">
+                                <div
+                                    class="p-3 border-bottom border-slate d-flex align-items-center justify-content-between">
+                                    <h6 class="mb-0">GEOSPATIAL INTELLIGENCE & DISPATCH</h6>
+                                    <button class="btn btn-outline-secondary btn-sm"
+                                        onclick="refreshMapData(); return false;">
+                                        <i class="fa fa-sync-alt me-1"></i>REFRESH
+                                    </button>
                                 </div>
-                                <div id="admin-map"></div>
+                                <div id="admin-map" style="height: 550px;"></div>
                             </div>
                         </div>
                         <!-- Responder Map End -->
 
-                        <!-- Widgets Start -->
+                        <!-- Risk Analytics Widgets -->
                         <div class="container-fluid pt-4 px-4">
                             <div class="row g-4">
-                                <div class="col-sm-12 col-md-6 col-xl-4">
-                                    <div class="h-100 bg-secondary rounded p-4 border border-secondary">
-                                        <div class="d-flex align-items-center justify-content-between mb-4">
-                                            <h6 class="mb-0 text-uppercase text-danger">High Risk Users</h6>
-                                            <a href="" class="text-muted small text-decoration-none">Show All</a>
-                                        </div>
-                                        <div class="table-responsive">
-                                            <table class="table table-hover mb-0">
-                                                <thead>
-                                                    <tr class="text-muted border-bottom border-secondary">
-                                                        <th scope="col" class="text-uppercase small">Fullname</th>
-                                                        <th scope="col" class="text-uppercase small">Score</th>
-                                                        <th scope="col" class="text-uppercase small">Date</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <% if (riskTables['High'] && riskTables['High'].length> 0) { %>
-                                                        <% riskTables['High'].forEach(user=> { %>
+                                <% const levels=[ {id: 'High' , label: 'CRITICAL RISK' , color: 'danger' },
+                                    {id: 'Moderate' , label: 'ELEVATED RISK' , color: 'slate' }, {id: 'Low' ,
+                                    label: 'STANDARD RISK' , color: 'slate' } ]; %>
+
+                                    <% levels.forEach(level=> { %>
+                                        <div class="col-sm-12 col-md-6 col-xl-4">
+                                            <div class="card h-100 p-0">
+                                                <div
+                                                    class="p-3 border-bottom border-slate d-flex align-items-center justify-content-between">
+                                                    <h6
+                                                        class="mb-0 <%= level.color === 'danger' ? 'text-danger' : '' %>">
+                                                        <%= level.label %>
+                                                    </h6>
+                                                    <a href="/assessment-results"
+                                                        class="text-muted small text-decoration-none">DETAILS</a>
+                                                </div>
+                                                <div class="table-responsive">
+                                                    <table class="table mb-0">
+                                                        <thead>
                                                             <tr>
-                                                                <td class="text-white">
-                                                                    <%= user.username %>
-                                                                </td>
-                                                                <td><span class="badge bg-danger text-white">
-                                                                        <%= user.risk_score %>
-                                                                    </span></td>
-                                                                <td class="text-muted small">
-                                                                    <%= user.assessed_at.toLocaleDateString() %>
-                                                                </td>
+                                                                <th>OPERATIVE</th>
+                                                                <th>SCORE</th>
+                                                                <th>DATE</th>
                                                             </tr>
-                                                            <% }) %>
-                                                                <% } else { %>
+                                                        </thead>
+                                                        <tbody>
+                                                            <% if (riskTables[level.id] && riskTables[level.id].length>
+                                                                0) { %>
+                                                                <% riskTables[level.id].forEach(user=> { %>
                                                                     <tr>
-                                                                        <td colspan="3"
-                                                                            class="text-center text-muted small">No high
-                                                                            risk users</td>
+                                                                        <td class="fw-bold text-head">
+                                                                            <%= user.username %>
+                                                                        </td>
+                                                                        <td><span
+                                                                                class="badge border border-slate text-slate">
+                                                                                <%= user.risk_score %>
+                                                                            </span></td>
+                                                                        <td class="text-muted small">
+                                                                            <%= user.assessed_at.toLocaleDateString() %>
+                                                                        </td>
                                                                     </tr>
-                                                                    <% } %>
-                                                </tbody>
-                                            </table>
+                                                                    <% }) %>
+                                                                        <% } else { %>
+                                                                            <tr>
+                                                                                <td colspan="3"
+                                                                                    class="text-center text-muted small py-4">
+                                                                                    NO DATA RECORDED</td>
+                                                                            </tr>
+                                                                            <% } %>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 col-md-6 col-xl-4">
-                                    <div class="h-100 bg-secondary rounded p-4 border border-secondary">
-                                        <div class="d-flex align-items-center justify-content-between mb-4">
-                                            <h6 class="mb-0 text-uppercase text-warning">Moderate Risk Users</h6>
-                                            <a href="" class="text-muted small text-decoration-none">Show All</a>
-                                        </div>
-                                        <div class="table-responsive">
-                                            <table class="table table-hover mb-0">
-                                                <thead>
-                                                    <tr class="text-muted border-bottom border-secondary">
-                                                        <th scope="col" class="text-uppercase small">Fullname</th>
-                                                        <th scope="col" class="text-uppercase small">Score</th>
-                                                        <th scope="col" class="text-uppercase small">Date</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <% if (riskTables['Moderate'] && riskTables['Moderate'].length> 0) {
-                                                        %>
-                                                        <% riskTables['Moderate'].forEach(user=> { %>
-                                                            <tr>
-                                                                <td class="text-white">
-                                                                    <%= user.username %>
-                                                                </td>
-                                                                <td><span class="badge bg-warning text-dark">
-                                                                        <%= user.risk_score %>
-                                                                    </span></td>
-                                                                <td class="text-muted small">
-                                                                    <%= user.assessed_at.toLocaleDateString() %>
-                                                                </td>
-                                                            </tr>
-                                                            <% }) %>
-                                                                <% } else { %>
-                                                                    <tr>
-                                                                        <td colspan="3"
-                                                                            class="text-center text-muted small">No
-                                                                            moderate risk users</td>
-                                                                    </tr>
-                                                                    <% } %>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 col-md-6 col-xl-4">
-                                    <div class="h-100 bg-secondary rounded p-4 border border-secondary">
-                                        <div class="d-flex align-items-center justify-content-between mb-4">
-                                            <h6 class="mb-0 text-uppercase text-success">Low Risk Users</h6>
-                                            <a href="" class="text-muted small text-decoration-none">Show All</a>
-                                        </div>
-                                        <div class="table-responsive">
-                                            <table class="table table-hover mb-0">
-                                                <thead>
-                                                    <tr class="text-muted border-bottom border-secondary">
-                                                        <th scope="col" class="text-uppercase small">Fullname</th>
-                                                        <th scope="col" class="text-uppercase small">Score</th>
-                                                        <th scope="col" class="text-uppercase small">Date</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <% if (riskTables['Low'] && riskTables['Low'].length> 0) { %>
-                                                        <% riskTables['Low'].forEach(user=> { %>
-                                                            <tr>
-                                                                <td class="text-white">
-                                                                    <%= user.username %>
-                                                                </td>
-                                                                <td><span class="badge bg-success text-white">
-                                                                        <%= user.risk_score %>
-                                                                    </span></td>
-                                                                <td class="text-muted small">
-                                                                    <%= user.assessed_at.toLocaleDateString() %>
-                                                                </td>
-                                                            </tr>
-                                                            <% }) %>
-                                                                <% } else { %>
-                                                                    <tr>
-                                                                        <td colspan="3"
-                                                                            class="text-center text-muted small">No low
-                                                                            risk users</td>
-                                                                    </tr>
-                                                                    <% } %>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
+                                        <% }) %>
                             </div>
                         </div>
                         <!-- Widgets End -->
 
 
 
-                        <!-- Chart Start -->
-                        <div class="container-fluid pt-4 px-4">
+                        <!-- Analytics Charts -->
+                        <div class="container-fluid pt-4 px-4 pb-4">
                             <div class="row g-4">
                                 <div class="col-sm-12 col-xl-6">
-                                    <div class="bg-secondary rounded h-100 p-4">
-                                        <h6 class="mb-4">Number of posts per day by users.</h6>
+                                    <div class="card h-100 p-4">
+                                        <h6 class="mb-4">INCIDENT TRENDS (DAILY)</h6>
                                         <canvas id="userChart"></canvas>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-xl-6">
-                                    <div class="bg-secondary rounded h-100 p-4">
-                                        <h6 class="mb-4">Risk Level chart</h6>
+                                    <div class="card h-100 p-4">
+                                        <h6 class="mb-4">RISK DISTRIBUTION</h6>
                                         <canvas id="riskLevelChart"></canvas>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-xl-6">
-                                    <div class="bg-secondary rounded h-100 p-4">
-                                        <h6 class="mb-4">Checklist Chart</h6>
+                                    <div class="card h-100 p-4">
+                                        <h6 class="mb-4">PREPAREDNESS METRICS</h6>
                                         <canvas id="checklistChart"></canvas>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-xl-6">
-                                    <div class="bg-secondary rounded h-100 p-4">
-                                        <h6 class="mb-4">Trend Chart</h6>
+                                    <div class="card h-100 p-4">
+                                        <h6 class="mb-4">AVERAGE RISK ACCUMULATION</h6>
                                         <canvas id="trendChart"></canvas>
                                     </div>
                                 </div>
                                 <div class="col-sm-12 col-xl-6">
-                                    <div class="bg-secondary rounded h-100 p-4">
-                                        <h6 class="mb-4">Hazard Chart</h6>
+                                    <div class="card h-100 p-4">
+                                        <h6 class="mb-4">ENVIRONMENTAL HAZARDS</h6>
                                         <canvas id="hazardsChart"></canvas>
                                     </div>
                                 </div>
@@ -265,10 +205,11 @@
         (function ($) {
             "use strict";
 
-            // Chart Global Color
-            Chart.defaults.color = "#A0A6B5";
-            Chart.defaults.borderColor = "#000000";
-            Chart.defaults.font.family = "'Roboto', 'Open Sans', sans-serif";
+            // Chart Global Formal Config
+            Chart.defaults.color = "#475569"; // Slate 600
+            Chart.defaults.borderColor = "#e2e8f0"; // Slate 200
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            Chart.defaults.font.size = 11;
 
             // --- User Chart ---
             var ctx1 = $("#userChart").get(0).getContext("2d");
@@ -277,9 +218,9 @@
                 data: {
                     labels: [ <% chartData.forEach(function (item, index) { %> '<%= item.day %>' <% if (index < chartData.length - 1) { %>, <% } %> <% }); %> ],
                 datasets: [{
-                    label: "Posts",
+                    label: "Reports",
                     data: [ <% chartData.forEach(function (item, index) { %> <%= item.total %><% if (index < chartData.length - 1) { %>, <% } %> <% }); %> ],
-                backgroundColor: "rgba(235, 22, 22, .7)"
+                backgroundColor: "#475569" // Slate 600
             }]
         },
             options: { responsive: true }
@@ -294,10 +235,10 @@
             datasets: [{
                 data: [ <% riskLevelData.forEach(function (item, index) { %> <%= item.total %><% if (index < riskLevelData.length - 1) { %>, <% } %> <% }); %> ],
             backgroundColor: [
-                "rgba(235, 22, 22, .7)",
-                "rgba(235, 22, 22, .6)",
-                "rgba(235, 22, 22, .5)",
-                "rgba(235, 22, 22, .4)"
+                "#1e293b", // Slate 800
+                "#475569", // Slate 600
+                "#94a3b8", // Slate 400
+                "#cbd5e1"  // Slate 200
             ]
         }]
         },
@@ -311,9 +252,9 @@
             data: {
                 labels: ["Near River", "Near Fault", "Has Emergency Kit", "Has Evacuation Plan"],
                 datasets: [{
-                    label: "Completed",
+                    label: "Compliance",
                     data: [<%= checklistData.near_river %>, <%= checklistData.near_fault %>, <%= checklistData.has_emergency_kit %>, <%= checklistData.has_evacuation_plan %>],
-                    backgroundColor: "rgba(235, 22, 22, .7)"
+                    backgroundColor: "#1e293b"
                 }]
             },
             options: { responsive: true }
@@ -328,11 +269,11 @@
             datasets: [{
                 label: "Avg Risk Score",
                 data: [ <% trendData.forEach(function (item, index) { %> <%= item.avg_score %><% if (index < trendData.length - 1) { %>, <% } %> <% }); %> ],
-            borderColor: "rgba(235, 22, 22, .7)",
-            backgroundColor: "rgba(235, 22, 22, .3)",
-            tension: 0.4,
+            borderColor: "#0f172a",
+            backgroundColor: "rgba(15, 23, 42, 0.05)",
+            tension: 0,
             fill: true,
-            pointBackgroundColor: "rgba(235, 22, 22, .9)",
+            pointBackgroundColor: "#0f172a",
             pointRadius: 4
         }]
     },
@@ -375,11 +316,11 @@
             data: {
                 labels: ["Near River", "Near Fault"],
                 datasets: [{
-                    label: "Users",
+                    label: "Operators",
                     data: [<%= hazardsData.near_river %>, <%= hazardsData.near_fault %>],
                     backgroundColor: [
-                        "rgba(235, 22, 22, .7)",
-                        "rgba(235, 22, 22, .5)"
+                        "#475569",
+                        "#94a3b8"
                     ]
                 }]
             },

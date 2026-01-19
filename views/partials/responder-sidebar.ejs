@@ -1,46 +1,52 @@
-<div class="sidebar pe-2 pb-3">
-    <nav class="navbar bg-dark navbar-dark">
-        <a href="/responder" class="navbar-brand mx-4 mb-3">
-            <h4 class="text-primary text-uppercase" style="letter-spacing: 0.1em;"><i
-                    class="fa fa-shield-alt me-2"></i>CitySafe</h4>
+<div class="sidebar pb-3">
+    <nav class="navbar-dark w-100">
+        <a href="/responder" class="navbar-brand mx-4 my-4 d-block">
+            <h4 class="text-white mb-0" style="letter-spacing: 0.05em;"><i class="fa fa-shield-alt me-2"></i>CITYSAFE
+            </h4>
         </a>
 
-        <!-- Compact User Info -->
-        <div class="px-4 mb-3">
-            <div class="p-2 border border-secondary" style="background: rgba(255,255,255,0.05);">
+        <!-- System Responder Info -->
+        <div class="px-4 mb-4">
+            <div class="p-3 border border-secondary" style="background: rgba(255,255,255,0.05);">
                 <div class="d-flex align-items-center">
-                    <div class="d-flex align-items-center justify-content-center bg-primary text-white"
+                    <div class="d-flex align-items-center justify-content-center bg-white"
                         style="width: 32px; height: 32px;">
-                        <i class="fa fa-user-md"></i>
+                        <i class="fa fa-user-md text-dark"></i>
                     </div>
                     <div class="ms-3">
-                        <h6 class="mb-0 text-white text-uppercase" style="font-size: 0.8rem;">
+                        <h6 class="mb-0 text-white text-uppercase" style="font-size: 0.75rem;">
                             <%= username %>
                         </h6>
-                        <small class="text-muted text-uppercase" style="font-size: 0.7rem;">Field Unit</small>
+                        <small class="text-muted text-uppercase" style="font-size: 0.65rem;">FIELD UNIT</small>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="navbar-nav w-100">
-            <div class="nav-header px-4 mt-2 mb-1 text-muted text-uppercase"
-                style="font-size: 0.7rem; font-weight: 700;">Operations</div>
-            <a href="/responder" class="nav-item nav-link <%= page === 'dashboard' ? 'active' : '' %>"><i
-                    class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-            <a href="/responder#nearby-reports" class="nav-item nav-link"><i
-                    class="fa fa-map-marked-alt me-2"></i>Nearby Ops</a>
+            <small class="px-4 mb-2 text-muted text-uppercase"
+                style="font-size: 0.65rem; font-weight: 800; opacity: 0.6;">OPERATIONS</small>
+            <a href="/responder"
+                class="nav-item nav-link <%= (typeof page !== 'undefined' && page === 'dashboard') ? 'active' : '' %>">
+                <i class="fa fa-tachometer-alt me-2"></i>WORKSPACE
+            </a>
+            <a href="/responder#nearby-reports" class="nav-item nav-link">
+                <i class="fa fa-map-marked-alt me-2"></i>NEARBY OPS
+            </a>
 
-            <div class="nav-header px-4 mt-3 mb-1 text-muted text-uppercase"
-                style="font-size: 0.7rem; font-weight: 700;">Records</div>
-            <a href="/responder-history" class="nav-item nav-link <%= page === 'history' ? 'active' : '' %>"><i
-                    class="fa fa-history me-2"></i>History</a>
-            <a href="/aboutresponder" class="nav-item nav-link <%= page === 'about' ? 'active' : '' %>"><i
-                    class="fa fa-info-circle me-2"></i>About</a>
+            <small class="px-4 mt-4 mb-2 text-muted text-uppercase"
+                style="font-size: 0.65rem; font-weight: 800; opacity: 0.6;">RECORDS</small>
+            <a href="/responder-history"
+                class="nav-item nav-link <%= (typeof page !== 'undefined' && page === 'history') ? 'active' : '' %>">
+                <i class="fa fa-history me-2"></i>HISTORY
+            </a>
+            <a href="/aboutresponder"
+                class="nav-item nav-link <%= (typeof page !== 'undefined' && page === 'about') ? 'active' : '' %>">
+                <i class="fa fa-info-circle me-2"></i>SYSTEM INFO
+            </a>
 
-            <div class="px-4 mt-3">
-                <a href="/logout" class="btn btn-outline-danger w-100 btn-sm text-uppercase"
-                    style="font-size: 0.75rem;">Sign Off</a>
+            <div class="px-4 mt-4">
+                <a href="/logout" class="btn btn-outline-danger w-100 text-uppercase">SIGN OFF</a>
             </div>
         </div>
     </nav>
