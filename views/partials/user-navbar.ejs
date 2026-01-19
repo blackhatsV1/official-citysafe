@@ -1,35 +1,20 @@
-<nav class="navbar navbar-expand sticky-top px-4 py-0">
-    <a href="/" class="navbar-brand d-flex d-lg-none me-4">
-        <h2 class="text-slate mb-0"><i class="fa fa-shield-alt"></i></h2>
-    </a>
-    <a href="#" class="sidebar-toggler flex-shrink-0 text-decoration-none">
-        <i class="fa fa-bars text-slate"></i>
-    </a>
-
-    <button class="btn btn-outline-secondary btn-sm ms-4" id="enableNotifications"
-        style="display: none; padding: 0.4rem 0.8rem;">
-        <i class="fa fa-bell me-2"></i>NOTIFICATIONS
-    </button>
-
-    <div class="navbar-nav align-items-center ms-auto">
-        <div class="nav-item">
-            <a href="/survival-tips" class="nav-link">
-                <i class="fa fa-info-circle me-1"></i>RESOURCES
-            </a>
-        </div>
-
-        <div class="nav-item dropdown ms-3">
-            <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
-                <i class="fa fa-user-circle me-2"></i>
-                <span class="d-none d-lg-inline-flex text-uppercase">
+<nav class="navbar navbar-expand sticky-top bg-white border-bottom px-4 py-2">
+    <div class="container d-flex align-items-center justify-content-between">
+        <a href="/" class="navbar-brand fw-semibold">CITYSAFE</a>
+        <div class="d-flex align-items-center">
+            <a href="/survival-tips" class="nav-link me-3">Resources</a>
+            <div class="dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                     <%= username %>
-                </span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-end border border-slate m-0">
-                <a href="/editaccount" class="dropdown-item">Settings</a>
-                <a href="/help-user" class="dropdown-item">Support</a>
-                <div class="dropdown-divider"></div>
-                <a href="/logout" class="dropdown-item text-danger">LOG OUT</a>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="/editaccount">Settings</a></li>
+                    <li><a class="dropdown-item" href="/help-user">Support</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="/logout">Sign out</a></li>
+                </ul>
             </div>
         </div>
     </div>
