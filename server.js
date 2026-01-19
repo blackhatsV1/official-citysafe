@@ -3,6 +3,8 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const session = require('express-session');
+const { KnexSessionStore } = require('connect-session-knex');
+
 const bodyparser = require('body-parser');
 const db = require('./db');
 const path = require("path");
@@ -43,7 +45,6 @@ const globalLimiter = rateLimit({
 // Rate Limiter Definition (Applied later)
 
 
-const KnexSessionStore = require('connect-session-knex')(session);
 const knex = require('knex')({
   client: 'mysql2',
   connection: {
@@ -55,18 +56,19 @@ const knex = require('knex')({
   }
 });
 
-app.use(cors());
 app.use(session({
   secret: process.env.SESSION_SECRET || 'fallback_secret_change_me',
   resave: false,
-  saveUninitialized: false, // Changed to false for GDPR compliance / efficiency
+  saveUninitialized: false,
   store: new KnexSessionStore({
     knex: knex,
-    tablename: 'sessions', // optional. Defaults to 'sessions'
+    tablename: 'sessions', // optional, defaults to 'sessions'
+    sidfieldname: 'sid',   // optional
+    createtable: true,     // auto-create table if missing
   }),
   cookie: {
-    secure: process.env.NODE_ENV === 'production', // Only true if HTTPS
-    httpOnly: true, // Prevents XSS
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
     maxAge: 1000 * 60 * 60 * 24 // 1 day
   }
 }));
