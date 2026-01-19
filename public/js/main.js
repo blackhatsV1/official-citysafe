@@ -9,7 +9,9 @@
             }
         }, 1);
     };
-    spinner();
+
+    // Use 'load' instead of simple execution to ensure all assets are ready
+    window.addEventListener('load', spinner);
 
 
     // Back to top button
