@@ -758,7 +758,7 @@ app.post('/login', loginLimiter, (req, res) => {
         req.session.userId = user.id;
         req.session.welcome = 'back'; // Flag for 'Welcome back' toast
 
-        db.query('UPDATE users SET status = "active" WHERE id = ?', [user.id]);
+        db.query('UPDATE users SET status = \'active\' WHERE id = ?', [user.id]);
 
         if (user.role === 'admin') {
           res.redirect('/adminpage');
@@ -797,7 +797,7 @@ app.post('/login', loginLimiter, (req, res) => {
             req.session.role = 'responder';
             req.session.userId = resp.id;
 
-            db.query('UPDATE responders SET status = "active" WHERE id = ?', [resp.id]);
+            db.query('UPDATE responders SET status = \'active\' WHERE id = ?', [resp.id]);
             res.redirect('/responder');
           } else {
             res.send(`<script>window.location.href='/login'; alert('Wrong Password or Identity!');</script>`);
@@ -1010,7 +1010,7 @@ app.post('/api/responder/location', (req, res) => {
     const { lat, lng } = req.body;
     const userId = req.session.userId;
     // Update RESPONDERS table
-    db.query('UPDATE responders SET latitude = ?, longitude = ?, status = "active" WHERE id = ?', [lat, lng, userId], (err) => {
+    db.query('UPDATE responders SET latitude = ?, longitude = ?, status = \'active\' WHERE id = ?', [lat, lng, userId], (err) => {
       if (err) {
         console.error(err);
         res.status(500).json({ error: 'Failed to update location' });
@@ -1032,7 +1032,7 @@ app.get('/api/responders', (req, res) => {
       (SELECT COUNT(*) FROM deploys d WHERE d.responder_id = r.id) as deploys_count
     FROM responders r
     LEFT JOIN stations s ON r.station_id = s.id
-    WHERE r.status != "offline"
+    WHERE r.status != 'offline'
   `;
 
   db.query(query, (err, results) => {
@@ -1139,7 +1139,7 @@ app.get('/api/incidents', (req, res) => {
             dr.user_message,
             dr.responder_message,
             dr.resolution_remarks,
-            "disaster_report" as type,
+            'disaster_report' as type,
             CONCAT(r.firstname, ' ', r.lastname) as responder_name,
             CONCAT(u.firstname, ' ', u.lastname) as sender
         FROM disaster_reports dr
@@ -1180,9 +1180,9 @@ app.post('/api/respond', (req, res) => {
         const reporterId = (incRes && incRes.length > 0) ? incRes[0].user_id : null;
 
         db.beginTransaction(err => {
-          const q1 = 'UPDATE disaster_reports SET status = "responding", responder_id = ? WHERE id = ?';
-          const q2 = 'UPDATE responders SET status = "deployed", action = "responding" WHERE id = ?';
-          const q3 = 'INSERT INTO deploys (responder_id, station_id, incident_id, user_id, status) VALUES (?, ?, ?, ?, "pending")';
+          const q1 = 'UPDATE disaster_reports SET status = \'responding\', responder_id = ? WHERE id = ?';
+          const q2 = 'UPDATE responders SET status = \'deployed\', action = \'responding\' WHERE id = ?';
+          const q3 = 'INSERT INTO deploys (responder_id, station_id, incident_id, user_id, status) VALUES (?, ?, ?, ?, \'pending\')';
 
           db.query(q1, [responderId, reportId], (err) => {
             if (err) {
