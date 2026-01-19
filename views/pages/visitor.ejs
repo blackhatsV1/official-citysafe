@@ -3,12 +3,12 @@
 
 <head>
   <%- include('../partials/head'); %>
-  <!-- openweather api key -->
-  <script>
-    const apiKey = "<%= apiKey %>";
-    window.skipAutoLocation = true;
-  </script>
-  <script src="/js/script.js"></script>
+    <!-- openweather api key -->
+    <script>
+      const apiKey = "<%= apiKey %>";
+      window.skipAutoLocation = true;
+    </script>
+    <script src="/js/script.js"></script>
 </head>
 <!-- ========================================================================= -->
 
@@ -16,87 +16,92 @@
   <div class="container-fluid position-relative d-flex p-0">
     <!-- Spinner Start -->
     <%- include('../partials/spinner'); %>
-    <!-- Spinner End -->
+      <!-- Spinner End -->
 
 
-    <!-- Sidebar Start -->
-    <%- include('../partials/visitor-sidebar'); %>
-      <!-- Sidebar End -->
+      <!-- Sidebar Start -->
+      <%- include('../partials/visitor-sidebar'); %>
+        <!-- Sidebar End -->
 
 
-      <!-- Content Start -->
-      <div class="content">
-        <!-- Navbar Start -->
-        <%- include('../partials/visitor-navbar'); %>
-          <!-- Navbar End -->
+        <!-- Content Start -->
+        <div class="content">
+          <!-- Navbar Start -->
+          <%- include('../partials/visitor-navbar'); %>
+            <!-- Navbar End -->
 
 
-          <!-- Weather Info -->
-          <div class="container-fluid pt-4 px-4">
-            <div class="bg-secondary text-center rounded p-4">
-              <div class="d-flex align-items-center justify-content-center mb-4">
-                <h1><i class="bi bi-cloud-sun mb-0"></i>Welcome to CitySafe!</h1>
-              </div>
-              <hr>
-              <h4 class="mb-3">Please <a href="/login">Login</a> to experience full feature!</h4>
-              
-              
-            </div>
-          </div>
-          <!-- Weather Info End -->
-
-
-          <!-- Widgets Start -->
+            <!-- Weather Info -->
             <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-sm-12 col-md-6 col-xl-4">
-                        <div class="h-100 bg-secondary rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                <h6 class="mb-0">Live Weather</h6>
-                                <i class="fa fa-cloud-sun-rain"></i>
-                            </div>
-                            <div id="weather-map"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-sm-12 col-md-6 col-xl-4">
-                        <div class="h-100 bg-secondary rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Weather Info</h6>
-                                <i class="fa fa-cloud"></i>
-                            </div>
-                            <p id="address">Loading Address...</p>
-                            <p id="coords"></p>
-                            <div class="rounded p-3" id="weather-info">Loading weather data...</div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-12 col-md-6 col-xl-4">
-                        <div class="h-100 bg-secondary rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Live Location</h6>
-                                <i class="fa fa-map-marker-alt"></i>
-                            </div>
-                            <div id="map"></div>
-                            <%- include('../partials/selectloc-visitor'); %>
-                        </div>
-                    </div>
-
+              <div class="bg-secondary text-center rounded p-4 border border-secondary">
+                <div class="d-flex align-items-center justify-content-center mb-3">
+                  <h3 class="text-uppercase mb-0"><i class="bi bi-shield-check text-primary me-3"></i>Welcome to
+                    CitySafe</h3>
                 </div>
+                <div class="mx-auto" style="max-width: 600px;">
+                  <p class="text-muted mb-4">Real-time disaster monitoring and public safety network. Access restricted.
+                  </p>
+                  <a href="/login" class="btn btn-primary btn-sm text-uppercase px-4 py-2 me-2">Login</a>
+                  <a href="/register" class="btn btn-outline-light btn-sm text-uppercase px-4 py-2">Create Account</a>
+                </div>
+              </div>
+            </div>
+            <!-- Weather Info End -->
+
+
+            <!-- Widgets Start -->
+            <div class="container-fluid pt-4 px-4">
+              <div class="row g-4">
+                <div class="col-sm-12 col-md-6 col-xl-4">
+                  <div class="h-100 bg-secondary rounded p-4 border border-secondary">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                      <h6 class="mb-0 text-uppercase text-white">Live Weather Radar</h6>
+                      <i class="fa fa-satellite-dish text-primary"></i>
+                    </div>
+                    <div id="weather-map" style="border: 1px solid rgba(255,255,255,0.1);"></div>
+                  </div>
+                </div>
+
+                <div class="col-sm-12 col-md-6 col-xl-4">
+                  <div class="h-100 bg-secondary rounded p-4 border border-secondary">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                      <h6 class="mb-0 text-uppercase text-white">Atmospheric Data</h6>
+                      <i class="fa fa-cloud text-info"></i>
+                    </div>
+                    <p id="address" class="small text-muted mb-1">Scanning Local Area...</p>
+                    <p id="coords" class="small family-monospace text-muted mb-3"></p>
+                    <div class="rounded p-3 bg-dark border border-secondary" id="weather-info">
+                      <div class="text-center text-muted small">Acquiring Data Stream...</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-sm-12 col-md-6 col-xl-4">
+                  <div class="h-100 bg-secondary rounded p-4 border border-secondary">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                      <h6 class="mb-0 text-uppercase text-white">Live Map</h6>
+                      <i class="fa fa-map-marked text-danger"></i>
+                    </div>
+                    <div id="map" style="border: 1px solid rgba(255,255,255,0.1);"></div>
+                    <%- include('../partials/selectloc-visitor'); %>
+                  </div>
+                </div>
+
+              </div>
             </div>
             <!-- Widgets End -->
 
 
-          <!-- Footer Start -->
-          <%- include('../partials/footer'); %>
-            <!-- Footer End -->
+            <!-- Footer Start -->
+            <%- include('../partials/footer'); %>
+              <!-- Footer End -->
 
-      </div>
-      <!-- Content End -->
+        </div>
+        <!-- Content End -->
 
 
-      <!-- Back to Top -->
-      <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
   </div>
 
 
