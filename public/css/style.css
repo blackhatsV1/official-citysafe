@@ -62,35 +62,45 @@ html {
 
 @media (max-width: 768px) {
     html {
-        font-size: 15px;
-        /* Slightly smaller base for tablets/large phones */
+        font-size: 12px;
+        /* Minimum legible standard base */
     }
 
     body {
         font-size: 1rem;
-        /* 15px effectively */
+        /* 12px effectively */
     }
 
+    /* Compact Headers */
     h1 {
-        font-size: 1.75rem !important;
-    }
-
-    h2 {
         font-size: 1.5rem !important;
     }
 
-    h3 {
-        font-size: 1.25rem !important;
+    /* ~18px */
+    h2 {
+        font-size: 1.3rem !important;
     }
 
-    /* Touch Targets */
+    /* ~15.6px */
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-size: 1.1rem !important;
+    }
+
+    /* ~13.2px */
+
+    /* Touch Targets but Compact Visuals */
     .btn,
     .form-control,
     .nav-link {
-        min-height: 48px;
-        /* Standard Touch Target Size */
-        font-size: 16px !important;
-        /* Prevents iOS Zoom on focus */
+        min-height: 44px;
+        /* Slightly tighter standard */
+        font-size: 1.1rem !important;
+        /* ~13.2px (readable) */
+        padding: 6px 16px;
+        /* Reduced padding */
         display: flex;
         align-items: center;
         justify-content: center;
