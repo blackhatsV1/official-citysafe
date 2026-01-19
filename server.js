@@ -1083,33 +1083,38 @@ app.post('/api/deploy', (req, res) => {
         const updateResponder = `UPDATE responders SET status = 'deployed', action = 'responding' WHERE id = ?`;
         const updateIncident = `UPDATE disaster_reports SET status = 'responding', responder_id = ? WHERE id = ?`;
 
-        db.beginTransaction(err => {
-          if (err) return res.status(500).json({ error: err.message });
+        db.getConnection((err, connection) => {
+          if (err) return res.status(500).json({ error: 'DB Connection Error: ' + err.message });
 
-          db.query(insertDeploy, [responderId, stationId, incidentId, reporterId], (err, result) => {
-            if (err) {
-              console.error("[DEPLOY ERROR] Insert Deploys Failed:", err);
-              return db.rollback(() => res.status(500).json({ error: 'Deploy Insert Failed: ' + err.message }));
-            }
+          connection.beginTransaction(err => {
+            if (err) { connection.release(); return res.status(500).json({ error: err.message }); }
 
-            db.query(updateResponder, [responderId], (err) => {
+            connection.query(insertDeploy, [responderId, stationId, incidentId, reporterId], (err, result) => {
               if (err) {
-                console.error("[DEPLOY ERROR] Update Responder Failed:", err);
-                return db.rollback(() => res.status(500).json({ error: 'Responder Update Failed: ' + err.message }));
+                console.error("[DEPLOY ERROR] Insert Deploys Failed:", err);
+                return connection.rollback(() => { connection.release(); res.status(500).json({ error: 'Deploy Insert Failed: ' + err.message }); });
               }
 
-              db.query(updateIncident, [responderId, incidentId], (err) => {
+              connection.query(updateResponder, [responderId], (err) => {
                 if (err) {
-                  console.error("[DEPLOY ERROR] Update Incident Failed:", err);
-                  return db.rollback(() => res.status(500).json({ error: 'Incident Update Failed: ' + err.message }));
+                  console.error("[DEPLOY ERROR] Update Responder Failed:", err);
+                  return connection.rollback(() => { connection.release(); res.status(500).json({ error: 'Responder Update Failed: ' + err.message }); });
                 }
 
-                db.commit(err => {
+                connection.query(updateIncident, [responderId, incidentId], (err) => {
                   if (err) {
-                    console.error("[DEPLOY ERROR] Commit Failed:", err);
-                    return db.rollback(() => res.status(500).json({ error: 'Commit Failed: ' + err.message }));
+                    console.error("[DEPLOY ERROR] Update Incident Failed:", err);
+                    return connection.rollback(() => { connection.release(); res.status(500).json({ error: 'Incident Update Failed: ' + err.message }); });
                   }
-                  res.json({ success: true, message: 'Deployed successfully' });
+
+                  connection.commit(err => {
+                    if (err) {
+                      console.error("[DEPLOY ERROR] Commit Failed:", err);
+                      return connection.rollback(() => { connection.release(); res.status(500).json({ error: 'Commit Failed: ' + err.message }); });
+                    }
+                    connection.release();
+                    res.json({ success: true, message: 'Deployed successfully' });
+                  });
                 });
               });
             });
@@ -1179,32 +1184,39 @@ app.post('/api/respond', (req, res) => {
         if (err) return res.status(500).json({ error: 'DB Error fetching incident' });
         const reporterId = (incRes && incRes.length > 0) ? incRes[0].user_id : null;
 
-        db.beginTransaction(err => {
-          const q1 = 'UPDATE disaster_reports SET status = \'responding\', responder_id = ? WHERE id = ?';
-          const q2 = 'UPDATE responders SET status = \'deployed\', action = \'responding\' WHERE id = ?';
-          const q3 = 'INSERT INTO deploys (responder_id, station_id, incident_id, user_id, status) VALUES (?, ?, ?, ?, \'pending\')';
+        db.getConnection((err, connection) => {
+          if (err) return res.status(500).json({ error: 'DB Connection Error: ' + err.message });
 
-          db.query(q1, [responderId, reportId], (err) => {
-            if (err) {
-              console.error("[RESPOND ERROR] Update Incident Failed:", err);
-              return db.rollback(() => res.json({ success: false, message: err.message }));
-            }
-            db.query(q2, [responderId], (err) => {
+          connection.beginTransaction(err => {
+            if (err) { connection.release(); return res.status(500).json({ error: err.message }); }
+
+            const q1 = 'UPDATE disaster_reports SET status = \'responding\', responder_id = ? WHERE id = ?';
+            const q2 = 'UPDATE responders SET status = \'deployed\', action = \'responding\' WHERE id = ?';
+            const q3 = 'INSERT INTO deploys (responder_id, station_id, incident_id, user_id, status) VALUES (?, ?, ?, ?, \'pending\')';
+
+            connection.query(q1, [responderId, reportId], (err) => {
               if (err) {
-                console.error("[RESPOND ERROR] Update Responder Failed:", err);
-                return db.rollback(() => res.json({ success: false, message: err.message }));
+                console.error("[RESPOND ERROR] Update Incident Failed:", err);
+                return connection.rollback(() => { connection.release(); res.json({ success: false, message: err.message }); });
               }
-              db.query(q3, [responderId, stationId, reportId, reporterId], (err) => {
+              connection.query(q2, [responderId], (err) => {
                 if (err) {
-                  console.error("[RESPOND ERROR] Insert Deploy Failed:", err);
-                  return db.rollback(() => res.json({ success: false, message: err.message }));
+                  console.error("[RESPOND ERROR] Update Responder Failed:", err);
+                  return connection.rollback(() => { connection.release(); res.json({ success: false, message: err.message }); });
                 }
-                db.commit(err => {
+                connection.query(q3, [responderId, stationId, reportId, reporterId], (err) => {
                   if (err) {
-                    console.error("[RESPOND ERROR] Commit Failed:", err);
-                    return db.rollback(() => res.json({ success: false, message: err.message }));
+                    console.error("[RESPOND ERROR] Insert Deploy Failed:", err);
+                    return connection.rollback(() => { connection.release(); res.json({ success: false, message: err.message }); });
                   }
-                  res.json({ success: true, message: 'You are now responding to this SOS.' });
+                  connection.commit(err => {
+                    if (err) {
+                      console.error("[RESPOND ERROR] Commit Failed:", err);
+                      return connection.rollback(() => { connection.release(); res.json({ success: false, message: err.message }); });
+                    }
+                    connection.release();
+                    res.json({ success: true, message: 'You are now responding to this SOS.' });
+                  });
                 });
               });
             });
@@ -1587,13 +1599,30 @@ app.post('/api/cancel_report', (req, res) => {
         const responderId = report.responder_id;
 
         // Transaction
-        db.beginTransaction(err => {
-          db.query('UPDATE disaster_reports SET status = "cancelled by user" WHERE id = ?', [id]);
-          db.query('UPDATE responders SET status = "active", action = "standby" WHERE id = ?', [responderId]);
-          db.query('UPDATE deploys SET status = "cancelled by user", remarks = "User Cancelled" WHERE incident_id = ? AND status = "pending"', [id]);
+        // Transaction
+        db.getConnection((err, connection) => {
+          if (err) return res.json({ success: false, message: 'DB Error' });
 
-          db.commit(err => {
-            res.json({ success: true });
+          connection.beginTransaction(err => {
+            if (err) { connection.release(); return res.json({ success: false }); }
+
+            connection.query('UPDATE disaster_reports SET status = \'cancelled by user\' WHERE id = ?', [id], (err) => {
+              if (err) return connection.rollback(() => { connection.release(); res.json({ success: false }); });
+
+              connection.query('UPDATE responders SET status = \'active\', action = \'standby\' WHERE id = ?', [responderId], (err) => {
+                if (err) return connection.rollback(() => { connection.release(); res.json({ success: false }); });
+
+                connection.query('UPDATE deploys SET status = \'cancelled by user\', remarks = \'User Cancelled\' WHERE incident_id = ? AND status = \'pending\'', [id], (err) => {
+                  if (err) return connection.rollback(() => { connection.release(); res.json({ success: false }); });
+
+                  connection.commit(err => {
+                    if (err) return connection.rollback(() => { connection.release(); res.json({ success: false }); });
+                    connection.release();
+                    res.json({ success: true });
+                  });
+                });
+              });
+            });
           });
         });
       } else {
@@ -1618,13 +1647,29 @@ app.post('/api/admin/cancel_report', (req, res) => {
 
       if (report.status === 'responding') {
         const responderId = report.responder_id;
-        db.beginTransaction(err => {
-          db.query('UPDATE disaster_reports SET status = "cancelled by admin" WHERE id = ?', [id]);
-          db.query('UPDATE responders SET status = "active", action = "standby" WHERE id = ?', [responderId]);
-          db.query('UPDATE deploys SET status = "cancelled by admin", remarks = "Admin Cancelled" WHERE incident_id = ? AND status = "pending"', [id]);
+        db.getConnection((err, connection) => {
+          if (err) return res.json({ success: false, message: 'DB Error' });
 
-          db.commit(err => {
-            res.json({ success: true });
+          connection.beginTransaction(err => {
+            if (err) { connection.release(); return res.json({ success: false }); }
+
+            connection.query('UPDATE disaster_reports SET status = \'cancelled by admin\' WHERE id = ?', [id], (err) => {
+              if (err) return connection.rollback(() => { connection.release(); res.json({ success: false }); });
+
+              connection.query('UPDATE responders SET status = \'active\', action = \'standby\' WHERE id = ?', [responderId], (err) => {
+                if (err) return connection.rollback(() => { connection.release(); res.json({ success: false }); });
+
+                connection.query('UPDATE deploys SET status = \'cancelled by admin\', remarks = \'Admin Cancelled\' WHERE incident_id = ? AND status = \'pending\'', [id], (err) => {
+                  if (err) return connection.rollback(() => { connection.release(); res.json({ success: false }); });
+
+                  connection.commit(err => {
+                    if (err) return connection.rollback(() => { connection.release(); res.json({ success: false }); });
+                    connection.release();
+                    res.json({ success: true });
+                  });
+                });
+              });
+            });
           });
         });
       } else {
