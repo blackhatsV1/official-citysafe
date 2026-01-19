@@ -2,238 +2,247 @@
 <html lang="en">
 
 <head>
-  <%- include('../partials/head'); %>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/OverlappingMarkerSpiderfier-Leaflet/0.2.6/oms.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-  
-  <!-- Leaflet Routing Machine -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
-  <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.min.js"></script>
-  
-  </head>
+    <%- include('../partials/head'); %>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/OverlappingMarkerSpiderfier-Leaflet/0.2.6/oms.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+        <!-- Leaflet Routing Machine -->
+        <link rel="stylesheet"
+            href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+        <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.min.js"></script>
+
+</head>
+
 <body>
-  <div class="container-fluid position-relative d-flex p-0">
-    <!-- Spinner Start -->
-    <%- include('../partials/spinner'); %>
-    <!-- Spinner End -->
+    <div class="container-fluid position-relative d-flex p-0">
+        <!-- Spinner Start -->
+        <%- include('../partials/spinner'); %>
+            <!-- Spinner End -->
 
 
-    <!-- Sidebar Start -->
-    <%- include('../partials/admin-sidebar'); %>
-      <!-- Sidebar End -->
+            <!-- Sidebar Start -->
+            <%- include('../partials/admin-sidebar'); %>
+                <!-- Sidebar End -->
 
 
-      <!-- Content Start -->
-      <div class="content">
-        <!-- Navbar Start -->
-        <%- include('../partials/admin-navbar'); %>
-          <!-- Navbar End -->
+                <!-- Content Start -->
+                <div class="content">
+                    <!-- Navbar Start -->
+                    <%- include('../partials/admin-navbar'); %>
+                        <!-- Navbar End -->
 
-          <!-- Weather Info -->
-          <div class="container-fluid pt-4 px-4">
-            <div class="bg-secondary text-center rounded p-4">
-              <p>Full-size version on the <a href="/reports">Charts Tab</a>.</p>
-              <p>CitySafe Total Users: <strong class="text-primary" id="total-users-count"><%= totalUsers %></strong></p>
-              <p>There are currently <strong><a href="/disaster-reports"><span id="total-requests-count"><%= totalRequests %></span></strong> SOS Reports</a>.</p>
-            </div>
-          </div>
-          <!-- Weather Info End -->
-
-          <!-- Responder Map Start -->
-          <div class="container-fluid pt-4 px-4">
-              <div class="bg-secondary text-center rounded p-4">
-                  <div class="d-flex align-items-center justify-content-between mb-4">
-                      <h6 class="mb-0">Responder Management & Live Map</h6>
-                      <a href="" onclick="refreshMapData(); return false;">Refresh Map</a>
-                  </div>
-                  <div id="admin-map"></div>
-              </div>
-          </div>
-          <!-- Responder Map End -->
-
-          <!-- Widgets Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-sm-12 col-md-6 col-xl-4">
-                        <div class="h-100 bg-secondary rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                <h6 class="mb-0">High Risk Users</h6>
-                                <a href="">Show All</a>
-                            </div>
-                            <div class="table-responsive">
-                              <table class="table table-hover table-premium">
-                                  <thead>
-                                      <tr>
-                                          
-                                          <th scope="col" class="text-danger">Fullname</th>
-                                          <th scope="col" class="text-danger">Risk Score</th>
-                                          <th scope="col" class="text-danger">Date Assessed</th>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                      <% riskTables['High'].forEach(user => { %>
-                                      <tr>
-                                        <td><%= user.username %></td>
-                                        <td><span class="text-danger fw-bold"><%= user.risk_score %></span></td>
-                                        <td><%= user.assessed_at.toLocaleString() %></td>
-                                      </tr>
-                                      <% }) %>
-                                  </tbody>
-                              </table>
+                        <!-- Weather Info -->
+                        <div class="container-fluid pt-4 px-4">
+                            <div class="bg-secondary rounded p-4 border border-secondary">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h4 class="mb-0 text-uppercase">System Status</h4>
+                                    </div>
+                                    <div class="text-end">
+                                        <small class="text-muted d-block uppercase">TOTAL USERS</small>
+                                        <strong class="text-white h5" id="total-users-count">
+                                            <%= totalUsers %>
+                                        </strong>
+                                    </div>
+                                    <div class="text-end ms-4">
+                                        <small class="text-muted d-block uppercase">ACTIVE REPORTS</small>
+                                        <strong class="text-danger h5"><a href="/disaster-reports"
+                                                class="text-danger text-decoration-none"><span
+                                                    id="total-requests-count">
+                                                    <%= totalRequests %>
+                                                </span></a></strong>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-xl-4">
-                        <div class="h-100 bg-secondary rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Moderate Risk Users</h6>
-                                <a href="">Show All</a>
+                        <!-- Weather Info End -->
+
+                        <!-- Responder Map Start -->
+                        <div class="container-fluid pt-4 px-4">
+                            <div class="bg-secondary text-center rounded p-4">
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <h6 class="mb-0">Responder Management & Live Map</h6>
+                                    <a href="" onclick="refreshMapData(); return false;">Refresh Map</a>
+                                </div>
+                                <div id="admin-map"></div>
                             </div>
-                            <div class="table-responsive">
-                              <table class="table table-hover table-premium">
-                                  <thead>
-                                      <tr>
-                                          
-                                          <th scope="col" class="text-warning">Fullname</th>
-                                          <th scope="col" class="text-warning">Risk Score</th>
-                                          <th scope="col" class="text-warning">Date Assessed</th>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                      <% riskTables['Moderate'].forEach(user => { %>
-                                      <tr>
-                                        <td><%= user.username %></td>
-                                        <td><span class="text-warning fw-bold"><%= user.risk_score %></span></td>
-                                        <td><%= user.assessed_at.toLocaleString() %></td>
-                                      </tr>
-                                      <% }) %>
-                                  </tbody>
-                              </table>
+                        </div>
+                        <!-- Responder Map End -->
+
+                        <!-- Widgets Start -->
+                        <div class="container-fluid pt-4 px-4">
+                            <div class="row g-4">
+                                <div class="col-sm-12 col-md-6 col-xl-4">
+                                    <% }) %>
+                                        </tbody>
+                                        </table>
+                                </div>
                             </div>
-                          </div>
-                    </div>
-                    <div class="col-sm-12 col-md-6 col-xl-4">
-                        <div class="h-100 bg-secondary rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h6 class="mb-0">Low Risk Users</h6>
-                                <a href="/reports">Show All</a>
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-xl-4">
+                            <div class="h-100 bg-secondary rounded p-4">
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <h6 class="mb-0">Moderate Risk Users</h6>
+                                    <a href="">Show All</a>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-premium">
+                                        <thead>
+                                            <tr>
+
+                                                <th scope="col" class="text-warning">Fullname</th>
+                                                <th scope="col" class="text-warning">Risk Score</th>
+                                                <th scope="col" class="text-warning">Date Assessed</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% riskTables['Moderate'].forEach(user=> { %>
+                                                <tr>
+                                                    <td>
+                                                        <%= user.username %>
+                                                    </td>
+                                                    <td><span class="text-warning fw-bold">
+                                                            <%= user.risk_score %>
+                                                        </span></td>
+                                                    <td>
+                                                        <%= user.assessed_at.toLocaleString() %>
+                                                    </td>
+                                                </tr>
+                                                <% }) %>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                            <div class="table-responsive">
-                              <table class="table table-hover table-premium">
-                                  <thead>
-                                      <tr>
-                                          
-                                          <th scope="col" class="text-success">Fullname</th>
-                                          <th scope="col" class="text-success">Risk Score</th>
-                                          <th scope="col" class="text-success">Date Assessed</th>
-                                      </tr>
-                                  </thead>
-                                  <tbody>
-                                      <% riskTables['Low'].forEach(user => { %>
-                                      <tr>
-                                        <td><%= user.username %></td>
-                                        <td><span class="text-success fw-bold"><%= user.risk_score %></span></td>
-                                        <td><%= user.assessed_at.toLocaleString() %></td>
-                                      </tr>
-                                      <% }) %>
-                                  </tbody>
-                              </table>
+                        </div>
+                        <div class="col-sm-12 col-md-6 col-xl-4">
+                            <div class="h-100 bg-secondary rounded p-4">
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <h6 class="mb-0">Low Risk Users</h6>
+                                    <a href="/reports">Show All</a>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-premium">
+                                        <thead>
+                                            <tr>
+
+                                                <th scope="col" class="text-success">Fullname</th>
+                                                <th scope="col" class="text-success">Risk Score</th>
+                                                <th scope="col" class="text-success">Date Assessed</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% riskTables['Low'].forEach(user=> { %>
+                                                <tr>
+                                                    <td>
+                                                        <%= user.username %>
+                                                    </td>
+                                                    <td><span class="text-success fw-bold">
+                                                            <%= user.risk_score %>
+                                                        </span></td>
+                                                    <td>
+                                                        <%= user.assessed_at.toLocaleString() %>
+                                                    </td>
+                                                </tr>
+                                                <% }) %>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                          </div>
-                    </div>
+                        </div>
+                </div>
+    </div>
+    <!-- Widgets End -->
+
+
+
+    <!-- Chart Start -->
+    <div class="container-fluid pt-4 px-4">
+        <div class="row g-4">
+            <div class="col-sm-12 col-xl-6">
+                <div class="bg-secondary rounded h-100 p-4">
+                    <h6 class="mb-4">Number of posts per day by users.</h6>
+                    <canvas id="userChart"></canvas>
                 </div>
             </div>
-          <!-- Widgets End -->
-
-
-
-          <!-- Chart Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-sm-12 col-xl-6">
-                        <div class="bg-secondary rounded h-100 p-4">
-                            <h6 class="mb-4">Number of posts per day by users.</h6>
-                            <canvas id="userChart" ></canvas>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-xl-6">
-                        <div class="bg-secondary rounded h-100 p-4">
-                            <h6 class="mb-4">Risk Level chart</h6>
-                            <canvas id="riskLevelChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-xl-6">
-                        <div class="bg-secondary rounded h-100 p-4">
-                            <h6 class="mb-4">Checklist Chart</h6>
-                            <canvas id="checklistChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-xl-6">
-                        <div class="bg-secondary rounded h-100 p-4">
-                            <h6 class="mb-4">Trend Chart</h6>
-                            <canvas id="trendChart"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-xl-6">
-                        <div class="bg-secondary rounded h-100 p-4">
-                            <h6 class="mb-4">Hazard Chart</h6>
-                            <canvas id="hazardsChart"></canvas>
-                        </div>
-                    </div>
+            <div class="col-sm-12 col-xl-6">
+                <div class="bg-secondary rounded h-100 p-4">
+                    <h6 class="mb-4">Risk Level chart</h6>
+                    <canvas id="riskLevelChart"></canvas>
                 </div>
             </div>
-          <!-- Chart End -->         
+            <div class="col-sm-12 col-xl-6">
+                <div class="bg-secondary rounded h-100 p-4">
+                    <h6 class="mb-4">Checklist Chart</h6>
+                    <canvas id="checklistChart"></canvas>
+                </div>
+            </div>
+            <div class="col-sm-12 col-xl-6">
+                <div class="bg-secondary rounded h-100 p-4">
+                    <h6 class="mb-4">Trend Chart</h6>
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+            <div class="col-sm-12 col-xl-6">
+                <div class="bg-secondary rounded h-100 p-4">
+                    <h6 class="mb-4">Hazard Chart</h6>
+                    <canvas id="hazardsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Chart End -->
 
-          <!-- Footer Start -->
-          <%- include('../partials/footer'); %>
-            <!-- Footer End -->
+    <!-- Footer Start -->
+    <%- include('../partials/footer'); %>
+        <!-- Footer End -->
 
-      </div>
-      <!-- Content End -->
-
-
-      <!-- Back to Top -->
-      <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-  </div>
-
-  
-  <script src="/js/script.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        </div>
+        <!-- Content End -->
 
 
-<script>
-(function ($) {
-    "use strict";
+        <!-- Back to Top -->
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+        </div>
 
-    // Chart Global Color
-    Chart.defaults.color = "#A0A6B5";
-    Chart.defaults.borderColor = "#000000";
-    Chart.defaults.font.family = "'Roboto', 'Open Sans', sans-serif";
 
-    // --- User Chart ---
-    var ctx1 = $("#userChart").get(0).getContext("2d");
-    var userChart = new Chart(ctx1, {
-        type: "bar",
-        data: {
-            labels: [ <% chartData.forEach(function(item, index) { %> '<%= item.day %>'<% if (index < chartData.length-1) { %>, <% } %> <% }); %> ],
-            datasets: [{
-                label: "Posts",
-                data: [ <% chartData.forEach(function(item, index) { %> <%= item.total %><% if (index < chartData.length-1) { %>, <% } %> <% }); %> ],
-                backgroundColor: "rgba(235, 22, 22, .7)"
-            }]
+        <script src="/js/script.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+        <script>
+            (function ($) {
+                "use strict";
+
+                // Chart Global Color
+                Chart.defaults.color = "#A0A6B5";
+                Chart.defaults.borderColor = "#000000";
+                Chart.defaults.font.family = "'Roboto', 'Open Sans', sans-serif";
+
+                // --- User Chart ---
+                var ctx1 = $("#userChart").get(0).getContext("2d");
+                var userChart = new Chart(ctx1, {
+                    type: "bar",
+                    data: {
+                        labels: [ <% chartData.forEach(function (item, index) { %> '<%= item.day %>' <% if (index < chartData.length - 1) { %>, <% } %> <% }); %> ],
+                    datasets: [{
+                        label: "Posts",
+                        data: [ <% chartData.forEach(function (item, index) { %> <%= item.total %><% if (index < chartData.length - 1) { %>, <% } %> <% }); %> ],
+                    backgroundColor: "rgba(235, 22, 22, .7)"
+                }]
         },
-        options: { responsive: true }
+                options: { responsive: true }
     });
 
-    // --- Risk Level Chart ---
-    var ctx2 = $("#riskLevelChart").get(0).getContext("2d");
-    var riskChart = new Chart(ctx2, {
-        type: "doughnut",
-        data: {
-            labels: [ <% riskLevelData.forEach(function(item, index) { %> '<%= item.risk_level %>'<% if (index < riskLevelData.length-1) { %>, <% } %> <% }); %> ],
-            datasets: [{
-                data: [ <% riskLevelData.forEach(function(item, index) { %> <%= item.total %><% if (index < riskLevelData.length-1) { %>, <% } %> <% }); %> ],
+            // --- Risk Level Chart ---
+            var ctx2 = $("#riskLevelChart").get(0).getContext("2d");
+            var riskChart = new Chart(ctx2, {
+                type: "doughnut",
+                data: {
+                    labels: [ <% riskLevelData.forEach(function (item, index) { %> '<%= item.risk_level %>' <% if (index < riskLevelData.length - 1) { %>, <% } %> <% }); %> ],
+                datasets: [{
+                    data: [ <% riskLevelData.forEach(function (item, index) { %> <%= item.total %><% if (index < riskLevelData.length - 1) { %>, <% } %> <% }); %> ],
                 backgroundColor: [
                     "rgba(235, 22, 22, .7)",
                     "rgba(235, 22, 22, .6)",
@@ -242,281 +251,281 @@
                 ]
             }]
         },
-        options: { responsive: true }
+            options: { responsive: true }
     });
 
-    // --- Checklist Chart ---
-    var ctx3 = $("#checklistChart").get(0).getContext("2d");
-    var checklistChart = new Chart(ctx3, {
-        type: "bar",
-        data: {
-            labels: ["Near River", "Near Fault", "Has Emergency Kit", "Has Evacuation Plan"],
-            datasets: [{
-                label: "Completed",
-                data: [<%= checklistData.near_river %>, <%= checklistData.near_fault %>, <%= checklistData.has_emergency_kit %>, <%= checklistData.has_evacuation_plan %>],
-                backgroundColor: "rgba(235, 22, 22, .7)"
+            // --- Checklist Chart ---
+            var ctx3 = $("#checklistChart").get(0).getContext("2d");
+            var checklistChart = new Chart(ctx3, {
+                type: "bar",
+                data: {
+                    labels: ["Near River", "Near Fault", "Has Emergency Kit", "Has Evacuation Plan"],
+                    datasets: [{
+                        label: "Completed",
+                        data: [<%= checklistData.near_river %>, <%= checklistData.near_fault %>, <%= checklistData.has_emergency_kit %>, <%= checklistData.has_evacuation_plan %>],
+                        backgroundColor: "rgba(235, 22, 22, .7)"
+                    }]
+                },
+                options: { responsive: true }
+            });
+
+            // --- Trend Chart ---
+            var ctx4 = $("#trendChart").get(0).getContext("2d");
+            var trendChart = new Chart(ctx4, {
+                type: "line",
+                data: {
+                    labels: [ <% trendData.forEach(function (item, index) { %> '<%= item.date %>' <% if (index < trendData.length - 1) { %>, <% } %> <% }); %> ],
+                datasets: [{
+                    label: "Avg Risk Score",
+                    data: [ <% trendData.forEach(function (item, index) { %> <%= item.avg_score %><% if (index < trendData.length - 1) { %>, <% } %> <% }); %> ],
+                borderColor: "rgba(235, 22, 22, .7)",
+                backgroundColor: "rgba(235, 22, 22, .3)",
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: "rgba(235, 22, 22, .9)",
+                pointRadius: 4
             }]
-        },
-        options: { responsive: true }
-    });
-
-   // --- Trend Chart ---
-var ctx4 = $("#trendChart").get(0).getContext("2d");
-var trendChart = new Chart(ctx4, {
-    type: "line",
-    data: {
-        labels: [ <% trendData.forEach(function(item, index) { %> '<%= item.date %>'<% if (index < trendData.length-1) { %>, <% } %> <% }); %> ],
-        datasets: [{
-            label: "Avg Risk Score",
-            data: [ <% trendData.forEach(function(item, index) { %> <%= item.avg_score %><% if (index < trendData.length-1) { %>, <% } %> <% }); %> ],
-            borderColor: "rgba(235, 22, 22, .7)",
-            backgroundColor: "rgba(235, 22, 22, .3)",
-            tension: 0.4,
-            fill: true,
-            pointBackgroundColor: "rgba(235, 22, 22, .9)",
-            pointRadius: 4
-        }]
     },
-    options: {
-        responsive: true,
-        plugins: {
-            legend: { display: true },
-            tooltip: {
-                enabled: true, // tooltips will still show
-                callbacks: {
-                    title: function(context) {
-                        // show the date label in tooltip
-                        return context[0].label;
+            options: {
+                responsive: true,
+                    plugins: {
+                    legend: { display: true },
+                    tooltip: {
+                        enabled: true, // tooltips will still show
+                            callbacks: {
+                            title: function(context) {
+                                // show the date label in tooltip
+                                return context[0].label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            display: false // hides labels under the chart
+                        },
+                        grid: {
+                            drawTicks: false // prevents small tick marks
+                        }
+                    },
+                    y: {
+                        beginAtZero: true
                     }
                 }
             }
-        },
-        scales: {
-            x: {
-                ticks: {
-                    display: false // hides labels under the chart
-                },
-                grid: {
-                    drawTicks: false // prevents small tick marks
-                }
-            },
-            y: {
-                beginAtZero: true
-            }
-        }
-    }
 });
 
 
 
-    // --- Hazards Chart ---
-    var ctx5 = $("#hazardsChart").get(0).getContext("2d");
-    var hazardsChart = new Chart(ctx5, {
-        type: "bar",
-        data: {
-            labels: ["Near River", "Near Fault"],
-            datasets: [{
-                label: "Users",
-                data: [<%= hazardsData.near_river %>, <%= hazardsData.near_fault %>],
-                backgroundColor: [
-                    "rgba(235, 22, 22, .7)",
-                    "rgba(235, 22, 22, .5)"
-                ]
-            }]
-        },
-        options: { responsive: true }
-    });
-
-})(jQuery);
-</script>
-
-<!-- Leaflet & Admin Map Logic -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    let adminMap, adminMarkersLayer, oms;
-    let responders = [];
-    let incidents = [];
-
-    function initAdminMap() {
-        // Default View (Iloilo City based on data)
-        adminMap = L.map('admin-map').setView([10.7202, 122.5621], 13);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-             attribution: '© OpenStreetMap contributors'
-        }).addTo(adminMap);
-        
-        // Init Spiderfier
-        if (typeof OverlappingMarkerSpiderfier !== 'undefined') {
-            oms = new OverlappingMarkerSpiderfier(adminMap, {
-                keepSpiderfied: true,
-                nearbyDistance: 20
+            // --- Hazards Chart ---
+            var ctx5 = $("#hazardsChart").get(0).getContext("2d");
+            var hazardsChart = new Chart(ctx5, {
+                type: "bar",
+                data: {
+                    labels: ["Near River", "Near Fault"],
+                    datasets: [{
+                        label: "Users",
+                        data: [<%= hazardsData.near_river %>, <%= hazardsData.near_fault %>],
+                        backgroundColor: [
+                            "rgba(235, 22, 22, .7)",
+                            "rgba(235, 22, 22, .5)"
+                        ]
+                    }]
+                },
+                options: { responsive: true }
             });
-        }
-        
 
-        
-        adminMarkersLayer = L.layerGroup().addTo(adminMap);
-        
-        refreshMapData();
-        setInterval(refreshMapData, 5000); // Auto-refresh every 5s
-    }
+}) (jQuery);
+        </script>
 
-    function calculateDistance(lat1, lon1, lat2, lon2) {
-        const R = 6371; // Radius of the earth in km
-        const dLat = deg2rad(lat2 - lat1);
-        const dLon = deg2rad(lon2 - lon1);
-        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-            Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c; // Distance in km
-    }
+        <!-- Leaflet & Admin Map Logic -->
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            let adminMap, adminMarkersLayer, oms;
+            let responders = [];
+            let incidents = [];
 
-    function deg2rad(deg) {
-        return deg * (Math.PI / 180);
-    }
+            function initAdminMap() {
+                // Default View (Iloilo City based on data)
+                adminMap = L.map('admin-map').setView([10.7202, 122.5621], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(adminMap);
 
-    async function refreshMapData() {
-        // Fetch Data
-        try {
-            const [resResponders, resIncidents, resStats] = await Promise.all([
-                fetch('/api/responders'),
-                fetch('/api/incidents'),
-                fetch('/api/admin/stats')
-            ]);
-            
-            responders = await resResponders.json();
-            incidents = await resIncidents.json();
-            const stats = await resStats.json();
+                // Init Spiderfier
+                if (typeof OverlappingMarkerSpiderfier !== 'undefined') {
+                    oms = new OverlappingMarkerSpiderfier(adminMap, {
+                        keepSpiderfied: true,
+                        nearbyDistance: 20
+                    });
+                }
 
-            // Update Stats
-            if(stats) {
-                const uCount = document.getElementById('total-users-count');
-                const rCount = document.getElementById('total-requests-count');
-                if(uCount) uCount.innerText = stats.totalUsers;
-                if(rCount) rCount.innerText = stats.totalRequests;
+
+
+                adminMarkersLayer = L.layerGroup().addTo(adminMap);
+
+                refreshMapData();
+                setInterval(refreshMapData, 5000); // Auto-refresh every 5s
             }
-            
-            plotMap();
-        } catch(e) { console.error("Refresh error:", e); }
-    }
 
-    async function plotMap() {
-        adminMarkersLayer.clearLayers();
-        if(oms) oms.clearMarkers();
-
-        // Plot Responders (Logged In Only)
-        responders.forEach(r => {
-             // Show only active or deployed (exclude offline)
-             if(r.latitude && r.longitude && r.status !== 'offline') {
-                 const statusColor = r.status === 'active' ? 'green' : (r.status === 'deployed' ? 'yellow' : 'gray');
-                 const icon = L.divIcon({
-                     className: 'custom-pd-icon',
-                     html: `<div style='background-color:${statusColor}; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.5);'></div>`,
-                     iconSize: [12, 12]
-                 });
-                 L.marker([r.latitude, r.longitude], {icon: icon})
-                  .bindPopup(`<b>Responder: ${r.firstname} ${r.lastname}</b><br>Status: <span class="badge ${r.status === 'active' ? 'bg-success' : (r.status === 'deployed' ? 'bg-warning text-dark' : 'bg-secondary')}">${r.status.toUpperCase()}</span><br><button class='btn btn-sm btn-primary mt-2' onclick='deployResponder(${r.id})'>Direct Deploy</button>`)
-                  .addTo(adminMarkersLayer);
-             }
-        });
-
-        // Plot Incidents (Unresolved Only)
-        for(let incident of incidents) {
-            // Filter: Show only pending or responding
-            const isUnresolved = incident.status === 'pending' || incident.status === 'responding';
-            if (!isUnresolved) continue;
-
-            if(incident.latitude && incident.longitude) {
-                addIncidentMarker({lat: incident.latitude, lon: incident.longitude}, incident);
-            } else if(incident.location) {
-                // Legacy
-                geocodeAndPlotAdmin(incident);
+            function calculateDistance(lat1, lon1, lat2, lon2) {
+                const R = 6371; // Radius of the earth in km
+                const dLat = deg2rad(lat2 - lat1);
+                const dLon = deg2rad(lon2 - lon1);
+                const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                return R * c; // Distance in km
             }
-        }
-    }
 
-    // Cache for geocoding to avoid API limits during dev
-    const geoCache = {};
+            function deg2rad(deg) {
+                return deg * (Math.PI / 180);
+            }
 
-    async function geocodeAndPlotAdmin(incident) {
-           if(geoCache[incident.location]) {
-               addIncidentMarker(geoCache[incident.location], incident);
-               return;
-           }
-           
-           // Simple rate limit for legacy data
-           await new Promise(r => setTimeout(r, 600)); 
+            async function refreshMapData() {
+                // Fetch Data
+                try {
+                    const [resResponders, resIncidents, resStats] = await Promise.all([
+                        fetch('/api/responders'),
+                        fetch('/api/incidents'),
+                        fetch('/api/admin/stats')
+                    ]);
 
-           try {
-               const query = encodeURIComponent(incident.location);
-               const url = `https://nominatim.openstreetmap.org/search?format=json&q=${query}`;
-               const res = await fetch(url);
-               const data = await res.json();
-               
-               if(data && data.length > 0) {
-                   const lat = parseFloat(data[0].lat);
-                   const lon = parseFloat(data[0].lon);
-                   geoCache[incident.location] = {lat, lon};
-                   addIncidentMarker({lat, lon}, incident);
-               }
-           } catch(e) {
-               console.error("Geocoding error", e);
-           }
-    }
+                    responders = await resResponders.json();
+                    incidents = await resIncidents.json();
+                    const stats = await resStats.json();
 
-    async function addIncidentMarker(coords, incident) {
-         // Determine Icon & Color
-         let markerColor = '#dc3545'; // Default Red
-         let iconClass = 'fa-exclamation-triangle';
+                    // Update Stats
+                    if (stats) {
+                        const uCount = document.getElementById('total-users-count');
+                        const rCount = document.getElementById('total-requests-count');
+                        if (uCount) uCount.innerText = stats.totalUsers;
+                        if (rCount) rCount.innerText = stats.totalRequests;
+                    }
 
-         // Check incident.disaster_type (or description if type is generic)
-         const typeLower = (incident.disaster_type || incident.description || '').toLowerCase();
-         
-         if (typeLower.includes('flood')) {
-             markerColor = '#0dcaf0'; // Info Cyan
-             iconClass = 'fa-water';
-         }
-         else if (typeLower.includes('earthquake')) {
-             markerColor = '#fd7e14'; // Orange
-             iconClass = 'fa-globe-americas';
-         }
-         else if (typeLower.includes('landslide')) {
-             markerColor = '#795548'; // Brown
-             iconClass = 'fa-mountain';
-         }
-         else if (typeLower.includes('fire')) {
-             markerColor = '#dc3545'; // Danger Red
-             iconClass = 'fa-fire';
-         }
-         else if (typeLower.includes('accident') || typeLower.includes('crash')) {
-             markerColor = '#6f42c1'; // Purple
-             iconClass = 'fa-car-crash';
-         } else if (incident.type === 'help_request') {
-             markerColor = '#ffc107'; // Warning Yellow
-             iconClass = 'fa-hand-holding-heart';
-         }
+                    plotMap();
+                } catch (e) { console.error("Refresh error:", e); }
+            }
 
-         const icon = L.divIcon({
-            className: 'custom-div-icon',
-             html: `<div style="background-color:${markerColor}; width: 28px; height: 28px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; color: white; font-size: 13px;">
+            async function plotMap() {
+                adminMarkersLayer.clearLayers();
+                if (oms) oms.clearMarkers();
+
+                // Plot Responders (Logged In Only)
+                responders.forEach(r => {
+                    // Show only active or deployed (exclude offline)
+                    if (r.latitude && r.longitude && r.status !== 'offline') {
+                        const statusColor = r.status === 'active' ? 'green' : (r.status === 'deployed' ? 'yellow' : 'gray');
+                        const icon = L.divIcon({
+                            className: 'custom-pd-icon',
+                            html: `<div style='background-color:${statusColor}; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.5);'></div>`,
+                            iconSize: [12, 12]
+                        });
+                        L.marker([r.latitude, r.longitude], { icon: icon })
+                            .bindPopup(`<b>Responder: ${r.firstname} ${r.lastname}</b><br>Status: <span class="badge ${r.status === 'active' ? 'bg-success' : (r.status === 'deployed' ? 'bg-warning text-dark' : 'bg-secondary')}">${r.status.toUpperCase()}</span><br><button class='btn btn-sm btn-primary mt-2' onclick='deployResponder(${r.id})'>Direct Deploy</button>`)
+                            .addTo(adminMarkersLayer);
+                    }
+                });
+
+                // Plot Incidents (Unresolved Only)
+                for (let incident of incidents) {
+                    // Filter: Show only pending or responding
+                    const isUnresolved = incident.status === 'pending' || incident.status === 'responding';
+                    if (!isUnresolved) continue;
+
+                    if (incident.latitude && incident.longitude) {
+                        addIncidentMarker({ lat: incident.latitude, lon: incident.longitude }, incident);
+                    } else if (incident.location) {
+                        // Legacy
+                        geocodeAndPlotAdmin(incident);
+                    }
+                }
+            }
+
+            // Cache for geocoding to avoid API limits during dev
+            const geoCache = {};
+
+            async function geocodeAndPlotAdmin(incident) {
+                if (geoCache[incident.location]) {
+                    addIncidentMarker(geoCache[incident.location], incident);
+                    return;
+                }
+
+                // Simple rate limit for legacy data
+                await new Promise(r => setTimeout(r, 600));
+
+                try {
+                    const query = encodeURIComponent(incident.location);
+                    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${query}`;
+                    const res = await fetch(url);
+                    const data = await res.json();
+
+                    if (data && data.length > 0) {
+                        const lat = parseFloat(data[0].lat);
+                        const lon = parseFloat(data[0].lon);
+                        geoCache[incident.location] = { lat, lon };
+                        addIncidentMarker({ lat, lon }, incident);
+                    }
+                } catch (e) {
+                    console.error("Geocoding error", e);
+                }
+            }
+
+            async function addIncidentMarker(coords, incident) {
+                // Determine Icon & Color
+                let markerColor = '#dc3545'; // Default Red
+                let iconClass = 'fa-exclamation-triangle';
+
+                // Check incident.disaster_type (or description if type is generic)
+                const typeLower = (incident.disaster_type || incident.description || '').toLowerCase();
+
+                if (typeLower.includes('flood')) {
+                    markerColor = '#0dcaf0'; // Info Cyan
+                    iconClass = 'fa-water';
+                }
+                else if (typeLower.includes('earthquake')) {
+                    markerColor = '#fd7e14'; // Orange
+                    iconClass = 'fa-globe-americas';
+                }
+                else if (typeLower.includes('landslide')) {
+                    markerColor = '#795548'; // Brown
+                    iconClass = 'fa-mountain';
+                }
+                else if (typeLower.includes('fire')) {
+                    markerColor = '#dc3545'; // Danger Red
+                    iconClass = 'fa-fire';
+                }
+                else if (typeLower.includes('accident') || typeLower.includes('crash')) {
+                    markerColor = '#6f42c1'; // Purple
+                    iconClass = 'fa-car-crash';
+                } else if (incident.type === 'help_request') {
+                    markerColor = '#ffc107'; // Warning Yellow
+                    iconClass = 'fa-hand-holding-heart';
+                }
+
+                const icon = L.divIcon({
+                    className: 'custom-div-icon',
+                    html: `<div style="background-color:${markerColor}; width: 28px; height: 28px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; color: white; font-size: 13px;">
                      <i class="fa ${iconClass}"></i>
                    </div>`,
-            iconSize: [28, 28],
-            iconAnchor: [14, 14],
-            popupAnchor: [0, -16]
-         });
+                    iconSize: [28, 28],
+                    iconAnchor: [14, 14],
+                    popupAnchor: [0, -16]
+                });
 
-         const marker = L.marker([coords.lat, coords.lon], {icon: icon})
-          .addTo(adminMarkersLayer);
-          
-         // Add to Spiderfier
-         if(oms) oms.addMarker(marker);
+                const marker = L.marker([coords.lat, coords.lon], { icon: icon })
+                    .addTo(adminMarkersLayer);
 
-         // Initial display just shows coords. Address fetches on click.
-         let addressDisplay = `Lat: ${Number(coords.lat).toFixed(4)}, Lon: ${Number(coords.lon).toFixed(4)}`;
-         
-         const popupContent = `
+                // Add to Spiderfier
+                if (oms) oms.addMarker(marker);
+
+                // Initial display just shows coords. Address fetches on click.
+                let addressDisplay = `Lat: ${Number(coords.lat).toFixed(4)}, Lon: ${Number(coords.lon).toFixed(4)}`;
+
+                const popupContent = `
              <b>Disaster: ${incident.disaster_type || incident.description || 'General'}</b><br>
              Location: <span id="admin-popup-loc-${incident.id}" class="text-primary" style="cursor:pointer" onclick="fetchAddress(this, ${coords.lat}, ${coords.lon})">
                 ${addressDisplay} <br><small>(Click to load address)</small>
@@ -524,61 +533,61 @@ var trendChart = new Chart(ctx4, {
              Time Reported: ${incident.time ? new Date(incident.time).toLocaleString() : (incident.created_at ? new Date(incident.created_at).toLocaleString() : 'N/A')}<br>
              <button class="btn btn-sm btn-danger mt-2" onclick="openDeployModal('${incident.id}', '${incident.type}', ${coords.lat}, ${coords.lon}, '${(incident.disaster_type || incident.description || 'General').replace(/'/g, "\\'")}', '${incident.time ? new Date(incident.time).toLocaleString() : 'N/A'}')">Deploy Responder Here</button>
          `;
-         marker.bindPopup(popupContent);
-    }
-    
-    // Lazy load address on click
-    window.fetchAddress = async function(el, lat, lon) {
-        el.innerText = "Loading address...";
-        try {
-            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
-            const data = await res.json();
-            if(data.display_name) {
-                el.innerText = data.display_name;
-            } else {
-                el.innerText = "Address not found";
+                marker.bindPopup(popupContent);
             }
-        } catch(e) {
-            el.innerText = "Failed to load address";
-        }
-    }
 
-    let deployMap = null; // Global for modal map
+            // Lazy load address on click
+            window.fetchAddress = async function (el, lat, lon) {
+                el.innerText = "Loading address...";
+                try {
+                    const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
+                    const data = await res.json();
+                    if (data.display_name) {
+                        el.innerText = data.display_name;
+                    } else {
+                        el.innerText = "Address not found";
+                    }
+                } catch (e) {
+                    el.innerText = "Failed to load address";
+                }
+            }
 
-    window.openDeployModal = async function(reportId, type, incLat, incLon, reportType, reportDate) {
-        if (typeof window.openSharedDeployModal === 'function') {
-            await window.openSharedDeployModal({
-                reportId: reportId,
-                lat: incLat,
-                lng: incLon,
-                type: reportType || type,
-                dateStr: reportDate,
-                locationStr: `Lat: ${incLat.toFixed(5)}, Lon: ${incLon.toFixed(5)}`
-            });
-        } else {
-            console.error("Shared deploy functionality (script.js) not loaded.");
-            Swal.fire('Error', 'Deployment system not initialized. Please refresh.', 'error');
-        }
-    }
+            let deployMap = null; // Global for modal map
+
+            window.openDeployModal = async function (reportId, type, incLat, incLon, reportType, reportDate) {
+                if (typeof window.openSharedDeployModal === 'function') {
+                    await window.openSharedDeployModal({
+                        reportId: reportId,
+                        lat: incLat,
+                        lng: incLon,
+                        type: reportType || type,
+                        dateStr: reportDate,
+                        locationStr: `Lat: ${incLat.toFixed(5)}, Lon: ${incLon.toFixed(5)}`
+                    });
+                } else {
+                    console.error("Shared deploy functionality (script.js) not loaded.");
+                    Swal.fire('Error', 'Deployment system not initialized. Please refresh.', 'error');
+                }
+            }
 
 
-    // confirmDeploy is now confirmDeployShared in script.js
+            // confirmDeploy is now confirmDeployShared in script.js
 
 
-    // Initialize Map on Load if container exists
-    if(document.getElementById('admin-map')) {
-        initAdminMap();
-        loadAdminTables(); // New function
-    }
+            // Initialize Map on Load if container exists
+            if (document.getElementById('admin-map')) {
+                initAdminMap();
+                loadAdminTables(); // New function
+            }
 
-    async function loadAdminTables() {
-        // Load Responders List
-        try {
-            const res = await fetch('/api/admin/responders_list');
-            const responders = await res.json();
-            const tbody = document.getElementById('responders-table-body');
-            if(tbody) {
-                tbody.innerHTML = responders.map(r => `
+            async function loadAdminTables() {
+                // Load Responders List
+                try {
+                    const res = await fetch('/api/admin/responders_list');
+                    const responders = await res.json();
+                    const tbody = document.getElementById('responders-table-body');
+                    if (tbody) {
+                        tbody.innerHTML = responders.map(r => `
                     <tr>
                         <td>${r.firstname} ${r.lastname}</td>
                         <td>${r.station_name || 'Unassigned'}</td>
@@ -587,16 +596,16 @@ var trendChart = new Chart(ctx4, {
                         <td>${r.deploy_count}</td>
                     </tr>
                 `).join('');
-            }
-        } catch(e) { console.error("Failed to load responders stats", e); }
+                    }
+                } catch (e) { console.error("Failed to load responders stats", e); }
 
-        // Load Deploys History
-        try {
-             const res = await fetch('/api/admin/deploys_history');
-             const deploys = await res.json();
-             const tbody = document.getElementById('deploys-table-body');
-             if(tbody) {
-                 tbody.innerHTML = deploys.map(d => `
+                // Load Deploys History
+                try {
+                    const res = await fetch('/api/admin/deploys_history');
+                    const deploys = await res.json();
+                    const tbody = document.getElementById('deploys-table-body');
+                    if (tbody) {
+                        tbody.innerHTML = deploys.map(d => `
                      <tr>
                          <td>${new Date(d.deployed_at).toLocaleString()}</td>
                          <td>${d.responder_name}</td>
@@ -607,9 +616,10 @@ var trendChart = new Chart(ctx4, {
                          <td>${d.resolved_at ? new Date(d.resolved_at).toLocaleString() : '-'}</td>
                      </tr>
                  `).join('');
-             }
-        } catch(e) { console.error("Failed to load history", e); }
-    }
-</script>
+                    }
+                } catch (e) { console.error("Failed to load history", e); }
+            }
+        </script>
 </body>
+
 </html>

@@ -1,34 +1,49 @@
-<div class="sidebar pe-4 pb-3">
-    <nav class="navbar bg-secondary navbar-dark">
+<div class="sidebar pe-2 pb-3"> <!-- Reduced padding -->
+    <nav class="navbar bg-dark navbar-dark">
         <a href="/" class="navbar-brand mx-4 mb-3">
-            <h3 class="text-primary"><i class="fa fa-shield-alt me-2"></i>CitySafe</h3>
+            <h4 class="text-danger text-uppercase" style="letter-spacing: 0.1em;"><i
+                    class="fa fa-shield-alt me-2"></i>CitySafe</h4>
         </a>
-        <div class="d-flex align-items-center ms-4 mb-4">
-            <div class="position-relative">
-                <img class="rounded-circle profile-img-sm" src="images/user.png" alt="">
-                <div
-                    class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1">
+
+        <!-- Compact User Info -->
+        <div class="px-4 mb-3">
+            <div class="p-2 border border-secondary" style="background: rgba(255,255,255,0.05);">
+                <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center justify-content-center bg-secondary"
+                        style="width: 32px; height: 32px;">
+                        <i class="fa fa-user text-white"></i>
+                    </div>
+                    <div class="ms-3">
+                        <h6 class="mb-0 text-white text-uppercase" style="font-size: 0.8rem;">
+                            <%= username %>
+                        </h6>
+                        <small class="text-muted text-uppercase" style="font-size: 0.7rem;">Operative</small>
+                    </div>
                 </div>
-            </div>
-            <div class="ms-3">
-                <h6 class="mb-0"><%= username %></h6>
-                <span>user</span>
             </div>
         </div>
+
         <div class="navbar-nav w-100">
-            <a href="/send-sos" class="nav-item nav-link <%= (typeof page !== 'undefined' && page === 'send-sos') ? 'active' : '' %>"><i class="fa fa-exclamation-triangle me-2"></i>Send SOS</a>
-            <a href="/my-reports" class="nav-item nav-link <%= (typeof page !== 'undefined' && page === 'my-reports') ? 'active' : '' %>"><i class="fa fa-history me-2"></i>My SOS History</a>
-            <!-- <a href="/requesthelp" class="nav-item nav-link"><i class="fa fa-info-circle me-2"></i>Ask for Help</a> -->
-            <!-- <a href="/" class="nav-item nav-link"><i class="fa fa-cogs me-2"></i>Browse Posts</a> -->
-            <a href="/nearby-stations" class="nav-item nav-link <%= (typeof page !== 'undefined' && page === 'stations') ? 'active' : '' %>"><i class="fa fa-info-circle me-2"></i>Stations</a>
-            <div class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
-                        class="far fa-file-alt me-2"></i>Risk Assessment</a>
-                <div class="dropdown-menu bg-transparent border-0">
-                    <a href="/assess-risk" class="dropdown-item">Risk Assessment Tool</a>
-                    <a href="/risk-results" class="dropdown-item">Assessment History</a>
-                </div>
-            </div>
+            <div class="nav-header px-4 mt-2 mb-1 text-muted text-uppercase"
+                style="font-size: 0.7rem; font-weight: 700;">Operations</div>
+            <a href="/send-sos"
+                class="nav-item nav-link <%= (typeof page !== 'undefined' && page === 'send-sos') ? 'active' : '' %>">
+                <i class="fa fa-exclamation-triangle me-2"></i>SOS Panel
+            </a>
+            <a href="/my-reports"
+                class="nav-item nav-link <%= (typeof page !== 'undefined' && page === 'my-reports') ? 'active' : '' %>">
+                <i class="fa fa-history me-2"></i>History
+            </a>
+
+            <div class="nav-header px-4 mt-3 mb-1 text-muted text-uppercase"
+                style="font-size: 0.7rem; font-weight: 700;">Intel</div>
+            <a href="/nearby-stations"
+                class="nav-item nav-link <%= (typeof page !== 'undefined' && page === 'stations') ? 'active' : '' %>">
+                <i class="fa fa-map-marker-alt me-2"></i>Stations
+            </a>
+            <a href="/assess-risk" class="nav-item nav-link">
+                <i class="far fa-file-alt me-2"></i>Risk Assess
+            </a>
         </div>
     </nav>
 </div>

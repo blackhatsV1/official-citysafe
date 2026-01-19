@@ -1,42 +1,39 @@
-<nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
+<nav class="navbar navbar-expand bg-dark navbar-dark sticky-top px-4 py-0"
+    style="height: 50px; border-bottom: 1px solid rgba(255,255,255,0.1);">
     <a href="/" class="navbar-brand d-flex d-lg-none me-4">
-        <h2 class="text-primary mb-0"><i class="fa fa-shield-alt"></i></h2>
+        <h2 class="text-danger mb-0"><i class="fa fa-shield-alt"></i></h2>
     </a>
-    <a href="#" class="sidebar-toggler flex-shrink-0">
-        <i class="fa fa-bars"></i>
+    <a href="#" class="sidebar-toggler flex-shrink-0 text-decoration-none">
+        <i class="fa fa-bars text-muted"></i>
     </a>
-    <!-- <form class="d-none d-md-flex ms-4">
-        <input class="form-control bg-dark border-0" type="search" placeholder="Search">
-    </form> -->
-    <button class="btn btn-primary ms-4" id="enableNotifications" style="display: none;">
-        <i class="fa fa-bell me-2"></i>Enable Notifications
+
+    <button class="btn btn-outline-danger btn-sm ms-4" id="enableNotifications"
+        style="display: none; font-size: 0.75rem;">
+        <i class="fa fa-bell me-2"></i>ENABLE ALERTS
     </button>
-    <!-- <button class="btn btn-primary" id="enableNotifications">Enable Weather Notifications</button> -->
+
     <div class="navbar-nav align-items-center ms-auto">
         <div class="nav-item">
-            <a href="/survival-tips" class="nav-link">
-                <i class="fa fa-lightbulb me-lg-2"></i>
-                <span class="d-none d-lg-inline-flex">Survival Tips</span>
-            </a>
-        </div>
-        <div class="nav-item">
-            <a href="/aboutuser" class="nav-link">
-                <i class="fa fa-info me-lg-2"></i>
-                <span class="d-none d-lg-inline-flex">About</span>
+            <a href="/survival-tips" class="nav-link" style="font-size: 0.85rem;">
+                <i class="fa fa-lightbulb me-2"></i>Tips
             </a>
         </div>
 
-        <div class="nav-item dropdown">
-            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                <img class="rounded-circle me-lg-2" src="images/user.png" alt="" style="width: 40px; height: 40px;">
-                <span class="d-none d-lg-inline-flex"><%= username %></span>
+        <div class="nav-item dropdown ms-3">
+            <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown"
+                style="font-size: 0.85rem;">
+                <!-- <img class="me-lg-2" src="images/user.png" alt="" style="width: 30px; height: 30px; object-fit: cover;"> -->
+                <i class="fa fa-user-circle me-2"></i>
+                <span class="d-none d-lg-inline-flex text-uppercase">
+                    <%= username %>
+                </span>
             </a>
-            <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
-                <a href="/editaccount" class="dropdown-item">Update Profile</a>
-                <a href="/help-user" class="dropdown-item">Help</a>
-                <a href="/logout" class="dropdown-item">Log Out</a>
+            <div class="dropdown-menu dropdown-menu-end bg-dark border border-secondary m-0">
+                <a href="/editaccount" class="dropdown-item text-light">Profile Settings</a>
+                <a href="/help-user" class="dropdown-item text-light">Help Documentation</a>
+                <div class="dropdown-divider bg-secondary"></div>
+                <a href="/logout" class="dropdown-item text-danger">LOG OUT</a>
             </div>
         </div>
-
     </div>
 </nav>

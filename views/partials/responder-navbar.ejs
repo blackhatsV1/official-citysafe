@@ -1,32 +1,26 @@
-<nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
+<nav class="navbar navbar-expand bg-dark navbar-dark sticky-top px-4 py-0"
+    style="height: 50px; border-bottom: 1px solid rgba(255,255,255,0.1);">
     <a href="/responder" class="navbar-brand d-flex d-lg-none me-4">
         <h2 class="text-primary mb-0"><i class="fa fa-shield-alt"></i></h2>
     </a>
-    <a href="#" class="sidebar-toggler flex-shrink-0">
-        <i class="fa fa-bars"></i>
+    <a href="#" class="sidebar-toggler flex-shrink-0 text-decoration-none">
+        <i class="fa fa-bars text-muted"></i>
     </a>
-    <!-- <form class="d-none d-md-flex ms-4">
-        <input class="form-control bg-dark border-0" type="search" placeholder="Search">
-    </form> -->
-    <button class="btn btn-primary" id="enableNotifications">Enable Weather Notifications</button>
+    <button class="btn btn-outline-info btn-sm ms-4" id="enableNotifications" style="font-size: 0.75rem;">
+        <i class="fa fa-bell me-2"></i> ALERTS
+    </button>
     <div class="navbar-nav align-items-center ms-auto">
-        <div class="nav-item">
-            <a href="/aboutresponder" class="nav-link">
-                <i class="fa fa-info me-lg-2"></i>
-                <span class="d-none d-lg-inline-flex">About</span>
+        <div class="nav-item dropdown ms-3">
+            <a href="#" class="nav-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown"
+                style="font-size: 0.85rem;">
+                <i class="fa fa-user-md me-2"></i>
+                <span class="d-none d-lg-inline-flex text-uppercase">
+                    <%= username %>
+                </span>
             </a>
-        </div>
-
-        <div class="nav-item dropdown">
-            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                <img class="rounded-circle me-lg-2" src="/images/user.png" alt="" style="width: 40px; height: 40px;">
-                <span class="d-none d-lg-inline-flex"><%= username %></span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
-                <a href="/logout" class="dropdown-item">Log Out</a>
+            <div class="dropdown-menu dropdown-menu-end bg-dark border border-secondary m-0">
+                <a href="/logout" class="dropdown-item text-danger">LOG OUT</a>
             </div>
-            
         </div>
-
     </div>
 </nav>

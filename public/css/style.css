@@ -1,26 +1,48 @@
 /* 
- * CitySafe - Minimalist Native Bootstrap Theme
- * "Clean, Elegant, Simple, Modern, Fast"
- * Relies on bootstrap.min.css for 99% of styling.
+ * CitySafe - Bootstrap Formal Theme
+ * "Standard Colors, Sharp Edges, Professional Typography"
  */
 
-/* [THEME] Dark Mode Overrides (Bootstrap 5 Compatible) */
-:root {
-    --bs-body-bg: #212529;
-    /* Standard Bootstrap Dark */
-    --bs-body-color: #f8f9fa;
-    /* Standard Bootstrap Light Text */
+/* [FONTS] Inter: Professional Standard */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* [GLOBAL SHARPNESS & RESET] */
+* {
+    border-radius: 0 !important;
+    /* The "Formal" Cut */
+    box-shadow: none !important;
+    /* Flat & Fast */
 }
 
-/* [GLOBAL RESET] */
 body {
-    background-color: var(--bs-body-bg);
-    color: var(--bs-body-color);
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    /* Native Font Stack */
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    /* We rely on Bootstrap's default colors (Dark Mode should be enabled via meta/classes) */
+    background-color: #212529;
+    /* Explicit Fallback to Bootstrap Dark BG */
+    color: #f8f9fa;
+    /* Explicit Fallback to Bootstrap Light Text */
 }
 
-/* [LAYOUT] Sidebar & Content Wrapper */
+/* [TYPOGRAPHY] Technical Dashboard Style */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+}
+
+/* [LAYOUT] Sidebar & Content */
 .sidebar {
     position: fixed;
     top: 0;
@@ -30,23 +52,21 @@ body {
     height: 100vh;
     overflow-y: auto;
     background: #343a40;
-    /* bg-dark */
-    transition: margin-left 0.3s ease-in-out;
-    z-index: 1030;
-    /* Above navbar */
+    /* Bootstrap .bg-dark-gray equivalent */
     border-right: 1px solid rgba(255, 255, 255, 0.1);
+    transition: margin-left 0.3s;
+    z-index: 1030;
 }
 
 .content {
     margin-left: 250px;
     width: calc(100% - 250px);
-    height: 100vh;
-    overflow-y: auto;
-    transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+    transition: margin-left 0.3s, width 0.3s;
+    min-height: 100vh;
     padding-bottom: 2rem;
 }
 
-/* Sidebar Toggle Logic */
+/* Toggle Logic */
 .sidebar.open {
     margin-left: -250px;
 }
@@ -56,7 +76,6 @@ body {
     width: 100%;
 }
 
-/* Mobile Layout */
 @media (max-width: 991.98px) {
     .sidebar {
         margin-left: -250px;
@@ -72,54 +91,107 @@ body {
     }
 }
 
-/* [NAVBAR] Clean & Functional */
+/* [NAVBAR] Clean */
 .navbar {
     background-color: #343a40 !important;
-    /* bg-dark */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    /* Subtle depth */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.75rem 1rem;
 }
 
-/* [MAPS] Responsive Containers */
+/* [COMPONENTS] Sharpened via Global Reset, just layout fixes here */
+.card,
+.bg-secondary {
+    background-color: #2c3034 !important;
+    /* Slightly lighter than body */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn {
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid transparent;
+}
+
+.form-control,
+.form-select {
+    background-color: #212529 !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #0d6efd;
+    /* Bootstrap Primary Blue */
+    box-shadow: 0 0 0 1px #0d6efd !important;
+}
+
+/* [MAPS] */
 #map,
 #weather-map,
 #admin-map {
     height: 450px;
     width: 100%;
-    border-radius: 0.375rem;
-    /* rounded */
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* [SPINNER] Essential Loading Logic */
+/* [SPINNER] */
 #spinner {
     opacity: 0;
     visibility: hidden;
-    transition: opacity .5s ease-out, visibility 0s linear .5s;
+    transition: opacity .5s ease-out, visibility 0s linear .5s !important;
     z-index: 99999;
 }
 
 #spinner.show {
-    transition: opacity .5s ease-out, visibility 0s linear 0s;
+    transition: opacity .5s ease-out, visibility 0s linear 0s !important;
     visibility: visible;
     opacity: 1;
 }
 
-/* [UTILITIES] Helper Classes */
-.cursor-pointer {
-    cursor: pointer;
+/* [DISASTER CARDS] Grid Style */
+.disaster-card {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.5rem;
+    text-align: center;
+    background-color: #2c3034;
+    transition: all 0.2s;
 }
 
-.text-justify {
-    text-align: justify;
+.disaster-card:hover {
+    border-color: #dc3545;
+    /* Bootstrap Danger */
+    background-color: rgba(220, 53, 69, 0.1);
 }
 
-/* [RESPONSIVE TABLES] High Density for Mobile */
+.disaster-card .icon-wrapper {
+    font-size: 2rem;
+    color: #dc3545;
+    margin-bottom: 1rem;
+}
+
+.disaster-card h5 {
+    margin: 0;
+}
+
+/* [UTILITIES] */
+.text-primary {
+    color: #dc3545 !important;
+}
+
+/* Brand Red Override */
+
+/* [MOBILE] */
 @media (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
 
-    .table td,
-    .table th {
-        padding: 0.5rem 0.25rem;
-        font-size: 0.9rem;
+    .btn,
+    .form-control {
+        min-height: 44px;
     }
 }
