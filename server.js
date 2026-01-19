@@ -3,8 +3,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const session = require('express-session');
-const { Store: KnexSessionStore } = require('connect-session-knex');
-
+const { ConnectSessionKnexStore: KnexSessionStore } = require('connect-session-knex');
 const bodyparser = require('body-parser');
 const db = require('./db');
 const path = require("path");
@@ -32,7 +31,7 @@ app.set('trust proxy', 1);
 
 // [SECURITY] Helmet - Secure HTTP Headers
 app.use(helmet({
-  contentSecurityPolicy: false, // Disabled for now to prevent breaking maps/scripts
+  contentSecurityPolicy: true, // Disabled for now to prevent breaking maps/scripts
 }));
 
 // [SECURITY] Global Rate Limiter
@@ -45,23 +44,27 @@ const globalLimiter = rateLimit({
 // Rate Limiter Definition (Applied later)
 
 
-const knex = require('knex')({ client: 'mysql2', 
-    connection: {
-    host: process.env.MYSQLHOST || 'localhost',
-    user: process.env.MYSQLUSER || 'root',
-    password: process.env.MYSQLPASSWORD || '',
-    database: process.env.MYSQLDATABASE || 'myapp',
+const knex = require('knex')({
+  client: 'mysql2', connection: {
+    host: process.env.MYSQLHOST,
+    user: process.env.MYSQLUSER,
+    password: process.env.MYSQLPASSWORD,
+    database: process.env.MYSQLDATABASE,
     port: process.env.MYSQLPORT || 3306
-  }
+  },
+  pool: { min: 0, max: 7 }
 });
 
 app.use(session({
-  store: new KnexSessionStore({ knex, createtable: true }),
+  store: new KnexSessionStore({
+    knex,
+    createtable: true
+  }),
   secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
+  cookie: { secure: process.env.NODE_ENV === 'production', httpOnly: true }
 }));
-
 
 app.set('view engine', 'ejs');
 app.use(express.json());
