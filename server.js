@@ -43,11 +43,27 @@ const globalLimiter = rateLimit({
 // Rate Limiter Definition (Applied later)
 
 
+const KnexSessionStore = require('connect-session-knex')(session);
+const knex = require('knex')({
+  client: 'mysql2',
+  connection: {
+    host: process.env.MYSQLHOST || 'localhost',
+    user: process.env.MYSQLUSER || 'root',
+    password: process.env.MYSQLPASSWORD || '',
+    database: process.env.MYSQLDATABASE || 'myapp',
+    port: process.env.MYSQLPORT || 3306
+  }
+});
+
 app.use(cors());
 app.use(session({
   secret: process.env.SESSION_SECRET || 'fallback_secret_change_me',
   resave: false,
   saveUninitialized: false, // Changed to false for GDPR compliance / efficiency
+  store: new KnexSessionStore({
+    knex: knex,
+    tablename: 'sessions', // optional. Defaults to 'sessions'
+  }),
   cookie: {
     secure: process.env.NODE_ENV === 'production', // Only true if HTTPS
     httpOnly: true, // Prevents XSS
