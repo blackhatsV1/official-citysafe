@@ -102,6 +102,26 @@ html {
         /* Align text start */
         padding: 10px 15px;
     }
+
+    /* [MOBILE EXCEL TABLES] Compact Data View */
+    .table {
+        font-size: 0.8rem !important;
+        /* ~12.8px */
+        line-height: 1.2;
+    }
+
+    .table th,
+    .table td {
+        padding: 8px 4px !important;
+        /* Tighter padding */
+        white-space: nowrap;
+        /* Prevent wrapping if desired, or remove for wrapping */
+    }
+
+    .table th {
+        font-size: 0.85rem !important;
+        /* Header slightly larger */
+    }
 }
 
 /* Scrollbar Styling */
