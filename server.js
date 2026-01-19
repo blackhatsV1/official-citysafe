@@ -29,6 +29,15 @@ const transporter = nodemailer.createTransport({
 // [SECURITY] Trust Proxy (Required for Railway/Load Balancers)
 app.set('trust proxy', 1);
 
+// [OPTIMIZATION] Gzip Compression
+const compression = require('compression');
+app.use(compression());
+
+// [OPTIMIZATION] Cache Static Assets (1 day)
+app.use(express.static(path.join(__dirname, "public"), {
+  maxAge: '1d'
+}));
+
 // [SECURITY] Helmet - Secure HTTP Headers
 app.use(helmet({
   contentSecurityPolicy: false, // Disabled to allow inline scripts (fixes spinner)
@@ -724,7 +733,7 @@ app.post('/login', loginLimiter, (req, res) => {
   const cleanIdentifier = identifier ? identifier.trim().replace(/\s+/g, ' ') : '';
 
   // Check Users Table First
-  db.query('SELECT * FROM users WHERE (TRIM(email) = ? OR TRIM(CONCAT(TRIM(firstname), " ", TRIM(lastname))) = ? OR TRIM(contact_number) = ?)', [cleanIdentifier, cleanIdentifier, cleanIdentifier], async (err, users) => {
+  db.query('SELECT * FROM users WHERE (TRIM(email) = ? OR TRIM(CONCAT(TRIM(firstname), \' \', TRIM(lastname))) = ? OR TRIM(contact_number) = ?)', [cleanIdentifier, cleanIdentifier, cleanIdentifier], async (err, users) => {
     if (err) { console.error("Login User Error:", err); throw err; }
 
     if (users.length > 0) {
@@ -761,7 +770,7 @@ app.post('/login', loginLimiter, (req, res) => {
       }
     } else {
       // Check Responders Table
-      db.query('SELECT * FROM responders WHERE (TRIM(email) = ? OR TRIM(username) = ? OR TRIM(CONCAT(TRIM(firstname), " ", TRIM(lastname))) = ? OR TRIM(contact_number) = ?)', [cleanIdentifier, cleanIdentifier, cleanIdentifier, cleanIdentifier], async (err, responders) => {
+      db.query('SELECT * FROM responders WHERE (TRIM(email) = ? OR TRIM(username) = ? OR TRIM(CONCAT(TRIM(firstname), \' \', TRIM(lastname))) = ? OR TRIM(contact_number) = ?)', [cleanIdentifier, cleanIdentifier, cleanIdentifier, cleanIdentifier], async (err, responders) => {
         if (err) { console.error("Login Responder Error:", err); throw err; }
 
         console.log("Responder Login Attempt:", cleanIdentifier); // [DEBUG]

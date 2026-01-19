@@ -76,8 +76,12 @@ function showMap(position) {
       })
       .catch(err => {
         console.error("Weather API error:", err);
-        if (weatherInfo) {
-          weatherInfo.innerHTML = "Unable to load weather data.";
+        // [OPTIMIZATION] Mobile Resilience: Don't wipe existing content if fetch fails!
+        if (weatherInfo && !weatherInfo.innerHTML.includes("Temp:")) {
+          weatherInfo.innerHTML = `<span style="color:red">Unable to load new data. (Offline?)</span>`;
+        } else {
+          // Toast/Silent fail if we already have data
+          console.warn("Update failed, keeping cached data.");
         }
       });
   }
