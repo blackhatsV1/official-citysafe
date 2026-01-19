@@ -423,9 +423,33 @@ app.post('/report', async (req, res) => {
       body_lon: req.body.lon
     });
 
-    const sql = `INSERT INTO disaster_reports (user_id, disaster_type, location, latitude, longitude) VALUES (?, ?, ?, ?, ?)`;
     db.query(sql, [userId, disasterTypeToStore, locationToStore, finalLat, finalLon], (err, result) => {
       if (err) throw err;
+
+      // [NOTIFICATION] Notify All Admins
+      db.query("SELECT id FROM users WHERE role = 'admin'", (err, admins) => {
+        if (!err && admins.length > 0) {
+          const adminIds = admins.map(a => a.id);
+          // Get subscriptions for these admins
+          db.query("SELECT * FROM push_subscriptions WHERE user_id IN (?)", [adminIds], (err, subs) => {
+            if (!err && subs.length > 0) {
+              subs.forEach(sub => {
+                const subscription = {
+                  endpoint: sub.endpoint,
+                  keys: { p256dh: sub.keys_p256dh, auth: sub.keys_auth }
+                };
+                const payload = {
+                  title: 'New SOS Alert!',
+                  body: `${disasterTypeToStore} reported at ${locationToStore}`,
+                  url: '/adminpage'
+                };
+                sendNotificationObj(subscription, payload);
+              });
+            }
+          });
+        }
+      });
+
       res.send(`<script>alert('Disaster Reported Successfully!'); window.location.href='/my-reports';</script>`);
     });
   } else {
@@ -1113,6 +1137,25 @@ app.post('/api/deploy', (req, res) => {
                       return connection.rollback(() => { connection.release(); res.status(500).json({ error: 'Commit Failed: ' + err.message }); });
                     }
                     connection.release();
+
+                    // [NOTIFICATION] Notify the Responder
+                    db.query("SELECT * FROM push_subscriptions WHERE responder_id = ?", [responderId], (err, subs) => {
+                      if (!err && subs.length > 0) {
+                        subs.forEach(sub => {
+                          const subscription = {
+                            endpoint: sub.endpoint,
+                            keys: { p256dh: sub.keys_p256dh, auth: sub.keys_auth }
+                          };
+                          const payload = {
+                            title: 'DEPLOYMENT ALERT',
+                            body: 'You have been deployed to a mission. Check your app immediately.',
+                            url: '/my-current-mission-page'
+                          };
+                          sendNotificationObj(subscription, payload);
+                        });
+                      }
+                    });
+
                     res.json({ success: true, message: 'Deployed successfully' });
                   });
                 });
