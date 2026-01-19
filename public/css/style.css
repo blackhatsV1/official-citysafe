@@ -47,7 +47,61 @@ body {
     background-color: var(--dark);
     color: var(--light);
     font-family: 'Roboto', 'Open Sans', sans-serif;
-    font-size: 17px;
+    font-size: 1rem;
+    /* Base 16px */
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    /* Prevent automatic zooming */
+}
+
+/* [MOBILE OPTIMIZATION] Responsive Typography */
+html {
+    font-size: 16px;
+    /* Desktop Base */
+}
+
+@media (max-width: 768px) {
+    html {
+        font-size: 15px;
+        /* Slightly smaller base for tablets/large phones */
+    }
+
+    body {
+        font-size: 1rem;
+        /* 15px effectively */
+    }
+
+    h1 {
+        font-size: 1.75rem !important;
+    }
+
+    h2 {
+        font-size: 1.5rem !important;
+    }
+
+    h3 {
+        font-size: 1.25rem !important;
+    }
+
+    /* Touch Targets */
+    .btn,
+    .form-control,
+    .nav-link {
+        min-height: 48px;
+        /* Standard Touch Target Size */
+        font-size: 16px !important;
+        /* Prevents iOS Zoom on focus */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Input padding adjustment */
+    .form-control {
+        justify-content: flex-start;
+        /* Align text start */
+        padding: 10px 15px;
+    }
 }
 
 /* Scrollbar Styling */
@@ -152,11 +206,13 @@ a:hover {
     visibility: hidden;
     transition: opacity .5s ease-out, visibility 0s linear .5s !important;
     z-index: 99999;
-    pointer-events: none; /* Allow clicks to pass through if stuck invisible */
+    pointer-events: none;
+    /* Allow clicks to pass through if stuck invisible */
 }
 
 #spinner.show {
-    pointer-events: all; /* Block clicks only when actively showing */
+    pointer-events: all;
+    /* Block clicks only when actively showing */
     transition: opacity .5s ease-out, visibility 0s linear 0s;
     visibility: visible;
     opacity: 1;
