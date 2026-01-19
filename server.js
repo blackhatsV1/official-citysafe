@@ -2414,6 +2414,20 @@ app.get('/api/status-overview', (req, res) => {
   }
 });
 
+// [OPTIMIZATION] Health Check for Render
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
+// [OPTIMIZATION] Global Error Handlers to prevent 502s
+process.on('uncaughtException', (err) => {
+  console.error('CRITICAL ERROR (Uncaught Exception):', err);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('CRITICAL ERROR (Unhandled Rejection):', reason);
+});
+
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server started on http://localhost:${PORT}`);
 });

@@ -1,25 +1,24 @@
 const mysql = require('mysql2');
 
-const db = mysql.createConnection({
+const pool = mysql.createPool({
   host: process.env.MYSQLHOST || 'localhost',
   user: process.env.MYSQLUSER || 'root',
   password: process.env.MYSQLPASSWORD || '',
   database: process.env.MYSQLDATABASE || 'myapp',
-  port: process.env.MYSQLPORT || 3306
+  port: process.env.MYSQLPORT || 3306,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
-db.on('error', (err) => {
-  console.error('MySQL Connection Error:', err);
-  if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-    // Reconnect logic could go here, but for now just log
-  } else {
-    throw err;
-  }
+// Pool events
+pool.on('connection', (connection) => {
+  console.log('MySQL pool connection established');
 });
 
-db.connect((err) => {
-  if (err) throw err;
-  console.log('Connected to MySQL database');
+pool.on('error', (err) => {
+  console.error('MySQL Pool Error:', err);
+  // Pool handles its own reconnection for most errors
 });
 
-module.exports = db;
+module.exports = pool;

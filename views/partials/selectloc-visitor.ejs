@@ -40,12 +40,8 @@
             console.error("Error updating weather map:", err);
         }
 
-        // Fetch address with better headers
-        fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`, {
-            headers: {
-                'User-Agent': 'CitySafe/1.0 (jayro; Urban Disaster Response App)'
-            }
-        })
+        // Fetch address (removed User-Agent header as it is forbidden in browser fetch)
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
             .then(res => res.json())
             .then(data => {
                 const address = data.display_name;
@@ -72,7 +68,7 @@
                     if (err.code === 1) msg = "Location permission denied. Please enable location in browser settings.";
                     else if (err.code === 2) msg = "Location unavailable.";
                     else if (err.code === 3) msg = "Location request timed out.";
-                    
+
                     alert(msg);
                 },
                 { enableHighAccuracy: true, timeout: 30000, maximumAge: 0 }
@@ -91,7 +87,7 @@
     }
 
     map.locate({
-        setView: true, 
+        setView: true,
         maxZoom: 16,
         enableHighAccuracy: true, // Better for Chrome & mobile reliability
         timeout: 30000,
