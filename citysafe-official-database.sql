@@ -36,7 +36,8 @@ CREATE TABLE `deploys` (
   `status` enum('pending','resolved','cancelled by user','cancelled by admin') DEFAULT 'pending',
   `deployed_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `resolved_at` timestamp NULL DEFAULT NULL,
-  `remarks` text DEFAULT NULL
+  `remarks` text DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -68,7 +69,8 @@ CREATE TABLE `disaster_reports` (
   `resolution_remarks` text DEFAULT NULL,
   `resolved_by` varchar(255) DEFAULT NULL,
   `user_message` text DEFAULT NULL,
-  `responder_message` text DEFAULT NULL
+  `responder_message` text DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -113,7 +115,8 @@ CREATE TABLE `push_subscriptions` (
   `endpoint` text NOT NULL,
   `keys_p256dh` text NOT NULL,
   `keys_auth` text NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -129,7 +132,8 @@ CREATE TABLE `requests` (
   `location` varchar(255) NOT NULL,
   `needs` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `help_count` int(11) DEFAULT 0
+  `help_count` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -151,7 +155,8 @@ CREATE TABLE `responders` (
   `longitude` decimal(11,8) DEFAULT NULL,
   `status` enum('active','inactive','deployed','offline') DEFAULT 'offline',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `action` enum('standby','responding') DEFAULT 'standby'
+  `action` enum('standby','responding') DEFAULT 'standby',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -176,7 +181,8 @@ CREATE TABLE `risk_assessments` (
   `has_evacuation_plan` tinyint(1) NOT NULL,
   `risk_score` int(11) NOT NULL,
   `risk_level` varchar(20) NOT NULL,
-  `assessed_at` datetime DEFAULT current_timestamp()
+  `assessed_at` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -198,7 +204,8 @@ CREATE TABLE `stations` (
   `type` enum('PNP','BFP') NOT NULL,
   `address` varchar(255) NOT NULL,
   `latitude` double NOT NULL,
-  `longitude` double NOT NULL
+  `longitude` double NOT NULL,
+  PRIMARY KEY (`id`) 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -259,7 +266,8 @@ CREATE TABLE `users` (
   `verification_code` varchar(6) DEFAULT NULL,
   `verification_expiry` datetime DEFAULT NULL,
   `is_verified` tinyint(1) DEFAULT 0,
-  `verification_method` enum('email','sms') DEFAULT 'email'
+  `verification_method` enum('email','sms') DEFAULT 'email',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -278,7 +286,6 @@ INSERT INTO `users` (`id`, `firstname`, `lastname`, `street_address`, `barangay`
 -- Indexes for table `deploys`
 --
 ALTER TABLE `deploys`
-  ADD PRIMARY KEY (`id`),
   ADD KEY `responder_id` (`responder_id`),
   ADD KEY `station_id` (`station_id`),
   ADD KEY `incident_id` (`incident_id`),
@@ -288,7 +295,6 @@ ALTER TABLE `deploys`
 -- Indexes for table `disaster_reports`
 --
 ALTER TABLE `disaster_reports`
-  ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `fk_responder` (`responder_id`);
 
@@ -296,7 +302,6 @@ ALTER TABLE `disaster_reports`
 -- Indexes for table `push_subscriptions`
 --
 ALTER TABLE `push_subscriptions`
-  ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `responder_id` (`responder_id`);
 
@@ -304,34 +309,30 @@ ALTER TABLE `push_subscriptions`
 -- Indexes for table `requests`
 --
 ALTER TABLE `requests`
-  ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `responders`
 --
 ALTER TABLE `responders`
-  ADD PRIMARY KEY (`id`),
   ADD KEY `station_id` (`station_id`);
 
 --
 -- Indexes for table `risk_assessments`
 --
 ALTER TABLE `risk_assessments`
-  ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `stations`
 --
-ALTER TABLE `stations`
-  ADD PRIMARY KEY (`id`);
+-- ALTER TABLE `stations`
+--   ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email` (`email`),
   ADD UNIQUE KEY `contact_number` (`contact_number`),
   ADD KEY `fk_station` (`station_id`);
