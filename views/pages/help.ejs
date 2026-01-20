@@ -5,140 +5,158 @@
     <%- include('../partials/head'); %>
 </head>
 
-<body>
+<body class="bg-dark text-white">
     <%- include('../partials/page-start'); %>
     <div class="container-fluid position-relative d-flex p-0">
-        <!-- Spinner Start -->
         <%- include('../partials/spinner'); %>
-            <!-- Spinner End -->
-
-
-            <!-- Sidebar Start -->
             <%- include('../partials/visitor-sidebar'); %>
-                <!-- Sidebar End -->
 
-
-                <!-- Content Start -->
                 <div class="content">
-                    <!-- Navbar Start -->
                     <%- include('../partials/visitor-navbar'); %>
-                        <!-- Navbar End -->
 
-                        <!-- Weather Info -->
                         <div class="container-fluid pt-4 px-4">
-                            <div class="bg-secondary text-center rounded p-4 mx-0">
-                                <div class="mb-0">
-                                    <h1><i class="bi bi-cloud-sun"></i> Welcome to CitySafe!</h1>
+                            <div class="bg-card shadow-sm text-center rounded mb-4 p-5">
+                                <div class="d-flex align-items-center justify-content-center gap-3">
+                                    <i class="bi bi-cloud-sun fs-1 text-primary"></i>
+                                    <h1 class="mb-0 fw-800 text-head letter-spacing-1">Welcome to CitySafe!</h1>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Weather Info End -->
-
-                        <!-- Sales Chart Start -->
-                        <div class="container-fluid pt-4 px-4">
+                            
                             <div class="row g-4">
-                                <!-- Left Column (Bigger) -->
+                                <!-- FAQ / Left Column -->
                                 <div class="col-sm-12 col-xl-8">
-                                    <div class="bg-secondary  rounded p-4 h-100">
+                                    <div class="bg-card rounded p-4 h-100 shadow-sm border border-light">
                                         <div class="d-flex align-items-center justify-content-between mb-4">
-                                            <h1 class="mb-0">Help & Support</h1>
+                                            <h3 class="mb-0 fw-bold text-head">Help & Support</h3>
                                         </div>
-                                        <p>
-                                            If you are experiencing any issues or have any questions, we are here to
-                                            help!
+                                        <p class="text-muted">
+                                            If you are experiencing any issues or have any questions, we are here to help!
                                             Below are some commonly asked questions and their answers.
                                         </p>
 
-                                        <!-- FAQ Section -->
-                                        <h3 class="mt-4">Frequently Asked Questions (FAQ)</h3>
-                                        <ul class="list-group list-group-flush text-left">
-                                            <li class="list-group-item bg-transparent">
-                                                <strong>How do I report an emergency?</strong>
-                                                <p>Use the "One-Tap SOS Reporting" feature to quickly send a distress
-                                                    signal to our team. We will respond as soon as possible to assist
-                                                    you.</p>
-                                            </li>
-                                            <li class="list-group-item bg-transparent">
-                                                <strong>How can I track my report status?</strong>
-                                                <p>Go to "My Reports" to view the status of your reported incidents and
-                                                    see if a responder has been assigned to your location.</p>
-                                            </li>
-                                            <li class="list-group-item bg-transparent">
-                                                <strong>How do I find nearby safe zones?</strong>
-                                                <p>Visit the "Nearby Stations" page to view a map of police stations,
-                                                    fire stations, and hospitals near you for quick navigation.</p>
-                                            </li>
-                                            <li class="list-group-item bg-transparent">
-                                                <strong>How do I check the weather?</strong>
-                                                <p>The "Weather" page provides real-time updates on local weather
-                                                    conditions to help you stay prepared for any potential hazards.</p>
-                                            </li>
-                                            <li class="list-group-item bg-transparent">
-                                                <strong>What is the Community Risk Assessment Tool?</strong>
-                                                <p>This tool helps assess disaster risks in your area, providing
-                                                    important data on natural disasters and preparedness so you can stay
-                                                    informed.</p>
-                                            </li>
-                                        </ul>
+                                        <h5 class="mt-4 mb-3 fw-bold text-uppercase letter-spacing-1 text-muted small">Frequently Asked Questions</h5>
+                                        <div class="accordion accordion-flush" id="faqAccordion">
+                                            <div class="accordion-item bg-transparent border border-light rounded mb-3">
+                                                <h2 class="accordion-header">
+                                                    <button class="accordion-button collapsed bg-dark text-white fw-bold shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                                        How do I report an emergency?
+                                                    </button>
+                                                </h2>
+                                                <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                                    <div class="accordion-body text-muted small">
+                                                        Use the "One-Tap SOS Reporting" feature to quickly send a distress signal to our team. We will respond as soon as possible to assist you.
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="accordion-item bg-transparent border border-light rounded mb-3">
+                                                <h2 class="accordion-header">
+                                                    <button class="accordion-button collapsed bg-dark text-white fw-bold shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                                        How can I track my report status?
+                                                    </button>
+                                                </h2>
+                                                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                                    <div class="accordion-body text-muted small">
+                                                        Go to "My Reports" to view the status of your reported incidents and see if a responder has been assigned to your location.
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="accordion-item bg-transparent border border-light rounded mb-3">
+                                                <h2 class="accordion-header">
+                                                    <button class="accordion-button collapsed bg-dark text-white fw-bold shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                                        How do I find nearby safe zones?
+                                                    </button>
+                                                </h2>
+                                                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                                    <div class="accordion-body text-muted small">
+                                                        Visit the "Nearby Stations" page to view a map of police stations, fire stations, and hospitals near you for quick navigation.
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="accordion-item bg-transparent border border-light rounded mb-3">
+                                                <h2 class="accordion-header">
+                                                    <button class="accordion-button collapsed bg-dark text-white fw-bold shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                                        How do I check the weather?
+                                                    </button>
+                                                </h2>
+                                                <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                                    <div class="accordion-body text-muted small">
+                                                        The "Weather" page provides real-time updates on local weather conditions to help you stay prepared for any potential hazards.
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="accordion-item bg-transparent border border-light rounded mb-3">
+                                                <h2 class="accordion-header">
+                                                    <button class="accordion-button collapsed bg-dark text-white fw-bold shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                                                        What is the Community Risk Assessment Tool?
+                                                    </button>
+                                                </h2>
+                                                <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                                    <div class="accordion-body text-muted small">
+                                                        This tool helps assess disaster risks in your area, providing important data on natural disasters and preparedness.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <!-- Right Column (Smaller but same height) -->
+                                <!-- Contact / Right Column -->
                                 <div class="col-sm-12 col-xl-4">
-                                    <div class="bg-secondary justify-content-center rounded p-4 h-100">
-                                        <!-- Contact Section -->
-                                        <h3 class="mt-4">Contact Us</h3>
-                                        <p>If you have any other questions or need further assistance, feel free to
-                                            reach us through:</p>
-                                        <ul class="list-group list-group-flush text-left">
-                                            <li class="list-group-item bg-transparent"><strong>Email:</strong>
-                                                jayr.tabalina.ui@phinmaed.com</li>
-                                            <li class="list-group-item bg-transparent"><strong>Phone:</strong> (+63) 993
-                                                978 4619</li>
-                                            <li class="list-group-item bg-transparent"><strong>Social Media:</strong>
-                                                @CitySafeOfficial</li>
-                                        </ul>
+                                    <div class="bg-card rounded p-4 h-100 shadow-sm border border-light">
+                                        <h5 class="mt-2 mb-4 fw-bold text-uppercase letter-spacing-1 text-muted small">Contact Us</h5>
+                                        <p class="text-muted small mb-4">If you have any other questions or need further assistance, feel free to reach us through:</p>
+                                        
+                                        <div class="d-flex flex-column gap-3 mb-4">
+                                            <div class="p-3 rounded bg-dark border border-light">
+                                                <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.65rem;">Email</small>
+                                                <span class="text-white small">jayr.tabalina.ui@phinmaed.com</span>
+                                            </div>
+                                            <div class="p-3 rounded bg-dark border border-light">
+                                                <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.65rem;">Phone</small>
+                                                <span class="text-white small">(+63) 993 978 4619</span>
+                                            </div>
+                                            <div class="p-3 rounded bg-dark border border-light">
+                                                <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.65rem;">Social Media</small>
+                                                <span class="text-primary small">@CitySafeOfficial</span>
+                                            </div>
+                                        </div>
 
-                                        <hr class="my-4">
+                                        <hr class="dropdown-divider bg-light opacity-10 my-4">
 
-                                        <!-- Emergency Numbers -->
-                                        <h3 class="mt-4">Emergency Assistance</h3>
-                                        <p>If you need immediate assistance, please refer to these emergency hotlines:
-                                        </p>
-                                        <ul class="list-group list-group-flush text-left">
-                                            <li class="list-group-item bg-transparent"><strong>National Emergency
-                                                    Hotline:</strong> 911</li>
-                                            <li class="list-group-item bg-transparent"><strong>PNP (Police):</strong>
-                                                117 or (02) 8722-0650</li>
-                                            <li class="list-group-item bg-transparent"><strong>BFP (Fire):</strong> (02)
-                                                8426-0219</li>
-                                            <li class="list-group-item bg-transparent"><strong>Red Cross:</strong> 143
-                                                or (02) 8790-2300</li>
-                                            <li class="list-group-item bg-transparent"><strong>MMDA:</strong> 136</li>
-                                            <li class="list-group-item bg-transparent"><strong>NDRRMC Operations
-                                                    Center:</strong> (02) 8911-5061 to 65</li>
-                                        </ul>
+                                        <h5 class="mb-4 fw-bold text-uppercase letter-spacing-1 text-muted small">Emergency Assistance</h5>
+                                        <div class="list-group list-group-flush rounded border border-light overflow-hidden">
+                                            <div class="list-group-item bg-dark border-light text-muted d-flex justify-content-between align-items-center p-2">
+                                                <small>National Hotline</small>
+                                                <span class="badge bg-danger-soft text-danger fw-bold">911</span>
+                                            </div>
+                                            <div class="list-group-item bg-dark border-light text-muted d-flex justify-content-between align-items-center p-2">
+                                                <small>PNP</small>
+                                                <span class="badge bg-primary-soft text-primary fw-bold">117</span>
+                                            </div>
+                                            <div class="list-group-item bg-dark border-light text-muted d-flex justify-content-between align-items-center p-2">
+                                                <small>BFP</small>
+                                                <span class="badge bg-warning-soft text-warning fw-bold">(02) 8426</span>
+                                            </div>
+                                            <div class="list-group-item bg-dark border-light text-muted d-flex justify-content-between align-items-center p-2">
+                                                <small>Red Cross</small>
+                                                <span class="badge bg-info-soft text-info fw-bold">143</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Sales Chart End -->
-
-
-
-
-                        <!-- Footer Start -->
                         <%- include('../partials/page-end'); %>
                         <%- include('../partials/footer'); %>
-                            <!-- Footer End -->
 
                 </div>
-                <!-- Content End -->
 
-
-                <!-- Back to Top -->
-                <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+                <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top rounded-circle shadow-lg"><i class="bi bi-arrow-up"></i></a>
     </div>
 
     <script src="/js/script.js"></script>

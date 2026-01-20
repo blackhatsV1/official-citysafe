@@ -13,48 +13,41 @@
             <div class="container">
                 <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
                     <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
-                        <div class="card p-4 p-sm-5 my-4">
+                        <div class="bg-card p-4 p-sm-5 my-4 rounded shadow-lg border border-light">
                             <div class="text-center mb-4">
-                                <a href="/visitor" class="d-inline-flex align-items-center gap-2 mb-2">
+                                <a href="/visitor" class="d-inline-flex align-items-center gap-2 mb-2 text-decoration-none">
                                     <i class="fa fa-shield-alt fs-2 text-primary"></i>
-                                    <h3 class="mb-0 text-primary fw-800 letter-spacing-1">CITYSAFE</h3>
+                                    <h3 class="mb-0 text-head fw-800 letter-spacing-1">CITYSAFE</h3>
                                 </a>
-                                <p class="text-muted small fw-600 text-uppercase letter-spacing-1">Urban Response Hub
-                                </p>
+                                <p class="text-muted small fw-600 text-uppercase letter-spacing-1">Urban Response Hub</p>
                             </div>
 
-                            <div class="mb-4">
-                                <h4 class="mb-1 fw-800">Welcome Back</h4>
+                            <div class="mb-4 text-center">
+                                <h4 class="mb-1 fw-bold text-head">Welcome Back</h4>
                                 <p class="text-muted small">Enter your credentials to access the command center.</p>
                             </div>
 
                             <form method="POST" action="/login">
                                 <div class="form-floating mb-3">
-                                    <input type="text" name="identifier" class="form-control" id="floatingInput"
-                                        placeholder="Email or Username" required>
+                                    <input type="text" name="identifier" class="form-control" id="floatingInput" placeholder="Email or Username" required>
                                     <label for="floatingInput">Email or Username</label>
                                 </div>
                                 <div class="form-floating mb-4 position-relative">
-                                    <input type="password" name="password" class="form-control" id="floatingPassword"
-                                        placeholder="Password" required>
+                                    <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password" required>
                                     <label for="floatingPassword">Password</label>
-                                    <i class="fa fa-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 text-muted opacity-50"
-                                        id="toggleLoginPass" style="cursor: pointer; z-index: 10;"></i>
+                                    <i class="fa fa-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 text-muted opacity-50" id="toggleLoginPass" style="cursor: pointer; z-index: 10;"></i>
                                 </div>
 
-                                <button type="submit" id="login-btn"
-                                    class="btn btn-primary py-3 w-100 mb-4 shadow-sm">Sign In to Dashboard</button>
+                                <button type="submit" id="login-btn" class="btn btn-primary py-3 w-100 mb-4 shadow fw-bold letter-spacing-1">SIGN IN</button>
 
                                 <div class="text-center">
-                                    <p class="mb-0 small text-muted">Awaiting access? <a href="/register"
-                                            class="text-primary fw-bold">Request Registration</a></p>
+                                    <p class="mb-0 small text-muted">Awaiting access? <a href="/register" class="text-primary fw-bold text-decoration-none">Request Registration</a></p>
                                 </div>
                             </form>
                         </div>
 
                         <div class="text-center">
-                            <a href="/visitor" class="small text-muted text-decoration-none hover-indigo"><i
-                                    class="fa fa-arrow-left me-1"></i> Return to Public Safety Portal</a>
+                            <a href="/visitor" class="small text-muted text-decoration-none hover-indigo"><i class="fa fa-arrow-left me-1"></i> Return to Public Safety Portal</a>
                         </div>
                     </div>
                 </div>
@@ -66,12 +59,14 @@
         const toggleLoginPass = document.querySelector("#toggleLoginPass");
         const loginPassInput = document.querySelector("#floatingPassword");
 
-        toggleLoginPass.addEventListener("click", function () {
-            const isPassword = loginPassInput.getAttribute("type") === "password";
-            loginPassInput.setAttribute("type", isPassword ? "text" : "password");
-            this.classList.toggle("fa-eye");
-            this.classList.toggle("fa-eye-slash");
-        });
+        if(toggleLoginPass && loginPassInput){
+            toggleLoginPass.addEventListener("click", function () {
+                const isPassword = loginPassInput.getAttribute("type") === "password";
+                loginPassInput.setAttribute("type", isPassword ? "text" : "password");
+                this.classList.toggle("fa-eye");
+                this.classList.toggle("fa-eye-slash");
+            });
+        }
 
         // Handle auto-spinner
         window.addEventListener('load', () => {

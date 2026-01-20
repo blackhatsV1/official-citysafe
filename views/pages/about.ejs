@@ -4,116 +4,104 @@
 <head>
   <%- include('../partials/head'); %>
 </head>
-<!-- ========================================================================= -->
 
-<body>
+<body class="bg-dark text-white">
   <%- include('../partials/page-start'); %>
   <div class="container-fluid position-relative d-flex p-0">
-    <!-- Spinner Start -->
     <%- include('../partials/spinner'); %>
-      <!-- Spinner End -->
-
-
-      <!-- Sidebar Start -->
       <%- include('../partials/visitor-sidebar'); %>
-        <!-- Sidebar End -->
 
-
-        <!-- Content Start -->
         <div class="content">
-          <!-- Navbar Start -->
           <%- include('../partials/visitor-navbar'); %>
-            <!-- Navbar End -->
 
-
-            <!-- Typography Start -->
             <div class="container-fluid pt-4 px-4">
-              <div class="bg-secondary text-center rounded mb-3 p-4">
-                <div class="d-flex align-items-center justify-content-between mb-4">
-                  <h1><i class="bi bi-cloud-sun mb-0"></i>Welcome to CitySafe!</h1>
+              <div class="bg-card shadow-sm text-center rounded mb-4 p-5">
+                <div class="d-flex align-items-center justify-content-center gap-3">
+                  <i class="bi bi-cloud-sun fs-1 text-primary"></i>
+                  <h1 class="mb-0 fw-800 text-head letter-spacing-1">Welcome to CitySafe!</h1>
                 </div>
               </div>
+
               <div class="row g-4">
                 <div class="col-sm-8">
-                  <div class="bg-secondary rounded h-100 p-4 p-3 mb-3">
-                    <h1>About CitySafe</h1>
-                    <div class="p-4 pb-0 mb-4">
-                      <figure class="text-center">
+                  <div class="bg-card rounded h-100 p-4 shadow-sm border border-light">
+                    <h3 class="mb-4 fw-bold text-head">About CitySafe</h3>
+                    <div class="p-4 rounded bg-dark border border-light">
+                      <figure class="text-center mb-0">
                         <blockquote class="blockquote">
-                          <p>CitySafe is a web-based disaster response app that provides
+                          <p class="text-muted text-start mb-4" style="line-height: 1.8;">
+                            CitySafe is a web-based disaster response app that provides
                             real-time alerts, localized notifications, and reliable information
                             during emergencies. It helps citizens stay informed, empowers them
                             to send SOS requests for immediate assistance, and supports city officials and
-                            responders in coordinating relief efforts efficiently.</p>
-
-                          <p>
-                            CitySafe was developed as a <em>capstone research project</em> entitled
+                            responders in coordinating relief efforts efficiently.
+                          </p>
+                          <p class="text-muted text-start mb-0">
+                            CitySafe was developed as a <em class="text-primary">capstone research project</em> entitled
                             “CitySafe: Urban Disaster Response App”, with the goal of creating a
                             user-friendly, efficient, and compassionate system that strengthens
                             disaster resilience in urban areas.
                           </p>
                         </blockquote>
-                        <figcaption class="blockquote-footer">
-                          Capstone Research Project <cite title="Source Title">“CitySafe: Urban Disaster Response
-                            App”</cite>
+                        <figcaption class="blockquote-footer mt-4 mb-0">
+                          Capstone Research Project <cite title="Source Title" class="text-primary fw-bold">“CitySafe:
+                            Urban Disaster Response App”</cite>
                         </figcaption>
                       </figure>
                     </div>
-
                   </div>
                 </div>
 
                 <div class="col-sm-4">
-                  <div class="p-4 mb-3 bg-secondary rounded h-100 p-4">
-                    <h3 class="mb-3 mt-3">Team Members:</h3>
-                    <div class="border rounded p-4 pb-0 mb-4">
-                      <figure>
-                        <blockquote class="blockquote">
-                          <p>Jayrold Tabalina</p>
-                        </blockquote>
-                        <figcaption class="blockquote-footer">
-                          Programmer <cite title="Source Title">PHINMA-University of Iloilo</cite>
-                        </figcaption>
-                      </figure>
-                    </div>
-                    <div class="border rounded p-4 pb-0 mb-4">
-                      <figure class="text-center">
-                        <blockquote class="blockquote">
-                          <p>Yasmine M. Talaman</p>
-                        </blockquote>
-                        <figcaption class="blockquote-footer">
-                          Documenter <cite title="Source Title">PHINMA-University of Iloilo</cite>
-                        </figcaption>
-                      </figure>
-                    </div>
-                    <div class="border rounded p-4 pb-0 mb-0">
-                      <figure class="text-end">
-                        <blockquote class="blockquote">
-                          <p>Mark Vincent Jabao</p>
-                        </blockquote>
-                        <figcaption class="blockquote-footer">
-                          UI/UX <cite title="Source Title">PHINMA-University of Iloilo</cite>
-                        </figcaption>
-                      </figure>
+                  <div class="bg-card rounded h-100 p-4 shadow-sm border border-light">
+                    <h5 class="mb-4 fw-bold text-uppercase letter-spacing-1 text-muted small">Team Members</h5>
+                    <div class="d-flex flex-column gap-3">
+                      <div class="p-3 rounded bg-dark border border-light">
+                        <div class="d-flex align-items-center gap-3">
+                          <div class="avatar-xs bg-primary-soft rounded-circle d-flex align-items-center justify-content-center">
+                            <span class="text-primary fw-bold small">JT</span>
+                          </div>
+                          <div>
+                            <h6 class="mb-0 fw-bold small">Jayrold Tabalina</h6>
+                            <small class="text-muted" style="font-size: 0.75rem;">Programmer</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="p-3 rounded bg-dark border border-light">
+                        <div class="d-flex align-items-center gap-3">
+                          <div class="avatar-xs bg-info-soft rounded-circle d-flex align-items-center justify-content-center">
+                            <span class="text-info fw-bold small">YT</span>
+                          </div>
+                          <div>
+                            <h6 class="mb-0 fw-bold small">Yasmine M. Talaman</h6>
+                            <small class="text-muted" style="font-size: 0.75rem;">Documenter</small>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="p-3 rounded bg-dark border border-light">
+                        <div class="d-flex align-items-center gap-3">
+                          <div class="avatar-xs bg-warning-soft rounded-circle d-flex align-items-center justify-content-center">
+                            <span class="text-warning fw-bold small">MJ</span>
+                          </div>
+                          <div>
+                            <h6 class="mb-0 fw-bold small">Mark Vincent Jabao</h6>
+                            <small class="text-muted" style="font-size: 0.75rem;">UI/UX</small>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <!-- Typography End -->
 
-
-            <!-- Footer Start -->
             <%- include('../partials/page-end'); %>
             <%- include('../partials/footer'); %>
-              <!-- Footer End -->
 
         </div>
-        <!-- Content End -->
 
-
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top rounded-circle shadow-lg"><i
+            class="bi bi-arrow-up"></i></a>
   </div>
 
   <script src="/js/script.js"></script>

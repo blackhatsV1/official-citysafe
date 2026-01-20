@@ -4,44 +4,33 @@
 <head>
   <%- include('../partials/head'); %>
 </head>
-<!-- ========================================================================= -->
 
-<body>
-    <%- include('../partials/page-start'); %>
-    <div class="container-fluid position-relative d-flex p-0">
-    <!-- Spinner Start -->
+<body class="bg-dark text-white">
+  <%- include('../partials/page-start'); %>
+  <div class="container-fluid position-relative d-flex p-0">
     <%- include('../partials/spinner'); %>
-    <!-- Spinner End -->
+      <%- include('../partials/visitor-sidebar'); %>
 
+        <div class="content">
+          <%- include('../partials/visitor-navbar'); %>
 
-    <!-- Sidebar Start -->
-    <%- include('../partials/visitor-sidebar'); %>
-      <!-- Sidebar End -->
-
-
-      <!-- Content Start -->
-      <div class="content">
-        <!-- Navbar Start -->
-        <%- include('../partials/visitor-navbar'); %>
-          <!-- Navbar End -->
-
-
-          <!-- Send Message Start -->
             <div class="container-fluid pt-4 px-4">
-                <div class="bg-secondary text-center rounded mb-3 p-4">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h1><i class="bi bi-cloud-sun mb-0"></i>Welcome to CitySafe!</h1>
+                <div class="bg-card shadow-sm text-center rounded mb-4 p-5">
+                    <div class="d-flex align-items-center justify-content-center gap-3">
+                        <i class="bi bi-cloud-sun fs-1 text-primary"></i>
+                        <h1 class="mb-0 fw-800 text-head letter-spacing-1">Welcome to CitySafe!</h1>
                     </div>
                 </div>
+
                 <div class="row g-4">                    
                     <div class="col-sm-12 col-xl-6">
-                        <div class="bg-secondary rounded h-100 p-4">
-                            <h6 class="mb-4">Send Us a Message</h6>
+                        <div class="bg-card rounded h-100 p-4 shadow-sm border border-light">
+                            <h6 class="mb-4 fw-bold text-uppercase letter-spacing-1 text-muted small">Send Us a Message</h6>
                             <form action="/send-message" method="POST" onsubmit="return showLoading()">
                                 <div class="form-floating mb-3">
                                     <input type="email" class="form-control" id="floatingEmail" name="email" placeholder="name@example.com" required>
                                     <label for="floatingEmail">Email address</label>
-                                    <div id="emailHelp" class="form-text text-muted ps-2">We'll never share your email with anyone else.</div>
+                                    <div id="emailHelp" class="form-text text-muted ps-2 small">We'll never share your email with anyone else.</div>
                                 </div>
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control" id="floatingName" name="name" placeholder="Name" required>
@@ -51,48 +40,64 @@
                                     <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" name="message" style="height: 150px;" required></textarea>
                                     <label for="floatingTextarea">Comments</label>
                                 </div>
-                                <button type="submit" class="btn btn-primary py-3 w-100 shadow">Submit Message</button>
+                                <button type="submit" class="btn btn-primary py-3 w-100 shadow fw-bold letter-spacing-1">SEND MESSAGE</button>
                             </form>
                         </div>
                     </div>
 
                     <div class="col-sm-12 col-xl-6">
-                        <div class="bg-secondary rounded h-100 p-4">
-                            <h6 class="mb-4">Team Contacts</h6>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item bg-transparent"><strong>Jayrold Tabalina:</strong> jayroldtabalina@gmail.com</li>
-                                <li class="list-group-item bg-transparent"><strong>Yasmine Talaman:</strong> yama.talaman.ui@phinmaed.com</li>
-                                <li class="list-group-item bg-transparent"><strong>Mark Vincent Jabao:</strong> mark.jabao@gmail.com</li>    
-                            </ul>
+                        <div class="bg-card rounded h-100 p-4 shadow-sm border border-light">
+                            <h6 class="mb-4 fw-bold text-uppercase letter-spacing-1 text-muted small">Team Contacts</h6>
+                            <div class="list-group list-group-flush mb-4 rounded border border-light overflow-hidden">
+                                <div class="list-group-item bg-dark border-light text-muted">
+                                    <strong class="text-white">Jayrold Tabalina:</strong> jayroldtabalina@gmail.com
+                                </div>
+                                <div class="list-group-item bg-dark border-light text-muted">
+                                    <strong class="text-white">Yasmine Talaman:</strong> yama.talaman.ui@phinmaed.com
+                                </div>
+                                <div class="list-group-item bg-dark border-light text-muted">
+                                    <strong class="text-white">Mark Vincent Jabao:</strong> mark.jabao@gmail.com
+                                </div>
+                            </div>
 
-                            <h6 class="mb-4 mt-4">Philippine Emergency Hotlines</h6>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item bg-transparent"><strong>National Emergency Hotline:</strong> 911</li>
-                                <li class="list-group-item bg-transparent"><strong>PNP (Police):</strong> 117 or (02) 8722-0650</li>
-                                <li class="list-group-item bg-transparent"><strong>BFP (Fire):</strong> (02) 8426-0219</li>
-                                <li class="list-group-item bg-transparent"><strong>Red Cross:</strong> 143 or (02) 8790-2300</li>
-                                <li class="list-group-item bg-transparent"><strong>MMDA:</strong> 136</li>
-                                <li class="list-group-item bg-transparent"><strong>NDRRMC Operations Center:</strong> (02) 8911-5061 to 65</li>
-                            </ul>
+                            <h6 class="mb-4 fw-bold text-uppercase letter-spacing-1 text-muted small">Emergency Hotlines</h6>
+                            <div class="list-group list-group-flush rounded border border-light overflow-hidden">
+                                <div class="list-group-item bg-dark border-light text-muted d-flex justify-content-between align-items-center">
+                                    <span>National Emergency Hotline</span>
+                                    <span class="badge bg-danger-soft text-danger fw-bold">911</span>
+                                </div>
+                                <div class="list-group-item bg-dark border-light text-muted d-flex justify-content-between align-items-center">
+                                    <span>PNP (Police)</span>
+                                    <span class="badge bg-primary-soft text-primary fw-bold">117</span>
+                                </div>
+                                <div class="list-group-item bg-dark border-light text-muted d-flex justify-content-between align-items-center">
+                                    <span>BFP (Fire)</span>
+                                    <span class="badge bg-warning-soft text-warning fw-bold">(02) 8426-0219</span>
+                                </div>
+                                <div class="list-group-item bg-dark border-light text-muted d-flex justify-content-between align-items-center">
+                                    <span>Red Cross</span>
+                                    <span class="badge bg-info-soft text-info fw-bold">143</span>
+                                </div>
+                                <div class="list-group-item bg-dark border-light text-muted d-flex justify-content-between align-items-center">
+                                    <span>MMDA</span>
+                                    <span class="badge bg-secondary text-white fw-bold">136</span>
+                                </div>
+                                <div class="list-group-item bg-dark border-light text-muted d-flex justify-content-between align-items-center">
+                                    <span>NDRRMC</span>
+                                    <span class="badge bg-success-soft text-success fw-bold">(02) 8911-5061</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
                 </div>
             </div>
-            <!-- Send Message End -->
 
-
-                    <!-- Footer Start -->
-                    <%- include('../partials/page-end'); %>
-                    <%- include('../partials/footer'); %>
-                        <!-- Footer End -->
+            <%- include('../partials/page-end'); %>
+            <%- include('../partials/footer'); %>
 
       </div>
-      <!-- Content End -->
 
-
-      <!-- Back to Top -->
-      <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+      <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top rounded-circle shadow-lg"><i class="bi bi-arrow-up"></i></a>
   </div>
 
   <script src="/js/script.js"></script>
