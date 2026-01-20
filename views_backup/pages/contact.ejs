@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head'); %>
+</head>
+<!-- ========================================================================= -->
+
+<body>
+    <%- include('../partials/page-start'); %>
+    <div class="container-fluid position-relative d-flex p-0">
+    <!-- Spinner Start -->
+    <%- include('../partials/spinner'); %>
+    <!-- Spinner End -->
+
+
+    <!-- Sidebar Start -->
+    <%- include('../partials/visitor-sidebar'); %>
+      <!-- Sidebar End -->
+
+
+      <!-- Content Start -->
+      <div class="content">
+        <!-- Navbar Start -->
+        <%- include('../partials/visitor-navbar'); %>
+          <!-- Navbar End -->
+
+
+          <!-- Send Message Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="bg-secondary text-center rounded mb-3 p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h1><i class="bi bi-cloud-sun mb-0"></i>Welcome to CitySafe!</h1>
+                    </div>
+                </div>
+                <div class="row g-4">                    
+                    <div class="col-sm-12 col-xl-6">
+                        <div class="bg-secondary rounded h-100 p-4">
+                            <h6 class="mb-4">Send Us a Message</h6>
+                            <form action="/send-message" method="POST" onsubmit="return showLoading()">
+                                <div class="form-floating mb-3">
+                                    <input type="email" class="form-control" id="floatingEmail" name="email" placeholder="name@example.com" required>
+                                    <label for="floatingEmail">Email address</label>
+                                    <div id="emailHelp" class="form-text text-muted ps-2">We'll never share your email with anyone else.</div>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="floatingName" name="name" placeholder="Name" required>
+                                    <label for="floatingName">Name</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" name="message" style="height: 150px;" required></textarea>
+                                    <label for="floatingTextarea">Comments</label>
+                                </div>
+                                <button type="submit" class="btn btn-primary py-3 w-100 shadow">Submit Message</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-xl-6">
+                        <div class="bg-secondary rounded h-100 p-4">
+                            <h6 class="mb-4">Team Contacts</h6>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item bg-transparent"><strong>Jayrold Tabalina:</strong> jayroldtabalina@gmail.com</li>
+                                <li class="list-group-item bg-transparent"><strong>Yasmine Talaman:</strong> yama.talaman.ui@phinmaed.com</li>
+                                <li class="list-group-item bg-transparent"><strong>Mark Vincent Jabao:</strong> mark.jabao@gmail.com</li>    
+                            </ul>
+
+                            <h6 class="mb-4 mt-4">Philippine Emergency Hotlines</h6>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item bg-transparent"><strong>National Emergency Hotline:</strong> 911</li>
+                                <li class="list-group-item bg-transparent"><strong>PNP (Police):</strong> 117 or (02) 8722-0650</li>
+                                <li class="list-group-item bg-transparent"><strong>BFP (Fire):</strong> (02) 8426-0219</li>
+                                <li class="list-group-item bg-transparent"><strong>Red Cross:</strong> 143 or (02) 8790-2300</li>
+                                <li class="list-group-item bg-transparent"><strong>MMDA:</strong> 136</li>
+                                <li class="list-group-item bg-transparent"><strong>NDRRMC Operations Center:</strong> (02) 8911-5061 to 65</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Send Message End -->
+
+
+                    <!-- Footer Start -->
+                    <%- include('../partials/page-end'); %>
+                    <%- include('../partials/footer'); %>
+                        <!-- Footer End -->
+
+      </div>
+      <!-- Content End -->
+
+
+      <!-- Back to Top -->
+      <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+  </div>
+
+  <script src="/js/script.js"></script>
+
+  <!-- Contact Form SweetAlert Logic -->
+  <script>
+    // Loading Spinner
+    function showLoading() {
+      Swal.fire({
+        title: 'Sending Message',
+        html: `
+          <div class="dots-loading">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+          <p class="mt-2 text-muted">Please wait...</p>
+        `,
+        allowOutsideClick: false,
+        showConfirmButton: false, 
+        background: '#191C24',
+        color: '#fff'
+      });
+      return true; // Allow form submission
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+
+        if (status === 'success') {
+            Swal.fire({
+                icon: 'success',
+                title: 'Message Sent!',
+                text: 'We have received your message and will contact you shortly.',
+                confirmButtonColor: '#EB1616',
+                background: '#191C24',
+                color: '#fff'
+            }).then(() => {
+                // Clean URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            });
+        } else if (status === 'error') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Sending Failed',
+                text: 'Something went wrong. Please try again later.',
+                confirmButtonColor: '#EB1616',
+                background: '#191C24',
+                color: '#fff'
+            }).then(() => {
+                window.history.replaceState({}, document.title, window.location.pathname);
+            });
+        }
+    });
+  </script>
+</body>
+
+</html>
+

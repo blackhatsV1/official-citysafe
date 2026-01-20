@@ -1,0 +1,90 @@
+<div class="selectloc-container shadow-sm rounded overflow-hidden bg-white border">
+    <div class="p-3 bg-dark text-white border-bottom d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-2">
+            <i class="fa fa-location-crosshairs text-primary"></i>
+            <h6 id="address" class="mb-0 small fw-bold text-head text-truncate" style="max-width: 250px;">Resolving
+                Address...</h6>
+        </div>
+        <button type="button" onclick="refreshLocation()" class="btn btn-primary-soft btn-xs px-2 py-1 small fw-800">
+            <i class="fa fa-sync-alt me-1"></i>RE-SYNC
+        </button>
+    </div>
+
+    <div id="selectloc-map" style="height: 350px; width: 100%;"></div>
+
+    <div class="p-2 px-3 bg-dark text-white border-top d-flex align-items-center justify-content-between">
+        <code id="coords" class="small text-muted" style="font-size: 0.65rem;">Waiting for satellite fix...</code>
+        <div class="d-flex align-items-center gap-1">
+            <span class="badge bg-success-soft text-success p-1 rounded-circle" style="width: 6px; height: 6px;"></span>
+            <small class="text-muted" style="font-size: 0.6rem;">GPS Active</small>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        var map = L.map('selectloc-map').setView([0, 0], 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        let watchId = null;
+        let userMarker = null;
+        let userCircle = null;
+
+        window.refreshLocation = function () {
+            if (watchId) navigator.geolocation.clearWatch(watchId);
+            document.getElementById('address').innerHTML = `<i class="opacity-50">Initializing GPS Hub...</i>`;
+
+            if (navigator.geolocation) {
+                watchId = navigator.geolocation.watchPosition(onLocationFound, onLocationError, {
+                    enableHighAccuracy: true,
+                    timeout: 20000,
+                    maximumAge: 0
+                });
+            } else {
+                document.getElementById('address').innerText = "Navigation service unavailable.";
+            }
+        };
+
+        function onLocationFound(pos) {
+            var lat = pos.coords.latitude;
+            var lng = pos.coords.longitude;
+            var acc = pos.coords.accuracy;
+            var latlng = L.latLng(lat, lng);
+
+            if (userMarker) {
+                userMarker.setLatLng(latlng);
+                userCircle.setLatLng(latlng).setRadius(acc);
+            } else {
+                userMarker = L.marker(latlng).addTo(map).bindPopup("Current Sector").openPopup();
+                userCircle = L.circle(latlng, acc, { color: 'var(--accent)', weight: 1, fillOpacity: 0.1 }).addTo(map);
+            }
+
+            map.setView(latlng, 17);
+            document.getElementById("coords").innerText = `${lat.toFixed(5)}, ${lng.toFixed(5)} (±${acc.toFixed(0)}m)`;
+
+            // Hidden inputs update
+            if (document.getElementById("lat")) document.getElementById("lat").value = lat;
+            if (document.getElementById("lon")) document.getElementById("lon").value = lng;
+
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+                .then(res => res.json())
+                .then(data => {
+                    const addr = data.display_name;
+                    document.getElementById('address').innerText = addr;
+                    if (document.getElementById("location")) document.getElementById("location").value = addr;
+                })
+                .catch(() => {
+                    document.getElementById('address').innerText = "Coordinates Resolved";
+                });
+        }
+
+        function onLocationError(err) {
+            document.getElementById('address').innerHTML = `<span class="text-danger small">GPS Pulse Lost</span>`;
+            console.warn("GPS Error:", err.message);
+        }
+
+        refreshLocation();
+    })();
+</script>

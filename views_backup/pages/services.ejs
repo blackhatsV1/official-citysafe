@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head'); %>
+</head>
+<!-- ========================================================================= -->
+
+<body>
+    <%- include('../partials/page-start'); %>
+    <div class="container-fluid position-relative d-flex p-0">
+        <!-- Spinner Start -->
+        <%- include('../partials/spinner'); %>
+            <!-- Spinner End -->
+
+
+            <!-- Sidebar Start -->
+            <%- include('../partials/visitor-sidebar'); %>
+                <!-- Sidebar End -->
+
+
+                <!-- Content Start -->
+                <div class="content">
+                    <!-- Navbar Start -->
+                    <%- include('../partials/visitor-navbar'); %>
+                        <!-- Navbar End -->
+
+
+                        <!-- Typography Start -->
+                        <div class="container-fluid pt-4 px-4">
+                            <div class="bg-secondary text-center rounded mb-3 p-4">
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <h1><i class="bi bi-cloud-sun mb-0"></i>Welcome to CitySafe!</h1>
+                                </div>
+                            </div>
+                            <div class="row g-4">
+                                <div class="col-sm-12 col-xl-6">
+                                    <div class="bg-secondary rounded h-100 p-4">
+                                        <h6 class="mb-4">Services</h6>
+                                        <dl class="row mb-0">
+                                            <dt class="col-sm-4">Real-time Information Service</dt>
+                                            <dd class="col-sm-8">Provides disaster-related updates through specific
+                                                weather tracking and real-time status reports.</dd>
+                                            <hr class="dropdown-divider bg-dark mx-auto" style="width: 95%;">
+
+                                            <dt class="col-sm-4 pt-3">Localized Notification Service</dt>
+                                            <dd class="col-sm-8 pt-3">Delivers relevant alerts and updates based on the
+                                                user's active report location.</dd>
+                                            <hr class="dropdown-divider bg-dark mx-auto" style="width: 95%;">
+
+                                            <dt class="col-sm-4 pt-3">Emergency Alert Service</dt>
+                                            <dd class="col-sm-8 pt-3">Allows users to quickly send SOS requests with
+                                                their location to nearby responders for urgent assistance.</dd>
+                                            <hr class="dropdown-divider bg-dark mx-auto" style="width: 95%;">
+
+                                            <dt class="col-sm-4 pt-3">Relief Effort Coordination Service</dt>
+                                            <dd class="col-sm-8 pt-3">Connects responders with active incidents to
+                                                efficiently manage and resolve emergency situations.</dd>
+                                            <hr class="dropdown-divider bg-dark mx-auto" style="width: 95%;">
+
+                                            <dt class="col-sm-4 pt-3">Mapping and Location Service</dt>
+                                            <dd class="col-sm-8 pt-3">Visualizes the location of incidents, nearby
+                                                stations, and responders to assist in navigation and situational
+                                                awareness.</dd>
+                                            <hr class="dropdown-divider bg-dark mx-auto" style="width: 95%;">
+
+                                            <dt class="col-sm-4 pt-3">Survival Guidelines & Tips</dt>
+                                            <dd class="col-sm-8 pt-3">Provides users with essential survival information
+                                                and guides to prepare for various disaster scenarios.</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 col-xl-6">
+                                    <div class="bg-secondary rounded h-100 p-4">
+                                        <h6 class="mb-4">Members</h6>
+                                        <div class="border rounded p-4 pb-0 mb-4">
+                                            <figure>
+                                                <blockquote class="blockquote">
+                                                    <p>Jayrold Tabalina</p>
+                                                </blockquote>
+                                                <figcaption class="blockquote-footer">
+                                                    Programmer <cite title="Source Title">PHINMA-University of
+                                                        Iloilo</cite>
+                                                </figcaption>
+                                            </figure>
+                                        </div>
+                                        <div class="border rounded p-4 pb-0 mb-4">
+                                            <figure class="text-center">
+                                                <blockquote class="blockquote">
+                                                    <p>Yasmine M. Talaman</p>
+                                                </blockquote>
+                                                <figcaption class="blockquote-footer">
+                                                    Documenter <cite title="Source Title">PHINMA-University of
+                                                        Iloilo</cite>
+                                                </figcaption>
+                                            </figure>
+                                        </div>
+                                        <div class="border rounded p-4 pb-0 mb-0">
+                                            <figure class="text-end">
+                                                <blockquote class="blockquote">
+                                                    <p>Mark Vincent Jabao</p>
+                                                </blockquote>
+                                                <figcaption class="blockquote-footer">
+                                                    UI/UX <cite title="Source Title">PHINMA-University of
+                                                        Iloilo</cite>
+                                                </figcaption>
+                                            </figure>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- Typography End -->
+
+
+                        <!-- Footer Start -->
+                        <%- include('../partials/page-end'); %>
+                        <%- include('../partials/footer'); %>
+                            <!-- Footer End -->
+
+                </div>
+                <!-- Content End -->
+
+
+                <!-- Back to Top -->
+                <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    </div>
+
+    <script src="/js/script.js"></script>
+</body>
+
+</html>

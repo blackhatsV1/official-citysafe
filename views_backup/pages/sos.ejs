@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head'); %>
+        <!-- removed non-map styling -->
+</head>
+
+<body class="bg-dark text-white">
+    <%- include('../partials/page-start'); %>
+    <div class="container-fluid position-relative d-flex p-0">
+        <%- include('../partials/spinner'); %>
+            <%- include('../partials/user-sidebar'); %>
+
+                <div class="content">
+                    <%- include('../partials/user-navbar'); %>
+
+                        <!-- SOS Console -->
+                        <div class="container-fluid pt-4 px-4 pb-4">
+                            <div class="row g-4">
+                                <!-- Location Grid -->
+                                <div class="col-sm-12 col-xl-6">
+                                    <div class="card h-100 shadow-sm border-0">
+                                        <div class="p-3 border-bottom d-flex align-items-center gap-2">
+                                            <div class="bg-primary-soft p-2 rounded">
+                                                <i class="fa fa-map-location-dot text-primary small"></i>
+                                            </div>
+                                            <h6 class="mb-0 fw-bold text-head text-uppercase small">Operational
+                                                Coordinates</h6>
+                                        </div>
+                                        <div class="p-0 flex-grow-1">
+                                            <%- include('../partials/selectloc'); %>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Dispatch Form -->
+                                <div class="col-sm-12 col-xl-6">
+                                    <div class="card h-100 shadow-sm border-0">
+                                        <div class="p-3 border-bottom d-flex align-items-center gap-2">
+                                            <div class="bg-danger-soft p-2 rounded">
+                                                <i class="fa fa-bullhorn text-danger small"></i>
+                                            </div>
+                                            <h6 class="mb-0 fw-bold text-head text-uppercase small">Emergency Dispatch
+                                                Request</h6>
+                                        </div>
+                                        <div class="p-4">
+                                            <form action="/report" method="POST" id="sosForm" autocomplete="off">
+                                                <p class="text-muted small mb-4">Select the nature of the emergency.
+                                                    Dispatch will be initiated to your verified coordinates immediately.
+                                                </p>
+
+                                                <input type="hidden" name="type_of_disaster"
+                                                    id="selected_disaster_type">
+
+                                                <div class="row g-3 mb-4">
+                                                    <% [ { type: 'Fire' , icon: 'fa-fire' , label: 'FIRE' }, {
+                                                        type: 'Flood' , icon: 'fa-water' , label: 'FLOOD' }, {
+                                                        type: 'Earthquake' , icon: 'fa-globe-americas' ,
+                                                        label: 'EARTHQUAKE' }, { type: 'Landslide' , icon: 'fa-mountain'
+                                                        , label: 'LANDSLIDE' } ].forEach(emergency=> { %>
+                                                        <div class="col-6">
+                                                            <button type="button"
+                                                                onclick="triggerSosReport('<%= emergency.type %>')"
+                                                                class="btn bg-secondary w-100 h-100 p-4 disaster-btn text-center d-flex flex-column align-items-center gap-3">
+                                                                <div class="avatar-md bg-dark text-white rounded-circle d-flex align-items-center justify-content-center"
+                                                                    style="width: 56px; height: 56px;">
+                                                                    <i
+                                                                        class="fa <%= emergency.icon %> fs-3 text-primary"></i>
+                                                                </div>
+                                                                <span class="fw-bold small letter-spacing-1 text-head">
+                                                                    <%= emergency.label %>
+                                                                </span>
+                                                            </button>
+                                                        </div>
+                                                        <% }) %>
+                                                </div>
+
+                                                <div class="mb-4">
+                                                    <label
+                                                        class="small fw-700 text-uppercase text-muted letter-spacing-1 mb-2 d-block">Verified
+                                                        Dispatch Address</label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-white border px-3"><i
+                                                                class="fa fa-location-arrow text-primary"></i></span>
+                                                        <textarea class="form-control"
+                                                            id="location" name="location" rows="2"
+                                                            placeholder="Acquiring satellite lock..." required
+                                                            readonly></textarea>
+                                                    </div>
+                                                    <input type="hidden" id="lat" name="lat">
+                                                    <input type="hidden" id="lon" name="lon">
+                                                </div>
+
+                                                <button type="submit" disabled class="d-none"></button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <%- include('../partials/page-end'); %>
+                        <%- include('../partials/footer'); %>
+                </div>
+    </div>
+
+    <script>
+        function triggerSosReport(type) {
+            const input = document.getElementById('selected_disaster_type');
+            if (input) input.value = type;
+
+            const loc = document.getElementById('location').value;
+            if (!loc || loc.trim() === "" || loc.includes('Acquiring')) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Awaiting Location',
+                    text: 'Satellite signal is still being processed. Please wait to ensure accurate dispatch.',
+                    confirmButtonColor: 'var(--accent)'
+                });
+                return;
+            }
+
+            Swal.fire({
+                title: 'INITIATE DISPATCH?',
+                text: `You are requesting emergency response for a ${type.toUpperCase()} incident.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: 'var(--danger-slate)',
+                cancelButtonColor: 'var(--text-muted)',
+                confirmButtonText: 'CONFIRM & SEND',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('sosForm').submit();
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

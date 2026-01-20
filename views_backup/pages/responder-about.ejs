@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head'); %>
+</head>
+
+<body>
+  <%- include('../partials/page-start'); %>
+  <div class="container-fluid position-relative d-flex p-0">
+    <!-- Spinner Start -->
+    <%- include('../partials/spinner'); %>
+    <!-- Spinner End -->
+
+    <!-- Custom Responder Sidebar Start -->
+    <%- include('../partials/responder-sidebar-custom'); %>
+    <!-- Sidebar End -->
+
+    <!-- Content Start -->
+    <div class="content">
+      <!-- Navbar Start -->
+      <%- include('../partials/admin-navbar'); %>
+      <!-- Navbar End -->
+
+      <!-- About Section Start -->
+      <div class="container-fluid pt-4 px-4">
+          <div class="bg-secondary text-center rounded mb-3 p-4">
+              <div class="d-flex align-items-center justify-content-between mb-4">
+                  <h4 class="mb-0 text-white fw-bold">About <span class="text-primary">CitySafe</span></h4>
+              </div>
+          </div>
+          <div class="row g-4">                    
+              <div class="col-sm-8">
+                  <div class="bg-secondary rounded h-100 p-4 mb-3">
+                    <h5 class="text-white mb-4">Mission Statement</h5>
+                     <div class="p-2 mb-4">
+                      <figure class="text-center">
+                        <blockquote class="blockquote">
+                          <p class="text-white">"Empowering rapid response through technology and community."</p>
+                          <p class="mt-3 text-muted">CitySafe is designed to bridge the gap between citizens in distress and the heroes who save them. As a responder, you are the heart of this system.</p>
+                        </blockquote>
+                      </figure>
+                    </div>
+                  </div>
+              </div>
+        
+              <div class="col-sm-4">
+                  <div class="bg-secondary rounded h-100 p-4">
+                      <div class="text-center">
+                          <img class="img-fluid rounded-circle mb-3 border border-primary p-1" src="/images/user.png" style="width: 100px; height: 100px;">
+                          <h5 class="text-white"><%= username %></h5>
+                          <p class="text-primary">Authorized Responder</p>
+                      </div>
+                      <hr>
+                      <h6 class="text-white mt-3">Dev Team</h6>
+                      <ul class="list-unstyled text-muted small">
+                          <li>Jayrold Tabalina</li>
+                          <li>Yasmine M. Talaman</li>
+                          <li>Mark Vincent Jabao</li>
+                      </ul>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <!-- About Section End -->
+
+      <!-- Footer Start -->
+      <%- include('../partials/page-end'); %>
+      <%- include('../partials/footer'); %>
+      <!-- Footer End -->
+    </div>
+    <!-- Content End -->
+  </div>
+
+  <script src="/js/script.js"></script>
+</body>
+</html>

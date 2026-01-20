@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head'); %>
+</head>
+
+<body class="bg-dark text-white">
+    <%- include('../partials/page-start'); %>
+    <div class="container-fluid position-relative d-flex p-0">
+        <%- include('../partials/spinner'); %>
+            <%- include('../partials/admin-sidebar'); %>
+
+                <div class="content">
+                    <%- include('../partials/admin-navbar', { currentPage: 'disaster-reports' }); %>
+
+                        <!-- Main Ledger -->
+                        <div class="container-fluid pt-4 px-4 pb-4">
+                            <div class="row g-4">
+                                <div class="col-12">
+                                    <div class="card shadow-sm border-0">
+                                        <div
+                                            class="p-3 bg-secondary border-bottom d-flex align-items-center justify-content-between">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="bg-primary-soft p-2 rounded">
+                                                    <i class="fa fa-clipboard-list text-primary small"></i>
+                                                </div>
+                                                <h6 class="mb-0 fw-bold text-head text-uppercase small">Incident Ledger
+                                                </h6>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <span
+                                                    class="badge bg-success-soft text-success px-2 py-1 rounded-pill small fw-800">REAL-TIME
+                                                    SYNC</span>
+                                                <div class="vr"></div>
+                                                <small class="text-muted fw-600" id="sync-timer">Last update: just
+                                                    now</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="table-responsive">
+                                            <table class="table table-hover align-middle mb-0">
+                                                <thead class="bg-dark text-white">
+                                                    <tr>
+                                                        <th
+                                                            class="ps-4 py-3 small fw-bold text-muted text-uppercase letter-spacing-1">
+                                                            Mission Control</th>
+                                                        <th
+                                                            class="py-3 small fw-bold text-muted text-uppercase letter-spacing-1">
+                                                            Personnel / Sender</th>
+                                                        <th
+                                                            class="py-3 small fw-bold text-muted text-uppercase letter-spacing-1 text-center">
+                                                            Classification</th>
+                                                        <th
+                                                            class="py-3 small fw-bold text-muted text-uppercase letter-spacing-1">
+                                                            Sector / Location</th>
+                                                        <th
+                                                            class="py-3 small fw-bold text-muted text-uppercase letter-spacing-1">
+                                                            Comms Feed</th>
+                                                        <th
+                                                            class="py-3 small fw-bold text-muted text-uppercase letter-spacing-1">
+                                                            Resolution Status</th>
+                                                        <th
+                                                            class="pe-4 py-3 small fw-bold text-muted text-uppercase letter-spacing-1 text-end">
+                                                            Timestamp</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="reportsTableBody">
+                                                    <% reports.forEach(report=> { %>
+                                                        <tr>
+                                                            <td class="ps-4">
+                                                                <% if (report.status==='responding' ) { %>
+                                                                    <div class="d-flex align-items-center gap-2">
+                                                                        <span
+                                                                            class="badge bg-warning-soft text-warning px-2 py-1 rounded-pill small fw-800 border-warning">IN
+                                                                            PROGRESS</span>
+                                                                        <button
+                                                                            class="btn btn-danger-soft btn-xs fw-bold"
+                                                                            onclick="cancelReportAdmin('<%= report.id %>')">ABORT</button>
+                                                                    </div>
+                                                                    <% } else if (report.status==='resolved' ) { %>
+                                                                        <span
+                                                                            class="badge bg-success-soft text-success px-2 py-1 rounded-pill small fw-800">RESOLVED</span>
+                                                                        <% } else if
+                                                                            (report.status.includes('cancelled')) { %>
+                                                                            <span
+                                                                                class="badge bg-danger-soft text-danger px-2 py-1 rounded-pill small fw-800">CANCELLED</span>
+                                                                            <% } else { %>
+                                                                                <div class="d-flex gap-2">
+                                                                                    <button
+                                                                                        class="btn btn-primary btn-xs fw-bold px-3 py-1 shadow-sm"
+                                                                                        data-id="<%= report.id %>"
+                                                                                        data-location="<%= report.location %>"
+                                                                                        data-lat="<%= report.latitude %>"
+                                                                                        data-lon="<%= report.longitude %>"
+                                                                                        data-type="<%= report.disaster_type %>"
+                                                                                        data-date="<%= new Date(report.reported_at).toLocaleString() %>"
+                                                                                        onclick="initiateDeploy(this)">DEPLOY</button>
+                                                                                    <button
+                                                                                        class="btn btn-outline-danger btn-xs fw-bold"
+                                                                                        onclick="cancelReportAdmin('<%= report.id %>')">CANCEL</button>
+                                                                                </div>
+                                                                                <% } %>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex flex-column">
+                                                                    <span class="fw-bold text-head small">
+                                                                        <%= report.sender %>
+                                                                    </span>
+                                                                    <% if (report.responder_name) { %>
+                                                                        <small class="text-primary fw-600"
+                                                                            style="font-size: 0.65rem;"><i
+                                                                                class="fa fa-shield-halved me-1"></i>
+                                                                            <%= report.responder_name %>
+                                                                        </small>
+                                                                        <% } else { %>
+                                                                            <small class="text-muted"
+                                                                                style="font-size: 0.65rem;">No responder
+                                                                                assigned</small>
+                                                                            <% } %>
+                                                                </div>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <% let badgeClass='bg-secondary-soft text-secondary' ;
+                                                                    if (report.disaster_type==='Fire' )
+                                                                    badgeClass='bg-danger-soft text-danger' ; else if
+                                                                    (report.disaster_type==='Flood' )
+                                                                    badgeClass='bg-info-soft text-info' ; else if
+                                                                    (report.disaster_type==='Earthquake' )
+                                                                    badgeClass='bg-warning-soft text-warning' ; else if
+                                                                    (report.disaster_type==='Landslide' )
+                                                                    badgeClass='bg-dark-soft text-head' ; %>
+                                                                    <span
+                                                                        class="badge <%= badgeClass %> px-2 py-1 fw-800 small text-uppercase"
+                                                                        style="letter-spacing: 0.5px;">
+                                                                        <%= report.disaster_type %>
+                                                                    </span>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex flex-column">
+                                                                    <span class="text-head small fw-600"
+                                                                        id="loc-display-<%= report.id %>">
+                                                                        <%= (report.latitude && report.longitude) ?
+                                                                            `${report.latitude.toFixed(4)},
+                                                                            ${report.longitude.toFixed(4)}` :
+                                                                            (report.location || "N/A" ) %>
+                                                                    </span>
+                                                                    <% if (report.latitude && report.longitude) { %>
+                                                                        <a href="#" class="text-primary fw-bold"
+                                                                            style="font-size: 0.65rem;"
+                                                                            onclick="fetchFormattedAddress(this, <%= report.latitude %>, <%= report.longitude %>, 'loc-display-<%= report.id %>'); return false;">SHOW
+                                                                            ADDRESS</a>
+                                                                        <% } %>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex flex-column gap-1"
+                                                                    style="max-width: 200px;">
+                                                                    <div class="d-flex align-items-start gap-1">
+                                                                        <span class="text-muted fw-bold"
+                                                                            style="font-size: 0.65rem;">C:</span>
+                                                                        <small class="text-truncate italic"
+                                                                            style="font-size: 0.7rem;">"<%=
+                                                                                report.user_message
+                                                                                || 'No intel provided' %>"</small>
+                                                                    </div>
+                                                                    <% if(report.responder_name) { %>
+                                                                        <div class="d-flex align-items-start gap-1">
+                                                                            <span class="text-primary fw-bold"
+                                                                                style="font-size: 0.65rem;">R:</span>
+                                                                            <small class="text-truncate italic"
+                                                                                style="font-size: 0.7rem;">"<%=
+                                                                                    report.responder_message
+                                                                                    || 'Awaiting update' %>"</small>
+                                                                        </div>
+                                                                        <% } %>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex flex-column">
+                                                                    <% if (report.status==='resolved' ) { %>
+                                                                        <div class="d-flex gap-1 mb-1">
+                                                                            <% if (report.user_confirmed_at) { %><span
+                                                                                    class="badge bg-success-soft text-success px-1"
+                                                                                    title="User Confirmed"><i
+                                                                                        class="fa fa-user-check"></i></span>
+                                                                                <% } %>
+                                                                                    <% if
+                                                                                        (report.responder_confirmed_at)
+                                                                                        { %><span
+                                                                                            class="badge bg-primary-soft text-primary px-1"
+                                                                                            title="Responder Confirmed"><i
+                                                                                                class="fa fa-shield-check"></i></span>
+                                                                                        <% } %>
+                                                                        </div>
+                                                                        <small class="text-muted fw-600"
+                                                                            style="font-size: 0.65rem;">
+                                                                            <%= report.resolution_remarks
+                                                                                || 'System Resolved' %>
+                                                                        </small>
+                                                                        <% } else { %>
+                                                                            <span
+                                                                                class="text-muted small italic">Awaiting
+                                                                                closure</span>
+                                                                            <% } %>
+                                                                </div>
+                                                            </td>
+                                                            <td class="pe-4 text-end">
+                                                                <span class="text-head small fw-600">
+                                                                    <%= new
+                                                                        Date(report.reported_at).toLocaleTimeString([],
+                                                                        {hour: '2-digit' , minute:'2-digit'}) %>
+                                                                </span><br>
+                                                                <small class="text-muted" style="font-size: 0.65rem;">
+                                                                    <%= new
+                                                                        Date(report.reported_at).toLocaleDateString() %>
+                                                                </small>
+                                                            </td>
+                                                        </tr>
+                                                        <% }) %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <%- include('../partials/page-end'); %>
+                        <%- include('../partials/footer'); %>
+                </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="/js/script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        async function initiateDeploy(btn) {
+            const reportId = btn.getAttribute('data-id');
+            const storedLat = btn.getAttribute('data-lat');
+            const storedLon = btn.getAttribute('data-lon');
+            const reportType = btn.getAttribute('data-type') || 'General';
+            const reportDate = btn.getAttribute('data-date') || 'N/A';
+            const locationStr = btn.getAttribute('data-location') || `Lat: ${storedLat}, Lon: ${storedLon}`;
+
+            let incLat = parseFloat(storedLat);
+            let incLon = parseFloat(storedLon);
+
+            if (!incLat || !incLon) {
+                Swal.fire('Error', 'Incomplete geospatial metadata.', 'error');
+                return;
+            }
+
+            window.openSharedDeployModal({ reportId, lat: incLat, lng: incLon, type: reportType, dateStr: reportDate, locationStr });
+        }
+
+        function cancelReportAdmin(id) {
+            Swal.fire({
+                title: 'ABORT MISSION?',
+                text: "Are you sure you want to cancel this emergency protocol?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: 'var(--danger-slate)',
+                confirmButtonText: 'CONFIRM ABORT',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/api/admin/cancel_report', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id: id })
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire('Operation Aborted', '', 'success').then(() => location.reload());
+                            }
+                        });
+                }
+            });
+        }
+
+        async function fetchFormattedAddress(linkEl, lat, lon, targetId) {
+            const targetEl = document.getElementById(targetId);
+            if (!targetEl) return;
+            linkEl.innerText = "QUERYING...";
+            try {
+                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
+                const data = await res.json();
+                if (data.display_name) {
+                    targetEl.innerText = data.display_name;
+                    linkEl.remove();
+                }
+            } catch (e) { linkEl.innerText = "RETRY"; }
+        }
+
+        // Optimized Polling
+        let prevJSON = '';
+        setInterval(() => {
+            fetch('/api/incidents?t=' + Date.now())
+                .then(res => res.json())
+                .then(data => {
+                    const currentJSON = JSON.stringify(data);
+                    if (currentJSON === prevJSON) return;
+                    prevJSON = currentJSON;
+                    document.getElementById('sync-timer').innerText = `Last update: ${new Date().toLocaleTimeString()}`;
+                    // Note: Full table redraw on update for simplicity, can be optimized with better DOM diffing
+                    location.reload();
+                });
+        }, 10000);
+    </script>
+</body>
+
+</html>

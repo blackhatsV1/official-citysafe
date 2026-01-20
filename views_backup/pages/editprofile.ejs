@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head'); %>
+</head>
+<!-- ========================================================================= -->
+
+<body>
+    <%- include('../partials/page-start'); %>
+    <div class="container-fluid position-relative d-flex p-0">
+    <!-- Spinner Start -->
+    <%- include('../partials/spinner'); %>
+    <!-- Spinner End -->
+
+
+    <!-- Sidebar Start -->
+    <%- include('../partials/user-sidebar'); %>
+      <!-- Sidebar End -->
+
+
+      <!-- Content Start -->
+      <div class="content">
+        <!-- Navbar Start -->
+        <%- include('../partials/user-navbar'); %>
+          <!-- Navbar End -->
+
+          <!-- Widgets Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-xl-8">
+                        <div class="h-100 bg-secondary rounded p-4">
+                            <div class="d-flex align-items-center justify-content-between mb-4">
+                                <h4 class="mb-0 text-white">Edit Profile</h4>
+                            </div>
+                            <form action="/update-account" method="POST">
+                                <div class="row g-3">
+                                    <!-- Personal Info -->
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" name="firstname" id="firstname" value="<%= user.firstname %>" placeholder="Firstname" required>
+                                            <label for="firstname">Firstname</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" name="lastname" id="lastname" value="<%= user.lastname %>" placeholder="Lastname" required>
+                                            <label for="lastname">Lastname</label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="email" class="form-control" name="email" id="email" value="<%= user.email %>" placeholder="Email" required>
+                                            <label for="email">Email</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="number" class="form-control" name="contact_number" id="contact_number" value="<%= user.contact_number %>" placeholder="Contact" required>
+                                            <label for="contact_number">Contact Number</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12"><hr class="dropdown-divider bg-light"></div>
+                                    <h5 class="mb-1 text-white">Address Details</h5>
+
+                                    <!-- Address Info -->
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" name="street_address" id="street_address" value="<%= user.street_address %>" placeholder="Street" required>
+                                            <label for="street_address">Street Address</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" name="barangay" id="barangay" value="<%= user.barangay %>" placeholder="Barangay" required>
+                                            <label for="barangay">Barangay</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" name="city" id="city" value="<%= user.city %>" placeholder="City" required>
+                                            <label for="city">City</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" name="province" id="province" value="<%= user.province %>" placeholder="Province" required>
+                                            <label for="province">Province</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" name="postal_code" id="postal_code" value="<%= user.postal_code %>" placeholder="Postal Code" required>
+                                            <label for="postal_code">Postal Code</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" name="country" id="country" value="<%= user.country %>" placeholder="Country" required>
+                                            <label for="country">Country</label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" name="landmark" id="landmark" value="<%= user.landmark %>" placeholder="Landmark" required>
+                                            <label for="landmark">Landmark</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" name="address_type" id="address_type" value="<%= user.address_type %>" placeholder="Address Type" required>
+                                            <label for="address_type">Address Type</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" name="additional_instructions" id="additional_instructions" value="<%= user.additional_instructions %>" placeholder="Instructions" required>
+                                            <label for="additional_instructions">Additional Instructions</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12"><hr class="dropdown-divider bg-light"></div>
+                                    
+                                    <div class="col-12">
+                                        <div class="input-group">
+                                            <div class="form-floating flex-grow-1">
+                                                <input type="password" class="form-control" name="password" id="password" placeholder="Leave empty to keep existing password" autocomplete="new-password">
+                                                <label for="password">Password (Leave empty to keep current)</label>
+                                            </div>
+                                            <button class="btn btn-outline-primary" type="button" id="togglePassword">
+                                                <i class="bi bi-eye-slash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 mt-4 d-flex justify-content-end gap-2">
+                                        <a class="btn btn-outline-light" href="/weather">Cancel</a>
+                                        <button type="submit" class="btn btn-primary px-4">Update Profile</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Widgets End -->
+
+                        <!-- Footer Start -->
+                        <%- include('../partials/page-end'); %>
+                        <%- include('../partials/footer'); %>
+                            <!-- Footer End -->
+
+      </div>
+      <!-- Content End -->
+
+
+      <!-- Back to Top -->
+      <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+  </div>
+
+  <script src="/js/script.js"></script>
+  <script>
+  const togglePassword = document.querySelector("#togglePassword");
+  const passwordInput = document.querySelector("#password");
+  const icon = togglePassword.querySelector("i");
+
+  togglePassword.addEventListener("click", function () {
+    const isPassword = passwordInput.getAttribute("type") === "password";
+    passwordInput.setAttribute("type", isPassword ? "text" : "password");
+    icon.classList.toggle("bi-eye");
+    icon.classList.toggle("bi-eye-slash");
+  });
+</script>
+</body>
+
+</html>

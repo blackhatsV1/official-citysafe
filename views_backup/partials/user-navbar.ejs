@@ -1,0 +1,35 @@
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid p-0 d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-3">
+            <button class="btn btn-outline-secondary d-lg-none" id="sidebar-toggle" aria-label="Toggle sidebar">
+                <i class="fa fa-bars"></i>
+            </button>
+            <h6 class="mb-0 fw-bold d-none d-sm-block">SAFETY PORTAL</h6>
+        </div>
+
+        <div class="d-flex align-items-center gap-3">
+            <a href="/survival-tips" class="nav-link d-none d-md-block small fw-bold text-uppercase">Resources</a>
+
+            <div class="dropdown">
+                <a class="d-flex align-items-center gap-2 dropdown-toggle text-decoration-none" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width:32px;height:32px;border:1px solid #e9ecef;">
+                        <i class="fa fa-user text-muted small"></i>
+                    </div>
+                    <span class="text-primary fw-semibold small d-none d-sm-block"><%= username %></span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow">
+                    <li><a class="dropdown-item" href="/editaccount"><i class="fa fa-cog me-2"></i>Settings</a></li>
+                    <li><a class="dropdown-item" href="/help-user"><i class="fa fa-question-circle me-2"></i>Support</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="/logout"><i class="fa fa-sign-out-alt me-2"></i>Sign out</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script>
+    document.getElementById('sidebar-toggle')?.addEventListener('click', function () {
+        document.querySelector('.sidebar')?.classList.toggle('open');
+    });
+</script>

@@ -1,0 +1,18 @@
+<div id="spinner" class="d-flex align-items-center justify-content-center position-fixed top-0 start-0 w-100 h-100 bg-white" style="z-index: 1050;">
+    <div class="text-center">
+        <div class="spinner-border text-primary" role="status" aria-hidden="true"></div>
+        <div class="mt-2 small text-muted">Loading CitySafe Hub...</div>
+    </div>
+</div>
+
+<script>
+    // Remove spinner shortly after load or after a failsafe timeout
+    window.addEventListener('load', () => {
+        const spinner = document.getElementById('spinner');
+        if (spinner) { spinner.classList.add('fade'); setTimeout(() => spinner.remove(), 300); }
+    });
+    setTimeout(() => {
+        const spinner = document.getElementById('spinner');
+        if (spinner) { spinner.remove(); console.warn('System: Spinner forced hidden by failsafe.'); }
+    }, 3000);
+</script>

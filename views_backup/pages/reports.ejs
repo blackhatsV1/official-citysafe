@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('../partials/head'); %>
+</head>
+<body>
+  <%- include('../partials/page-start'); %>
+  <div class="container-fluid position-relative d-flex p-0">
+    <!-- Spinner Start -->
+    <%- include('../partials/spinner'); %>
+    <!-- Spinner End -->
+
+
+    <!-- Sidebar Start -->
+    <%- include('../partials/admin-sidebar'); %>
+      <!-- Sidebar End -->
+
+
+      <!-- Content Start -->
+      <div class="content">
+        <!-- Navbar Start -->
+        <%- include('../partials/admin-navbar'); %>
+          <!-- Navbar End -->
+
+
+          <!-- Blank Start -->
+            <div class="container-fluid pt-4 px-4">
+                <div class="row bg-secondary rounded align-items-center justify-content-center mx-0">
+                    
+                    <div class="container mt-5">
+                      <h2 class="mb-4 bg-light p-3 sticky-header">All Data Records</h2>
+                      <div class="row">
+                        <div class="col-12 mb-4">
+                          <h4 class="bg-danger p-2 rounded text-white">High Risk Users</h4>
+                          <div class="table-responsive">
+                            <table class="table table-danger table-bordered">
+                            <thead>
+                              <tr><th>Fullname</th><th>Risk Score</th><th>Assessed At</th></tr>
+                            </thead>
+                            <tbody>
+                              <% riskTables['High'].forEach(user => { %>
+                                <tr>
+                                  <td><%= user.username %></td>
+                                  <td><%= user.risk_score %></td>
+                                  <td><%= user.assessed_at.toLocaleString() %></td>
+                                </tr>
+                              <% }) %>
+                            </tbody>
+                          </table>
+                        </div>
+                      
+                        <div class="col-12 mb-4">
+                          <h4 class="bg-warning p-2 rounded text-dark">Moderate Risk Users</h4>
+                          <div class="table-responsive">
+                            <table class="table table-warning table-bordered">
+                            <thead>
+                              <tr><th>Fullname</th><th>Risk Score</th><th>Assessed At</th></tr>
+                            </thead>
+                            <tbody>
+                              <% riskTables['Moderate'].forEach(user => { %>
+                                <tr>
+                                  <td><%= user.username %></td>
+                                  <td><%= user.risk_score %></td>
+                                  <td><%= user.assessed_at.toLocaleString() %></td>
+                                </tr>
+                              <% }) %>
+                            </tbody>
+                          </table>
+                        </div>
+                      
+                        <div class="col-12 mb-4">
+                          <h4 class="bg-success p-2 rounded text-white">Low Risk Users</h4>
+                          <div class="table-responsive">
+                            <table class="table table-success table-bordered">
+                            <thead>
+                              <tr><th>Fullname</th><th>Risk Score</th><th>Assessed At</th></tr>
+                            </thead>
+                            <tbody>
+                              <% riskTables['Low'].forEach(user => { %>
+                                <tr>
+                                  <td><%= user.username %></td>
+                                  <td><%= user.risk_score %></td>
+                                  <td><%= user.assessed_at.toLocaleString() %></td>
+                                </tr>
+                              <% }) %>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+
+                      <div class="row g-4">
+                        <div class="col-sm-12 col-xl-6">
+                            <div class="bg-secondary rounded h-100 p-4">
+                                <h4 class="mb-4 text-white">Checklist Completion</h4>
+                                <canvas id="checklistChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-xl-6">
+                            <div class="bg-secondary rounded h-100 p-4">
+                                <h4 class="mb-4 text-white">Number of posts per day</h4>
+                                <canvas id="userChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-xl-6">
+                            <div class="bg-secondary rounded h-100 p-4">
+                                <h4 class="mb-4 text-white">Risk Level Data</h4>
+                                <canvas id="riskLevelChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-xl-6">
+                            <div class="bg-secondary rounded h-100 p-4">
+                                <h4 class="mb-4 text-white">Risk Score Trend</h4>
+                                <canvas id="trendChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-xl-6">
+                            <div class="bg-secondary rounded h-100 p-4">
+                                <h4 class="mb-4 text-white">Hazard Level</h4>
+                                <canvas id="hazardsChart"></canvas>
+                            </div>
+                        </div>
+                      </div>
+
+                      <!-- Chart.js Library -->
+                      <!-- Note: Typically scripts are at end of body. Moving logic there or inline is fine. -->
+                      <script>
+                        // Wait for jQuery or DOM Content
+                        document.addEventListener("DOMContentLoaded", function() {
+                           // Chart Global Color
+                           Chart.defaults.color = "#ffffff";
+                           Chart.defaults.borderColor = "rgba(255,255,255,0.1)";
+                           Chart.defaults.font.family = "'Roboto', 'Open Sans', sans-serif";
+                           Chart.defaults.font.size = 14;
+
+                           // --- Checklist Chart ---
+                           var ctxCheck = document.getElementById("checklistChart").getContext("2d");
+                           new Chart(ctxCheck, {
+                               type: "bar",
+                               data: {
+                                   labels: ["Near River", "Near Fault", "Has Emergency Kit", "Has Evacuation Plan"],
+                                   datasets: [{
+                                       label: "Completed",
+                                       data: [<%= checklistData.near_river %>, <%= checklistData.near_fault %>, <%= checklistData.has_emergency_kit %>, <%= checklistData.has_evacuation_plan %>],
+                                       backgroundColor: "rgba(235, 22, 22, .7)"
+                                   }]
+                               },
+                               options: { responsive: true, plugins: { legend: { display: false } } }
+                           });
+
+                           // --- User Chart (Posts per Day) ---
+                           var ctxUser = document.getElementById("userChart").getContext("2d");
+                           new Chart(ctxUser, {
+                               type: "bar",
+                               data: {
+                                   labels: [ <% chartData.forEach(function(item, index) { %> '<%= item.day %>'<% if (index < chartData.length-1) { %>, <% } %> <% }); %> ],
+                                   datasets: [{
+                                       label: "Posts",
+                                       data: [ <% chartData.forEach(function(item, index) { %> <%= item.total %><% if (index < chartData.length-1) { %>, <% } %> <% }); %> ],
+                                       backgroundColor: "rgba(235, 22, 22, .7)"
+                                   }]
+                               },
+                               options: { responsive: true, plugins: { legend: { display: false } } }
+                           });
+
+                           // --- Risk Level Chart ---
+                           var ctxRisk = document.getElementById("riskLevelChart").getContext("2d");
+                           new Chart(ctxRisk, {
+                               type: "doughnut",
+                               data: {
+                                   labels: [ <% riskLevelData.forEach(function(item, index) { %> '<%= item.risk_level %>'<% if (index < riskLevelData.length-1) { %>, <% } %> <% }); %> ],
+                                   datasets: [{
+                                       data: [ <% riskLevelData.forEach(function(item, index) { %> <%= item.total %><% if (index < riskLevelData.length-1) { %>, <% } %> <% }); %> ],
+                                       backgroundColor: [
+                                           "rgba(235, 22, 22, .7)",
+                                           "rgba(235, 22, 22, .6)",
+                                           "rgba(235, 22, 22, .5)",
+                                           "rgba(235, 22, 22, .4)"
+                                       ],
+                                       borderWidth: 0
+                                   }]
+                               },
+                               options: { responsive: true }
+                           });
+
+                           // --- Trend Chart ---
+                           var ctxTrend = document.getElementById("trendChart").getContext("2d");
+                           new Chart(ctxTrend, {
+                               type: "line",
+                               data: {
+                                   labels: [ <% trendData.forEach(function(item, index) { %> '<%= item.date %>'<% if (index < trendData.length-1) { %>, <% } %> <% }); %> ],
+                                   datasets: [{
+                                       label: "Avg Risk Score",
+                                       data: [ <% trendData.forEach(function(item, index) { %> <%= item.avg_score %><% if (index < trendData.length-1) { %>, <% } %> <% }); %> ],
+                                       borderColor: "rgba(235, 22, 22, .7)",
+                                       backgroundColor: "rgba(235, 22, 22, .3)",
+                                       tension: 0.4,
+                                       fill: true,
+                                       pointBackgroundColor: "rgba(235, 22, 22, .9)",
+                                       pointRadius: 4
+                                   }]
+                               },
+                               options: {
+                                   responsive: true,
+                                   scales: {
+                                       x: { ticks: { display: false }, grid: { display: false } },
+                                       y: { beginAtZero: true, grid: { color: "rgba(255,255,255,0.05)" } }
+                                   }
+                               }
+                           });
+
+                           // --- Hazards Chart ---
+                           var ctxHazard = document.getElementById("hazardsChart").getContext("2d");
+                           new Chart(ctxHazard, {
+                               type: "bar",
+                               data: {
+                                   labels: ["Near River", "Near Fault"],
+                                   datasets: [{
+                                       label: "Users",
+                                       data: [<%= hazardsData.near_river %>, <%= hazardsData.near_fault %>],
+                                       backgroundColor: [
+                                           "rgba(235, 22, 22, .7)",
+                                           "rgba(235, 22, 22, .5)"
+                                       ]
+                                   }]
+                               },
+                               options: { responsive: true, plugins: { legend: { display: false } } }
+                           });
+                        });
+                      </script>
+                    </div>
+                </div>
+            </div>
+            <!-- Blank End -->
+
+          <!-- Footer Start -->
+            <%- include('../partials/page-end'); %>
+            <%- include('../partials/footer'); %>
+            <!-- Footer End -->
+
+      </div>
+      <!-- Content End -->
+
+
+      <!-- Back to Top -->
+      <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+  </div>
+
+  <script src="/js/script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</body>
+
+</html>

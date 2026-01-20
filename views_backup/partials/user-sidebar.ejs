@@ -1,0 +1,37 @@
+<aside class="sidebar bg-light border-end vh-100">
+  <div class="p-3">
+    <a href="/" class="d-flex align-items-center gap-2 text-dark text-decoration-none mb-3">
+      <i class="fa fa-shield-alt fs-4 text-primary"></i>
+      <h5 class="mb-0 fw-bold">CITYSAFE</h5>
+    </a>
+
+    <!-- User Profile Summary -->
+    <div class="mb-3">
+      <div class="p-3 rounded bg-white border">
+        <div class="d-flex align-items-center gap-3">
+          <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width:40px; height:40px;">
+            <i class="fa fa-user text-secondary"></i>
+          </div>
+          <div class="overflow-hidden">
+            <h6 class="mb-0 text-truncate small fw-bold"><%= username %></h6>
+            <small class="text-muted text-uppercase">Citizen Unit</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="nav flex-column">
+      <small class="text-muted text-uppercase mb-2">Emergency</small>
+      <a href="/send-sos" class="nav-link <%= (typeof page !== 'undefined' && page === 'send-sos') ? 'active' : '' %>"><i class="fa fa-bullhorn text-danger me-2"></i>SOS Panel</a>
+      <a href="/my-reports" class="nav-link <%= (typeof page !== 'undefined' && page === 'my-reports') ? 'active' : '' %>"><i class="fa fa-history me-2"></i>Incident Activity</a>
+
+      <small class="text-muted text-uppercase mt-3 mb-2">Intelligence</small>
+      <a href="/nearby-stations" class="nav-link <%= (typeof page !== 'undefined' && page === 'stations') ? 'active' : '' %>"><i class="fa fa-map-marked-alt me-2"></i>Facilities</a>
+      <a href="/assess-risk" class="nav-link"><i class="fa fa-file-contract me-2"></i>Safety Assessment</a>
+
+      <small class="text-muted text-uppercase mt-3 mb-2">Account</small>
+      <a href="/editaccount" class="nav-link"><i class="fa fa-cog me-2"></i>Settings</a>
+      <a href="/logout" class="nav-link text-danger"><i class="fa fa-sign-out-alt me-2"></i>Sign Out</a>
+    </nav>
+  </div>
+</aside>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head'); %>
+        <link rel="stylesheet"
+            href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+        <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.min.js"></script>
+
+        
+</head>
+
+<body class="bg-dark text-white responder-page">
+    <%- include('../partials/page-start'); %>
+    <div class="container-fluid position-relative d-flex p-0">
+        <%- include('../partials/spinner'); %>
+            <%- include('../partials/responder-sidebar'); %>
+
+                <div class="content">
+                    <%- include('../partials/responder-navbar'); %>
+
+                        <!-- Operational Workspace -->
+                        <div class="container-fluid pt-4 px-4 pb-4">
+                            <div class="row g-4">
+                                <!-- Mission Grid -->
+                                <div class="col-12">
+                                    <div class="card overflow-hidden h-100 shadow-sm border-0">
+                                        <div
+                                            class="p-3 bg-secondary border-bottom d-flex align-items-center justify-content-between">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="bg-primary-soft p-2 rounded">
+                                                    <i class="fa fa-crosshairs text-primary small"></i>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0 fw-bold text-head text-uppercase small">Field
+                                                        Operations Grid</h6>
+                                                    <small class="text-muted" style="font-size: 0.7rem;">Real-time
+                                                        Incident Coordination</small>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <span
+                                                    class="badge bg-success-soft text-success px-2 py-1 rounded-pill small">LIVE
+                                                    STREAM</span>
+                                            </div>
+                                        </div>
+                                        <div class="position-relative">
+                                            <div id="map"></div>
+                                            <div class="position-absolute bottom-0 start-0 m-3 p-2 bg-secondary text-white rounded shadow border"
+                                                style="z-index: 1000; min-width: 200px;">
+                                                <div class="d-flex align-items-center gap-2 mb-1">
+                                                    <i class="fa fa-location-arrow text-primary small"></i>
+                                                    <span id="locationStatus"
+                                                        class="small fw-600 text-head">Initializing GPS...</span>
+                                                </div>
+                                                <div class="progress" style="height: 4px;">
+                                                    <div class="progress-bar bg-success progress-bar-striped progress-bar-animated"
+                                                        role="progressbar" style="width: 100%"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Operations Log -->
+                                <div class="col-12" id="nearby-reports">
+                                    <div class="card shadow-sm border-0 h-100">
+                                        <div
+                                            class="p-3 bg-secondary border-bottom d-flex align-items-center justify-content-between">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="bg-indigo-soft p-2 rounded">
+                                                    <i class="fa fa-satellite-dish text-indigo small"></i>
+                                                </div>
+                                                <div>
+                                                    <h6 class="mb-0 fw-bold text-head text-uppercase small">Local
+                                                        Deployments</h6>
+                                                    <small class="text-muted" style="font-size: 0.7rem;">Active reports
+                                                        within 2KM radius</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="table-responsive">
+                                            <table class="table table-hover align-middle mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="ps-4">TIMESTAMP</th>
+                                                        <th>REPORTED BY</th>
+                                                        <th>CLASSIFICATION</th>
+                                                        <th>OPERATIONAL ADDRESS</th>
+                                                        <th class="text-end pe-4">ACTION</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="reportsTableBody">
+                                                    <tr>
+                                                        <td colspan="5" class="text-center py-5">
+                                                            <div class="spinner-border spinner-border-sm text-primary mb-2"
+                                                                role="status"></div>
+                                                            <p class="text-muted small mb-0">Scanning operational
+                                                                sectors for reported incidents...</p>
+                                                            <style>
+                                                                #map {
+                                                                    height: 550px;
+                                                                    width: 100%;
+                                                                }
+
+                                                                'Flood': L.icon({
+                                                                    iconUrl: 'https://cdn-icons-png.flaticon.com/512/3012/3012727.png', iconSize: [32, 32]
+
+                                                                }),
+                                                                'default': L.icon({
+                                                                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                                                                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                                                                    iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+                                                                })
+                                                                }
+
+                                                                ;
+
+                                                                function addMarker(report) {
+                                                                    if (currentMarkers[report.id]) return;
+
+                                                                    const marker=L.marker([report.latitude, report.longitude], {
+                                                                        icon: icons['default']
+                                                                    }).addTo(map);
+                                                                const date=new Date(report.reported_at).toLocaleString();
+
+                                                                const popupContent=` <div class="p-1" style="min-width: 180px;"><div class="badge bg-danger text-uppercase mb-2" style="font-size: 10px;">$ {
+                                                                    report.disaster_type
+                                                                }
+
+                                                                </div><p class="mb-1 small"><strong>Status:</strong><span class="text-primary">$ {
+                                                                    report.status.toUpperCase()
+                                                                }
+
+                                                                </span></p><p class="mb-2 small"><strong>Reported:</strong>$ {
+                                                                    date
+                                                                }
+
+                                                                </p><div class="p-2 bg-light rounded small" id="addr-${report.id}"><i class="fa fa-spinner fa-spin me-2 opacity-50"></i>Resolving address... </div><button class="btn btn-primary btn-sm w-100 mt-2 py-1 small fw-bold" onclick="respondToReport(${report.id}, '${report.disaster_type}')">RESPOND NOW</button></div>`;
+                                                                marker.bindPopup(popupContent);
+
+                                                                marker.on('popupopen', ()=> {
+                                                                        const el=document.getElementById(`addr-$ {
+                                                                                report.id
+                                                                            }
+
+                                                                            `);
+                                                                        if ( !el || !el.innerText.includes('Resolving')) return;
+
+                                                                        if (addressCache[report.id]) {
+                                                                            el.innerText=addressCache[report.id];
+                                                                        }
+
+                                                                        else {
+                                                                            fetch(`https: //nominatim.openstreetmap.org/reverse?format=json&lat=${report.latitude}&lon=${report.longitude}`)
+
+                                                                                .then(r=> r.json()).then(d=> {
+                                                                                        const addr=d.display_name || "Unknown Location";
+                                                                                        addressCache[report.id]=addr;
+                                                                                        if (el) el.innerText=addr;
+                                                                                    });
+                                                                            }
+                                                                        });
+                                                                    currentMarkers[report.id]=marker;
+                                                                }
+
+                                                                reports.forEach(r=> {
+                                                                        if (r.latitude && r.longitude) addMarker(r);
+                                                                    });
+
+                                                                function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+                                                                    const R=6371;
+                                                                    const dLat=(lat2 - lat1) * Math.PI / 180;
+                                                                    const dLon=(lon2 - lon1) * Math.PI / 180;
+                                                                    const a=Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                                                                    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                                                                }
+
+                                                                window.respondToReport=function (id, type) {
+                                                                    Swal.fire({
+
+                                                                        title: 'DEPLOY MISSION?',
+                                                                        text: `Confirm deployment to $ {
+                                                                            type
+                                                                        }
+
+                                                                        incident?`,
+                                                                        icon: 'warning',
+                                                                        showCancelButton: true,
+                                                                        confirmButtonColor: 'var(--accent)',
+                                                                        cancelButtonColor: 'var(--text-muted)',
+                                                                        confirmButtonText: 'DEPLOY NOW'
+
+                                                                    }).then((result)=> {
+                                                                        if (result.isConfirmed) {
+                                                                            fetch('/api/respond', {
+
+                                                                                method: 'POST',
+                                                                                headers: {
+                                                                                    'Content-Type': 'application/json'
+                                                                                }
+
+                                                                                ,
+                                                                                body: JSON.stringify({
+                                                                                    reportId: id
+                                                                                })
+
+                                                                        }) .then(res=> res.json()) .then(data=> {
+                                                                            if (data.success) {
+                                                                                Swal.fire({
+                                                                                    icon: 'success', title: 'Mission Accepted', showConfirmButton: false, timer: 1500
+                                                                                }) .then(()=> window.location.href='/responding');
+                                                                        }
+
+                                                                        else {
+                                                                            Swal.fire('Error', data.message || data.error, 'error');
+                                                                        }
+                                                                    });
+                                                                }
+                                                                });
+                                                                }
+
+                                                                ;
+
+                                                                function pollResponder() {
+                                                                    fetch('/api/responder-reports') .then(res=> res.json()) .then(newReports=> {
+                                                                            const newIds=new Set(newReports.map(r=> r.id));
+                                                                            newReports.forEach(r=> addMarker(r));
+
+                                                                            Object.keys(currentMarkers).forEach(id=> {
+                                                                                    if ( !newIds.has(parseInt(id))) {
+                                                                                        map.removeLayer(currentMarkers[id]);
+                                                                                        delete currentMarkers[id];
+                                                                                    }
+                                                                                });
+                                                                            updateNearbyTable(newReports);
+                                                                        });
+                                                                }
+
+                                                                function updateNearbyTable(reportsList) {
+                                                                    if ( !userLocation) return;
+                                                                    const tbody=document.getElementById('reportsTableBody');
+                                                                    let rows='';
+                                                                    let hasNearby=false;
+
+                                                                    reportsList.forEach(report=> {
+                                                                            if ( !report.latitude || !report.longitude) return;
+                                                                            const dist=getDistanceFromLatLonInKm(userLocation.lat, userLocation.lon, report.latitude, report.longitude);
+
+                                                                            if (dist <=2) {
+                                                                                hasNearby=true;
+                                                                                const dateStr=new Date(report.reported_at).toLocaleString();
+
+                                                                                const reporterName=(report.firstname && report.lastname) ? `$ {
+                                                                                    report.firstname
+                                                                                }
+
+                                                                                $ {
+                                                                                    report.lastname
+                                                                                }
+
+                                                                                ` : 'Anonymous Citizen';
+                                                                                const addr=addressCache[report.id] || "Pending Geocode...";
+
+                                                                                rows +=` <tr> <td class="ps-4" ><small class="text-muted fw-bold" >$ {
+                                                                                    dateStr
+                                                                                }
+
+                                                                                </small></td> <td><div class="d-flex align-items-center gap-2" ><div class="avatar-xs bg-secondary text-primary rounded-circle d-flex align-items-center justify-content-center" style="width:24px; height:24px;" ><i class="fa fa-user small" ></i></div><span class="small fw-600" >$ {
+                                                                                    reporterName
+                                                                                }
+
+                                                                                </span></div></td> <td><span class="badge bg-danger-soft text-danger" >$ {
+                                                                                    report.disaster_type
+                                                                                }
+
+                                                                                </span></td> <td><small class="text-muted text-truncate d-inline-block" style="max-width: 200px;" >$ {
+                                                                                    addr
+                                                                                }
+
+                                                                                </small></td> <td class="text-end pe-4" ><button class="btn btn-primary btn-xs py-1 px-3 small fw-bold" onclick="respondToReport(${report.id}, '${report.disaster_type}')" >DEPLOY</button></td> </tr> `;
+                                                                            }
+                                                                        });
+
+                                                                    if ( !hasNearby) {
+                                                                        rows='<tr><td colspan="5" class="text-center py-5 text-muted small">No active incidents detected in your immediate sector.</td></tr>';
+                                                                    }
+
+                                                                    tbody.innerHTML=rows;
+                                                                }
+
+                                                                if (navigator.geolocation) {
+                                                                    navigator.geolocation.watchPosition(pos=> {
+                                                                            userLocation= {
+                                                                                lat: pos.coords.latitude, lon: pos.coords.longitude
+                                                                            }
+
+                                                                            ;
+
+                                                                            document.getElementById('locationStatus').innerText=`$ {
+                                                                                userLocation.lat.toFixed(4)
+                                                                            }
+
+                                                                            , $ {
+                                                                                userLocation.lon.toFixed(4)
+                                                                            }
+
+                                                                            `;
+
+                                                                            const responderIcon=L.icon({
+                                                                                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                                                                                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                                                                                iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+                                                                            });
+
+                                                                        if (userMarker) {
+                                                                            userMarker.setLatLng([userLocation.lat, userLocation.lon]);
+                                                                            userCircle.setLatLng([userLocation.lat, userLocation.lon]);
+                                                                        }
+
+                                                                        else {
+                                                                            userMarker=L.marker([userLocation.lat, userLocation.lon], {
+                                                                                icon: responderIcon
+                                                                            }).addTo(map).bindPopup("<b>Unit Position</b>").openPopup();
+
+                                                                        userCircle=L.circle([userLocation.lat, userLocation.lon], {
+                                                                            color: 'var(--accent)', weight: 1, fillOpacity: 0.05, radius: 2000
+                                                                        }).addTo(map);
+                                                                }
+
+                                                                fetch('/api/responder/location', {
+
+                                                                    method: 'POST',
+                                                                    headers: {
+                                                                        'Content-Type': 'application/json'
+                                                                    }
+
+                                                                    ,
+                                                                    body: JSON.stringify({
+                                                                        lat: userLocation.lat, lng: userLocation.lon
+                                                                    })
+                                                                });
+                                                                }
+
+                                                                , null, {
+                                                                enableHighAccuracy: true
+                                                                });
+                                                                }
+
+                                                                setInterval(pollResponder, 5000);
+                                                                pollResponder();
+
+                                                                window.addEventListener('load', ()=> setTimeout(()=> map.invalidateSize(), 500));
+                                                                </script>
+                                                            <%- include('../partials/page-end'); %>
+                                                            </body>
+                                                            </html>

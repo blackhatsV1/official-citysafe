@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('../partials/head'); %>
+</head>
+
+<body class="bg-dark text-white">
+    <%- include('../partials/page-start'); %>
+    <div class="container-fluid p-0">
+        <%- include('../partials/spinner'); %>
+
+            <div class="container">
+                <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
+                    <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
+                        <div class="card p-4 p-sm-5 my-4">
+                            <div class="text-center mb-4">
+                                <a href="/visitor" class="d-inline-flex align-items-center gap-2 mb-2">
+                                    <i class="fa fa-shield-alt fs-2 text-primary"></i>
+                                    <h3 class="mb-0 text-primary fw-800 letter-spacing-1">CITYSAFE</h3>
+                                </a>
+                                <p class="text-muted small fw-600 text-uppercase letter-spacing-1">Join the Response
+                                    Network</p>
+                            </div>
+
+                            <div class="mb-4">
+                                <h4 class="mb-1 fw-800">Create Citizen Account</h4>
+                                <p class="text-muted small">Provide your details to receive early warning alerts and
+                                    manage safety reports.</p>
+                            </div>
+
+                            <form method="POST" action="/register">
+                                <div class="row g-3 mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="text" name="firstname" class="form-control" id="floatingFirst"
+                                                placeholder="Firstname" required>
+                                            <label for="floatingFirst">Firstname</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input type="text" name="lastname" class="form-control" id="floatingLast"
+                                                placeholder="Lastname" required>
+                                            <label for="floatingLast">Lastname</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input type="email" name="email" class="form-control" id="floatingEmail"
+                                        placeholder="Email Address" required>
+                                    <label for="floatingEmail">Email Address</label>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="number" name="contact_number" class="form-control" id="floatingContact"
+                                        placeholder="Contact Number" required>
+                                    <label for="floatingContact">Contact Number</label>
+                                </div>
+                                <div class="form-floating mb-3 position-relative">
+                                    <input type="password" name="password" class="form-control" id="signupPassword"
+                                        placeholder="Password" required>
+                                    <label for="signupPassword">Password</label>
+                                    <i class="fa fa-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 text-muted opacity-50"
+                                        id="toggleSignupPass" style="cursor: pointer; z-index: 10;"></i>
+                                </div>
+
+                                <div class="form-floating mb-4 position-relative">
+                                    <input type="password" name="confirm_password" class="form-control"
+                                        id="confirmPassword" placeholder="Confirm Password" required>
+                                    <label for="confirmPassword">Confirm Password</label>
+                                    <i class="fa fa-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 text-muted opacity-50"
+                                        id="toggleConfirmPass" style="cursor: pointer; z-index: 10;"></i>
+                                </div>
+
+                                <div id="passError" class="alert alert-danger mb-4 small py-2" style="display:none;">
+                                    <i class="fa fa-exclamation-triangle me-2"></i> Passwords do not match!
+                                </div>
+
+                                <button type="submit" class="btn btn-primary py-3 w-100 mb-4 shadow-sm"
+                                    onclick="return validateSignup()">Register Account</button>
+                                <p class="text-center mb-0 small text-muted">Already standardized your account? <a
+                                        href="/login" class="text-primary fw-bold">Sign In</a></p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OTP Modal (simple custom modal) -->
+            <div class="modal" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title fw-800" id="otpModalLabel">Verify Your Email</h5>
+                        </div>
+                        <div class="modal-body text-center p-4">
+                            <div class="bg-dark text-white rounded p-3 mb-4 border">
+                                <i class="fa fa-envelope-open-text text-primary fs-2 mb-2"></i>
+                                <p class="mb-0 small text-muted">We sent a verification code to</p>
+                                <strong id="otpEmailDisplay" class="text-primary"></strong>
+                            </div>
+                            <div class="my-4">
+                                <input type="text" id="otpInput"
+                                    class="form-control form-control-lg text-center fw-800 letter-spacing-1"
+                                    maxlength="4" placeholder="0 0 0 0"
+                                    style="font-size: 2rem; letter-spacing: 0.5rem !important;">
+                            </div>
+                            <div id="otpError" class="text-danger mb-2 small" style="display:none;">Invalid verification
+                                code</div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary px-5 py-2" onclick="verifyOtp()">Verify
+                                Identity</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    <%- include('../partials/page-end'); %>
+    </div>
+
+    <!-- Core Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <script>
+        function setupToggle(toggleId, inputId) {
+            const toggle = document.querySelector(toggleId);
+            const input = document.querySelector(inputId);
+            if (!toggle || !input) return;
+            toggle.addEventListener("click", function () {
+                const isPassword = input.getAttribute("type") === "password";
+                input.setAttribute("type", isPassword ? "text" : "password");
+                this.classList.toggle("fa-eye");
+                this.classList.toggle("fa-eye-slash");
+            });
+        }
+
+        setupToggle("#toggleSignupPass", "#signupPassword");
+        setupToggle("#toggleConfirmPass", "#confirmPassword");
+
+        function validateSignup() {
+            const form = document.querySelector('form');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return false;
+            }
+
+            const p1 = document.getElementById("signupPassword").value;
+            const p2 = document.getElementById("confirmPassword").value;
+            const err = document.getElementById("passError");
+
+            if (p1 !== p2) {
+                err.style.display = "block";
+                return false;
+            }
+            err.style.display = "none";
+
+            // AJAX Submission
+            const btn = document.querySelector('button[type="submit"]');
+            const spinner = document.getElementById('spinner');
+
+            spinner.classList.add('show');
+            btn.disabled = true;
+
+            const formData = {
+                firstname: document.querySelector('input[name="firstname"]').value,
+                lastname: document.querySelector('input[name="lastname"]').value,
+                email: document.querySelector('input[name="email"]').value,
+                contact_number: document.querySelector('input[name="contact_number"]').value,
+                password: p1
+            };
+
+            fetch('/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    spinner.classList.remove('show');
+                    btn.disabled = false;
+
+                    if (data.success) {
+                        document.getElementById('otpEmailDisplay').innerText = data.email;
+                        showModal('otpModal');
+                    } else {
+                        alert(data.message || 'Registration failed');
+                    }
+                })
+                .catch(err => {
+                    spinner.classList.remove('show');
+                    btn.disabled = false;
+                    alert('Error connecting to server');
+                    console.error(err);
+                });
+
+            return false;
+        }
+
+        function verifyOtp() {
+            const code = document.getElementById('otpInput').value;
+            const email = document.getElementById('otpEmailDisplay').innerText;
+            const errorDiv = document.getElementById('otpError');
+
+            if (code.length !== 4) {
+                errorDiv.innerText = "Please enter 4 digits";
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            fetch('/verify-code-json', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, code })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = data.redirect;
+                    } else {
+                        errorDiv.innerText = data.message || "Invalid Code";
+                        errorDiv.style.display = 'block';
+                    }
+                })
+                .catch(err => console.error(err));
+        }
+
+        /* Minimal modal helpers to replace Bootstrap modals */
+        function ensureBackdrop() {
+            let bd = document.getElementById('customModalBackdrop');
+            if (!bd) {
+                bd = document.createElement('div');
+                bd.id = 'customModalBackdrop';
+                bd.className = 'modal-backdrop';
+                document.body.appendChild(bd);
+            }
+            return bd;
+        }
+
+        function showModal(id) {
+            const modal = document.getElementById(id);
+            if (!modal) return;
+            const bd = ensureBackdrop();
+            modal.classList.add('show');
+            bd.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideModal(id) {
+            const modal = document.getElementById(id);
+            const bd = document.getElementById('customModalBackdrop');
+            if (modal) modal.classList.remove('show');
+            if (bd) bd.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // Handle auto-spinner
+        window.addEventListener('load', () => {
+            const spinner = document.getElementById('spinner');
+            if (spinner) {
+                spinner.classList.remove('show');
+                setTimeout(() => spinner.remove(), 300);
+            }
+        });
+    </script>
+</body>
+
+</html>
