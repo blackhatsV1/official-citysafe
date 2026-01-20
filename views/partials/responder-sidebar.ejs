@@ -1,53 +1,60 @@
-<div class="sidebar pb-3">
-    <nav class="navbar-dark w-100">
-        <a href="/responder" class="navbar-brand mx-4 my-4 d-block">
-            <h4 class="text-white mb-0" style="letter-spacing: 0.05em;"><i class="fa fa-shield-alt me-2"></i>CITYSAFE
-            </h4>
+<div class="sidebar">
+    <div class="px-4 mb-4">
+        <a href="/responder" class="d-flex align-items-center gap-2 text-white">
+            <i class="fa fa-shield-alt fs-4 text-primary"></i>
+            <h4 class="mb-0 text-white fw-bold letter-spacing-1">CITYSAFE</h4>
         </a>
+    </div>
 
-        <!-- System Responder Info -->
-        <div class="px-4 mb-4">
-            <div class="p-3 border border-secondary" style="background: rgba(255,255,255,0.05);">
-                <div class="d-flex align-items-center">
-                    <div class="d-flex align-items-center justify-content-center bg-white"
-                        style="width: 32px; height: 32px;">
-                        <i class="fa fa-user-md text-dark"></i>
-                    </div>
-                    <div class="ms-3">
-                        <h6 class="mb-0 text-white text-uppercase" style="font-size: 0.75rem;">
-                            <%= username %>
-                        </h6>
-                        <small class="text-muted text-uppercase" style="font-size: 0.65rem;">FIELD UNIT</small>
-                    </div>
+    <!-- Responder Profile Summary -->
+    <div class="px-4 mb-4">
+        <div class="p-3 rounded-lg"
+            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+            <div class="d-flex align-items-center gap-3">
+                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center"
+                    style="min-width: 32px; height: 32px;">
+                    <i class="fa fa-user-md text-dark fs-6"></i>
+                </div>
+                <div class="overflow-hidden">
+                    <h6 class="mb-0 text-white text-truncate small fw-bold">
+                        <%= username %>
+                    </h6>
+                    <span class="text-muted d-block text-uppercase"
+                        style="font-size: 0.65rem; letter-spacing: 0.05em;">Field Unit</span>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="navbar-nav w-100">
-            <small class="px-4 mb-2 text-muted text-uppercase"
-                style="font-size: 0.65rem; font-weight: 800; opacity: 0.6;">OPERATIONS</small>
-            <a href="/responder"
-                class="nav-item nav-link <%= (typeof page !== 'undefined' && page === 'dashboard') ? 'active' : '' %>">
-                <i class="fa fa-tachometer-alt me-2"></i>WORKSPACE
-            </a>
-            <a href="/responder#nearby-reports" class="nav-item nav-link">
-                <i class="fa fa-map-marked-alt me-2"></i>NEARBY OPS
-            </a>
+    <div class="nav flex-column">
+        <span class="px-4 mb-2 text-muted text-uppercase fw-bold" style="font-size: 0.7rem; opacity: 0.5;">Active
+            Duty</span>
+        <a href="/responder"
+            class="nav-link <%= (typeof page !== 'undefined' && page === 'dashboard') ? 'active' : '' %>">
+            <i class="fa fa-tachometer-alt"></i>
+            <span>Mission Control</span>
+        </a>
+        <a href="/responder#nearby-reports" class="nav-link">
+            <i class="fa fa-map-marker-alt"></i>
+            <span>Nearby Ops</span>
+        </a>
 
-            <small class="px-4 mt-4 mb-2 text-muted text-uppercase"
-                style="font-size: 0.65rem; font-weight: 800; opacity: 0.6;">RECORDS</small>
-            <a href="/responder-history"
-                class="nav-item nav-link <%= (typeof page !== 'undefined' && page === 'history') ? 'active' : '' %>">
-                <i class="fa fa-history me-2"></i>HISTORY
-            </a>
-            <a href="/aboutresponder"
-                class="nav-item nav-link <%= (typeof page !== 'undefined' && page === 'about') ? 'active' : '' %>">
-                <i class="fa fa-info-circle me-2"></i>SYSTEM INFO
-            </a>
+        <span class="px-4 mt-4 mb-2 text-muted text-uppercase fw-bold"
+            style="font-size: 0.7rem; opacity: 0.5;">Records</span>
+        <a href="/responder-history"
+            class="nav-link <%= (typeof page !== 'undefined' && page === 'history') ? 'active' : '' %>">
+            <i class="fa fa-history"></i>
+            <span>Mission History</span>
+        </a>
+        <a href="/aboutresponder"
+            class="nav-link <%= (typeof page !== 'undefined' && page === 'about') ? 'active' : '' %>">
+            <i class="fa fa-info-circle"></i>
+            <span>Station Info</span>
+        </a>
 
-            <div class="px-4 mt-4">
-                <a href="/logout" class="btn btn-outline-danger w-100 text-uppercase">SIGN OFF</a>
-            </div>
-        </div>
-    </nav>
+        <a href="/logout" class="nav-link mt-4 text-danger opacity-75">
+            <i class="fa fa-power-off"></i>
+            <span>Sign Off</span>
+        </a>
+    </div>
 </div>

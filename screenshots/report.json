@@ -1,0 +1,60 @@
+[
+  {
+    "page": "/visitor",
+    "status": 200,
+    "foundLeaflet": true,
+    "tileCount": 4,
+    "mapChecks": [
+      {
+        "selector": "#map",
+        "exists": true,
+        "bbox": {
+          "w": 268,
+          "h": 350
+        }
+      }
+    ],
+    "screenshot": "/home/lenovo-thinkpadx240-jayrold/Documents/Capstone/official-citysafe/screenshots/visitor.png"
+  },
+  {
+    "page": "/sos-otw",
+    "status": 404,
+    "foundLeaflet": false,
+    "tileCount": 0,
+    "mapChecks": [
+      {
+        "selector": "#map",
+        "exists": false,
+        "bbox": null
+      }
+    ],
+    "screenshot": "/home/lenovo-thinkpadx240-jayrold/Documents/Capstone/official-citysafe/screenshots/sos-otw.png"
+  },
+  {
+    "page": "/login",
+    "status": 200,
+    "foundLeaflet": true,
+    "tileCount": 0,
+    "mapChecks": [],
+    "screenshot": "/home/lenovo-thinkpadx240-jayrold/Documents/Capstone/official-citysafe/screenshots/login.png"
+  },
+  {
+    "page": "/adminpage",
+    "status": 304,
+    "foundLeaflet": true,
+    "tileCount": 0,
+    "mapChecks": [
+      {
+        "selector": "#admin-map",
+        "exists": false,
+        "bbox": null
+      },
+      {
+        "selector": "#map",
+        "exists": false,
+        "bbox": null
+      }
+    ],
+    "screenshot": "/home/lenovo-thinkpadx240-jayrold/Documents/Capstone/official-citysafe/screenshots/adminpage.png"
+  }
+]

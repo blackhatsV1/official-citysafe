@@ -7,7 +7,8 @@
 <!-- ========================================================================= -->
 
 <body>
-  <div class="container-fluid position-relative d-flex p-0">
+    <%- include('../partials/page-start'); %>
+    <div class="container-fluid position-relative d-flex p-0">
     <!-- Spinner Start -->
     <%- include('../partials/spinner'); %>
     <!-- Spinner End -->
@@ -37,26 +38,26 @@
                                     <!-- Personal Info -->
                                     <div class="col-12">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control bg-dark text-white border-0" name="firstname" id="firstname" value="<%= user.firstname %>" placeholder="Firstname" required>
+                                            <input type="text" class="form-control" name="firstname" id="firstname" value="<%= user.firstname %>" placeholder="Firstname" required>
                                             <label for="firstname">Firstname</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control bg-dark text-white border-0" name="lastname" id="lastname" value="<%= user.lastname %>" placeholder="Lastname" required>
+                                            <input type="text" class="form-control" name="lastname" id="lastname" value="<%= user.lastname %>" placeholder="Lastname" required>
                                             <label for="lastname">Lastname</label>
                                         </div>
                                     </div>
                                     
                                     <div class="col-12">
                                         <div class="form-floating">
-                                            <input type="email" class="form-control bg-dark text-white border-0" name="email" id="email" value="<%= user.email %>" placeholder="Email" required>
+                                            <input type="email" class="form-control" name="email" id="email" value="<%= user.email %>" placeholder="Email" required>
                                             <label for="email">Email</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating">
-                                            <input type="number" class="form-control bg-dark text-white border-0" name="contact_number" id="contact_number" value="<%= user.contact_number %>" placeholder="Contact" required>
+                                            <input type="number" class="form-control" name="contact_number" id="contact_number" value="<%= user.contact_number %>" placeholder="Contact" required>
                                             <label for="contact_number">Contact Number</label>
                                         </div>
                                     </div>
@@ -67,56 +68,56 @@
                                     <!-- Address Info -->
                                     <div class="col-12">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control bg-dark text-white border-0" name="street_address" id="street_address" value="<%= user.street_address %>" placeholder="Street" required>
+                                            <input type="text" class="form-control" name="street_address" id="street_address" value="<%= user.street_address %>" placeholder="Street" required>
                                             <label for="street_address">Street Address</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control bg-dark text-white border-0" name="barangay" id="barangay" value="<%= user.barangay %>" placeholder="Barangay" required>
+                                            <input type="text" class="form-control" name="barangay" id="barangay" value="<%= user.barangay %>" placeholder="Barangay" required>
                                             <label for="barangay">Barangay</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control bg-dark text-white border-0" name="city" id="city" value="<%= user.city %>" placeholder="City" required>
+                                            <input type="text" class="form-control" name="city" id="city" value="<%= user.city %>" placeholder="City" required>
                                             <label for="city">City</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control bg-dark text-white border-0" name="province" id="province" value="<%= user.province %>" placeholder="Province" required>
+                                            <input type="text" class="form-control" name="province" id="province" value="<%= user.province %>" placeholder="Province" required>
                                             <label for="province">Province</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control bg-dark text-white border-0" name="postal_code" id="postal_code" value="<%= user.postal_code %>" placeholder="Postal Code" required>
+                                            <input type="text" class="form-control" name="postal_code" id="postal_code" value="<%= user.postal_code %>" placeholder="Postal Code" required>
                                             <label for="postal_code">Postal Code</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control bg-dark text-white border-0" name="country" id="country" value="<%= user.country %>" placeholder="Country" required>
+                                            <input type="text" class="form-control" name="country" id="country" value="<%= user.country %>" placeholder="Country" required>
                                             <label for="country">Country</label>
                                         </div>
                                     </div>
                                     
                                     <div class="col-12">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control bg-dark text-white border-0" name="landmark" id="landmark" value="<%= user.landmark %>" placeholder="Landmark" required>
+                                            <input type="text" class="form-control" name="landmark" id="landmark" value="<%= user.landmark %>" placeholder="Landmark" required>
                                             <label for="landmark">Landmark</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control bg-dark text-white border-0" name="address_type" id="address_type" value="<%= user.address_type %>" placeholder="Address Type" required>
+                                            <input type="text" class="form-control" name="address_type" id="address_type" value="<%= user.address_type %>" placeholder="Address Type" required>
                                             <label for="address_type">Address Type</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control bg-dark text-white border-0" name="additional_instructions" id="additional_instructions" value="<%= user.additional_instructions %>" placeholder="Instructions" required>
+                                            <input type="text" class="form-control" name="additional_instructions" id="additional_instructions" value="<%= user.additional_instructions %>" placeholder="Instructions" required>
                                             <label for="additional_instructions">Additional Instructions</label>
                                         </div>
                                     </div>
@@ -126,7 +127,7 @@
                                     <div class="col-12">
                                         <div class="input-group">
                                             <div class="form-floating flex-grow-1">
-                                                <input type="password" class="form-control bg-dark text-white border-0" name="password" id="password" placeholder="Leave empty to keep existing password" autocomplete="new-password">
+                                                <input type="password" class="form-control" name="password" id="password" placeholder="Leave empty to keep existing password" autocomplete="new-password">
                                                 <label for="password">Password (Leave empty to keep current)</label>
                                             </div>
                                             <button class="btn btn-outline-primary" type="button" id="togglePassword">
@@ -147,9 +148,10 @@
             </div>
             <!-- Widgets End -->
 
-          <!-- Footer Start -->
-          <%- include('../partials/footer'); %>
-            <!-- Footer End -->
+                        <!-- Footer Start -->
+                        <%- include('../partials/page-end'); %>
+                        <%- include('../partials/footer'); %>
+                            <!-- Footer End -->
 
       </div>
       <!-- Content End -->

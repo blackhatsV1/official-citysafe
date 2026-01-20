@@ -1,47 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <%- include('../partials/head'); %>
-    <title>Verify Account | CitySafe</title>
+        <title>Verify Account | CitySafe</title>
 </head>
+
 <body>
+    <%- include('../partials/page-start'); %>
     <div class="container-fluid position-relative d-flex p-0">
         <!-- Spinner Start -->
         <%- include('../partials/spinner'); %>
-        <!-- Spinner End -->
+            <!-- Spinner End -->
 
-        <div class="container-fluid">
-            <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
-                <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
-                    <div class="bg-secondary rounded p-4 p-sm-5 my-4 mx-3">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <a href="/" class="">
-                                <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>CitySafe</h3>
-                            </a>
-                            <h3>Verify</h3>
-                        </div>
-                        <p class="text-white mb-4">We sent a 6-digit code to your <%= method || 'contact info' %>.</p>
-                        
-                        <% if (typeof error !== 'undefined' && error) { %>
-                            <div class="alert alert-danger" role="alert"><%= error %></div>
-                        <% } %>
-
-                        <form action="/verify-code" method="POST">
-                            <input type="hidden" name="email" value="<%= email %>">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" name="code" id="floatingInput" placeholder="123456" required>
-                                <label for="floatingInput">Enter 6-Digit Code</label>
+            <div class="container-fluid">
+                <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
+                    <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+                        <div class="bg-secondary rounded p-4 p-sm-5 my-4 mx-3">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <a href="/" class="">
+                                    <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>CitySafe</h3>
+                                </a>
+                                <h3>Verify</h3>
                             </div>
-                            <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Verify Account</button>
-                        </form>
-                        <p class="text-center mb-0">Didn't receive it? <a href="/resend-code?email=<%= email %>">Resend Code</a></p>
+                            <p class="text-white mb-4">We sent a 6-digit code to your <%= method || 'contact info' %>.
+                            </p>
+
+                            <% if (typeof error !=='undefined' && error) { %>
+                                <div class="alert alert-danger" role="alert">
+                                    <%= error %>
+                                </div>
+                                <% } %>
+
+                                    <form action="/verify-code" method="POST">
+                                        <input type="hidden" name="email" value="<%= email %>">
+                                        <div class="form-floating mb-3">
+                                            <input type="text" class="form-control" name="code" id="floatingInput"
+                                                placeholder="123456" required>
+                                            <label for="floatingInput">Enter 6-Digit Code</label>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary py-3 w-100 mb-4">Verify
+                                            Account</button>
+                                    </form>
+                                    <p class="text-center mb-0">Didn't receive it? <a
+                                            href="/resend-code?email=<%= email %>">Resend Code</a></p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+    <%- include('../partials/page-end'); %>
     </div>
     <script src="/js/script.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

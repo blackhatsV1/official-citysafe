@@ -2,7 +2,7 @@ const CACHE_NAME = 'citysafe-v1';
 const STATIC_ASSETS = [
     '/',
     '/login',
-    '/css/style.css',
+    '/css/custom.css',
     '/js/script.js',
     '/js/main.js',
     '/js/push-client.js',

@@ -2,229 +2,269 @@
 <html lang="en">
 
 <head>
-  <%- include('../partials/head'); %>
+    <%- include('../partials/head'); %>
 </head>
-<body>
-  <div class="container-fluid position-relative d-flex p-0">
-    <!-- Spinner Start -->
-    <%- include('../partials/spinner'); %>
-    <!-- Spinner End -->
 
+<body class="bg-page">
+    <%- include('../partials/page-start'); %>
+    <div class="container-fluid position-relative d-flex p-0">
+        <%- include('../partials/spinner'); %>
+            <%- include('../partials/admin-sidebar'); %>
 
-    <!-- Sidebar Start -->
-    <%- include('../partials/admin-sidebar'); %>
-      <!-- Sidebar End -->
+                <div class="content">
+                    <%- include('../partials/admin-navbar', { currentPage: 'disaster-reports' }); %>
 
+                        <!-- Main Ledger -->
+                        <div class="container-fluid pt-4 px-4 pb-4">
+                            <div class="row g-4">
+                                <div class="col-12">
+                                    <div class="card shadow-sm border-0">
+                                        <div
+                                            class="p-3 bg-card border-bottom d-flex align-items-center justify-content-between">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="bg-primary-soft p-2 rounded-md">
+                                                    <i class="fa fa-clipboard-list text-primary small"></i>
+                                                </div>
+                                                <h6 class="mb-0 fw-bold text-head text-uppercase small">Incident Ledger
+                                                </h6>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <span
+                                                    class="badge bg-success-soft text-success px-2 py-1 rounded-pill small fw-800">REAL-TIME
+                                                    SYNC</span>
+                                                <div class="vr"></div>
+                                                <small class="text-muted fw-600" id="sync-timer">Last update: just
+                                                    now</small>
+                                            </div>
+                                        </div>
 
-      <!-- Content Start -->
-      <div class="content">
-        <!-- Navbar Start -->
-        <%- include('../partials/admin-navbar'); %>
-          <!-- Navbar End -->
-
-          <!-- Widgets Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="row g-4">
-                    <div class="col-12">
-                        <div class="bg-secondary rounded h-100 p-4">
-                            <h6 class="mb-4">Disaster Reports</h6>
-                            <div class="table-responsive">
-                                <table class="table table-hover text-nowrap">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Deploy / Status</th>
-                                            <th scope="col">Sender</th>
-                                            <th scope="col">Type</th>
-                                            <th scope="col">Location</th>
-                                            <th scope="col">Feedbacks</th>
-                                            <th scope="col">Resolution</th>
-                                            <th scope="col">Date</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="reportsTableBody">
-                                        <% reports.forEach(report => { %>
-                                        <tr>
-                                          <td>
-                                              <% if (report.status === 'responding') { %>
-                                                  <span class="badge bg-warning text-dark">Responding</span>
-                                                  <button class="btn btn-sm btn-danger ms-1" onclick="cancelReportAdmin('<%= report.id %>')">Cancel</button>
-                                              <% } else if (report.status === 'resolved') { %>
-                                                  <span class="badge bg-success">Resolved</span>
-                                              <% } else if (report.status === 'cancelled by user') { %>
-                                                  <span class="badge bg-danger">Cancelled (User)</span>
-                                              <% } else if (report.status === 'cancelled by admin') { %>
-                                                  <span class="badge bg-danger">Cancelled (Admin)</span>
-                                              <% } else if (report.status === 'cancelled') { %>
-                                                  <span class="badge bg-danger">Cancelled</span>
-                                              <% } else { %>
-                                                  <div class="d-flex gap-2">
-                                                      <button class="btn btn-sm btn-primary deploy-btn" 
-                                                          data-id="<%= report.id %>" 
-                                                          data-location="<%= report.location %>"
-                                                          data-lat="<%= report.latitude %>"
-                                                          data-lon="<%= report.longitude %>"
-                                                          data-type="<%= report.disaster_type %>"
-                                                          data-date="<%= new Date(report.reported_at).toLocaleString() %>"
-                                                          onclick="initiateDeploy(this)">
-                                                          Deploy
-                                                      </button>
-                                                      <button class="btn btn-sm btn-outline-danger" onclick="cancelReportAdmin('<%= report.id %>')">
-                                                          Cancel
-                                                      </button>
-                                                  </div>
-                                              <% } %>
-                                          </td>
-                                          <td>
-                                              <%= report.sender %>
-                                              <% if (report.responder_name) { %>
-                                                  <span class="text-muted"> | Responder: <%= report.responder_name %></span>
-                                              <% } %>
-                                          </td>
-                                          <td class="
-                                                <% if (report.disaster_type === 'Fire') { %> bg-danger text-white 
-                                                <% } else if (report.disaster_type === 'Flood') { %> bg-info text-dark 
-                                                <% } else if (report.disaster_type === 'Earthquake') { %> bg-warning text-dark 
-                                                <% } else if (report.disaster_type === 'Landslide') { %> bg-light text-white 
-                                                <% } else { %> bg-light text-dark 
-                                                <% } %>
-                                                ">
-                                                <%= report.disaster_type %>
-                                            </td>
-
-                                          <td>
-                                            <span id="loc-display-<%= report.id %>">
-                                                <%= report.latitude && report.longitude ? `(${report.latitude}, ${report.longitude})` : (report.location || "No Location") %>
-                                            </span>
-                                            <% if (report.latitude && report.longitude) { %>
-                                                <br>
-                                                <small>
-                                                    <a href="#" class="text-primary" onclick="fetchFormattedAddress(this, <%= report.latitude %>, <%= report.longitude %>, 'loc-display-<%= report.id %>'); return false;">
-                                                        Show Address
-                                                    </a>
-                                                </small>
-                                            <% } %>
-                                          </td>
-                                          <td>
-                                            <small>
-                                                <strong><%= report.sender %>:</strong> "<%= report.user_message || 'Pending' %>" 
-                                                <br>
-                                                <% if(report.responder_name) { %>
-                                                    <strong><%= report.responder_name %>:</strong> "<%= report.responder_message || 'Pending' %>"
-                                                <% } else { %>
-                                                    <strong>Responder:</strong> Pending
-                                                <% } %>
-                                            </small>
-                                          </td>
-                                          <td>
-                                            <small>
-                                                <% if (report.status === 'resolved') { %>
-                                                    <% if (report.user_confirmed_at) { %>
-                                                        <span class="text-success">User Resolved</span>
-                                                    <% } %>
-                                                    <% if (report.user_confirmed_at && report.responder_confirmed_at) { %> | <% } %>
-                                                    <% if (report.responder_confirmed_at) { %>
-                                                        <span class="text-primary">Responder Resolved</span>
-                                                    <% } %>
-                                                    <% if (!report.user_confirmed_at && !report.responder_confirmed_at) { %>
-                                                        <%= report.resolution_remarks || 'Resolved' %>
-                                                    <% } %>
-                                                <% } else { %>
-                                                    <span class="text-muted">Pending</span>
-                                                <% } %>
-                                            </small>
-                                          </td>
-                                          <td><%= new Date(report.reported_at).toLocaleString() %></td>
-
-                                        </tr>
-                                      <% }) %>
-                                    </tbody>
-                                </table>
+                                        <div class="table-responsive">
+                                            <table class="table table-hover align-middle mb-0">
+                                                <thead class="bg-page">
+                                                    <tr>
+                                                        <th
+                                                            class="ps-4 py-3 small fw-bold text-muted text-uppercase letter-spacing-1">
+                                                            Mission Control</th>
+                                                        <th
+                                                            class="py-3 small fw-bold text-muted text-uppercase letter-spacing-1">
+                                                            Personnel / Sender</th>
+                                                        <th
+                                                            class="py-3 small fw-bold text-muted text-uppercase letter-spacing-1 text-center">
+                                                            Classification</th>
+                                                        <th
+                                                            class="py-3 small fw-bold text-muted text-uppercase letter-spacing-1">
+                                                            Sector / Location</th>
+                                                        <th
+                                                            class="py-3 small fw-bold text-muted text-uppercase letter-spacing-1">
+                                                            Comms Feed</th>
+                                                        <th
+                                                            class="py-3 small fw-bold text-muted text-uppercase letter-spacing-1">
+                                                            Resolution Status</th>
+                                                        <th
+                                                            class="pe-4 py-3 small fw-bold text-muted text-uppercase letter-spacing-1 text-end">
+                                                            Timestamp</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="reportsTableBody">
+                                                    <% reports.forEach(report=> { %>
+                                                        <tr>
+                                                            <td class="ps-4">
+                                                                <% if (report.status==='responding' ) { %>
+                                                                    <div class="d-flex align-items-center gap-2">
+                                                                        <span
+                                                                            class="badge bg-warning-soft text-warning px-2 py-1 rounded-pill small fw-800 border-warning">IN
+                                                                            PROGRESS</span>
+                                                                        <button
+                                                                            class="btn btn-danger-soft btn-xs fw-bold"
+                                                                            onclick="cancelReportAdmin('<%= report.id %>')">ABORT</button>
+                                                                    </div>
+                                                                    <% } else if (report.status==='resolved' ) { %>
+                                                                        <span
+                                                                            class="badge bg-success-soft text-success px-2 py-1 rounded-pill small fw-800">RESOLVED</span>
+                                                                        <% } else if
+                                                                            (report.status.includes('cancelled')) { %>
+                                                                            <span
+                                                                                class="badge bg-danger-soft text-danger px-2 py-1 rounded-pill small fw-800">CANCELLED</span>
+                                                                            <% } else { %>
+                                                                                <div class="d-flex gap-2">
+                                                                                    <button
+                                                                                        class="btn btn-primary btn-xs fw-bold px-3 py-1 shadow-sm"
+                                                                                        data-id="<%= report.id %>"
+                                                                                        data-location="<%= report.location %>"
+                                                                                        data-lat="<%= report.latitude %>"
+                                                                                        data-lon="<%= report.longitude %>"
+                                                                                        data-type="<%= report.disaster_type %>"
+                                                                                        data-date="<%= new Date(report.reported_at).toLocaleString() %>"
+                                                                                        onclick="initiateDeploy(this)">DEPLOY</button>
+                                                                                    <button
+                                                                                        class="btn btn-outline-danger btn-xs fw-bold"
+                                                                                        onclick="cancelReportAdmin('<%= report.id %>')">CANCEL</button>
+                                                                                </div>
+                                                                                <% } %>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex flex-column">
+                                                                    <span class="fw-bold text-head small">
+                                                                        <%= report.sender %>
+                                                                    </span>
+                                                                    <% if (report.responder_name) { %>
+                                                                        <small class="text-primary fw-600"
+                                                                            style="font-size: 0.65rem;"><i
+                                                                                class="fa fa-shield-halved me-1"></i>
+                                                                            <%= report.responder_name %>
+                                                                        </small>
+                                                                        <% } else { %>
+                                                                            <small class="text-muted"
+                                                                                style="font-size: 0.65rem;">No responder
+                                                                                assigned</small>
+                                                                            <% } %>
+                                                                </div>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <% let badgeClass='bg-secondary-soft text-secondary' ;
+                                                                    if (report.disaster_type==='Fire' )
+                                                                    badgeClass='bg-danger-soft text-danger' ; else if
+                                                                    (report.disaster_type==='Flood' )
+                                                                    badgeClass='bg-info-soft text-info' ; else if
+                                                                    (report.disaster_type==='Earthquake' )
+                                                                    badgeClass='bg-warning-soft text-warning' ; else if
+                                                                    (report.disaster_type==='Landslide' )
+                                                                    badgeClass='bg-dark-soft text-head' ; %>
+                                                                    <span
+                                                                        class="badge <%= badgeClass %> px-2 py-1 fw-800 small text-uppercase"
+                                                                        style="letter-spacing: 0.5px;">
+                                                                        <%= report.disaster_type %>
+                                                                    </span>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex flex-column">
+                                                                    <span class="text-head small fw-600"
+                                                                        id="loc-display-<%= report.id %>">
+                                                                        <%= (report.latitude && report.longitude) ?
+                                                                            `${report.latitude.toFixed(4)},
+                                                                            ${report.longitude.toFixed(4)}` :
+                                                                            (report.location || "N/A" ) %>
+                                                                    </span>
+                                                                    <% if (report.latitude && report.longitude) { %>
+                                                                        <a href="#" class="text-primary fw-bold"
+                                                                            style="font-size: 0.65rem;"
+                                                                            onclick="fetchFormattedAddress(this, <%= report.latitude %>, <%= report.longitude %>, 'loc-display-<%= report.id %>'); return false;">SHOW
+                                                                            ADDRESS</a>
+                                                                        <% } %>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex flex-column gap-1"
+                                                                    style="max-width: 200px;">
+                                                                    <div class="d-flex align-items-start gap-1">
+                                                                        <span class="text-muted fw-bold"
+                                                                            style="font-size: 0.65rem;">C:</span>
+                                                                        <small class="text-truncate italic"
+                                                                            style="font-size: 0.7rem;">"<%=
+                                                                                report.user_message
+                                                                                || 'No intel provided' %>"</small>
+                                                                    </div>
+                                                                    <% if(report.responder_name) { %>
+                                                                        <div class="d-flex align-items-start gap-1">
+                                                                            <span class="text-primary fw-bold"
+                                                                                style="font-size: 0.65rem;">R:</span>
+                                                                            <small class="text-truncate italic"
+                                                                                style="font-size: 0.7rem;">"<%=
+                                                                                    report.responder_message
+                                                                                    || 'Awaiting update' %>"</small>
+                                                                        </div>
+                                                                        <% } %>
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <div class="d-flex flex-column">
+                                                                    <% if (report.status==='resolved' ) { %>
+                                                                        <div class="d-flex gap-1 mb-1">
+                                                                            <% if (report.user_confirmed_at) { %><span
+                                                                                    class="badge bg-success-soft text-success px-1"
+                                                                                    title="User Confirmed"><i
+                                                                                        class="fa fa-user-check"></i></span>
+                                                                                <% } %>
+                                                                                    <% if
+                                                                                        (report.responder_confirmed_at)
+                                                                                        { %><span
+                                                                                            class="badge bg-primary-soft text-primary px-1"
+                                                                                            title="Responder Confirmed"><i
+                                                                                                class="fa fa-shield-check"></i></span>
+                                                                                        <% } %>
+                                                                        </div>
+                                                                        <small class="text-muted fw-600"
+                                                                            style="font-size: 0.65rem;">
+                                                                            <%= report.resolution_remarks
+                                                                                || 'System Resolved' %>
+                                                                        </small>
+                                                                        <% } else { %>
+                                                                            <span
+                                                                                class="text-muted small italic">Awaiting
+                                                                                closure</span>
+                                                                            <% } %>
+                                                                </div>
+                                                            </td>
+                                                            <td class="pe-4 text-end">
+                                                                <span class="text-head small fw-600">
+                                                                    <%= new
+                                                                        Date(report.reported_at).toLocaleTimeString([],
+                                                                        {hour: '2-digit' , minute:'2-digit'}) %>
+                                                                </span><br>
+                                                                <small class="text-muted" style="font-size: 0.65rem;">
+                                                                    <%= new
+                                                                        Date(report.reported_at).toLocaleDateString() %>
+                                                                </small>
+                                                            </td>
+                                                        </tr>
+                                                        <% }) %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+
+                        <%- include('../partials/page-end'); %>
+                        <%- include('../partials/footer'); %>
                 </div>
-            </div>
-          <!-- Widgets End -->     
+    </div>
 
-          <!-- Footer Start -->
-          <%- include('../partials/footer'); %>
-            <!-- Footer End -->
-
-      </div>
-      <!-- Content End -->
-
-
-      <!-- Back to Top -->
-      <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-  </div>
-
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="/js/script.js"></script>
-    
-    <script>
-        let deployMap = null;
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <script>
         async function initiateDeploy(btn) {
             const reportId = btn.getAttribute('data-id');
             const storedLat = btn.getAttribute('data-lat');
             const storedLon = btn.getAttribute('data-lon');
             const reportType = btn.getAttribute('data-type') || 'General';
             const reportDate = btn.getAttribute('data-date') || 'N/A';
-            let locationStr = btn.getAttribute('data-location');
-            
-             const cellSpan = document.getElementById(`loc-${reportId}`);
-             if (cellSpan && cellSpan.innerText && !cellSpan.innerText.includes("Loading") && !cellSpan.innerText.includes("waiting")) {
-                 locationStr = cellSpan.innerText;
-             }
-            
+            const locationStr = btn.getAttribute('data-location') || `Lat: ${storedLat}, Lon: ${storedLon}`;
+
             let incLat = parseFloat(storedLat);
             let incLon = parseFloat(storedLon);
 
-            if (isNaN(incLat) || isNaN(incLon)) {
-                if (locationStr && locationStr !== 'Usage Location') {
-                    try {
-                        Swal.fire({ title: 'Resolving Location...', didOpen: () => Swal.showLoading() });
-                        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationStr)}`;
-                        const res = await fetch(url);
-                        const geoData = await res.json();
-                         if (geoData && geoData.length > 0) {
-                            incLat = parseFloat(geoData[0].lat);
-                            incLon = parseFloat(geoData[0].lon);
-                         }
-                         Swal.close();
-                    } catch(e) { 
-                        console.error(e); 
-                        Swal.close();
-                    }
-                }
-            }
-
             if (!incLat || !incLon) {
-                Swal.fire('Error', 'Cannot deploy: Location coordinates missing.', 'error');
+                Swal.fire('Error', 'Incomplete geospatial metadata.', 'error');
                 return;
             }
 
-            window.openSharedDeployModal({
-                reportId, 
-                lat: incLat, 
-                lng: incLon, 
-                type: reportType, 
-                dateStr: reportDate, 
-                locationStr
-            });
+            window.openSharedDeployModal({ reportId, lat: incLat, lng: incLon, type: reportType, dateStr: reportDate, locationStr });
         }
+
         function cancelReportAdmin(id) {
             Swal.fire({
-                title: 'Confirm Admin Cancellation',
-                text: "Are you sure you want to cancel this SOS report as an administrator?",
+                title: 'ABORT MISSION?',
+                text: "Are you sure you want to cancel this emergency protocol?",
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, cancel it'
+                confirmButtonColor: 'var(--danger-slate)',
+                confirmButtonText: 'CONFIRM ABORT',
+                reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
                     fetch('/api/admin/cancel_report', {
@@ -232,155 +272,45 @@
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ id: id })
                     })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.success) {
-                            Swal.fire('Cancelled', 'The report has been cancelled by admin.', 'success')
-                            .then(() => location.reload());
-                        } else {
-                            Swal.fire('Error', 'Failed to cancel report.', 'error');
-                        }
-                    });
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire('Operation Aborted', '', 'success').then(() => location.reload());
+                            }
+                        });
                 }
             });
         }
-    </script>
 
-    <script>
-        // Lazy load address function
         async function fetchFormattedAddress(linkEl, lat, lon, targetId) {
             const targetEl = document.getElementById(targetId);
-            if(!targetEl) return;
-
-            // Change link to loading
-            linkEl.innerText = "Loading...";
-            linkEl.style.pointerEvents = "none";
-            linkEl.style.color = "grey";
-
+            if (!targetEl) return;
+            linkEl.innerText = "QUERYING...";
             try {
                 const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
                 const data = await res.json();
                 if (data.display_name) {
                     targetEl.innerText = data.display_name;
-                    linkEl.style.display = 'none'; // Hide the button after success
-                } else {
-                    targetEl.innerText = `(${lat}, ${lon}) - Unknown Address`;
-                    linkEl.innerText = "Retry";
-                    linkEl.style.pointerEvents = "auto";
+                    linkEl.remove();
                 }
-            } catch (e) {
-                console.error(e);
-                linkEl.innerText = "Failed. Retry?";
-                linkEl.style.pointerEvents = "auto";
-                linkEl.style.color = "red";
-            }
+            } catch (e) { linkEl.innerText = "RETRY"; }
         }
 
-        // Real-time Polling
-        let previousReportsJSON = '';
+        // Optimized Polling
+        let prevJSON = '';
         setInterval(() => {
             fetch('/api/incidents?t=' + Date.now())
-            .then(res => res.json())
-            .then(data => {
-                const currentJSON = JSON.stringify(data);
-                if(currentJSON === previousReportsJSON) return;
-                previousReportsJSON = currentJSON;
-                
-                const tbody = document.getElementById('reportsTableBody');
-                let html = '';
-                
-                data.forEach(report => {
-                    let actionHtml = '';
-                    if (report.status === 'responding') {
-                        actionHtml = `<span class="badge bg-warning text-dark">Responding</span>
-                                      <button class="btn btn-sm btn-danger ms-1" onclick="cancelReportAdmin('${report.id}')">Cancel</button>`;
-                    } else if (report.status === 'resolved') {
-                        actionHtml = `<span class="badge bg-success">Resolved</span>`;
-                    } else if (report.status === 'cancelled by user') {
-                        actionHtml = `<span class="badge bg-danger">Cancelled (User)</span>`;
-                    } else if (report.status === 'cancelled by admin') {
-                        actionHtml = `<span class="badge bg-danger">Cancelled (Admin)</span>`;
-                    } else if (report.status === 'cancelled') {
-                        actionHtml = `<span class="badge bg-danger">Cancelled</span>`;
-                    } else {
-                        actionHtml = `
-                            <div class="d-flex gap-2">
-                                <button class="btn btn-sm btn-primary deploy-btn" 
-                                    data-id="${report.id}" 
-                                    data-location="${report.location || ''}"
-                                    data-lat="${report.latitude}"
-                                    data-lon="${report.longitude}"
-                                    data-type="${report.disaster_type}"
-                                    data-date="${new Date(report.time).toLocaleString()}"
-                                    onclick="initiateDeploy(this)">
-                                    Deploy
-                                </button>
-                                <button class="btn btn-sm btn-outline-danger" onclick="cancelReportAdmin('${report.id}')">
-                                    Cancel
-                                </button>
-                            </div>
-                        `;
-                    }
-
-                    // Sender
-                    const sender = report.sender || (report.user_id ? 'User ' + report.user_id : 'Unknown');
-
-                    // Type Class
-                    let typeClass = 'bg-light text-dark';
-                    if (report.disaster_type === 'Fire') typeClass = 'bg-danger text-white';
-                    else if (report.disaster_type === 'Flood') typeClass = 'bg-info text-dark';
-                    else if (report.disaster_type === 'Earthquake') typeClass = 'bg-warning text-dark';
-                    else if (report.disaster_type === 'Landslide') typeClass = 'bg-light text-white';
-
-                    // Location Logic
-                    let locHtml = `<span id="loc-display-${report.id}">
-                        ${report.latitude && report.longitude ? `(${report.latitude}, ${report.longitude})` : (report.location || "No Location")}
-                    </span>`;
-                    
-                    if (report.latitude && report.longitude) {
-                        locHtml += `<br><small>
-                            <a href="#" class="text-primary" onclick="fetchFormattedAddress(this, ${report.latitude}, ${report.longitude}, 'loc-display-${report.id}'); return false;">Show Address</a>
-                        </small>`;
-                    }
-                    
-                    // Resolution Logic
-                    let resolutionContent = '<span class="text-muted">Pending</span>';
-                    if (report.status === 'resolved') {
-                        let parts = [];
-                        if (report.user_confirmed_at) parts.push('<span class="text-success">User Resolved</span>');
-                        if (report.responder_confirmed_at) parts.push('<span class="text-primary">Responder Resolved</span>');
-                        
-                        if (parts.length > 0) {
-                            resolutionContent = parts.join(' | ');
-                        } else {
-                            resolutionContent = report.resolution_remarks || 'Resolved';
-                        }
-                    }
-
-                    // Feedbacks Logic
-                    const responderName = report.responder_name ? report.responder_name : 'Pending';
-                    const feedbackContent = `
-                        <strong>${report.sender}:</strong> "${report.user_message || 'Pending'}"<br>
-                        <strong>${report.responder_name ? report.responder_name : 'Responder'}:</strong> "${report.responder_message || 'Pending'}"
-                    `;
-
-                    html += `
-                        <tr>
-                            <td>${actionHtml}</td>
-                            <td>${sender}${report.responder_name ? ' <span class="text-muted">| Responder: ' + report.responder_name + '</span>' : ''}</td>
-                            <td class="${typeClass}">${report.disaster_type}</td>
-                            <td>${locHtml}</td>
-                            <td><small>${feedbackContent}</small></td>
-                            <td><small>${resolutionContent}</small></td>
-                            <td>${new Date(report.time).toLocaleString()}</td>
-                        </tr>
-                    `;
+                .then(res => res.json())
+                .then(data => {
+                    const currentJSON = JSON.stringify(data);
+                    if (currentJSON === prevJSON) return;
+                    prevJSON = currentJSON;
+                    document.getElementById('sync-timer').innerText = `Last update: ${new Date().toLocaleTimeString()}`;
+                    // Note: Full table redraw on update for simplicity, can be optimized with better DOM diffing
+                    location.reload();
                 });
-                
-                if(tbody) tbody.innerHTML = html;
-            })
-            .catch(e => console.error("Polling error:", e));
-        }, 1000);
+        }, 10000);
     </script>
 </body>
+
 </html>

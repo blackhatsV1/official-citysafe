@@ -1,48 +1,54 @@
-<div class="sidebar pb-3">
-    <nav class="navbar-dark w-100">
-        <a href="/visitor" class="navbar-brand mx-4 my-4 d-block">
-            <h4 class="text-white mb-0" style="letter-spacing: 0.05em;"><i class="fa fa-shield-alt me-2"></i>CITYSAFE
-            </h4>
+<div class="sidebar">
+    <div class="px-4 mb-4">
+        <a href="/visitor" class="d-flex align-items-center gap-2 text-white">
+            <i class="fa fa-shield-alt fs-4 text-primary"></i>
+            <h4 class="mb-0 text-white fw-bold letter-spacing-1">CITYSAFE</h4>
         </a>
+    </div>
 
-        <!-- System Visitor Info -->
-        <div class="px-4 mb-4">
-            <div class="p-3 border border-secondary" style="background: rgba(255,255,255,0.05);">
-                <div class="d-flex align-items-center">
-                    <div class="d-flex align-items-center justify-content-center bg-white"
-                        style="width: 32px; height: 32px;">
-                        <i class="fa fa-user-secret text-dark"></i>
-                    </div>
-                    <div class="ms-3">
-                        <h6 class="mb-0 text-white text-uppercase" style="font-size: 0.75rem;">GUEST</h6>
-                        <small class="text-muted text-uppercase" style="font-size: 0.65rem;">PUBLIC ACCESS</small>
-                    </div>
+    <!-- Visitor Info Summary -->
+    <div class="px-4 mb-4">
+        <div class="p-3 rounded-lg"
+            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
+            <div class="d-flex align-items-center gap-3">
+                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center"
+                    style="min-width: 32px; height: 32px;">
+                    <i class="fa fa-user-secret text-dark fs-6"></i>
+                </div>
+                <div class="overflow-hidden">
+                    <h6 class="mb-0 text-white text-truncate small fw-bold">GUEST</h6>
+                    <span class="text-muted d-block text-uppercase"
+                        style="font-size: 0.65rem; letter-spacing: 0.05em;">Public Access</span>
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="navbar-nav w-100">
-            <small class="px-4 mb-2 text-muted text-uppercase"
-                style="font-size: 0.65rem; font-weight: 800; opacity: 0.6;">PORTAL</small>
-            <a href="/visitor" class="nav-item nav-link active">
-                <i class="fa fa-home me-2"></i>OVERVIEW
-            </a>
-            <a href="/services" class="nav-item nav-link">
-                <i class="fa fa-cogs me-2"></i>SERVICES
-            </a>
-            <a href="/contact" class="nav-item nav-link">
-                <i class="fa fa-envelope me-2"></i>CONTACT
-            </a>
-            <a href="/about" class="nav-item nav-link">
-                <i class="fa fa-info-circle me-2"></i>ABOUT
-            </a>
+    <div class="nav flex-column">
+        <span class="px-4 mb-2 text-muted text-uppercase fw-bold"
+            style="font-size: 0.7rem; opacity: 0.5;">General</span>
+        <a href="/visitor" class="nav-link active">
+            <i class="fa fa-home"></i>
+            <span>Portal Overview</span>
+        </a>
+        <a href="/services" class="nav-link">
+            <i class="fa fa-th-list"></i>
+            <span>Our Services</span>
+        </a>
+        <a href="/about" class="nav-link">
+            <i class="fa fa-info-circle"></i>
+            <span>About Us</span>
+        </a>
+        <a href="/contact" class="nav-link">
+            <i class="fa fa-envelope"></i>
+            <span>Contact</span>
+        </a>
 
-            <small class="px-4 mt-4 mb-2 text-muted text-uppercase"
-                style="font-size: 0.65rem; font-weight: 800; opacity: 0.6;">AUTHENTICATION</small>
-            <div class="px-4 mt-2">
-                <a href="/login" class="btn btn-outline-light w-100 text-uppercase mb-2">LOGIN</a>
-                <a href="/signup" class="btn btn-outline-secondary w-100 text-uppercase">REGISTER</a>
-            </div>
+        <span class="px-4 mt-4 mb-2 text-muted text-uppercase fw-bold"
+            style="font-size: 0.7rem; opacity: 0.5;">Access</span>
+        <div class="px-4 mt-2 d-flex flex-column gap-2">
+            <a href="/login" class="btn btn-primary w-100 text-uppercase small py-2">Sign In</a>
+            <a href="/signup" class="btn btn-outline-secondary w-100 text-uppercase small py-2">Register</a>
         </div>
-    </nav>
+    </div>
 </div>

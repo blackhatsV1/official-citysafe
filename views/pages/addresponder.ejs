@@ -2,97 +2,192 @@
 <html lang="en">
 
 <head>
-  <%- include('../partials/head'); %>
+    <%- include('../partials/head'); %>
 </head>
 
-<body>
-  <div class="container-fluid position-relative d-flex p-0">
-    <%- include('../partials/spinner'); %>
-    <%- include('../partials/admin-sidebar'); %>
+<body class="bg-page">
+    <body>
+      <%- include('../partials/page-start'); %>
+      <div class="container-fluid position-relative d-flex p-0">
+        <%- include('../partials/spinner'); %>
+            <%- include('../partials/admin-sidebar'); %>
 
-      <div class="content">
-        <%- include('../partials/admin-navbar'); %>
+                <div class="content">
+                    <%- include('../partials/admin-navbar', { currentPage: 'addresponder' }); %>
 
-            <div class="container-fluid pt-4 px-4">
-                  <div class="row justify-content-center">
-                    <div class="col-12 col-xl-6">
-                        <div class="h-100 bg-secondary rounded p-4">
-                            <div class="d-flex align-items-center justify-content-between mb-4">
-                                <h4 class="mb-0 text-white">Create New Responder</h4>
-                            </div>
-                            <form action="/addresponder" method="POST">
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <div class="form-floating">
-                                            <input type="text" class="form-control bg-dark text-white border-0" name="firstname" id="firstname" placeholder="Firstname" required>
-                                            <label for="firstname">Firstname</label>
+                        <!-- Main Content Area -->
+                        <div class="container-fluid pt-4 px-4 pb-4">
+                            <div class="row justify-content-center">
+                                <div class="col-12 col-xl-7">
+                                    <div class="card shadow-sm border-0 overflow-hidden">
+                                        <!-- Card Header -->
+                                        <div class="p-4 bg-card border-bottom d-flex align-items-center gap-3">
+                                            <div class="bg-primary-soft p-3 rounded-md">
+                                                <i class="fa fa-user-plus text-primary fs-4"></i>
+                                            </div>
+                                            <div>
+                                                <h4 class="mb-1 fw-800 text-head">Personnel Enlistment</h4>
+                                                <p class="text-muted small mb-0">Register a new operative into the
+                                                    regional response network.</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-floating">
-                                            <input type="text" class="form-control bg-dark text-white border-0" name="lastname" id="lastname" placeholder="Lastname" required>
-                                            <label for="lastname">Lastname</label>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-12">
-                                        <div class="form-floating">
-                                            <input type="email" class="form-control bg-dark text-white border-0" name="email" id="email" placeholder="Email" required>
-                                            <label for="email">Email Address</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-12">
-                                        <div class="form-floating">
-                                            <input type="number" class="form-control bg-dark text-white border-0" name="contact_number" id="contact" placeholder="Contact" required>
-                                            <label for="contact">Contact Number</label>
-                                        </div>
-                                    </div>
 
-                                    <div class="col-12">
-                                        <div class="form-floating">
-                                            <select class="form-select bg-dark text-white border-0" id="station" name="station_id" required>
-                                                <option value="" disabled selected>Select a Station...</option>
-                                                <% stations.forEach(station => { %>
-                                                    <option value="<%= station.id %>"><%= station.name %> (<%= station.type %>)</option>
-                                                <% }) %>
-                                            </select>
-                                            <label for="station">Assign Station</label>
+                                        <!-- Card Body -->
+                                        <div class="p-4 p-md-5">
+                                            <form action="/addresponder" method="POST" id="addResponderForm">
+                                                <div class="row g-4">
+                                                    <!-- Identity Section -->
+                                                    <div class="col-12 col-md-6">
+                                                        <div class="form-group mb-0">
+                                                            <label
+                                                                class="small fw-700 text-uppercase text-muted letter-spacing-1 mb-2 d-block">First
+                                                                Name</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text bg-white border-light"><i
+                                                                        class="fa fa-id-card text-muted"></i></span>
+                                                                <input type="text"
+                                                                    class="form-control border-light shadow-none"
+                                                                    name="firstname" id="firstname"
+                                                                    placeholder="Enter operative first name" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-6">
+                                                        <div class="form-group mb-0">
+                                                            <label
+                                                                class="small fw-700 text-uppercase text-muted letter-spacing-1 mb-2 d-block">Last
+                                                                Name</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text bg-white border-light"><i
+                                                                        class="fa fa-id-card text-muted"></i></span>
+                                                                <input type="text"
+                                                                    class="form-control border-light shadow-none"
+                                                                    name="lastname" id="lastname"
+                                                                    placeholder="Enter operative last name" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Contact & Credentials -->
+                                                    <div class="col-12">
+                                                        <div class="form-group mb-0">
+                                                            <label
+                                                                class="small fw-700 text-uppercase text-muted letter-spacing-1 mb-2 d-block">Official
+                                                                Email Address</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text bg-white border-light"><i
+                                                                        class="fa fa-envelope text-muted"></i></span>
+                                                                <input type="email"
+                                                                    class="form-control border-light shadow-none"
+                                                                    name="email" id="email"
+                                                                    placeholder="operative.name@citysafe.gov" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-6">
+                                                        <div class="form-group mb-0">
+                                                            <label
+                                                                class="small fw-700 text-uppercase text-muted letter-spacing-1 mb-2 d-block">Contact
+                                                                Frequency</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text bg-white border-light"><i
+                                                                        class="fa fa-phone text-muted"></i></span>
+                                                                <input type="number"
+                                                                    class="form-control border-light shadow-none"
+                                                                    name="contact_number" id="contact"
+                                                                    placeholder="09XXXXXXXXX" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 col-md-6">
+                                                        <div class="form-group mb-0">
+                                                            <label
+                                                                class="small fw-700 text-uppercase text-muted letter-spacing-1 mb-2 d-block">Access
+                                                                Credentials</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text bg-white border-light"><i
+                                                                        class="fa fa-lock text-muted"></i></span>
+                                                                <input type="password"
+                                                                    class="form-control border-light shadow-none"
+                                                                    name="password" id="password"
+                                                                    placeholder="Secure passphrase" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Assignment -->
+                                                    <div class="col-12">
+                                                        <div class="form-group mb-0">
+                                                            <label
+                                                                class="small fw-700 text-uppercase text-muted letter-spacing-1 mb-2 d-block">Station
+                                                                Assignment</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text bg-white border-light"><i
+                                                                        class="fa fa-building-shield text-muted"></i></span>
+                                                                <select class="form-select border-light shadow-none"
+                                                                    id="station" name="station_id" required>
+                                                                    <option value="" disabled selected>Identify assigned
+                                                                        operational base...</option>
+                                                                    <% stations.forEach(station=> { %>
+                                                                        <option value="<%= station.id %>">
+                                                                            <%= station.name %> (Sector: <%=
+                                                                                    station.type %>)
+                                                                        </option>
+                                                                        <% }) %>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Admin Parameters (Hidden) -->
+                                                    <input type="hidden" name="role" value="responder">
+                                                    <input type="hidden" name="street_address" value="Station Assigned">
+                                                    <input type="hidden" name="barangay" value="N/A">
+                                                    <input type="hidden" name="city" value="Iloilo City">
+                                                    <input type="hidden" name="province" value="Iloilo">
+                                                    <input type="hidden" name="postal_code" value="5000">
+                                                    <input type="hidden" name="country" value="Philippines">
+                                                    <input type="hidden" name="landmark" value="N/A">
+                                                    <input type="hidden" name="address_type" value="Work">
+                                                    <input type="hidden" name="additional_instructions" value="N/A">
+
+                                                    <!-- Action -->
+                                                    <div class="col-12 mt-3">
+                                                        <button type="submit"
+                                                            class="btn btn-primary w-100 py-3 fw-bold shadow-md letter-spacing-1">
+                                                            <i class="fa fa-check-circle me-1"></i> FINALIZE ENLISTMENT
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </form>
                                         </div>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <div class="form-floating">
-                                            <input type="password" class="form-control bg-dark text-white border-0" name="password" id="password" placeholder="Password" required>
-                                            <label for="password">Password</label>
-                                        </div>
-                                    </div>
-
-                                    <!-- Hidden Fields -->
-                                    <input type="hidden" name="role" value="responder">
-                                    <input type="hidden" name="street_address" value="Station Assigned">
-                                    <input type="hidden" name="barangay" value="N/A">
-                                    <input type="hidden" name="city" value="Iloilo City">
-                                    <input type="hidden" name="province" value="Iloilo">
-                                    <input type="hidden" name="postal_code" value="5000">
-                                    <input type="hidden" name="country" value="Philippines">
-                                    <input type="hidden" name="landmark" value="N/A">
-                                    <input type="hidden" name="address_type" value="Work">
-                                    <input type="hidden" name="additional_instructions" value="N/A">
-
-                                    <div class="col-12 mt-4">
-                                        <button type="submit" class="btn btn-primary w-100 py-3 shadow">Create Responder Account</button>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
-                    </div>
-                  </div>
-            </div>
 
-          <%- include('../partials/footer'); %>
-      </div>
-      <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-  </div>
-  <script src="/js/script.js"></script>
+        <%- include('../partials/page-end'); %>
+                        <%- include('../partials/footer'); %>
+                </div>
+
+                <!-- Scroll to Top -->
+                <a href="#" class="btn btn-primary btn-md-square back-to-top rounded-circle shadow-lg"><i
+                        class="bi bi-arrow-up"></i></a>
+    </div>
+
+    <!-- Page Specific Script -->
+    <script>
+        document.getElementById('addResponderForm').onsubmit = function () {
+            Swal.fire({
+                title: 'Enlisting Operative...',
+                text: 'Please wait while we update the personnel registry.',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading() }
+            });
+        };
+    </script>
 </body>
+
 </html>

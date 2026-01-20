@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Nearby PNP/BFP</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
-    #map { height: 400px; border: 1px solid black; }
+    #map {
+      height: 400px;
+      width: 100%;
+    }
   </style>
 </head>
+
 <body>
   <h2 id="address">Address:</h2>
   <p id="coords"></p>
@@ -55,4 +60,5 @@
     map.on('locationerror', e => alert(e.message));
   </script>
 </body>
+
 </html>

@@ -11,67 +11,13 @@
         <style>
             #map {
                 height: 400px;
-                border: 2px solid var(--primary);
-                border-radius: 8px;
-            }
-
-            .btn-close {
-                filter: invert(25%) sepia(90%) saturate(6000%) hue-rotate(0deg);
-            }
-
-            /* Dark Theme for Routing Machine */
-            .leaflet-routing-container {
-                background-color: #191C24 !important;
-                color: #ffffff !important;
-                border: 1px solid var(--primary) !important;
-                border-radius: 8px !important;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
-                font-family: 'Open Sans', sans-serif !important;
-            }
-            .leaflet-routing-container h2 {
-                font-size: 16px;
-                color: var(--primary) !important;
-                border-bottom: 1px solid #444;
-            }
-            .leaflet-routing-container h3 {
-                font-size: 14px;
-                color: #ddd !important;
-            }
-            .leaflet-routing-alt {
-                max-height: 300px;
-                overflow-y: auto;
-            }
-            .leaflet-routing-alt table {
-                 margin-top: 10px;
-            }
-            .leaflet-routing-alt tr:hover {
-                background-color: rgba(235, 22, 22, 0.1) !important;
-                cursor: pointer;
-            }
-            .leaflet-routing-icon {
-                background-image: none !important; /* Hide default sprites */
-            }
-            .leaflet-routing-icon-depart:before { content: '🚩'; }
-            .leaflet-routing-icon-arrive:before { content: '🏁'; }
-            .leaflet-routing-icon-continue:before { content: '⬆️'; }
-            .leaflet-routing-icon-turn-right:before { content: '➡️'; }
-            .leaflet-routing-icon-turn-left:before { content: '⬅️'; }
-            
-            /* Scrollbar styling */
-            .leaflet-routing-container::-webkit-scrollbar {
-                width: 8px;
-            }
-            .leaflet-routing-container::-webkit-scrollbar-thumb {
-                background: var(--primary); 
-                border-radius: 4px;
-            }
-            .leaflet-routing-container::-webkit-scrollbar-track {
-                background: #191C24; 
+                width: 100%;
             }
         </style>
 </head>
 
 <body>
+    <%- include('../partials/page-start'); %>
     <div class="container-fluid position-relative d-flex p-0">
         <!-- Spinner Start -->
         <%- include('../partials/spinner'); %>
@@ -174,7 +120,7 @@
                                                             document.getElementById("address").innerHTML = `<b>${data.display_name}</b>`;
                                                         });
 
-                                                    if(!hasScanned) {
+                                                    if (!hasScanned) {
                                                         hasScanned = true;
                                                         fetchStations(lat, lng);
                                                     }
@@ -190,55 +136,55 @@
                                                 function fetchStations(lat, lng) {
                                                     // Show loading state
                                                     document.getElementById("stationName1").textContent = "Scanning...";
-                                                    
+
                                                     fetch('/nearby-stations', {
                                                         method: 'POST',
                                                         headers: { 'Content-Type': 'application/json' },
                                                         body: JSON.stringify({ lat: lat, lng: lng })
                                                     })
-                                                    .then(res => res.json())
-                                                    .then(data => {
-                                                        if (!data || data.length === 0) {
-                                                            document.getElementById("stationName1").textContent = "No stations found nearby.";
-                                                            return;
-                                                        }
+                                                        .then(res => res.json())
+                                                        .then(data => {
+                                                            if (!data || data.length === 0) {
+                                                                document.getElementById("stationName1").textContent = "No stations found nearby.";
+                                                                return;
+                                                            }
 
-                                                        // Get the nearest station (first in sorted array)
-                                                        const nearest = data[0];
+                                                            // Get the nearest station (first in sorted array)
+                                                            const nearest = data[0];
 
-                                                        // Update Sidebar Info
-                                                        document.getElementById("stationName1").textContent = nearest.name;
-                                                        document.getElementById("stationAddress1").textContent = nearest.address;
-                                                        document.getElementById("stationDistance1").textContent = `${nearest.distance.toFixed(2)} km`;
+                                                            // Update Sidebar Info
+                                                            document.getElementById("stationName1").textContent = nearest.name;
+                                                            document.getElementById("stationAddress1").textContent = nearest.address;
+                                                            document.getElementById("stationDistance1").textContent = `${nearest.distance.toFixed(2)} km`;
 
-                                                        // Add marker for each station
-                                                        data.forEach(station => {
-                                                            L.marker([station.latitude, station.longitude], { icon: redIcon })
-                                                                .addTo(map)
-                                                                .bindPopup(`<b>${station.name}</b><br>Type: ${station.type}<br>Distance: ${station.distance.toFixed(2)} km<br>Address: ${station.address}`);
+                                                            // Add marker for each station
+                                                            data.forEach(station => {
+                                                                L.marker([station.latitude, station.longitude], { icon: redIcon })
+                                                                    .addTo(map)
+                                                                    .bindPopup(`<b>${station.name}</b><br>Type: ${station.type}<br>Distance: ${station.distance.toFixed(2)} km<br>Address: ${station.address}`);
+                                                            });
+
+                                                            // Add route from user to nearest station
+                                                            L.Routing.control({
+                                                                waypoints: [
+                                                                    L.latLng(lat, lng),
+                                                                    L.latLng(nearest.latitude, nearest.longitude)
+                                                                ],
+                                                                lineOptions: {
+                                                                    styles: [{ color: 'blue', weight: 5, opacity: 0.7 }]
+                                                                },
+                                                                routeWhileDragging: false,
+                                                                showAlternatives: false,
+                                                                addWaypoints: false,
+                                                                draggableWaypoints: false,
+                                                                fitSelectedRoutes: true,
+                                                                createMarker: function () { return null; } // Don't create extra markers, we already have them
+                                                            }).addTo(map);
+                                                        })
+                                                        .catch(err => {
+                                                            console.error(err);
+                                                            document.getElementById("stationName1").textContent = "Error loading stations.";
                                                         });
-
-                                                        // Add route from user to nearest station
-                                                        L.Routing.control({
-                                                            waypoints: [
-                                                                L.latLng(lat, lng),
-                                                                L.latLng(nearest.latitude, nearest.longitude)
-                                                            ],
-                                                            lineOptions: {
-                                                                styles: [{ color: 'blue', weight: 5, opacity: 0.7 }]
-                                                            },
-                                                            routeWhileDragging: false,
-                                                            showAlternatives: false,
-                                                            addWaypoints: false,
-                                                            draggableWaypoints: false,
-                                                            fitSelectedRoutes: true,
-                                                            createMarker: function() { return null; } // Don't create extra markers, we already have them
-                                                        }).addTo(map);
-                                                    })
-                                                    .catch(err => {
-                                                        console.error(err);
-                                                        document.getElementById("stationName1").textContent = "Error loading stations.";
-                                                    });
                                                 }
                                             </script>
                                         </div>
@@ -252,9 +198,18 @@
                                             <h6 class="mb-5">Nearest Station</h6>
                                         </div>
                                         <ul class="list-group list-group-flush">
-                                            <li class="list-group-item bg-transparent"><p class="fs-5"><strong>Station Name:</strong> <span id="stationName1">Loading...</span></p></li>
-                                            <li class="list-group-item bg-transparent"><p class="fs-5"><strong>Distance:</strong> <span id="stationDistance1">Loading...</span></p></li>
-                                            <li class="list-group-item bg-transparent"><p class="fs-5"><strong>Address:</strong> <span id="stationAddress1">Loading...</span></p></li>
+                                            <li class="list-group-item bg-transparent">
+                                                <p class="fs-5"><strong>Station Name:</strong> <span
+                                                        id="stationName1">Loading...</span></p>
+                                            </li>
+                                            <li class="list-group-item bg-transparent">
+                                                <p class="fs-5"><strong>Distance:</strong> <span
+                                                        id="stationDistance1">Loading...</span></p>
+                                            </li>
+                                            <li class="list-group-item bg-transparent">
+                                                <p class="fs-5"><strong>Address:</strong> <span
+                                                        id="stationAddress1">Loading...</span></p>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -266,6 +221,7 @@
 
 
                         <!-- Footer Start -->
+                        <%- include('../partials/page-end'); %>
                         <%- include('../partials/footer'); %>
                             <!-- Footer End -->
 

@@ -3,613 +3,380 @@
 
 <head>
     <%- include('../partials/head'); %>
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <script
             src="https://cdnjs.cloudflare.com/ajax/libs/OverlappingMarkerSpiderfier-Leaflet/0.2.6/oms.min.js"></script>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
-        <!-- Leaflet Routing Machine -->
         <link rel="stylesheet"
             href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
         <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.min.js"></script>
-
 </head>
 
-<body>
+<body class="bg-page">
+    <%- include('../partials/page-start'); %>
     <div class="container-fluid position-relative d-flex p-0">
-        <!-- Spinner Start -->
         <%- include('../partials/spinner'); %>
-            <!-- Spinner End -->
+            <%- include('../partials/admin-sidebar', { currentPage: 'dashboard' }); %>
 
-
-            <!-- Sidebar Start -->
-            <%- include('../partials/admin-sidebar'); %>
-                <!-- Sidebar End -->
-
-
-                <!-- Content Start -->
                 <div class="content">
-                    <!-- Navbar Start -->
-                    <%- include('../partials/admin-navbar'); %>
-                        <!-- Navbar End -->
+                    <%- include('../partials/admin-navbar', { currentPage: 'dashboard' }); %>
 
-                        <!-- System Overview -->
-                        <div class="container-fluid pt-4 px-4">
-                            <div class="card p-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="d-flex align-items-center">
-                                        <div class="bg-neutral p-2 px-3 border-slate me-3">
-                                            <h5 class="mb-0">OPS CENTER</h5>
+                        <!-- Main Dashboard -->
+                        <div class="container-fluid pt-4 px-4 pb-4">
+                            <!-- System Pulse -->
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <div
+                                        class="card p-4 border-0 shadow-sm d-flex flex-row align-items-center justify-content-between">
+                                        <div>
+                                            <h4 class="mb-1 fw-800 text-head">OPERATIONS COMMAND</h4>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <span
+                                                    class="badge bg-success-soft text-success px-2 py-1 rounded-pill small fw-800">SYSTEM
+                                                    NOMINAL</span>
+                                                <small class="text-muted text-uppercase fw-bold letter-spacing-1"
+                                                    style="font-size: 0.65rem;">Regional Grid Status</small>
+                                            </div>
                                         </div>
-                                        <span class="text-slate small fw-bold text-uppercase letter-spacing-1">System
-                                            Health: Nominal</span>
-                                    </div>
-                                    <div class="d-flex gap-4">
-                                        <div class="text-end">
-                                            <small class="text-muted d-block text-uppercase"
-                                                style="font-size: 0.65rem;">Personnel Registry</small>
-                                            <strong class="text-head" id="total-users-count">
-                                                <%= totalUsers %>
-                                            </strong>
-                                        </div>
-                                        <div class="text-end">
-                                            <small class="text-muted d-block text-uppercase"
-                                                style="font-size: 0.65rem;">Active Ops</small>
-                                            <strong class="text-danger"><a href="/disaster-reports"
-                                                    class="text-danger text-decoration-none"><span
-                                                        id="total-requests-count">
+                                        <div class="d-flex gap-5">
+                                            <div class="text-end">
+                                                <span class="d-block text-muted text-uppercase fw-bold mb-1"
+                                                    style="font-size: 0.65rem;">Operatives</span>
+                                                <h3 class="mb-0 fw-800 text-primary" id="total-users-count">
+                                                    <%= totalUsers %>
+                                                </h3>
+                                            </div>
+                                            <div class="text-end border-start ps-5 border-light">
+                                                <span class="d-block text-muted text-uppercase fw-bold mb-1"
+                                                    style="font-size: 0.65rem;">Active Missions</span>
+                                                <h3 class="mb-0 fw-800 text-danger" id="total-requests-count">
+                                                    <a href="/disaster-reports"
+                                                        class="text-danger text-decoration-none">
                                                         <%= totalRequests %>
-                                                    </span></a></strong>
+                                                    </a>
+                                                </h3>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- Weather Info End -->
 
-                        <!-- Operations Map -->
-                        <div class="container-fluid pt-4 px-4">
-                            <div class="card p-0">
-                                <div
-                                    class="p-3 border-bottom border-slate d-flex align-items-center justify-content-between">
-                                    <h6 class="mb-0">GEOSPATIAL INTELLIGENCE & DISPATCH</h6>
-                                    <button class="btn btn-outline-secondary btn-sm"
-                                        onclick="refreshMapData(); return false;">
-                                        <i class="fa fa-sync-alt me-1"></i>REFRESH
-                                    </button>
-                                </div>
-                                <div id="admin-map" style="height: 550px;"></div>
-                            </div>
-                        </div>
-                        <!-- Responder Map End -->
-
-                        <!-- Risk Analytics Widgets -->
-                        <div class="container-fluid pt-4 px-4">
-                            <div class="row g-4">
-                                <% const levels=[ {id: 'High' , label: 'CRITICAL RISK' , color: 'danger' },
-                                    {id: 'Moderate' , label: 'ELEVATED RISK' , color: 'slate' }, {id: 'Low' ,
-                                    label: 'STANDARD RISK' , color: 'slate' } ]; %>
-
-                                    <% levels.forEach(level=> { %>
-                                        <div class="col-sm-12 col-md-6 col-xl-4">
-                                            <div class="card h-100 p-0">
-                                                <div
-                                                    class="p-3 border-bottom border-slate d-flex align-items-center justify-content-between">
-                                                    <h6
-                                                        class="mb-0 <%= level.color === 'danger' ? 'text-danger' : '' %>">
-                                                        <%= level.label %>
-                                                    </h6>
-                                                    <a href="/assessment-results"
-                                                        class="text-muted small text-decoration-none">DETAILS</a>
+                            <!-- Live Intelligence Grid -->
+                            <div class="row g-4 mb-4">
+                                <div class="col-lg-8">
+                                    <div class="card p-0 border-0 shadow-sm h-100 overflow-hidden">
+                                        <div
+                                            class="p-3 border-bottom d-flex align-items-center justify-content-between">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="bg-primary-soft p-2 rounded-md">
+                                                    <i class="fa fa-crosshairs text-primary small"></i>
                                                 </div>
-                                                <div class="table-responsive">
-                                                    <table class="table mb-0">
-                                                        <thead>
+                                                <h6 class="mb-0 fw-bold text-head text-uppercase small">Geospatial
+                                                    Intelligence</h6>
+                                            </div>
+                                            <button class="btn btn-primary-soft btn-sm py-1 px-3 fw-bold small"
+                                                onclick="refreshMapData();">
+                                                <i class="fa fa-sync-alt me-1"></i>SYNC
+                                            </button>
+                                        </div>
+                                        <div id="admin-map" style="height: 520px;"></div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="card shadow-sm border-0 h-100 d-flex flex-column">
+                                        <div
+                                            class="p-3 border-bottom d-flex align-items-center justify-content-between">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="bg-warning-soft p-2 rounded-md">
+                                                    <i class="fa fa-bolt text-warning small"></i>
+                                                </div>
+                                                <h6 class="mb-0 fw-bold text-head text-uppercase small">Critical Risk
+                                                    Alerts</h6>
+                                            </div>
+                                            <a href="/assessment-results"
+                                                class="text-primary fw-bold small text-decoration-none">EXPLORE</a>
+                                        </div>
+                                        <div class="table-responsive flex-grow-1">
+                                            <table class="table table-hover align-middle mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="ps-4">Operative</th>
+                                                        <th class="text-end pe-4">Risk Index</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% if (riskTables['High'] && riskTables['High'].length> 0) { %>
+                                                        <% riskTables['High'].slice(0, 8).forEach(user=> { %>
                                                             <tr>
-                                                                <th>OPERATIVE</th>
-                                                                <th>SCORE</th>
-                                                                <th>DATE</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <% if (riskTables[level.id] && riskTables[level.id].length>
-                                                                0) { %>
-                                                                <% riskTables[level.id].forEach(user=> { %>
-                                                                    <tr>
-                                                                        <td class="fw-bold text-head">
+                                                                <td class="ps-4">
+                                                                    <div class="d-flex align-items-center gap-2">
+                                                                        <div class="avatar-xs bg-page rounded-circle d-flex align-items-center justify-content-center"
+                                                                            style="width:24px; height:24px;">
+                                                                            <i class="fa fa-user text-muted small"></i>
+                                                                        </div>
+                                                                        <span class="small fw-600">
                                                                             <%= user.username %>
-                                                                        </td>
-                                                                        <td><span
-                                                                                class="badge border border-slate text-slate">
-                                                                                <%= user.risk_score %>
-                                                                            </span></td>
-                                                                        <td class="text-muted small">
-                                                                            <%= user.assessed_at.toLocaleDateString() %>
-                                                                        </td>
+                                                                        </span>
+                                                                    </div>
+                                                                </td>
+                                                                <td class="text-end pe-4"><span
+                                                                        class="badge bg-danger text-uppercase fw-800">
+                                                                        <%= user.risk_score %>
+                                                                    </span></td>
+                                                            </tr>
+                                                            <% }) %>
+                                                                <% } else { %>
+                                                                    <tr>
+                                                                        <td colspan="2"
+                                                                            class="text-center py-5 text-muted small">No
+                                                                            critical alerts detected in sector</td>
                                                                     </tr>
-                                                                    <% }) %>
-                                                                        <% } else { %>
-                                                                            <tr>
-                                                                                <td colspan="3"
-                                                                                    class="text-center text-muted small py-4">
-                                                                                    NO DATA RECORDED</td>
-                                                                            </tr>
-                                                                            <% } %>
-                                                        </tbody>
-                                                    </table>
+                                                                    <% } %>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Analytics Row -->
+                            <div class="row g-4 mb-4">
+                                <div class="col-xl-6">
+                                    <div class="card shadow-sm border-0 p-4">
+                                        <div class="d-flex align-items-center gap-2 mb-4">
+                                            <div class="bg-indigo-soft p-2 rounded-md">
+                                                <i class="fa fa-chart-line text-indigo small"></i>
+                                            </div>
+                                            <h6 class="mb-0 fw-bold text-head text-uppercase small">Incident Trends</h6>
+                                        </div>
+                                        <canvas id="userChart" style="max-height: 280px;"></canvas>
+                                    </div>
+                                </div>
+                                <div class="col-xl-6">
+                                    <div class="card shadow-sm border-0 p-4">
+                                        <div class="d-flex align-items-center gap-2 mb-4">
+                                            <div class="bg-success-soft p-2 rounded-md">
+                                                <i class="fa fa-chart-pie text-success small"></i>
+                                            </div>
+                                            <h6 class="mb-0 fw-bold text-head text-uppercase small">Risk Stratification
+                                            </h6>
+                                        </div>
+                                        <div class="row align-items-center">
+                                            <div class="col-md-7">
+                                                <canvas id="riskLevelChart" style="max-height: 260px;"></canvas>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="d-flex flex-column gap-3">
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <span class="rounded-pill"
+                                                            style="width: 12px; height: 12px; background: #1e293b;"></span>
+                                                        <small class="text-muted fw-bold">Critical High</small>
+                                                    </div>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <span class="rounded-pill"
+                                                            style="width: 12px; height: 12px; background: #475569;"></span>
+                                                        <small class="text-muted fw-bold">Elevated Risk</small>
+                                                    </div>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <span class="rounded-pill"
+                                                            style="width: 12px; height: 12px; background: #94a3b8;"></span>
+                                                        <small class="text-muted fw-bold">Standard Risk</small>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <% }) %>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <!-- Widgets End -->
 
-
-
-                        <!-- Analytics Charts -->
-                        <div class="container-fluid pt-4 px-4 pb-4">
+                            <!-- Performance Snapshots -->
                             <div class="row g-4">
-                                <div class="col-sm-12 col-xl-6">
-                                    <div class="card h-100 p-4">
-                                        <h6 class="mb-4">INCIDENT TRENDS (DAILY)</h6>
-                                        <canvas id="userChart"></canvas>
+                                <% [ { id: 'checklistChart' , icon: 'fa-tasks' , title: 'Operational Compliance' ,
+                                    color: 'info' }, { id: 'trendChart' , icon: 'fa-history' ,
+                                    title: 'Risk Accumulation' , color: 'secondary' }, { id: 'hazardsChart' ,
+                                    icon: 'fa-biohazard' , title: 'Environmental Hazards' , color: 'danger' }
+                                    ].forEach(widget=> { %>
+                                    <div class="col-md-4">
+                                        <div class="card shadow-sm border-0 p-4">
+                                            <div class="d-flex align-items-center gap-2 mb-3">
+                                                <div class="bg-<%= widget.color %>-soft p-2 rounded-md">
+                                                    <i class="fa <%= widget.icon %> text-<%= widget.color %> small"></i>
+                                                </div>
+                                                <h6 class="mb-0 fw-bold text-head text-uppercase small"
+                                                    style="font-size: 0.7rem;">
+                                                    <%= widget.title %>
+                                                </h6>
+                                            </div>
+                                            <canvas id="<%= widget.id %>" style="max-height: 180px;"></canvas>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-sm-12 col-xl-6">
-                                    <div class="card h-100 p-4">
-                                        <h6 class="mb-4">RISK DISTRIBUTION</h6>
-                                        <canvas id="riskLevelChart"></canvas>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 col-xl-6">
-                                    <div class="card h-100 p-4">
-                                        <h6 class="mb-4">PREPAREDNESS METRICS</h6>
-                                        <canvas id="checklistChart"></canvas>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 col-xl-6">
-                                    <div class="card h-100 p-4">
-                                        <h6 class="mb-4">AVERAGE RISK ACCUMULATION</h6>
-                                        <canvas id="trendChart"></canvas>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 col-xl-6">
-                                    <div class="card h-100 p-4">
-                                        <h6 class="mb-4">ENVIRONMENTAL HAZARDS</h6>
-                                        <canvas id="hazardsChart"></canvas>
-                                    </div>
-                                </div>
+                                    <% }) %>
                             </div>
                         </div>
-                        <!-- Chart End -->
 
-                        <!-- Footer Start -->
+                        <%- include('../partials/page-end'); %>
                         <%- include('../partials/footer'); %>
-                            <!-- Footer End -->
-
                 </div>
-                <!-- Content End -->
-
-
-                <!-- Back to Top -->
-                <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
 
-
+    <!-- Analytics & Map Scripts -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="/js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
 
     <script>
         (function ($) {
             "use strict";
 
-            // Chart Global Formal Config
-            Chart.defaults.color = "#475569"; // Slate 600
-            Chart.defaults.borderColor = "#e2e8f0"; // Slate 200
+            Chart.defaults.color = "#64748b";
+            Chart.defaults.borderColor = "#f1f5f9";
             Chart.defaults.font.family = "'Inter', sans-serif";
-            Chart.defaults.font.size = 11;
 
-            // --- User Chart ---
-            var ctx1 = $("#userChart").get(0).getContext("2d");
-            var userChart = new Chart(ctx1, {
+            // --- Incident Trends ---
+            new Chart($("#userChart").get(0).getContext("2d"), {
                 type: "bar",
                 data: {
-                    labels: [ <% chartData.forEach(function (item, index) { %> '<%= item.day %>' <% if (index < chartData.length - 1) { %>, <% } %> <% }); %> ],
-                datasets: [{
-                    label: "Reports",
-                    data: [ <% chartData.forEach(function (item, index) { %> <%= item.total %><% if (index < chartData.length - 1) { %>, <% } %> <% }); %> ],
-                backgroundColor: "#475569" // Slate 600
-            }]
-        },
-            options: { responsive: true }
-    });
-
-        // --- Risk Level Chart ---
-        var ctx2 = $("#riskLevelChart").get(0).getContext("2d");
-        var riskChart = new Chart(ctx2, {
-            type: "doughnut",
-            data: {
-                labels: [ <% riskLevelData.forEach(function (item, index) { %> '<%= item.risk_level %>' <% if (index < riskLevelData.length - 1) { %>, <% } %> <% }); %> ],
-            datasets: [{
-                data: [ <% riskLevelData.forEach(function (item, index) { %> <%= item.total %><% if (index < riskLevelData.length - 1) { %>, <% } %> <% }); %> ],
-            backgroundColor: [
-                "#1e293b", // Slate 800
-                "#475569", // Slate 600
-                "#94a3b8", // Slate 400
-                "#cbd5e1"  // Slate 200
-            ]
-        }]
-        },
-        options: { responsive: true }
-    });
-
-        // --- Checklist Chart ---
-        var ctx3 = $("#checklistChart").get(0).getContext("2d");
-        var checklistChart = new Chart(ctx3, {
-            type: "bar",
-            data: {
-                labels: ["Near River", "Near Fault", "Has Emergency Kit", "Has Evacuation Plan"],
-                datasets: [{
-                    label: "Compliance",
-                    data: [<%= checklistData.near_river %>, <%= checklistData.near_fault %>, <%= checklistData.has_emergency_kit %>, <%= checklistData.has_evacuation_plan %>],
-                    backgroundColor: "#1e293b"
-                }]
-            },
-            options: { responsive: true }
-        });
-
-        // --- Trend Chart ---
-        var ctx4 = $("#trendChart").get(0).getContext("2d");
-        var trendChart = new Chart(ctx4, {
-            type: "line",
-            data: {
-                labels: [ <% trendData.forEach(function (item, index) { %> '<%= item.date %>' <% if (index < trendData.length - 1) { %>, <% } %> <% }); %> ],
-            datasets: [{
-                label: "Avg Risk Score",
-                data: [ <% trendData.forEach(function (item, index) { %> <%= item.avg_score %><% if (index < trendData.length - 1) { %>, <% } %> <% }); %> ],
-            borderColor: "#0f172a",
-            backgroundColor: "rgba(15, 23, 42, 0.05)",
-            tension: 0,
-            fill: true,
-            pointBackgroundColor: "#0f172a",
-            pointRadius: 4
-        }]
-    },
-        options: {
-            responsive: true,
-                plugins: {
-                legend: { display: true },
-                tooltip: {
-                    enabled: true, // tooltips will still show
-                        callbacks: {
-                        title: function(context) {
-                            // show the date label in tooltip
-                            return context[0].label;
-                        }
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        display: false // hides labels under the chart
-                    },
-                    grid: {
-                        drawTicks: false // prevents small tick marks
-                    }
+                    labels: <% - JSON.stringify(chartData.map(d => d.day)) %>,
+                    datasets: [{
+                        label: "Incoming Reports",
+                        data: <% - JSON.stringify(chartData.map(d => d.total)) %>,
+                        backgroundColor: "#6366f1",
+                        borderRadius: 4
+                    }]
                 },
-                y: {
-                    beginAtZero: true
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, grid: { borderDash: [5, 5] } } }
                 }
-            }
-        }
-});
+            });
 
+            // --- Risk Stratification ---
+            new Chart($("#riskLevelChart").get(0).getContext("2d"), {
+                type: "doughnut",
+                data: {
+                    labels: <% - JSON.stringify(riskLevelData.map(d => d.risk_level)) %>,
+                    datasets: [{
+                        data: <% - JSON.stringify(riskLevelData.map(d => d.total)) %>,
+                        backgroundColor: ["#1e293b", "#475569", "#94a3b8", "#cbd5e1"],
+                        borderWidth: 0
+                    }]
+                },
+                options: { responsive: true, cutout: '75%', plugins: { legend: { display: false } } }
+            });
 
+            // --- 其他图表保持一致逻辑 ---
+            new Chart($("#checklistChart").get(0).getContext("2d"), {
+                type: "bar",
+                data: {
+                    labels: ["River", "Fault", "Kit", "Plan"],
+                    datasets: [{
+                        data: [<%= checklistData.near_river %>, <%= checklistData.near_fault %>, <%= checklistData.has_emergency_kit %>, <%= checklistData.has_evacuation_plan %>],
+                        backgroundColor: "#6366f1"
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { display: false } } }
+            });
 
-        // --- Hazards Chart ---
-        var ctx5 = $("#hazardsChart").get(0).getContext("2d");
-        var hazardsChart = new Chart(ctx5, {
-            type: "bar",
-            data: {
-                labels: ["Near River", "Near Fault"],
-                datasets: [{
-                    label: "Operators",
-                    data: [<%= hazardsData.near_river %>, <%= hazardsData.near_fault %>],
-                    backgroundColor: [
-                        "#475569",
-                        "#94a3b8"
-                    ]
-                }]
-            },
-            options: { responsive: true }
-        });
+            new Chart($("#trendChart").get(0).getContext("2d"), {
+                type: "line",
+                data: {
+                    labels: <% - JSON.stringify(trendData.map(d => d.date)) %>,
+                    datasets: [{
+                        label: "Risk Velocity",
+                        data: <% - JSON.stringify(trendData.map(d => d.avg_score)) %>,
+                        borderColor: "#6366f1",
+                        tension: 0.4,
+                        fill: true,
+                        backgroundColor: "rgba(99, 102, 241, 0.05)"
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { display: false } }, scales: { x: { display: false } } }
+            });
 
-}) (jQuery);
-    </script>
+            new Chart($("#hazardsChart").get(0).getContext("2d"), {
+                type: "bar",
+                data: {
+                    labels: ["River", "Fault"],
+                    datasets: [{
+                        data: [<%= hazardsData.near_river %>, <%= hazardsData.near_fault %>],
+                        backgroundColor: ["#ef4444", "#f59e0b"]
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { display: false } } }
+            });
 
-    <!-- Leaflet & Admin Map Logic -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
+        })(jQuery);
+
+        // --- Map Logic ---
         let adminMap, adminMarkersLayer, oms;
         let responders = [];
         let incidents = [];
 
         function initAdminMap() {
-            // Default View (Iloilo City based on data)
             adminMap = L.map('admin-map').setView([10.7202, 122.5621], 13);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(adminMap);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(adminMap);
 
-            // Init Spiderfier
             if (typeof OverlappingMarkerSpiderfier !== 'undefined') {
-                oms = new OverlappingMarkerSpiderfier(adminMap, {
-                    keepSpiderfied: true,
-                    nearbyDistance: 20
-                });
+                oms = new OverlappingMarkerSpiderfier(adminMap, { keepSpiderfied: true, nearbyDistance: 20 });
             }
-
-
-
             adminMarkersLayer = L.layerGroup().addTo(adminMap);
-
             refreshMapData();
-            setInterval(refreshMapData, 5000); // Auto-refresh every 5s
-        }
-
-        function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371; // Radius of the earth in km
-            const dLat = deg2rad(lat2 - lat1);
-            const dLon = deg2rad(lon2 - lon1);
-            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            return R * c; // Distance in km
-        }
-
-        function deg2rad(deg) {
-            return deg * (Math.PI / 180);
+            setInterval(refreshMapData, 5000);
         }
 
         async function refreshMapData() {
-            // Fetch Data
             try {
-                const [resResponders, resIncidents, resStats] = await Promise.all([
-                    fetch('/api/responders'),
-                    fetch('/api/incidents'),
-                    fetch('/api/admin/stats')
-                ]);
-
-                responders = await resResponders.json();
-                incidents = await resIncidents.json();
-                const stats = await resStats.json();
-
-                // Update Stats
+                const [rR, rI, rS] = await Promise.all([fetch('/api/responders'), fetch('/api/incidents'), fetch('/api/admin/stats')]);
+                responders = await rR.json();
+                incidents = await rI.json();
+                const stats = await rS.json();
                 if (stats) {
-                    const uCount = document.getElementById('total-users-count');
-                    const rCount = document.getElementById('total-requests-count');
-                    if (uCount) uCount.innerText = stats.totalUsers;
-                    if (rCount) rCount.innerText = stats.totalRequests;
+                    $('#total-users-count').text(stats.totalUsers);
+                    $('#total-requests-count').text(stats.totalRequests);
                 }
-
                 plotMap();
-            } catch (e) { console.error("Refresh error:", e); }
+            } catch (e) { console.error(e); }
         }
 
-        async function plotMap() {
+        function plotMap() {
             adminMarkersLayer.clearLayers();
             if (oms) oms.clearMarkers();
 
-            // Plot Responders (Logged In Only)
             responders.forEach(r => {
-                // Show only active or deployed (exclude offline)
                 if (r.latitude && r.longitude && r.status !== 'offline') {
-                    const statusColor = r.status === 'active' ? 'green' : (r.status === 'deployed' ? 'yellow' : 'gray');
+                    const color = r.status === 'active' ? '#10b981' : (r.status === 'deployed' ? '#f59e0b' : '#64748b');
                     const icon = L.divIcon({
-                        className: 'custom-pd-icon',
-                        html: `<div style='background-color:${statusColor}; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.5);'></div>`,
+                        className: 'responder-dot',
+                        html: `<div style="background:${color}; width:12px; height:12px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 5px rgba(0,0,0,0.2);"></div>`,
                         iconSize: [12, 12]
                     });
-                    L.marker([r.latitude, r.longitude], { icon: icon })
-                        .bindPopup(`<b>Responder: ${r.firstname} ${r.lastname}</b><br>Status: <span class="badge ${r.status === 'active' ? 'bg-success' : (r.status === 'deployed' ? 'bg-warning text-dark' : 'bg-secondary')}">${r.status.toUpperCase()}</span><br><button class='btn btn-sm btn-primary mt-2' onclick='deployResponder(${r.id})'>Direct Deploy</button>`)
-                        .addTo(adminMarkersLayer);
+                    L.marker([r.latitude, r.longitude], { icon }).addTo(adminMarkersLayer)
+                        .bindPopup(`<strong>${r.firstname} ${r.lastname}</strong><br>Status: ${r.status.toUpperCase()}`);
                 }
             });
 
-            // Plot Incidents (Unresolved Only)
-            for (let incident of incidents) {
-                // Filter: Show only pending or responding
-                const isUnresolved = incident.status === 'pending' || incident.status === 'responding';
-                if (!isUnresolved) continue;
-
-                if (incident.latitude && incident.longitude) {
-                    addIncidentMarker({ lat: incident.latitude, lon: incident.longitude }, incident);
-                } else if (incident.location) {
-                    // Legacy
-                    geocodeAndPlotAdmin(incident);
+            incidents.forEach(incident => {
+                if ((incident.status === 'pending' || incident.status === 'responding') && incident.latitude && incident.longitude) {
+                    const color = incident.disaster_type === 'Fire' ? '#ef4444' : (incident.disaster_type === 'Flood' ? '#3b82f6' : '#f97316');
+                    const icon = L.divIcon({
+                        className: 'incident-icon',
+                        html: `<div style="background:${color}; width:24px; height:24px; border-radius:50%; border:2px solid #fff; display:flex; align-items:center; justify-content:center; color:#fff;"><i class="fa fa-triangle-exclamation" style="font-size:10px;"></i></div>`,
+                        iconSize: [24, 24]
+                    });
+                    const marker = L.marker([incident.latitude, incident.longitude], { icon }).addTo(adminMarkersLayer);
+                    marker.bindPopup(`<strong>${incident.disaster_type}</strong><br>Reported: ${new Date(incident.reported_at).toLocaleString()}<br><button class="btn btn-primary btn-sm w-100 mt-2" onclick="openDeployModal('${incident.id}', '${incident.disaster_type}', ${incident.latitude}, ${incident.longitude})">DEPLOY</button>`);
+                    if (oms) oms.addMarker(marker);
                 }
-            }
-        }
-
-        // Cache for geocoding to avoid API limits during dev
-        const geoCache = {};
-
-        async function geocodeAndPlotAdmin(incident) {
-            if (geoCache[incident.location]) {
-                addIncidentMarker(geoCache[incident.location], incident);
-                return;
-            }
-
-            // Simple rate limit for legacy data
-            await new Promise(r => setTimeout(r, 600));
-
-            try {
-                const query = encodeURIComponent(incident.location);
-                const url = `https://nominatim.openstreetmap.org/search?format=json&q=${query}`;
-                const res = await fetch(url);
-                const data = await res.json();
-
-                if (data && data.length > 0) {
-                    const lat = parseFloat(data[0].lat);
-                    const lon = parseFloat(data[0].lon);
-                    geoCache[incident.location] = { lat, lon };
-                    addIncidentMarker({ lat, lon }, incident);
-                }
-            } catch (e) {
-                console.error("Geocoding error", e);
-            }
-        }
-
-        async function addIncidentMarker(coords, incident) {
-            // Determine Icon & Color
-            let markerColor = '#dc3545'; // Default Red
-            let iconClass = 'fa-exclamation-triangle';
-
-            // Check incident.disaster_type (or description if type is generic)
-            const typeLower = (incident.disaster_type || incident.description || '').toLowerCase();
-
-            if (typeLower.includes('flood')) {
-                markerColor = '#0dcaf0'; // Info Cyan
-                iconClass = 'fa-water';
-            }
-            else if (typeLower.includes('earthquake')) {
-                markerColor = '#fd7e14'; // Orange
-                iconClass = 'fa-globe-americas';
-            }
-            else if (typeLower.includes('landslide')) {
-                markerColor = '#795548'; // Brown
-                iconClass = 'fa-mountain';
-            }
-            else if (typeLower.includes('fire')) {
-                markerColor = '#dc3545'; // Danger Red
-                iconClass = 'fa-fire';
-            }
-            else if (typeLower.includes('accident') || typeLower.includes('crash')) {
-                markerColor = '#6f42c1'; // Purple
-                iconClass = 'fa-car-crash';
-            } else if (incident.type === 'help_request') {
-                markerColor = '#ffc107'; // Warning Yellow
-                iconClass = 'fa-hand-holding-heart';
-            }
-
-            const icon = L.divIcon({
-                className: 'custom-div-icon',
-                html: `<div style="background-color:${markerColor}; width: 28px; height: 28px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; color: white; font-size: 13px;">
-                     <i class="fa ${iconClass}"></i>
-                   </div>`,
-                iconSize: [28, 28],
-                iconAnchor: [14, 14],
-                popupAnchor: [0, -16]
             });
-
-            const marker = L.marker([coords.lat, coords.lon], { icon: icon })
-                .addTo(adminMarkersLayer);
-
-            // Add to Spiderfier
-            if (oms) oms.addMarker(marker);
-
-            // Initial display just shows coords. Address fetches on click.
-            let addressDisplay = `Lat: ${Number(coords.lat).toFixed(4)}, Lon: ${Number(coords.lon).toFixed(4)}`;
-
-            const popupContent = `
-             <b>Disaster: ${incident.disaster_type || incident.description || 'General'}</b><br>
-             Location: <span id="admin-popup-loc-${incident.id}" class="text-primary" style="cursor:pointer" onclick="fetchAddress(this, ${coords.lat}, ${coords.lon})">
-                ${addressDisplay} <br><small>(Click to load address)</small>
-             </span><br>
-             Time Reported: ${incident.time ? new Date(incident.time).toLocaleString() : (incident.created_at ? new Date(incident.created_at).toLocaleString() : 'N/A')}<br>
-             <button class="btn btn-sm btn-danger mt-2" onclick="openDeployModal('${incident.id}', '${incident.type}', ${coords.lat}, ${coords.lon}, '${(incident.disaster_type || incident.description || 'General').replace(/'/g, "\\'")}', '${incident.time ? new Date(incident.time).toLocaleString() : 'N/A'}')">Deploy Responder Here</button>
-         `;
-            marker.bindPopup(popupContent);
         }
 
-        // Lazy load address on click
-        window.fetchAddress = async function (el, lat, lon) {
-            el.innerText = "Loading address...";
-            try {
-                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
-                const data = await res.json();
-                if (data.display_name) {
-                    el.innerText = data.display_name;
-                } else {
-                    el.innerText = "Address not found";
-                }
-            } catch (e) {
-                el.innerText = "Failed to load address";
-            }
-        }
-
-        let deployMap = null; // Global for modal map
-
-        window.openDeployModal = async function (reportId, type, incLat, incLon, reportType, reportDate) {
+        window.openDeployModal = async function (reportId, type, lat, lng) {
             if (typeof window.openSharedDeployModal === 'function') {
-                await window.openSharedDeployModal({
-                    reportId: reportId,
-                    lat: incLat,
-                    lng: incLon,
-                    type: reportType || type,
-                    dateStr: reportDate,
-                    locationStr: `Lat: ${incLat.toFixed(5)}, Lon: ${incLon.toFixed(5)}`
-                });
-            } else {
-                console.error("Shared deploy functionality (script.js) not loaded.");
-                Swal.fire('Error', 'Deployment system not initialized. Please refresh.', 'error');
+                await window.openSharedDeployModal({ reportId, lat, lng, type, dateStr: new Date().toLocaleString() });
             }
-        }
+        };
 
-
-        // confirmDeploy is now confirmDeployShared in script.js
-
-
-        // Initialize Map on Load if container exists
-        if (document.getElementById('admin-map')) {
-            initAdminMap();
-            loadAdminTables(); // New function
-        }
-
-        async function loadAdminTables() {
-            // Load Responders List
-            try {
-                const res = await fetch('/api/admin/responders_list');
-                const responders = await res.json();
-                const tbody = document.getElementById('responders-table-body');
-                if (tbody) {
-                    tbody.innerHTML = responders.map(r => `
-                    <tr>
-                        <td>${r.firstname} ${r.lastname}</td>
-                        <td>${r.station_name || 'Unassigned'}</td>
-                        <td><span class="badge ${r.status === 'active' ? 'bg-success' : (r.status === 'deployed' ? 'bg-warning' : 'bg-secondary')}">${r.status.toUpperCase()}</span></td>
-                        <td>${r.contact_number || '-'}</td>
-                        <td>${r.deploy_count}</td>
-                    </tr>
-                `).join('');
-                }
-            } catch (e) { console.error("Failed to load responders stats", e); }
-
-            // Load Deploys History
-            try {
-                const res = await fetch('/api/admin/deploys_history');
-                const deploys = await res.json();
-                const tbody = document.getElementById('deploys-table-body');
-                if (tbody) {
-                    tbody.innerHTML = deploys.map(d => `
-                     <tr>
-                         <td>${new Date(d.deployed_at).toLocaleString()}</td>
-                         <td>${d.responder_name}</td>
-                         <td>${d.station_name}</td>
-                         <td>${d.disaster_type || 'Incident'}</td>
-                         <td>${d.reported_by}</td>
-                         <td><span class="badge ${d.status === 'resolved' ? 'bg-success' : (d.status.includes('cancelled') ? 'bg-danger' : 'bg-warning')}">${d.status}</span></td>
-                         <td>${d.resolved_at ? new Date(d.resolved_at).toLocaleString() : '-'}</td>
-                     </tr>
-                 `).join('');
-                }
-            } catch (e) { console.error("Failed to load history", e); }
-        }
+        if ($('#admin-map').length) initAdminMap();
+        window.addEventListener('load', () => setTimeout(() => adminMap.invalidateSize(), 500));
     </script>
 </body>
 

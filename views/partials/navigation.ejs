@@ -1,26 +1,25 @@
-<header class="py-2 border-bottom bg-white">
-    <div class="container d-flex align-items-center justify-content-between">
-        <a href="/" class="navbar-brand text-slate fw-semibold">CITYSAFE</a>
-        <nav>
-            <a href="/weather" class="me-3 nav-link d-inline">Weather</a>
-            <a href="/survival-tips" class="me-3 nav-link d-inline">Resources</a>
-            <a href="/nearby-stations" class="me-3 nav-link d-inline">Stations</a>
-            <a href="/requesthelp" class="me-3 nav-link d-inline">Post Help</a>
-            <a href="/aboutuser" class="nav-link d-inline">About</a>
+<ul class="top-links">
+<header class="border-bottom bg-white">
+    <div class="container">
+        <nav class="navbar navbar-expand-lg">
+            <a class="navbar-brand fw-bold" href="/">CITYSAFE</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/weather">Weather</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/survival-tips">Resources</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/nearby-stations">Stations</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/requesthelp">Post Help</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/aboutuser">About</a></li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <small class="text-muted me-3">Signed in as <strong><%= username %></strong></small>
+                    <a href="/help-user" class="btn btn-outline-secondary btn-sm me-2">Help</a>
+                    <a href="/logout" class="btn btn-danger btn-sm">Logout</a>
+                </div>
+            </div>
         </nav>
-        <div class="d-flex align-items-center">
-            <span class="me-3 text-muted small">Signed in as <strong>
-                    <%= username %>
-                </strong></span>
-            <a href="/help-user" class="btn btn-outline-secondary btn-sm me-2">Help</a>
-            <a href="/logout" class="btn btn-danger btn-sm">Logout</a>
-        </div>
     </div>
 </header>
-<div class="nav-title">Welcome, <%= username %>!</div>
-
-<ul class="top-links">
-
-    <li><a href="/logout" class="btn btn-danger text-light">Logout</a></li>
-
-    <li><a href="/help-user" class="btn btn-success text-light">Help</a></li>
