@@ -57,7 +57,7 @@
 
                                     <div id="resolve-btn-container">
                                         <% if (!mission.user_confirmed_at) { %>
-                                            <button class="btn btn-secondary text-white" disabled>
+                                            <button class="btn btn-secondary" disabled>
                                                 <i class="fa fa-hourglass-half me-2"></i>Waiting for User Report...
                                             </button>
                                             <% } else { %>
@@ -296,7 +296,7 @@
                             // Check if we need to Disable
                             if (!currentBtn.disabled) {
                                 container.innerHTML = `
-                                <button class="btn btn-secondary text-white" disabled>
+                                <button class="btn btn-secondary" disabled>
                                     <i class="fa fa-hourglass-half me-2"></i>Waiting for User Report...
                                 </button>
                             `;
