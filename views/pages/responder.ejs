@@ -7,53 +7,10 @@
             href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
         <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.min.js"></script>
 
-        <style>
-            #map {
-                height: 550px;
-                width: 100%;
-                border-radius: 8px;
-                border: 1px solid var(--border-light);
-                overflow: hidden;
-            }
-
-            .leaflet-routing-container {
-                background-color: var(--bg-card) !important;
-                color: var(--text-main) !important;
-                border: 1px solid var(--border-light) !important;
-                border-radius: 8px !important;
-                box-shadow: var(--shadow-md) !important;
-                font-family: inherit !important;
-                padding: 10px !important;
-            }
-
-            .leaflet-routing-alt {
-                max-height: 200px;
-                overflow-y: auto;
-            }
-
-            .leaflet-routing-alt table {
-                font-size: 0.8rem;
-            }
-
-            .assigned-icon {
-                background-color: var(--accent) !important;
-                border: 2px solid white;
-                border-radius: 50%;
-                box-shadow: 0 0 10px rgba(79, 70, 229, 0.4);
-            }
-
-            .status-badge {
-                font-size: 0.65rem;
-                font-weight: 800;
-                padding: 4px 8px;
-                border-radius: 20px;
-                text-transform: uppercase;
-                letter-spacing: 0.05em;
-            }
-        </style>
+        
 </head>
 
-<body class="bg-dark text-white">
+<body class="bg-dark text-white responder-page">
     <%- include('../partials/page-start'); %>
     <div class="container-fluid position-relative d-flex p-0">
         <%- include('../partials/spinner'); %>

@@ -3,6 +3,11 @@
     --bg-card: #f8fafc;
     --text-head: #0f172a;
     --accent: #6366f1;
+    --border-light: rgba(255, 255, 255, 0.06);
+    --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.3);
+    --text-main: #f8fafc;
+    --danger-slate: #b91c1c;
+    --text-muted: #94a3b8;
 }
 
 body.bg-page {
@@ -64,4 +69,36 @@ body.bg-page {
     .sidebar {
         display: none
     }
+}
+
+/* Map defaults for consistent rendering across pages */
+#map,
+#weather-map,
+#admin-map {
+    height: 550px;
+    width: 100%;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+}
+
+/* Page-scoped tweaks */
+.responder-page #map {
+    height: 550px;
+}
+
+.leaflet-routing-container {
+    background-color: var(--bg-card) !important;
+    color: var(--text-main) !important;
+    border: 1px solid var(--border-light) !important;
+    border-radius: 0.5rem !important;
+    box-shadow: var(--shadow-md) !important;
+    font-family: inherit !important;
+    padding: 10px !important;
+}
+
+.leaflet-routing-alt {
+    max-height: 200px;
+    overflow-y: auto;
+    font-size: 0.9rem;
 }
