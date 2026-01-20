@@ -6,7 +6,7 @@
         <!-- removed non-map styling -->
 </head>
 
-<body class="bg-page">
+<body class="bg-dark text-white">
     <%- include('../partials/page-start'); %>
     <div class="container-fluid position-relative d-flex p-0">
         <%- include('../partials/spinner'); %>
@@ -62,8 +62,8 @@
                                                         <div class="col-6">
                                                             <button type="button"
                                                                 onclick="triggerSosReport('<%= emergency.type %>')"
-                                                                class="btn bg-card w-100 h-100 p-4 disaster-btn text-center d-flex flex-column align-items-center gap-3">
-                                                                <div class="avatar-md bg-page rounded-circle d-flex align-items-center justify-content-center"
+                                                                class="btn bg-secondary w-100 h-100 p-4 disaster-btn text-center d-flex flex-column align-items-center gap-3">
+                                                                <div class="avatar-md bg-dark text-white rounded-circle d-flex align-items-center justify-content-center"
                                                                     style="width: 56px; height: 56px;">
                                                                     <i
                                                                         class="fa <%= emergency.icon %> fs-3 text-primary"></i>
