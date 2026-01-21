@@ -1678,7 +1678,7 @@ app.post('/api/cancel_report', (req, res) => {
         });
       } else {
         // Simple Cancel for Pending
-        db.query('UPDATE disaster_reports SET status = "cancelled by user" WHERE id = ?', [id], (err, updateRes) => {
+        db.query('UPDATE disaster_reports SET status = \'cancelled by user\' WHERE id = ?', [id], (err, updateRes) => {
           if (err) {
             console.error("[USER CANCEL] Pending Update Error:", err);
             return res.json({ success: false });
@@ -1740,7 +1740,7 @@ app.post('/api/admin/cancel_report', (req, res) => {
           });
         });
       } else {
-        db.query('UPDATE disaster_reports SET status = "cancelled by admin" WHERE id = ?', [id], (err, updateRes) => {
+        db.query('UPDATE disaster_reports SET status = \'cancelled by admin\' WHERE id = ?', [id], (err, updateRes) => {
           if (err) {
             console.error("[ADMIN CANCEL] Update Error:", err);
             return res.json({ success: false });
