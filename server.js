@@ -423,6 +423,7 @@ app.post('/report', async (req, res) => {
       body_lon: req.body.lon
     });
 
+    const sql = "INSERT INTO disaster_reports (user_id, disaster_type, location, latitude, longitude) VALUES (?, ?, ?, ?, ?)";
     db.query(sql, [userId, disasterTypeToStore, locationToStore, finalLat, finalLon], (err, result) => {
       if (err) throw err;
 
