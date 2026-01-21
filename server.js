@@ -2503,10 +2503,17 @@ app.get('/logout', (req, res) => {
   const role = req.session.role;
 
   if (userId) {
+    console.log(`[LOGOUT] User/Responder logging out: ${userId} (${role})`);
     if (role === 'responder') {
-      db.query('UPDATE responders SET status = "offline" WHERE id = ?', [userId]);
+      db.query('UPDATE responders SET status = \'offline\' WHERE id = ?', [userId], (err) => {
+        if (err) console.error("[LOGOUT] Error updating responder status:", err);
+        else console.log("[LOGOUT] Responder status set to offline.");
+      });
     } else {
-      db.query('UPDATE users SET status = "offline" WHERE id = ?', [userId]);
+      db.query('UPDATE users SET status = \'offline\' WHERE id = ?', [userId], (err) => {
+        if (err) console.error("[LOGOUT] Error updating user status:", err);
+        else console.log("[LOGOUT] User status set to offline.");
+      });
     }
   }
 
