@@ -16,6 +16,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
+const cron = require('node-cron');
 
 // Email Transporter Configuration
 const transporter = nodemailer.createTransport({
@@ -166,7 +167,19 @@ app.get('/clean_whitespace', (req, res) => {
   runNext();
 });
 
-// [SETUP] One-time route to create the first admin
+// [HELPER] Haversine Distance Calculation (Km)
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Radius of the earth in km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+// [SETUP] One-time route to cleanup whitespace in responders tabledmin
 app.get('/setup-admin', async (req, res) => {
   const secretKey = req.query.key;
   if (secretKey !== process.env.SESSION_SECRET) {
@@ -254,6 +267,65 @@ app.get('/setup_db', (req, res) => {
     });
   }
   runNext();
+});
+
+
+
+// [HELPER] Check Weather and Send Alert
+async function checkWeatherAlerts(userId, lat, lon, endpoint, keys) {
+  if (!lat || !lon) return;
+  try {
+    const response = await axios.get("https://api.openweathermap.org/data/2.5/weather", {
+      params: { lat, lon, appid: process.env.OWM_API_KEY, units: "metric" }
+    });
+    const weather = response.data.weather[0];
+    const main = response.data.main;
+
+    // Alert Conditions: Rain, Thunderstorm, or Extreme Heat (>35C) or High Wind (>20m/s)
+    let alertMsg = null;
+
+    if (weather.main === 'Thunderstorm') alertMsg = `Storm Warning: ${weather.description} detected in your area.`;
+    else if (weather.main === 'Rain' && (weather.description.includes('heavy') || weather.description.includes('storm'))) alertMsg = `Heavy Rain Alert: Potential flooding.`;
+    else if (main.temp > 38) alertMsg = `Heat Advisory: Extreme temperature (${main.temp}°C). Stay hydrated.`;
+    else if (response.data.wind.speed > 25) alertMsg = `Wind Alert: Strong winds (${response.data.wind.speed}m/s) detected.`;
+
+    if (alertMsg) {
+      console.log(`[WEATHER ALERT] Sending to User ${userId}: ${alertMsg}`);
+      const subscription = { endpoint, keys: { p256dh: keys.p256dh, auth: keys.auth } };
+      const payload = { title: 'Weather Alert', body: alertMsg, url: '/weather' };
+      sendNotificationObj(subscription, payload);
+    }
+  } catch (err) {
+    console.error(`[WEATHER ERROR] User ${userId}:`, err.message);
+  }
+}
+
+// [CRON] Schedule Daily Weather Check (7:00 AM)
+cron.schedule('0 7 * * *', () => {
+  console.log('[CRON] Running Daily Weather Check...');
+  db.query("SELECT u.id, u.latitude, u.longitude, ps.endpoint, ps.keys_p256dh, ps.keys_auth FROM users u JOIN push_subscriptions ps ON u.id = ps.user_id", (err, users) => {
+    if (!err) {
+      users.forEach(u => checkWeatherAlerts(u.id, u.latitude, u.longitude, u.endpoint, { p256dh: u.keys_p256dh, auth: u.keys_auth }));
+    }
+  });
+});
+
+// [API] Manual Weather Check Trigger
+app.get('/api/check-weather-manual', (req, res) => {
+  if (req.session.loggedin && req.session.role === 'user') {
+    const userId = req.session.userId;
+    db.query("SELECT u.id, u.latitude, u.longitude, ps.endpoint, ps.keys_p256dh, ps.keys_auth FROM users u JOIN push_subscriptions ps ON u.id = ps.user_id WHERE u.id = ?", [userId], (err, users) => {
+      if (!err && users.length > 0) {
+        const u = users[0];
+        checkWeatherAlerts(u.id, u.latitude, u.longitude, u.endpoint, { p256dh: u.keys_p256dh, auth: u.keys_auth });
+        res.json({ success: true, message: 'Checking weather for your location...' });
+      } else {
+        res.status(404).json({ error: 'No subscription or location found.' });
+      }
+    });
+  } else {
+    res.status(401).json({ error: 'Unauthorized' });
+  }
 });
 
 app.get("/api/weather", async (req, res) => {
@@ -431,25 +503,50 @@ app.post('/report', async (req, res) => {
       db.query("SELECT id FROM users WHERE role = 'admin'", (err, admins) => {
         if (!err && admins.length > 0) {
           const adminIds = admins.map(a => a.id);
-          // Get subscriptions for these admins
           db.query("SELECT * FROM push_subscriptions WHERE user_id IN (?)", [adminIds], (err, subs) => {
             if (!err && subs.length > 0) {
               subs.forEach(sub => {
-                const subscription = {
-                  endpoint: sub.endpoint,
-                  keys: { p256dh: sub.keys_p256dh, auth: sub.keys_auth }
-                };
-                const payload = {
-                  title: 'New SOS Alert!',
-                  body: `${disasterTypeToStore} reported at ${locationToStore}`,
-                  url: '/adminpage'
-                };
+                const subscription = { endpoint: sub.endpoint, keys: { p256dh: sub.keys_p256dh, auth: sub.keys_auth } };
+                const payload = { title: 'New SOS Alert!', body: `${disasterTypeToStore} reported at ${locationToStore}`, url: '/adminpage' };
                 sendNotificationObj(subscription, payload);
               });
             }
           });
         }
       });
+
+      // [NOTIFICATION] Notify Nearby Responders (< 5km)
+      if (finalLat && finalLon) {
+        db.query("SELECT r.id, r.latitude, r.longitude, ps.endpoint, ps.keys_p256dh, ps.keys_auth FROM responders r JOIN push_subscriptions ps ON r.id = ps.responder_id WHERE r.status != 'offline'", (err, responders) => {
+          if (!err) {
+            responders.forEach(r => {
+              const dist = calculateDistance(finalLat, finalLon, r.latitude, r.longitude);
+              if (dist <= 5) {
+                const subscription = { endpoint: r.endpoint, keys: { p256dh: r.keys_p256dh, auth: r.keys_auth } };
+                const payload = { title: 'Nearby Incident!', body: `${disasterTypeToStore} reported ${dist.toFixed(1)}km away.`, url: '/responder' };
+                sendNotificationObj(subscription, payload);
+              }
+            });
+          }
+        });
+
+        // [NOTIFICATION] Notify Nearby Users (< 3km)
+        db.query("SELECT u.id, u.latitude, u.longitude, ps.endpoint, ps.keys_p256dh, ps.keys_auth FROM users u JOIN push_subscriptions ps ON u.id = ps.user_id WHERE u.id != ?", [userId], (err, users) => {
+          if (!err) {
+            users.forEach(u => {
+              // Use saved user location (if available) - Assuming user.latitude is updated
+              if (u.latitude && u.longitude) {
+                const dist = calculateDistance(finalLat, finalLon, u.latitude, u.longitude);
+                if (dist <= 3) {
+                  const subscription = { endpoint: u.endpoint, keys: { p256dh: u.keys_p256dh, auth: u.keys_auth } };
+                  const payload = { title: 'Danger Nearby!', body: `${disasterTypeToStore} reported ${dist.toFixed(1)}km away. Stay safe!`, url: '/' };
+                  sendNotificationObj(subscription, payload);
+                }
+              }
+            });
+          }
+        });
+      }
 
       res.send(`<script>alert('Disaster Reported Successfully!'); window.location.href='/my-reports';</script>`);
     });
@@ -1150,7 +1247,7 @@ app.post('/api/deploy', (req, res) => {
                           const payload = {
                             title: 'DEPLOYMENT ALERT',
                             body: 'You have been deployed to a mission. Check your app immediately.',
-                            url: '/my-current-mission-page'
+                            url: '/responding'
                           };
                           sendNotificationObj(subscription, payload);
                         });
