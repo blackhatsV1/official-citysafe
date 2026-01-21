@@ -1632,20 +1632,26 @@ app.get('/my-reports', (req, res) => {
 app.post('/api/cancel_report', (req, res) => {
   if (req.session.loggedin && req.session.role === 'user') {
     const { id } = req.body;
+    console.log(`[USER CANCEL] Request received for Report ID: ${id} by User: ${req.session.userId}`);
+
     // Fetch current status first
     db.query('SELECT status, responder_id FROM disaster_reports WHERE id = ?', [id], (err, results) => {
-      if (err || results.length === 0) return res.json({ success: false });
+      if (err) {
+        console.error("[USER CANCEL] DB Fetch Error:", err);
+        return res.json({ success: false, message: 'DB Error' });
+      }
+      if (results.length === 0) {
+        console.warn("[USER CANCEL] Report not found ID:", id);
+        return res.json({ success: false, message: 'Report not found' });
+      }
 
       const report = results[0];
+      console.log(`[USER CANCEL] Current Status: ${report.status}, Responder: ${report.responder_id}`);
 
       if (report.status === 'responding') {
-        // Complex Cancel: Free responder
         const responderId = report.responder_id;
-
-        // Transaction
-        // Transaction
         db.getConnection((err, connection) => {
-          if (err) return res.json({ success: false, message: 'DB Error' });
+          if (err) return res.json({ success: false, message: 'DB Connection Error' });
 
           connection.beginTransaction(err => {
             if (err) { connection.release(); return res.json({ success: false }); }
@@ -1662,6 +1668,7 @@ app.post('/api/cancel_report', (req, res) => {
                   connection.commit(err => {
                     if (err) return connection.rollback(() => { connection.release(); res.json({ success: false }); });
                     connection.release();
+                    console.log("[USER CANCEL] Successfully cancelled 'responding' report.");
                     res.json({ success: true });
                   });
                 });
@@ -1670,8 +1677,13 @@ app.post('/api/cancel_report', (req, res) => {
           });
         });
       } else {
-        // Simple Cancel
-        db.query('UPDATE disaster_reports SET status = "cancelled by user" WHERE id = ?', [id], (err) => {
+        // Simple Cancel for Pending
+        db.query('UPDATE disaster_reports SET status = "cancelled by user" WHERE id = ?', [id], (err, updateRes) => {
+          if (err) {
+            console.error("[USER CANCEL] Pending Update Error:", err);
+            return res.json({ success: false });
+          }
+          console.log(`[USER CANCEL] Successfully cancelled 'pending' report. Rows affected: ${updateRes.affectedRows}`);
           res.json({ success: true });
         });
       }
@@ -1684,10 +1696,20 @@ app.post('/api/cancel_report', (req, res) => {
 app.post('/api/admin/cancel_report', (req, res) => {
   if (req.session.loggedin && req.session.role === 'admin') {
     const { id } = req.body;
+    console.log(`[ADMIN CANCEL] Request received for Report ID: ${id} by Admin: ${req.session.username}`);
+
     db.query('SELECT status, responder_id FROM disaster_reports WHERE id = ?', [id], (err, results) => {
-      if (err || results.length === 0) return res.json({ success: false });
+      if (err) {
+        console.error("[ADMIN CANCEL] DB Fetch Error:", err);
+        return res.json({ success: false });
+      }
+      if (results.length === 0) {
+        console.warn("[ADMIN CANCEL] Report not found ID:", id);
+        return res.json({ success: false });
+      }
 
       const report = results[0];
+      console.log(`[ADMIN CANCEL] Current Status: ${report.status}, Responder: ${report.responder_id}`);
 
       if (report.status === 'responding') {
         const responderId = report.responder_id;
@@ -1709,6 +1731,7 @@ app.post('/api/admin/cancel_report', (req, res) => {
                   connection.commit(err => {
                     if (err) return connection.rollback(() => { connection.release(); res.json({ success: false }); });
                     connection.release();
+                    console.log("[ADMIN CANCEL] Successfully cancelled 'responding' report.");
                     res.json({ success: true });
                   });
                 });
@@ -1717,7 +1740,12 @@ app.post('/api/admin/cancel_report', (req, res) => {
           });
         });
       } else {
-        db.query('UPDATE disaster_reports SET status = "cancelled by admin" WHERE id = ?', [id], (err) => {
+        db.query('UPDATE disaster_reports SET status = "cancelled by admin" WHERE id = ?', [id], (err, updateRes) => {
+          if (err) {
+            console.error("[ADMIN CANCEL] Update Error:", err);
+            return res.json({ success: false });
+          }
+          console.log(`[ADMIN CANCEL] Successfully cancelled 'pending' report. Rows affected: ${updateRes.affectedRows}`);
           res.json({ success: true });
         });
       }

@@ -283,6 +283,7 @@
         setInterval(pollReports, 3000);
 
         function cancelReport(id) {
+            console.log("Attempting to cancel report (User):", id);
             Swal.fire({
                 title: 'Cancel Request?',
                 text: "Are you sure you want to cancel this pending request?",
@@ -297,11 +298,15 @@
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({ id: id })
                     }).then(res => res.json()).then(data => {
+                        console.log("Cancel Response:", data);
                         if(data.success) {
                             Swal.fire('Cancelled!', 'Report cancelled.', 'success').then(() => location.reload());
                         } else {
-                            Swal.fire('Error', 'Failed to cancel.', 'error');
+                            Swal.fire('Error', 'Failed to cancel. ' + (data.message || ''), 'error');
                         }
+                    }).catch(err => {
+                        console.error("Cancel Fetch Error:", err);
+                        Swal.fire('Error', 'Network or Server Error', 'error');
                     });
                 }
             })

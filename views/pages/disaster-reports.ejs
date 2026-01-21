@@ -217,6 +217,7 @@
             });
         }
         function cancelReportAdmin(id) {
+            console.log("Attempting to cancel report (Admin):", id);
             Swal.fire({
                 title: 'Confirm Admin Cancellation',
                 text: "Are you sure you want to cancel this SOS report as an administrator?",
@@ -234,12 +235,17 @@
                     })
                     .then(res => res.json())
                     .then(data => {
+                        console.log("Cancel Response:", data);
                         if (data.success) {
                             Swal.fire('Cancelled', 'The report has been cancelled by admin.', 'success')
                             .then(() => location.reload());
                         } else {
-                            Swal.fire('Error', 'Failed to cancel report.', 'error');
+                            Swal.fire('Error', 'Failed to cancel report. ' + (data.message || ''), 'error');
                         }
+                    })
+                    .catch(err => {
+                        console.error("Cancel Fetch Error:", err);
+                        Swal.fire('Error', 'Network or Server Error', 'error');
                     });
                 }
             });
