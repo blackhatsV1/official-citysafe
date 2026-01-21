@@ -501,6 +501,18 @@
       }
 
       function pollResponder() {
+          // [NEW] Continuous Mission Check
+          fetch('/api/my-current-mission')
+            .then(res => res.json())
+            .then(mission => {
+                if (mission && mission.id) {
+                    // Active mission detected, redirect immediately
+                    console.log("New mission assigned! Redirecting...");
+                    window.location.href = '/responding';
+                }
+            })
+            .catch(err => console.error("Error checking mission:", err));
+
           fetch('/api/responder-reports')
             .then(res => res.json())
             .then(newReports => {
