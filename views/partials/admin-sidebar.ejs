@@ -1,9 +1,9 @@
-<div class="sidebar pe-4 pb-3">
+<div class="sidebar pb-3"> <!-- Removed pe-4 -->
     <nav class="navbar navbar-dark">
         <a href="/adminpage" class="navbar-brand mx-4 mb-3">
             <h3 class="text-primary"><i class="fa fa-shield-alt me-2"></i>CitySafe</h3>
         </a>
-        <div class="d-flex align-items-center ms-4 mb-4">
+        <div class="d-flex align-items-center ms-4 mb-4 sidebar-user"> <!-- Added sidebar-user -->
             <div class="position-relative">
                 <img class="rounded-circle profile-img-sm" src="/images/user.png" alt="">
                 <div
@@ -16,15 +16,17 @@
             </div>
         </div>
         <div class="navbar-nav w-100">
-            <a href="/adminpage" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Dashboard</a>
-            <a href="/status-overview" class="nav-item nav-link"><i class="bi bi-person-badge me-2"></i>Status Overview</a>
-            <a href="/disaster-reports" class="nav-item nav-link"><i class="fa fa-envelope me-2"></i>SOS Reports</a>
-            <a href="/reports" class="nav-item nav-link"><i class="fa fa-chart-pie me-2"></i>Charts</a>
-            <a href="/assessment-results" class="nav-item nav-link"><i class="fa fa-envelope me-2"></i>Assessments</a>
+            <a href="/adminpage" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i><span>Dashboard</span></a>
+            <a href="/status-overview" class="nav-item nav-link"><i class="bi bi-person-badge me-2"></i><span>Status Overview</span></a>
+            <a href="/disaster-reports" class="nav-item nav-link"><i class="fa fa-envelope me-2"></i><span>SOS Reports</span></a>
+            <a href="/reports" class="nav-item nav-link"><i class="fa fa-chart-pie me-2"></i><span>Charts</span></a>
+            <a href="/assessment-results" class="nav-item nav-link"><i class="fa fa-envelope me-2"></i><span>Assessments</span></a>
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
-                        class="far fa-file-alt me-2"></i>Manage Users</a>
+                        class="far fa-file-alt me-2"></i><span>Manage Users</span></a>
                 <div class="dropdown-menu bg-transparent border-0">
+                    <!-- Dropdown items usually dont show in collapsed state or show on hover. 
+                         For now, leave as is, they will be hidden if parent is hidden or handled by CSS. -->
                     <a href="/userslist" class="dropdown-item">Users List</a>
                     <a href="/addusers" class="dropdown-item">Add User</a>
                     <a href="/addresponder" class="dropdown-item">Add Responder</a>
@@ -33,6 +35,8 @@
         </div>
     </nav>
 </div>
+<div class="sidebar-backdrop"></div>
+
 
 <!-- <ul>
         <li><a href="/adminpage">Home Dashboard</a></li>

@@ -30,8 +30,40 @@
 
     // Sidebar Toggler
     $('.sidebar-toggler').click(function () {
-        $('.sidebar, .content').toggleClass("open");
+        if ($(window).width() < 992) {
+            $('.sidebar').toggleClass("open");
+            $('.sidebar-backdrop').toggleClass("show");
+        } else {
+            $('.sidebar, .content').toggleClass("collapsed");
+        }
         return false;
+    });
+
+    // Handle Resize to clean up classes
+    $(window).resize(function () {
+        if ($(window).width() >= 992) {
+            $('.sidebar').removeClass("open");
+            $('.sidebar-backdrop').removeClass("show");
+        } else {
+            $('.sidebar, .content').removeClass("collapsed");
+        }
+    });
+
+    // Sidebar Close on Click Outside or Backdrop (Mobile)
+    $(document).on('click', '.sidebar-backdrop', function () {
+        $('.sidebar').removeClass("open");
+        $('.sidebar-backdrop').removeClass("show");
+    });
+
+    $(document).click(function (e) {
+        if ($(window).width() < 992) {
+            if ($('.sidebar').hasClass('open')) {
+                if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggler').length) {
+                    $('.sidebar').removeClass("open");
+                    $('.sidebar-backdrop').removeClass("show");
+                }
+            }
+        }
     });
 
 

@@ -1,9 +1,9 @@
-<div class="sidebar pe-4 pb-3">
+<div class="sidebar pb-3">
     <nav class="navbar navbar-dark">
         <a href="/" class="navbar-brand mx-4 mb-3">
             <h3 class="text-primary"><i class="fa fa-shield-alt me-2"></i>CitySafe</h3>
         </a>
-        <div class="d-flex align-items-center ms-4 mb-4">
+        <div class="d-flex align-items-center ms-4 mb-4 sidebar-user">
             <div class="position-relative">
                 <img class="rounded-circle profile-img-sm" src="images/user.png" alt="">
                 <div
@@ -16,14 +16,14 @@
             </div>
         </div>
         <div class="navbar-nav w-100">
-            <a href="/send-sos" class="nav-item nav-link <%= (typeof page !== 'undefined' && page === 'send-sos') ? 'active' : '' %>"><i class="fa fa-exclamation-triangle me-2"></i>Send SOS</a>
-            <a href="/my-reports" class="nav-item nav-link <%= (typeof page !== 'undefined' && page === 'my-reports') ? 'active' : '' %>"><i class="fa fa-history me-2"></i>My SOS History</a>
-            <!-- <a href="/requesthelp" class="nav-item nav-link"><i class="fa fa-info-circle me-2"></i>Ask for Help</a> -->
-            <!-- <a href="/" class="nav-item nav-link"><i class="fa fa-cogs me-2"></i>Browse Posts</a> -->
-            <a href="/nearby-stations" class="nav-item nav-link <%= (typeof page !== 'undefined' && page === 'stations') ? 'active' : '' %>"><i class="fa fa-info-circle me-2"></i>Stations</a>
+            <a href="/send-sos" class="nav-item nav-link <%= (typeof page !== 'undefined' && page === 'send-sos') ? 'active' : '' %>"><i class="fa fa-exclamation-triangle me-2"></i><span>Send SOS</span></a>
+            <a href="/my-reports" class="nav-item nav-link <%= (typeof page !== 'undefined' && page === 'my-reports') ? 'active' : '' %>"><i class="fa fa-history me-2"></i><span>My SOS History</span></a>
+            <!-- <a href="/requesthelp" class="nav-item nav-link"><i class="fa fa-info-circle me-2"></i><span>Ask for Help</span></a> -->
+            <!-- <a href="/" class="nav-item nav-link"><i class="fa fa-cogs me-2"></i><span>Browse Posts</span></a> -->
+            <a href="/nearby-stations" class="nav-item nav-link <%= (typeof page !== 'undefined' && page === 'stations') ? 'active' : '' %>"><i class="fa fa-info-circle me-2"></i><span>Stations</span></a>
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><i
-                        class="far fa-file-alt me-2"></i>Risk Assessment</a>
+                        class="far fa-file-alt me-2"></i><span>Risk Assessment</span></a>
                 <div class="dropdown-menu bg-transparent border-0">
                     <a href="/assess-risk" class="dropdown-item">Risk Assessment Tool</a>
                     <a href="/risk-results" class="dropdown-item">Assessment History</a>
@@ -32,3 +32,4 @@
         </div>
     </nav>
 </div>
+<div class="sidebar-backdrop"></div>
