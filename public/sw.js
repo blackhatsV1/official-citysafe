@@ -1,4 +1,4 @@
-const CACHE_NAME = 'citysafe-v1';
+const CACHE_NAME = 'citysafe-v2';
 const STATIC_ASSETS = [
     '/',
     '/login',

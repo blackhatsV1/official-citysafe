@@ -348,16 +348,9 @@ app.get("/api/weather", async (req, res) => {
 
 
 
-//weather
+// Redirect legacy weather route to main dashboard
 app.get('/weather', (req, res) => {
-  if (req.session.loggedin && req.session.role === 'user') {
-    db.query('SELECT * FROM requests ORDER BY created_at DESC', (err, results) => {
-      if (err) throw err;
-      res.render('pages/weather', { users: results, username: req.session.username, apiKey: process.env.OWM_API_KEY, page: 'weather' });
-    });
-  } else {
-    res.redirect('/visitor');
-  }
+  res.redirect('/');
 });
 
 

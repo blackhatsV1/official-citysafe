@@ -21,9 +21,10 @@
 
             /* Dark Theme for Routing Machine */
             .leaflet-routing-container {
-                background-color: #191C24 !important;
-                color: #ffffff !important;
-                border: 1px solid var(--primary) !important;
+                background-color: var(--glass-heavy) !important;
+                backdrop-filter: blur(10px);
+                color: var(--text-primary) !important;
+                border: 1px solid var(--border) !important;
                 border-radius: 8px !important;
                 box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
                 font-family: 'Open Sans', sans-serif !important;
@@ -66,7 +67,7 @@
                 border-radius: 4px;
             }
             .leaflet-routing-container::-webkit-scrollbar-track {
-                background: #191C24; 
+                background: var(--bg-dark); 
             }
         </style>
 </head>
@@ -110,8 +111,8 @@
 
                                             <div class="modal fade" id="myModal" tabindex="-1"
                                                 aria-labelledby="myModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog text-light modal-dialog-centered ">
-                                                    <div class="modal-content bg-secondary">
+                                                <div class="modal-dialog text-light modal-dialog-centered">
+                                                    <div class="modal-content glass-card p-2">
                                                         <div class="modal-header">
                                                             <h5 class="modal-title" id="myModalLabel">
                                                                 <h3>Nearest Help Station (PNP/BFP):</h3>
