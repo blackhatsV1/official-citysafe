@@ -65,12 +65,18 @@ self.addEventListener('fetch', event => {
 
 self.addEventListener('push', function (event) {
     console.log('[SW] Push Received');
-    let data = {};
-    if (event.data) {
-        data = event.data.json();
-        console.log('[SW] Push Data:', data);
-    } else {
-        console.log('[SW] Push received but no data');
+    let data = { title: 'CitySafe Alert', body: 'New notification received.' };
+
+    try {
+        if (event.data) {
+            const rawData = event.data.text();
+            console.log('[SW] Raw Push Data:', rawData);
+            data = JSON.parse(rawData);
+            console.log('[SW] Parsed Push Data:', data);
+        }
+    } catch (err) {
+        console.error('[SW] Push data parse failed. Using fallback.', err);
+        // data remains as fallback default
     }
 
     const options = {
@@ -85,6 +91,7 @@ self.addEventListener('push', function (event) {
 
     event.waitUntil(
         self.registration.showNotification(data.title || 'CitySafe Alert', options)
+            .catch(err => console.error('[SW] Failed to show notification:', err))
     );
 });
 

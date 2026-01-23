@@ -113,21 +113,34 @@ app.post('/api/subscribe', (req, res) => {
 
   if (!userId) return res.status(401).json({ error: 'Unauthorized' });
 
-  // Store subscription in DB
+  // Store/Update subscription in DB
   const table = 'push_subscriptions';
-  const idColumn = role === 'responder' ? 'responder_id' : 'user_id';
+  const idToSet = role === 'responder' ? 'responder_id' : 'user_id';
+  const idToClear = role === 'responder' ? 'user_id' : 'responder_id';
 
-  // Minimal check to avoid duplicates (simplified)
+  // [FIX] UPSERT Logic: Update if endpoint already exists, otherwise Insert
   db.query(`SELECT id FROM ${table} WHERE endpoint = ?`, [subscription.endpoint], (err, exists) => {
-    if (!err && exists.length === 0) {
-      const sql = `INSERT INTO ${table} (${idColumn}, endpoint, keys_p256dh, keys_auth) VALUES (?, ?, ?, ?)`;
+    if (err) {
+      console.error('Sub Check Error:', err);
+      return res.status(500).json({ error: 'Database check failed' });
+    }
+
+    if (exists.length > 0) {
+      // Update existing record: set current role ID, clear the other, update keys
+      const sql = `UPDATE ${table} SET ${idToSet} = ?, ${idToClear} = NULL, keys_p256dh = ?, keys_auth = ? WHERE endpoint = ?`;
+      db.query(sql, [userId, subscription.keys.p256dh, subscription.keys.auth, subscription.endpoint], (err) => {
+        if (err) console.error('Sub Update Error:', err);
+      });
+    } else {
+      // Insert new record
+      const sql = `INSERT INTO ${table} (${idToSet}, endpoint, keys_p256dh, keys_auth) VALUES (?, ?, ?, ?)`;
       db.query(sql, [userId, subscription.endpoint, subscription.keys.p256dh, subscription.keys.auth], (err) => {
-        if (err) console.error('Sub Error:', err);
+        if (err) console.error('Sub Insert Error:', err);
       });
     }
   });
 
-  res.status(201).json({});
+  res.status(201).json({ success: true });
 });
 
 // Helper to send notification
