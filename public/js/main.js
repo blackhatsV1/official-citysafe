@@ -11,7 +11,34 @@
     };
 
     // Use 'load' instead of simple execution to ensure all assets are ready
-    window.addEventListener('load', spinner);
+    window.addEventListener('load', function () {
+        spinner();
+
+        // Active State Logic for Sidebar
+        const path = window.location.pathname;
+
+        // Clear all active states first
+        $('.sidebar .nav-link').removeClass('active');
+        $('.sidebar .dropdown-item').removeClass('active');
+        $('.sidebar .dropdown-menu').removeClass('show');
+        $('.sidebar .dropdown-toggle').attr('aria-expanded', 'false');
+
+        $('.sidebar .nav-link, .sidebar .dropdown-item').each(function () {
+            const href = $(this).attr('href');
+            if (path === href) {
+                $(this).addClass('active');
+
+                // If it's a dropdown item, highlight and expand parent
+                if ($(this).hasClass('dropdown-item')) {
+                    const $parentDropdown = $(this).closest('.nav-item.dropdown');
+                    $parentDropdown.find('.nav-link.dropdown-toggle').addClass('active');
+                    const $dropdownMenu = $(this).closest('.dropdown-menu');
+                    $dropdownMenu.addClass('show'); // Keep it open
+                    $parentDropdown.find('.dropdown-toggle').attr('aria-expanded', 'true');
+                }
+            }
+        });
+    });
 
 
     // Back to top button
