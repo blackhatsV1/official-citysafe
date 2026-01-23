@@ -137,21 +137,33 @@
                 return res.json();
             })
             .then(data => {
-                if (data && data.display_name) {
-                    const address = data.display_name;
-                    updateAddressUI(address);
-                    if (callback) callback(address);
+                if (data && data.address) {
+                    const addr = data.address;
+                    // Refined Priority: POI Name > House Number + Street > Street
+                    let poi = addr.amenity || addr.building || addr.office || addr.shop || addr.neighbourhood;
+                    let street = addr.road;
+                    let house = addr.house_number;
+
+                    let finalAddress = "";
+                    if (poi && street) {
+                        finalAddress = `${poi}, ${street}`;
+                    } else if (house && street) {
+                        finalAddress = `${house} ${street}`;
+                    } else {
+                        finalAddress = poi || street || data.display_name.split(',')[0] || "Unknown Location";
+                    }
+
+                    updateAddressUI(finalAddress);
+                    if (callback) callback(finalAddress);
                     
-                    // Also update inputs here to ensure address is synced
-                    if (document.getElementById("location")) document.getElementById("location").value = address;
+                    if (document.getElementById("location")) document.getElementById("location").value = finalAddress;
                 } else {
-                    throw new Error("Empty display_name from Nominatim");
+                    throw new Error("Invalid response from Nominatim");
                 }
             })
             .catch(err => {
                 console.error("Failed to fetch address:", err);
-                // Fallback: Show coordinates in address field instead of "Not found"
-                const fallback = `Unmarked Area (Lat: ${lat.toFixed(4)}, Lon: ${lng.toFixed(4)})`;
+                const fallback = `Unmarked Area (Lat: ${lat.toFixed(6)}, Lon: ${lng.toFixed(6)})`;
                 document.getElementById('address').innerHTML = `<span class="text-muted">${fallback}</span>`;
                 if (document.getElementById("location")) document.getElementById("location").value = fallback;
             });

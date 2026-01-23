@@ -244,11 +244,14 @@
       // 4. Real-time Status Polling
       setInterval(() => {
           fetch('/api/my-current-mission')
-            .then(res => res.json())
+            .then(res => {
+                if(!res.ok) throw new Error("Fetch failed: " + res.status);
+                return res.json();
+            })
             .then(mission => {
                 if (!mission || !mission.id) {
-                    // Mission ended or resolved fully
-                    window.location.href = '/responder-history'; // or dashboard
+                    console.log("Mission ended. Redirecting...");
+                    window.location.href = '/responder'; // Go back to dashboard if mission cleared
                     return;
                 }
 

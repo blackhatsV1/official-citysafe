@@ -1151,27 +1151,6 @@ app.post('/api/responder/location', (req, res) => {
   }
 });
 
-app.get('/api/responders', (req, res) => {
-  // Query RESPONDERS table
-  const query = `
-    SELECT 
-      r.id, r.firstname, r.lastname, r.latitude, r.longitude, r.status, r.action, r.contact_number, r.station_id,
-      s.latitude as station_lat, s.longitude as station_lng, s.name as station_name,
-      (SELECT COUNT(*) FROM deploys d WHERE d.responder_id = r.id) as deploys_count
-    FROM responders r
-    LEFT JOIN stations s ON r.station_id = s.id
-    WHERE r.status != 'offline'
-  `;
-
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Database error' });
-    } else {
-      res.json(results);
-    }
-  });
-});
 
 app.get('/api/stations', (req, res) => {
   const query = 'SELECT * FROM stations';

@@ -18,38 +18,47 @@
         var radius = e.accuracy;
         var lat = e.latlng.lat;
         var lng = e.latlng.lng;
-        var coords = "Latitude: " + lat + ", " + "Longitude: " + lng;
+        // Format to 6 decimal places
+        var coords = "Latitude: " + lat.toFixed(6) + ", " + "Longitude: " + lng.toFixed(6);
 
         L.marker(e.latlng).addTo(map)
-            .bindPopup("You are within " + radius + " meters from this point").openPopup();
+            .bindPopup("You are within " + radius.toFixed(1) + " meters from this point").openPopup();
         L.circle(e.latlng, radius).addTo(map);
 
         document.getElementById("coords").textContent = coords;
 
-        // Try to update weather map, but don't let it block the address fetch
-        try {
-            if (typeof showMap === 'function') {
-                showMap({
-                    coords: {
-                        latitude: lat,
-                        longitude: lng
-                    }
-                });
-            }
-        } catch (err) {
-            console.error("Error updating weather map:", err);
+        if (typeof showMap === 'function') {
+            try {
+                showMap({ coords: { latitude: lat, longitude: lng } });
+            } catch (err) { console.error("Weather Map Error:", err); }
         }
 
-        // Fetch address (removed User-Agent header as it is forbidden in browser fetch)
         fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
             .then(res => res.json())
             .then(data => {
-                const address = data.display_name;
-                document.getElementById('address').innerHTML = `Location: <b>${address}</b> `;
+                if (data && data.address) {
+                    const addr = data.address;
+                    let poi = addr.amenity || addr.building || addr.office || addr.shop || addr.neighbourhood;
+                    let street = addr.road;
+                    let house = addr.house_number;
+
+                    let finalAddress = "";
+                    if (poi && street) {
+                        finalAddress = `${poi}, ${street}`;
+                    } else if (house && street) {
+                        finalAddress = `${house} ${street}`;
+                    } else {
+                        finalAddress = poi || street || data.display_name.split(',')[0] || "Unknown Location";
+                    }
+
+                    document.getElementById('address').innerHTML = `Location: <b>${finalAddress}</b>`;
+                } else {
+                    document.getElementById('address').innerHTML = `Location: <b>${data.display_name || "Unknown"}</b>`;
+                }
             })
             .catch(err => {
-                console.error("Failed to fetch address:", err);
-                document.getElementById('address').innerText = "Address found but could not be name-resolved.";
+                console.error("Address Error:", err);
+                document.getElementById('address').innerText = `Unmarked Area (${lat.toFixed(6)}, ${lng.toFixed(6)})`;
             });
     }
 

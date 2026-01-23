@@ -388,6 +388,7 @@
       });
 
       function addMarker(report) {
+          if (!report || !report.id || !report.latitude || !report.longitude) return; 
           if (currentMarkers[report.id]) return; 
 
           const marker = L.marker([report.latitude, report.longitude], {
@@ -506,7 +507,6 @@
             .then(res => res.json())
             .then(mission => {
                 if (mission && mission.id) {
-                    // Active mission detected, redirect immediately
                     console.log("New mission assigned! Redirecting...");
                     window.location.href = '/responding';
                 }
@@ -514,8 +514,13 @@
             .catch(err => console.error("Error checking mission:", err));
 
           fetch('/api/responder-reports')
-            .then(res => res.json())
+            .then(res => {
+                if(!res.ok) throw new Error("Fetch failed: " + res.status);
+                return res.json();
+            })
             .then(newReports => {
+                 if(!Array.isArray(newReports)) return;
+
                  const newIds = new Set(newReports.map(r => r.id));
 
                  // 1. Add New / Update
@@ -532,7 +537,7 @@
                  // 3. Update Table
                  updateNearbyTable(newReports);
             })
-            .catch(err => console.error(err));
+            .catch(err => console.error("[POLL ERROR]", err));
       }
 
       // Initial poll and then every 3 seconds
