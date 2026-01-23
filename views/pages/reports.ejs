@@ -33,15 +33,19 @@
                         <div class="col-12 mb-4">
                           <h4 class="bg-danger p-2 rounded-sm text-white">High Risk Users</h4>
                           <div class="table-responsive">
-                            <table class="table table-danger table-bordered">
+                            <table class="table table-hover table-premium">
                             <thead>
-                              <tr><th>Fullname</th><th>Risk Score</th><th>Assessed At</th></tr>
+                              <tr>
+                                <th class="text-danger">Fullname</th>
+                                <th class="text-danger">Risk Score</th>
+                                <th class="text-danger">Assessed At</th>
+                              </tr>
                             </thead>
                             <tbody>
                               <% riskTables['High'].forEach(user => { %>
                                 <tr>
                                   <td><%= user.username %></td>
-                                  <td><%= user.risk_score %></td>
+                                  <td><span class="text-danger fw-bold"><%= user.risk_score %></span></td>
                                   <td><%= user.assessed_at.toLocaleString() %></td>
                                 </tr>
                               <% }) %>
@@ -52,15 +56,19 @@
                         <div class="col-12 mb-4">
                           <h4 class="bg-warning p-2 rounded-sm text-dark">Moderate Risk Users</h4>
                           <div class="table-responsive">
-                            <table class="table table-warning table-bordered">
+                            <table class="table table-hover table-premium">
                             <thead>
-                              <tr><th>Fullname</th><th>Risk Score</th><th>Assessed At</th></tr>
+                              <tr>
+                                <th class="text-warning">Fullname</th>
+                                <th class="text-warning">Risk Score</th>
+                                <th class="text-warning">Assessed At</th>
+                              </tr>
                             </thead>
                             <tbody>
                               <% riskTables['Moderate'].forEach(user => { %>
                                 <tr>
                                   <td><%= user.username %></td>
-                                  <td><%= user.risk_score %></td>
+                                  <td><span class="text-warning fw-bold"><%= user.risk_score %></span></td>
                                   <td><%= user.assessed_at.toLocaleString() %></td>
                                 </tr>
                               <% }) %>
@@ -71,15 +79,19 @@
                         <div class="col-12 mb-4">
                           <h4 class="bg-success p-2 rounded-sm text-white">Low Risk Users</h4>
                           <div class="table-responsive">
-                            <table class="table table-success table-bordered">
+                            <table class="table table-hover table-premium">
                             <thead>
-                              <tr><th>Fullname</th><th>Risk Score</th><th>Assessed At</th></tr>
+                              <tr>
+                                <th class="text-success">Fullname</th>
+                                <th class="text-success">Risk Score</th>
+                                <th class="text-success">Assessed At</th>
+                              </tr>
                             </thead>
                             <tbody>
                               <% riskTables['Low'].forEach(user => { %>
                                 <tr>
                                   <td><%= user.username %></td>
-                                  <td><%= user.risk_score %></td>
+                                  <td><span class="text-success fw-bold"><%= user.risk_score %></span></td>
                                   <td><%= user.assessed_at.toLocaleString() %></td>
                                 </tr>
                               <% }) %>
@@ -126,11 +138,8 @@
                       <script>
                         // Wait for jQuery or DOM Content
                         document.addEventListener("DOMContentLoaded", function() {
-                           // Chart Global Color
-                           Chart.defaults.color = "#ffffff";
-                           Chart.defaults.borderColor = "rgba(255,255,255,0.1)";
-                           Chart.defaults.font.family = "'Roboto', 'Open Sans', sans-serif";
-                           Chart.defaults.font.size = 14;
+                           // Chart Global Defaults are handled by chart-theme.js
+
 
                            // --- Checklist Chart ---
                            var ctxCheck = document.getElementById("checklistChart").getContext("2d");
@@ -141,7 +150,7 @@
                                    datasets: [{
                                        label: "Completed",
                                        data: [<%= checklistData.near_river %>, <%= checklistData.near_fault %>, <%= checklistData.has_emergency_kit %>, <%= checklistData.has_evacuation_plan %>],
-                                       backgroundColor: "rgba(235, 22, 22, .7)"
+                                       backgroundColor: "rgba(56, 206, 60, 0.7)"
                                    }]
                                },
                                options: { responsive: true, plugins: { legend: { display: false } } }
@@ -156,7 +165,7 @@
                                    datasets: [{
                                        label: "Posts",
                                        data: [ <% chartData.forEach(function(item, index) { %> <%= item.total %><% if (index < chartData.length-1) { %>, <% } %> <% }); %> ],
-                                       backgroundColor: "rgba(235, 22, 22, .7)"
+                                       backgroundColor: "rgba(56, 206, 60, 0.7)"
                                    }]
                                },
                                options: { responsive: true, plugins: { legend: { display: false } } }
@@ -171,10 +180,10 @@
                                    datasets: [{
                                        data: [ <% riskLevelData.forEach(function(item, index) { %> <%= item.total %><% if (index < riskLevelData.length-1) { %>, <% } %> <% }); %> ],
                                        backgroundColor: [
-                                           "rgba(235, 22, 22, .7)",
-                                           "rgba(235, 22, 22, .6)",
-                                           "rgba(235, 22, 22, .5)",
-                                           "rgba(235, 22, 22, .4)"
+                                           "rgba(56, 206, 60, 0.9)",
+                                           "rgba(56, 206, 60, 0.7)",
+                                           "rgba(56, 206, 60, 0.5)",
+                                           "rgba(56, 206, 60, 0.3)"
                                        ],
                                        borderWidth: 0
                                    }]
@@ -191,11 +200,11 @@
                                    datasets: [{
                                        label: "Avg Risk Score",
                                        data: [ <% trendData.forEach(function(item, index) { %> <%= item.avg_score %><% if (index < trendData.length-1) { %>, <% } %> <% }); %> ],
-                                       borderColor: "rgba(235, 22, 22, .7)",
-                                       backgroundColor: "rgba(235, 22, 22, .3)",
+                                       borderColor: "rgba(56, 206, 60, 1)",
+                                       backgroundColor: "rgba(56, 206, 60, 0.2)",
                                        tension: 0.4,
                                        fill: true,
-                                       pointBackgroundColor: "rgba(235, 22, 22, .9)",
+                                       pointBackgroundColor: "rgba(56, 206, 60, 1)",
                                        pointRadius: 4
                                    }]
                                },
@@ -218,8 +227,8 @@
                                        label: "Users",
                                        data: [<%= hazardsData.near_river %>, <%= hazardsData.near_fault %>],
                                        backgroundColor: [
-                                           "rgba(235, 22, 22, .7)",
-                                           "rgba(235, 22, 22, .5)"
+                                           "rgba(56, 206, 60, 0.7)",
+                                           "rgba(56, 206, 60, 0.5)"
                                        ]
                                    }]
                                },
@@ -245,7 +254,7 @@
   </div>
 
   <script src="/js/script.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Chart.js moved to head -->
 
 </body>
 
