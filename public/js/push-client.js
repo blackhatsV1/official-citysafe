@@ -1,142 +1,174 @@
-// ===============================
-// Service Worker Registration
-// ===============================
+
 async function registerServiceWorker() {
-    if (!('serviceWorker' in navigator)) {
-        throw new Error('Service Workers not supported');
+    if ('serviceWorker' in navigator) {
+        try {
+            const register = await navigator.serviceWorker.register('/sw.js', {
+                scope: '/'
+            });
+            console.log('Service Worker Registered');
+
+            // Wait for service worker to be ready
+            await navigator.serviceWorker.ready;
+
+            return register;
+        } catch (err) {
+            console.error('Service Worker Failed:', err);
+        }
+    } else {
+        console.warn('Service Workers not supported in this browser');
     }
-
-    await navigator.serviceWorker.register('/sw.js', { scope: '/' });
-    console.log('[Push] Service Worker registered');
-
-    return navigator.serviceWorker.ready;
 }
 
-// ===============================
-// Subscribe User
-// ===============================
-async function subscribeUser(registration) {
-    // Security check
+async function subscribeUser() {
+    // 1. Check Security (Required for notifications)
     if (!window.isSecureContext) {
         Swal.fire({
             icon: 'error',
             title: 'Insecure Connection',
-            text: 'Notifications require HTTPS or localhost.'
+            text: 'Notifications require HTTPS or localhost. You are likely strictly blocked by the browser.'
         });
-        throw new Error('Insecure context');
+        throw new Error('Push notifications require a secure context (HTTPS or localhost).');
     }
 
-    // Permission checks
+    // 2. Immediate Permission Request
     if (Notification.permission === 'denied') {
         Swal.fire({
             icon: 'warning',
             title: 'Notifications Blocked',
-            html: 'Click the <b>lock icon</b> 🔒 in the address bar to reset permissions.'
+            html: 'You have blocked notifications.<br>Click the <b>Lock Icon</b> 🔒 in the URL bar to Reset Permissions.',
+            confirmButtonText: 'Got it'
         });
-        throw new Error('Notifications blocked');
+        throw new Error('Notifications are currently blocked.');
     }
 
-    if (Notification.permission !== 'granted') {
-        const permission = await Notification.requestPermission();
-        if (permission !== 'granted') {
-            throw new Error('Notification permission not granted');
-        }
-    }
-
-    if (!('PushManager' in window)) {
-        throw new Error('Push messaging not supported');
-    }
-
-    // Fetch VAPID public key
-    const res = await fetch('/api/vapid-public-key');
-    if (!res.ok) throw new Error('Failed to fetch VAPID key');
-
-    const { publicKey } = await res.json();
-    if (!publicKey) throw new Error('Missing VAPID public key');
-
-    const applicationServerKey = urlBase64ToUint8Array(publicKey);
-
-    // Get existing subscription (IMPORTANT)
-    let subscription = await registration.pushManager.getSubscription();
-
-    if (!subscription) {
-        subscription = await registration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') {
+        Swal.fire({
+            icon: 'info',
+            title: 'Permission Needed',
+            text: 'We need your permission to send weather alerts. Please click "Allow" on the browser prompt.',
+            confirmButtonText: 'Try Again'
         });
-        console.log('[Push] New subscription created');
-    } else {
-        console.log('[Push] Existing subscription found');
+        throw new Error('Notification permission was not granted.');
     }
 
-    // Send subscription to backend
-    await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(subscription)
-    });
+    // 3. Technical Checks & Setup
+    if (!('serviceWorker' in navigator)) throw new Error('Service Workers not supported.');
+    if (!('PushManager' in window)) throw new Error('Push messaging not supported.');
 
-    Swal.fire({
-        icon: 'success',
-        title: 'Subscribed!',
-        text: 'You will now receive notifications.',
-        timer: 2000,
-        showConfirmButton: false
-    });
-}
+    // Register Service Worker
+    const registration = await registerServiceWorker();
+    if (!registration) throw new Error('Service Worker registration failed.');
 
-// ===============================
-// Utils
-// ===============================
-function urlBase64ToUint8Array(base64String) {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
-        .replace(/-/g, '+')
-        .replace(/_/g, '/');
+    // Fetch Public Key
+    console.log('Fetching VAPID key...');
+    const response = await fetch('/api/vapid-public-key');
+    if (!response.ok) throw new Error('Failed to fetch public key from server.');
 
-    const rawData = atob(base64);
-    return Uint8Array.from([...rawData].map(char => char.charCodeAt(0)));
-}
+    const data = await response.json();
+    const publicKey = data.publicKey;
 
-// ===============================
-// Button Visibility
-// ===============================
-async function updateSubscriptionBtn(registration) {
-    const btn = document.getElementById('enableNotifications');
-    if (!btn) return;
+    if (!publicKey) throw new Error('Server returned no public key. Check .env configuration.');
 
-    const subscription = await registration.pushManager.getSubscription();
-    btn.style.display = subscription ? 'none' : 'block';
-}
+    // Convert Key
+    const convertedVapidKey = urlBase64ToUint8Array(publicKey);
 
-// ===============================
-// Init
-// ===============================
-document.addEventListener('DOMContentLoaded', async () => {
+    // Subscribe
+    console.log('Subscribing to Push Manager...');
     try {
-        console.log('[Push] Client loaded');
+        const subscription = await registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: convertedVapidKey
+        });
 
-        const registration = await registerServiceWorker();
-        await updateSubscriptionBtn(registration);
+        console.log('Push Registered:', subscription);
 
-        const btn = document.getElementById('enableNotifications');
-        if (!btn) return;
-
-        btn.addEventListener('click', async () => {
-            try {
-                await subscribeUser(registration);
-                await updateSubscriptionBtn(registration);
-            } catch (err) {
-                console.error(err);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Subscription Failed',
-                    text: err.message || 'Could not subscribe to notifications.'
-                });
+        // Send Subscription to Server
+        await fetch('/api/subscribe', {
+            method: 'POST',
+            body: JSON.stringify(subscription),
+            headers: {
+                'content-type': 'application/json'
             }
         });
 
+        Swal.fire({
+            icon: 'success',
+            title: 'Subscribed!',
+            text: 'You will now receive weather notifications.',
+            timer: 2000,
+            showConfirmButton: false
+        });
+
     } catch (err) {
-        console.error('[Push] Initialization failed:', err);
+        console.error('Failed to subscribe:', err);
+        throw new Error('Failed to subscribe to Push Manager: ' + err.message);
+    }
+}
+
+function urlBase64ToUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding)
+        .replace(/\-/g, '+')
+        .replace(/_/g, '/');
+
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+
+    for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+}
+
+// Button Logic
+function updateSubscriptionBtn() {
+    const btn = document.getElementById('enableNotifications');
+    if (!btn) {
+        console.warn('Enable Notifications button not found in DOM');
+        return;
+    }
+
+    if (Notification.permission === 'granted') {
+        btn.style.display = 'none'; // Hide if already granted
+        console.log('Notification permission granted, hiding button');
+    } else {
+        btn.style.display = 'block'; // Show if default or denied
+        console.log('Notification permission not granted, showing button');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Push Client Loaded');
+
+    // [PWA FIX] Register Service Worker immediately to enable "Add to Home Screen"
+    registerServiceWorker().catch(err => console.error("SW Registration failed:", err));
+
+    updateSubscriptionBtn();
+
+    const btn = document.getElementById('enableNotifications');
+    if (btn) {
+        console.log('Button found, attaching listener');
+        btn.addEventListener('click', async () => {
+            console.log('Button clicked');
+            // Request permission and subscribe
+            try {
+                // Ensure SW is ready (idempotent check)
+                if (!('serviceWorker' in navigator)) throw new Error('Service Workers not supported.');
+                const registration = await navigator.serviceWorker.ready; // Wait for the one we registered on load
+
+                await subscribeUser(registration); // Pass registration or let it refetch
+                updateSubscriptionBtn();
+            } catch (error) {
+                console.error('Subscription error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Subscription Failed',
+                    text: error.message || 'Could not subscribe to notifications.'
+                });
+            }
+        });
+    } else {
+        // console.warn('Enable Notifications button MISSING on load (might be granted already)');
     }
 });
