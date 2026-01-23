@@ -64,9 +64,13 @@ self.addEventListener('fetch', event => {
 
 
 self.addEventListener('push', function (event) {
+    console.log('[SW] Push Received');
     let data = {};
     if (event.data) {
         data = event.data.json();
+        console.log('[SW] Push Data:', data);
+    } else {
+        console.log('[SW] Push received but no data');
     }
 
     const options = {
@@ -86,17 +90,22 @@ self.addEventListener('push', function (event) {
 
 self.addEventListener('notificationclick', function (event) {
     event.notification.close();
+
+    // Resolve relative URLs to absolute for matching
+    const targetUrl = new URL(event.notification.data.url, self.location.origin).href;
+
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
             // Focus if already open
             for (let i = 0; i < clientList.length; i++) {
                 let client = clientList[i];
-                if (client.url === event.notification.data.url && 'focus' in client)
+                // Check if current URL matches or matches normalized target
+                if (client.url === targetUrl && 'focus' in client)
                     return client.focus();
             }
-            // Open new if not
+            // Open new if not found open
             if (clients.openWindow)
-                return clients.openWindow(event.notification.data.url);
+                return clients.openWindow(targetUrl);
         })
     );
 });

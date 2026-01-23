@@ -84,13 +84,22 @@ async function subscribeUser() {
         console.log('Push Registered:', subscription);
 
         // Send Subscription to Server
-        await fetch('/api/subscribe', {
+        const response = await fetch('/api/subscribe', {
             method: 'POST',
             body: JSON.stringify(subscription),
             headers: {
                 'content-type': 'application/json'
             }
         });
+
+        if (!response.ok) {
+            if (response.status === 401) {
+                // Specific handling for Unauthorized
+                throw new Error('You must be logged in to subscribe.');
+            } else {
+                throw new Error(`Server error: ${response.statusText}`);
+            }
+        }
 
         Swal.fire({
             icon: 'success',
@@ -102,7 +111,22 @@ async function subscribeUser() {
 
     } catch (err) {
         console.error('Failed to subscribe:', err);
-        throw new Error('Failed to subscribe to Push Manager: ' + err.message);
+
+        // Improve error message for user
+        let msg = 'Failed to subscribe to Push Manager.';
+        if (err.message.includes('logged in')) {
+            msg = err.message;
+            // Optional: Redirect to login
+            setTimeout(() => window.location.href = '/login', 2000);
+        }
+
+        Swal.fire({
+            icon: 'error',
+            title: 'Subscription Failed',
+            text: msg
+        });
+
+        throw new Error(msg); // Re-throw to stop chain
     }
 }
 

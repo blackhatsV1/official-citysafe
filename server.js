@@ -1239,13 +1239,33 @@ app.post('/api/deploy', (req, res) => {
                           };
                           const payload = {
                             title: 'DEPLOYMENT ALERT',
-                            body: 'You have been deployed to a mission. Check your app immediately.',
+                            body: `You have been deployed to a ${type || 'mission'}. Check your app immediately.`,
                             url: '/responding'
                           };
                           sendNotificationObj(subscription, payload);
                         });
                       }
                     });
+
+                    // [NOTIFICATION] Notify the Reporter (User)
+                    if (reporterId) {
+                      db.query("SELECT * FROM push_subscriptions WHERE user_id = ?", [reporterId], (err, subs) => {
+                        if (!err && subs.length > 0) {
+                          subs.forEach(sub => {
+                            const subscription = {
+                              endpoint: sub.endpoint,
+                              keys: { p256dh: sub.keys_p256dh, auth: sub.keys_auth }
+                            };
+                            const payload = {
+                              title: 'Help is on the way!',
+                              body: `A responder has been assigned and is heading to your location.`,
+                              url: '/my-reports'
+                            };
+                            sendNotificationObj(subscription, payload);
+                          });
+                        }
+                      });
+                    }
 
                     res.json({ success: true, message: 'Deployed successfully' });
                   });
@@ -1349,6 +1369,27 @@ app.post('/api/respond', (req, res) => {
                       return connection.rollback(() => { connection.release(); res.json({ success: false, message: err.message }); });
                     }
                     connection.release();
+
+                    // [NOTIFICATION] Notify the Reporter (User)
+                    if (reporterId) {
+                      db.query("SELECT * FROM push_subscriptions WHERE user_id = ?", [reporterId], (err, subs) => {
+                        if (!err && subs.length > 0) {
+                          subs.forEach(sub => {
+                            const subscription = {
+                              endpoint: sub.endpoint,
+                              keys: { p256dh: sub.keys_p256dh, auth: sub.keys_auth }
+                            };
+                            const payload = {
+                              title: 'Responder Assigned!',
+                              body: `A nearby responder has claimed your SOS and is coming to help.`,
+                              url: '/my-reports'
+                            };
+                            sendNotificationObj(subscription, payload);
+                          });
+                        }
+                      });
+                    }
+
                     res.json({ success: true, message: 'You are now responding to this SOS.' });
                   });
                 });
