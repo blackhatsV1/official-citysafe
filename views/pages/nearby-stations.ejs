@@ -21,13 +21,14 @@
 
             /* Dark Theme for Routing Machine */
             .leaflet-routing-container {
-                background-color: var(--glass-heavy) !important;
-                backdrop-filter: blur(10px);
-                color: var(--text-primary) !important;
-                border: 1px solid var(--border) !important;
-                border-radius: 8px !important;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.5) !important;
-                font-family: 'Open Sans', sans-serif !important;
+                background-color: #0f172a !important; /* Solid dark background */
+                color: #ffffff !important;
+                border: 2px solid var(--primary) !important;
+                border-radius: 12px !important;
+                box-shadow: 0 10px 40px rgba(0,0,0,0.8) !important;
+                font-family: 'Outfit', sans-serif !important;
+                padding: 15px !important;
+                opacity: 1 !important;
             }
             .leaflet-routing-container h2 {
                 font-size: 16px;
@@ -41,6 +42,10 @@
             .leaflet-routing-alt {
                 max-height: 300px;
                 overflow-y: auto;
+                color: #ffffff !important;
+            }
+            .leaflet-routing-alt *, .leaflet-routing-alt table, .leaflet-routing-alt td {
+                color: #ffffff !important;
             }
             .leaflet-routing-alt table {
                  margin-top: 10px;

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'citysafe-v2';
+const CACHE_NAME = 'citysafe-v3';
 const STATIC_ASSETS = [
     '/',
     '/login',
@@ -40,27 +40,26 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-    // Strategy: Network First for HTML, Cache First for Assets
-    if (event.request.mode === 'navigate') {
-        event.respondWith(
-            fetch(event.request)
-                .catch(() => {
-                    return caches.match(event.request)
-                        .then(response => {
-                            if (response) return response;
-                            // Optional: Return a generic "offline.html" here if caching '/' fails
+    // Strategy: Network First for EVERYTHING to ensure style persistence
+    // We only fallback to cache if the network fails (offline)
+    event.respondWith(
+        fetch(event.request)
+            .then(response => {
+                // If network works, return it
+                return response;
+            })
+            .catch(() => {
+                // If offline, try cache
+                return caches.match(event.request)
+                    .then(cachedResponse => {
+                        if (cachedResponse) return cachedResponse;
+                        // Ultimate fallback for navigation
+                        if (event.request.mode === 'navigate') {
                             return caches.match('/');
-                        });
-                })
-        );
-    } else {
-        event.respondWith(
-            caches.match(event.request)
-                .then(response => {
-                    return response || fetch(event.request);
-                })
-        );
-    }
+                        }
+                    });
+            })
+    );
 });
 
 

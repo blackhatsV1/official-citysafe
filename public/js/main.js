@@ -40,28 +40,58 @@
         }
     });
 
+    // Global toggle for legacy/visitor patterns
+    window.toggleSidebar = function () {
+        if ($(window).width() < 992) {
+            $('.sidebar').toggleClass("open");
+            $('.sidebar-backdrop').toggleClass("show");
+            // Also handle visitor legacy side-nav if present
+            $('.side-nav').toggleClass("active");
+            $('.overlay').toggleClass("active");
+        } else {
+            $('.sidebar, .content').toggleClass("collapsed");
+        }
+    };
+
     // Handle Resize to clean up classes
     $(window).on('resize', function () {
         if ($(window).width() >= 992) {
             $('.sidebar').removeClass("open");
             $('.sidebar-backdrop').removeClass("show");
-        } else {
-            $('.sidebar, .content').removeClass("collapsed");
+            $('.side-nav').removeClass("active");
+            $('.overlay').removeClass("active");
         }
     });
 
-    // Sidebar Close on Click Outside or Backdrop (Mobile)
-    $(document).on('click', '.sidebar-backdrop', function (e) {
-        $('.sidebar').removeClass("open");
-        $('.sidebar-backdrop').removeClass("show");
-    });
+    // Universal Outside Click / Backdrop Click
+    $(document).on('click touchstart', function (e) {
+        // If clicking backdrop or overlay
+        if ($(e.target).closest('.sidebar-backdrop, .overlay').length) {
+            $('.sidebar').removeClass("open");
+            $('.sidebar-backdrop').removeClass("show");
+            $('.side-nav').removeClass("active");
+            $('.overlay').removeClass("active");
+            return;
+        }
 
-    $(document).on('click', function (e) {
+        // Mobile outside click logic
         if ($(window).width() < 992) {
-            if ($('.sidebar').hasClass('open')) {
-                if (!$(e.target).closest('.sidebar').length && !$(e.target).closest('.sidebar-toggler').length) {
-                    $('.sidebar').removeClass("open");
-                    $('.sidebar-backdrop').removeClass("show");
+            const $sidebar = $('.sidebar, .side-nav');
+            const $toggler = $('.sidebar-toggler, .hamburger, .navbar-toggler');
+
+            if ($sidebar.hasClass('open') || $sidebar.hasClass('active')) {
+                // Close if clicking outside sidebar AND toggler
+                // OR if clicking on a map (Leaflet often eats regular clicks)
+                if ((!$(e.target).closest($sidebar).length && !$(e.target).closest($toggler).length) ||
+                    $(e.target).closest('.leaflet-container, #map, .content, main').length) {
+
+                    // Small delay to ensure click events inside sidebar finish first
+                    setTimeout(function () {
+                        $('.sidebar').removeClass("open");
+                        $('.sidebar-backdrop').removeClass("show");
+                        $('.side-nav').removeClass("active");
+                        $('.overlay').removeClass("active");
+                    }, 50);
                 }
             }
         }
