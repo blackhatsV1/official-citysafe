@@ -467,10 +467,12 @@ a:hover {
 
 @media (max-width: 991.98px) {
     .sidebar {
-        left: 0 !important;
+        left: -280px !important;
+        /* Move off-canvas */
         top: 0 !important;
         height: 100vh !important;
-        width: 80px;
+        width: 260px !important;
+        /* Set standard width for when it slides in */
         background: var(--glass-heavy) !important;
         backdrop-filter: blur(20px) !important;
         border-right: 1px solid var(--border) !important;
@@ -487,7 +489,7 @@ a:hover {
         padding: 0 !important;
     }
 
-    /* Force Floating Icon Pods in Minimized Mobile State */
+    /* Sidebar Internal Elements */
     .sidebar .navbar-brand h3,
     .sidebar .navbar-nav .nav-link span,
     .sidebar .dropdown-toggle::after,
@@ -539,6 +541,7 @@ a:hover {
         background: var(--glass-heavy) !important;
         backdrop-filter: blur(25px) !important;
         border-radius: 0 24px 24px 0 !important;
+        /* Rounded only on right side */
         border-right: 1px solid var(--border) !important;
         box-shadow: var(--shadow);
     }
