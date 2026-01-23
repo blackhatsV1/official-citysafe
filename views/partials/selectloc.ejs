@@ -22,8 +22,6 @@
         attribution: '© OpenStreetMap'
     }).addTo(map);
 
-
-
     // Create a custom control for the refresh button
     var refreshControl = L.Control.extend({
         options: {
@@ -44,23 +42,40 @@
     map.addControl(new refreshControl());
 
     let watchId = null;
+    let timeoutHandle = null;
+    let isLocked = false;
+    const TARGET_ACCURACY = 15; // meters
+    const TIMEOUT_MS = 20000; // 20 seconds
 
     function refreshLocation() {
+        // Reset state
         if (watchId) navigator.geolocation.clearWatch(watchId);
+        if (timeoutHandle) clearTimeout(timeoutHandle);
+        isLocked = false;
+        
         document.getElementById('address').innerHTML = `<i>Initializing GPS...</i>`;
         document.getElementById('coords').innerHTML = `<span class="text-muted">Wait for fix...</span>`;
-        // Clear hidden inputs to prevent bad submission
+        
+        // Clear hidden inputs
         if(document.getElementById("location")) document.getElementById("location").value = "";
         if(document.getElementById("lat")) document.getElementById("lat").value = "";
         if(document.getElementById("lon")) document.getElementById("lon").value = "";
         
+        // Start Timeout
+        timeoutHandle = setTimeout(() => {
+            if(!isLocked) {
+                console.log("GPS Timeout - locking on current best.");
+                lockLocation(true); // Force lock due to timeout
+            }
+        }, TIMEOUT_MS);
+
         if (navigator.geolocation) {
              watchId = navigator.geolocation.watchPosition(
                 onLocationFound, 
                 onLocationError, 
                 { 
                     enableHighAccuracy: true, 
-                    timeout: 30000, 
+                    timeout: 20000, 
                     maximumAge: 0 
                 }
             );
@@ -70,12 +85,13 @@
     }
 
     function onLocationFound(pos) {
+        if(isLocked) return; // Ignore updates if locked
+
         var radius = pos.coords.accuracy;
         var lat = pos.coords.latitude;
         var lng = pos.coords.longitude;
         var coords = "Latitude: " + lat.toFixed(6) + ", " + "Longitude: " + lng.toFixed(6);
         
-        // Time
         var now = new Date();
         var timeString = now.toLocaleTimeString();
 
@@ -93,17 +109,35 @@
             .bindPopup("You are within " + radius.toFixed(1) + " meters from this point").openPopup();
         L.circle(latlng, radius).addTo(map);
 
-        map.setView(latlng, 16); // Follow user
+        map.setView(latlng, 16); 
 
+        // Update UI
         document.getElementById("coords").innerHTML = `${coords} <br><small class='text-muted'>(Accuracy: ±${radius.toFixed(1)}m) - Last Update: ${timeString}</small>`;
         document.getElementById('address').innerHTML = `<i>Refining address...</i>`;
         
+        // Update inputs immediately so something is always there
+        if(document.getElementById("lat")) document.getElementById("lat").value = lat;
+        if(document.getElementById("lon")) document.getElementById("lon").value = lng;
+
         // Fetch Address
-        fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+        fetchAddress(lat, lng, (addr) => {
+             // Logic to check if we should lock
+             if (radius <= TARGET_ACCURACY) {
+                 lockLocation(false, "Accuracy Optimized");
+             }
+        });
+    }
+
+    function fetchAddress(lat, lng, callback) {
+         fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
             .then(res => res.json())
             .then(data => {
                 const address = data.display_name;
-                updateAddressUI(address, lat, lng);
+                updateAddressUI(address);
+                if(callback) callback(address);
+                
+                // Also update inputs here to ensure address is synced
+                if(document.getElementById("location")) document.getElementById("location").value = address;
             })
             .catch(err => {
                 console.error("Failed to fetch address:", err);
@@ -111,37 +145,42 @@
             });
     }
 
-    function updateAddressUI(address, lat, lng) {
-        // Optimize address display (Shorten if too long)
-        // Split by comma, take first 3 parts if too long
+    function lockLocation(isTimeout, reason) {
+        if(isLocked) return;
+        isLocked = true;
+        
+        if (watchId) navigator.geolocation.clearWatch(watchId);
+        if (timeoutHandle) clearTimeout(timeoutHandle);
+        watchId = null; 
+        timeoutHandle = null;
+
+        const reasonText = isTimeout ? "Timeout (Best Available)" : (reason || "Location Locked");
+        const statusEl = document.getElementById('coords');
+        if(statusEl) {
+            statusEl.innerHTML += `<br><strong class='text-success'><i class='fa fa-check-circle'></i> ${reasonText}</strong>`;
+        }
+        console.log("Location locked:", reasonText);
+    }
+
+    function updateAddressUI(address) {
         let shortAddress = address; 
         const parts = address.split(',');
         if (parts.length > 5) {
              shortAddress = parts.slice(0, 4).join(',') + '...';
         }
-
         document.getElementById('address').innerHTML = `<b>${shortAddress}</b>`;
-        // Keep full address in hidden input
-        const locInput = document.getElementById("location");
-        if(locInput) locInput.value = address; // Always update the input
-        
-        if(document.getElementById("lat")) document.getElementById("lat").value = lat;
-        if(document.getElementById("lon")) document.getElementById("lon").value = lng;
     }
-
 
     function onLocationError(err) {
         console.warn("Geolocation Error:", err.message);
+        // Don't lock on error, let it retry or let user click retry
         let msg = "Unable to retrieve location.";
-        if (err.code === 1) msg = "Location permission denied. Please enable location in browser settings.";
+        if (err.code === 1) msg = "Loc. permission denied.";
         else if (err.code === 2) msg = "Location unavailable.";
         else if (err.code === 3) msg = "Location request timed out.";
         
         document.getElementById('address').innerHTML = `<span class="text-danger">${msg}</span> <button class='btn btn-sm btn-outline-primary ms-2' onclick='refreshLocation()'>Retry</button>`;
     }
-
-    // map.on('locationfound', onLocationFound); // Removed Leaflet locate event
-    // map.on('locationerror', onLocationError);
 
     // Initial Locate
     refreshLocation();
