@@ -1,4 +1,3 @@
-const publicVapidKey = 'REPLACE_WITH_PUBLIC_KEY'; // Will be fetched from server
 
 async function registerServiceWorker() {
     if ('serviceWorker' in navigator) {
@@ -141,6 +140,10 @@ function updateSubscriptionBtn() {
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Push Client Loaded');
+
+    // [PWA FIX] Register Service Worker immediately to enable "Add to Home Screen"
+    registerServiceWorker().catch(err => console.error("SW Registration failed:", err));
+
     updateSubscriptionBtn();
 
     const btn = document.getElementById('enableNotifications');
@@ -150,7 +153,11 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('Button clicked');
             // Request permission and subscribe
             try {
-                await subscribeUser();
+                // Ensure SW is ready (idempotent check)
+                if (!('serviceWorker' in navigator)) throw new Error('Service Workers not supported.');
+                const registration = await navigator.serviceWorker.ready; // Wait for the one we registered on load
+
+                await subscribeUser(registration); // Pass registration or let it refetch
                 updateSubscriptionBtn();
             } catch (error) {
                 console.error('Subscription error:', error);
@@ -162,6 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     } else {
-        console.error('Enable Notifications button MISSING on load');
+        // console.warn('Enable Notifications button MISSING on load (might be granted already)');
     }
 });
