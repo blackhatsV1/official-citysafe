@@ -8,20 +8,35 @@
         </div>
 
         <div class="d-flex align-items-center gap-3">
+            <!-- Notification Toggle -->
+            <button id="enableNotifications" class="btn btn-sm btn-outline-success d-none border-0 px-2"
+                title="Enable Notifications">
+                <i class="bi bi-bell-fill"></i>
+                <span class="d-none d-lg-inline ms-1 small fw-bold">Alerts</span>
+            </button>
+
             <a href="/survival-tips" class="nav-link d-none d-md-block small fw-bold text-uppercase">Resources</a>
 
             <div class="dropdown">
-                <a class="d-flex align-items-center gap-2 dropdown-toggle text-decoration-none" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width:32px;height:32px;border:1px solid #e9ecef;">
+                <a class="d-flex align-items-center gap-2 dropdown-toggle text-decoration-none" href="#" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center"
+                        style="width:32px;height:32px;border:1px solid #e9ecef;">
                         <i class="fa fa-user text-muted small"></i>
                     </div>
-                    <span class="text-primary fw-semibold small d-none d-sm-block"><%= username %></span>
+                    <span class="text-primary fw-semibold small d-none d-sm-block">
+                        <%= username %>
+                    </span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end shadow">
                     <li><a class="dropdown-item" href="/editaccount"><i class="fa fa-cog me-2"></i>Settings</a></li>
-                    <li><a class="dropdown-item" href="/help-user"><i class="fa fa-question-circle me-2"></i>Support</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item text-danger" href="/logout"><i class="fa fa-sign-out-alt me-2"></i>Sign out</a></li>
+                    <li><a class="dropdown-item" href="/help-user"><i class="fa fa-question-circle me-2"></i>Support</a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item text-danger" href="/logout"><i class="fa fa-sign-out-alt me-2"></i>Sign
+                            out</a></li>
                 </ul>
             </div>
         </div>

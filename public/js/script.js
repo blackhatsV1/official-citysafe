@@ -1,19 +1,4 @@
-//=============permission==========
-const enableNotificationsBtn = document.getElementById("enableNotifications");
-if (enableNotificationsBtn) {
-  enableNotificationsBtn.addEventListener("click", () => {
-    if ("Notification" in window && Notification.permission === "default") {
-      Notification.requestPermission().then(permission => {
-        console.log("Notification permission:", permission);
-      });
-    }
-  });
-}
-if ("Notification" in window && Notification.permission === "default") {
-  Notification.requestPermission().then(permission => {
-    console.log("Notification permission:", permission);
-  });
-}
+// Notification logic moved to push-client.js for PWA/iOS support
 
 // Only auto-run geolocation if not explicitly skipped (e.g., on visitor page)
 if (!window.skipAutoLocation) {
@@ -217,21 +202,6 @@ document.addEventListener("click", () => {
   //   alert('Weather alerts enabled!');
   soundEnabled = true;
 });
-
-function showWeatherNotification(title, body, withSound = false) {
-  if ("Notification" in window && Notification.permission === "granted") {
-    const options = {
-      body: body,
-      silent: !withSound
-    };
-    new Notification(title, options);
-
-    if (withSound && soundEnabled) {
-      const audio = new Audio("/sounds/alert-33762.mp3");
-      audio.play();
-    }
-  }
-}
 
 
 

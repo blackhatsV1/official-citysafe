@@ -65,23 +65,35 @@ self.addEventListener('fetch', event => {
 
 
 self.addEventListener('push', function (event) {
-    let data = {};
+    let data = {
+        title: 'CitySafe Alert',
+        body: 'New emergency notification received.',
+        url: '/'
+    };
+
     if (event.data) {
-        data = event.data.json();
+        try {
+            const json = event.data.json();
+            data = { ...data, ...json };
+        } catch (e) {
+            data.body = event.data.text() || data.body;
+        }
     }
 
     const options = {
-        body: data.body || 'New Notification',
+        body: data.body,
         icon: '/images/shield.png',
         badge: '/images/shield.png',
-        vibrate: [100, 50, 100],
+        vibrate: [200, 100, 200],
+        tag: 'citysafe-alert-' + Date.now(),
+        renotify: true,
         data: {
-            url: data.url || '/'
+            url: data.url
         }
     };
 
     event.waitUntil(
-        self.registration.showNotification(data.title || 'CitySafe Alert', options)
+        self.registration.showNotification(data.title, options)
     );
 });
 

@@ -1,4 +1,15 @@
-const publicVapidKey = 'REPLACE_WITH_PUBLIC_KEY'; // Will be fetched from server
+// push-client.js - Enhanced Cross-Platform Notification Client
+const publicVapidKey = 'REPLACE_WITH_PUBLIC_KEY'; // Fetched dynamically
+
+/**
+ * Detects if the app is running on iOS
+ */
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+/**
+ * Detects if the app is running in Standalone mode (added to home screen)
+ */
+const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
 
 async function registerServiceWorker() {
     if ('serviceWorker' in navigator) {
@@ -7,10 +18,7 @@ async function registerServiceWorker() {
                 scope: '/'
             });
             console.log('Service Worker Registered');
-
-            // Wait for service worker to be ready
             await navigator.serviceWorker.ready;
-
             return register;
         } catch (err) {
             console.error('Service Worker Failed:', err);
@@ -21,134 +29,121 @@ async function registerServiceWorker() {
 }
 
 async function subscribeUser() {
-    // 1. Check Security (Required for notifications)
-    if (!window.isSecureContext) {
+    // 1. iOS Specific Guard
+    if (isIOS && !isStandalone) {
         Swal.fire({
-            icon: 'error',
-            title: 'Insecure Connection',
-            text: 'Notifications require HTTPS or localhost. You are likely strictly blocked by the browser.'
+            icon: 'info',
+            title: 'Action Required for iOS',
+            html: `To receive emergency alerts on iPhone/iPad:<br><br>
+                   1. Tap the <b>Share</b> button <i class="bi bi-share"></i> at the bottom.<br>
+                   2. Scroll down and tap <b>'Add to Home Screen'</b>.<br>
+                   3. Open <b>CitySafe</b> from your home screen to enable notifications.`,
+            confirmButtonText: 'Got it'
         });
-        throw new Error('Push notifications require a secure context (HTTPS or localhost).');
+        return;
     }
 
-    // 2. Immediate Permission Request
+    // 2. Security Check (HTTPS/Localhost)
+    if (!window.isSecureContext && window.location.hostname !== 'localhost') {
+        Swal.fire({
+            icon: 'error',
+            title: 'Security Requirement',
+            text: 'Push notifications require a secure connection (HTTPS).'
+        });
+        return;
+    }
+
+    // 3. Technical Support Checks
+    if (!('serviceWorker' in navigator)) throw new Error('Service Workers not supported.');
+    if (!('PushManager' in window)) {
+        if (isIOS) {
+            throw new Error('Push notifications on iOS require adding to home screen first.');
+        }
+        throw new Error('Push messaging not supported in this browser.');
+    }
+
+    // 4. Permission Logic
     if (Notification.permission === 'denied') {
         Swal.fire({
             icon: 'warning',
             title: 'Notifications Blocked',
-            html: 'You have blocked notifications.<br>Click the <b>Lock Icon</b> 🔒 in the URL bar to Reset Permissions.',
+            html: 'You have blocked notifications.<br>Click the <b>Lock Icon</b> 🔒 next to the URL to Reset Permissions.',
             confirmButtonText: 'Got it'
         });
-        throw new Error('Notifications are currently blocked.');
+        return;
     }
 
     const permission = await Notification.requestPermission();
-    if (permission !== 'granted') {
-        Swal.fire({
-            icon: 'info',
-            title: 'Permission Needed',
-            text: 'We need your permission to send weather alerts. Please click "Allow" on the browser prompt.',
-            confirmButtonText: 'Try Again'
-        });
-        throw new Error('Notification permission was not granted.');
-    }
+    if (permission !== 'granted') return;
 
-    // 3. Technical Checks & Setup
-    if (!('serviceWorker' in navigator)) throw new Error('Service Workers not supported.');
-    if (!('PushManager' in window)) throw new Error('Push messaging not supported.');
-
-    // Register Service Worker
+    // 5. Subscription Logic
     const registration = await registerServiceWorker();
-    if (!registration) throw new Error('Service Worker registration failed.');
+    if (!registration) throw new Error('Registration failed.');
 
-    // Fetch Public Key
-    console.log('Fetching VAPID key...');
     const response = await fetch('/api/vapid-public-key');
-    if (!response.ok) throw new Error('Failed to fetch public key from server.');
+    const { publicKey } = await response.json();
+    if (!publicKey) throw new Error('No public key found.');
 
-    const data = await response.json();
-    const publicKey = data.publicKey;
-
-    if (!publicKey) throw new Error('Server returned no public key. Check .env configuration.');
-
-    // Convert Key
     const convertedVapidKey = urlBase64ToUint8Array(publicKey);
 
-    // Subscribe
-    console.log('Subscribing to Push Manager...');
     try {
         const subscription = await registration.pushManager.subscribe({
             userVisibleOnly: true,
             applicationServerKey: convertedVapidKey
         });
 
-        console.log('Push Registered:', subscription);
-
-        // Send Subscription to Server
         await fetch('/api/subscribe', {
             method: 'POST',
             body: JSON.stringify(subscription),
-            headers: {
-                'content-type': 'application/json'
-            }
+            headers: { 'content-type': 'application/json' }
         });
 
         Swal.fire({
             icon: 'success',
-            title: 'Subscribed!',
-            text: 'You will now receive weather notifications.',
+            title: 'System Armed!',
+            text: 'You will now receive real-time alerts.',
             timer: 2000,
             showConfirmButton: false
         });
 
     } catch (err) {
         console.error('Failed to subscribe:', err);
-        throw new Error('Failed to subscribe to Push Manager: ' + err.message);
+        throw err;
     }
 }
 
 function urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);
-    const base64 = (base64String + padding)
-        .replace(/\-/g, '+')
-        .replace(/_/g, '/');
-
+    const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
     const rawData = window.atob(base64);
     const outputArray = new Uint8Array(rawData.length);
-
     for (let i = 0; i < rawData.length; ++i) {
         outputArray[i] = rawData.charCodeAt(i);
     }
     return outputArray;
 }
 
-// Button Logic
 function updateSubscriptionBtn() {
     const btn = document.getElementById('enableNotifications');
-    if (!btn) {
-        console.warn('Enable Notifications button not found in DOM');
-        return;
-    }
+    if (!btn) return;
 
     if (Notification.permission === 'granted') {
-        btn.style.display = 'none'; // Hide if already granted
-        console.log('Notification permission granted, hiding button');
+        btn.classList.add('d-none');
     } else {
-        btn.style.display = 'block'; // Show if default or denied
-        console.log('Notification permission not granted, showing button');
+        btn.classList.remove('d-none');
+        // iOS Safari workaround - button should be visible even if PWA not installed 
+        // to show the "Add to Home Screen" instructions.
     }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Push Client Loaded');
     updateSubscriptionBtn();
 
     const btn = document.getElementById('enableNotifications');
     if (btn) {
-        console.log('Button found, attaching listener');
         btn.addEventListener('click', async () => {
-            console.log('Button clicked');
-            // Request permission and subscribe
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Syncing...';
+            btn.disabled = true;
             try {
                 await subscribeUser();
                 updateSubscriptionBtn();
@@ -156,12 +151,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error('Subscription error:', error);
                 Swal.fire({
                     icon: 'error',
-                    title: 'Subscription Failed',
-                    text: error.message || 'Could not subscribe to notifications.'
+                    title: 'Sync Error',
+                    text: error.message || 'Could not connect to notification system.'
                 });
+            } finally {
+                btn.innerHTML = '<i class="bi bi-bell-fill"></i><span class="d-none d-lg-inline ms-1 small fw-bold">Alerts</span>';
+                btn.disabled = false;
             }
         });
-    } else {
-        console.error('Enable Notifications button MISSING on load');
     }
 });
