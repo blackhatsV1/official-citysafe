@@ -3,19 +3,50 @@
     "short_name": "CitySafe",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#ffffff",
+    "background_color": "#1a1c1e",
+    "theme_color": "#4f46e5",
     "description": "CitySafe - Official Disaster Response Application",
+    "orientation": "portrait",
+    "categories": [
+        "productivity",
+        "public safety"
+    ],
     "icons": [
         {
             "src": "/images/shield.png",
             "sizes": "192x192",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "any"
         },
         {
             "src": "/images/shield.png",
             "sizes": "512x512",
-            "type": "image/png"
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Send SOS",
+            "short_name": "SOS",
+            "url": "/send-sos",
+            "icons": [
+                {
+                    "src": "/images/shield.png",
+                    "sizes": "192x192"
+                }
+            ]
+        },
+        {
+            "name": "Weather Alerts",
+            "short_name": "Weather",
+            "url": "/weather",
+            "icons": [
+                {
+                    "src": "/images/shield.png",
+                    "sizes": "192x192"
+                }
+            ]
         }
     ]
 }

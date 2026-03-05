@@ -129,11 +129,16 @@ app.post('/api/subscribe', (req, res) => {
   res.status(201).json({});
 });
 
-// Helper to send notification
 const sendNotificationObj = (subscription, payload) => {
   webpush.sendNotification(subscription, JSON.stringify(payload)).catch(err => {
-    console.error('Push Error:', err);
-    // TODO: cleanup invalid subscriptions
+    console.error('Push Error:', err.statusCode, err.message);
+    // Cleanup if subscription is no longer valid
+    if (err.statusCode === 410 || err.statusCode === 404) {
+      console.log('Subscription expired or removed. Deleting from DB...');
+      db.query("DELETE FROM push_subscriptions WHERE endpoint = ?", [subscription.endpoint], (dbErr) => {
+        if (dbErr) console.error('Error deleting expired subscription:', dbErr);
+      });
+    }
   });
 };
 
@@ -441,7 +446,10 @@ app.post('/report', async (req, res) => {
                 const payload = {
                   title: 'New SOS Alert!',
                   body: `${disasterTypeToStore} reported at ${locationToStore}`,
-                  url: '/adminpage'
+                  url: '/adminpage',
+                  actions: [
+                    { action: '/adminpage', title: 'Open Dashboard', icon: '/images/shield.png' }
+                  ]
                 };
                 sendNotificationObj(subscription, payload);
               });
@@ -1149,7 +1157,10 @@ app.post('/api/deploy', (req, res) => {
                           const payload = {
                             title: 'DEPLOYMENT ALERT',
                             body: 'You have been deployed to a mission. Check your app immediately.',
-                            url: '/my-current-mission-page'
+                            url: '/responder',
+                            actions: [
+                              { action: '/responder', title: 'Start Mission', icon: '/images/shield.png' }
+                            ]
                           };
                           sendNotificationObj(subscription, payload);
                         });

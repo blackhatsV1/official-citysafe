@@ -68,7 +68,8 @@ self.addEventListener('push', function (event) {
     let data = {
         title: 'CitySafe Alert',
         body: 'New emergency notification received.',
-        url: '/'
+        url: '/',
+        actions: []
     };
 
     if (event.data) {
@@ -85,31 +86,45 @@ self.addEventListener('push', function (event) {
         icon: '/images/shield.png',
         badge: '/images/shield.png',
         vibrate: [200, 100, 200],
-        tag: 'citysafe-alert-' + Date.now(),
+        tag: data.tag || 'citysafe-alert-' + Date.now(),
         renotify: true,
+        actions: data.actions || [],
         data: {
             url: data.url
         }
     };
 
     event.waitUntil(
-        self.registration.showNotification(data.title, options)
+        Promise.all([
+            self.registration.showNotification(data.title, options),
+            // Set badge if supported
+            'setAppBadge' in navigator ? navigator.setAppBadge(1) : Promise.resolve()
+        ])
     );
 });
 
 self.addEventListener('notificationclick', function (event) {
-    event.notification.close();
+    const notification = event.notification;
+    const action = event.action;
+    const url = action || notification.data.url || '/';
+
+    notification.close();
+
+    // Clear badge if supported (optional, might want to do this on app open instead)
+    if ('clearAppBadge' in navigator) navigator.clearAppBadge();
+
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
-            // Focus if already open
+            // If action is provided, it might be a specific URL
+            const targetUrl = new URL(url, self.location.origin).href;
+
             for (let i = 0; i < clientList.length; i++) {
                 let client = clientList[i];
-                if (client.url === event.notification.data.url && 'focus' in client)
+                if (client.url === targetUrl && 'focus' in client)
                     return client.focus();
             }
-            // Open new if not
             if (clients.openWindow)
-                return clients.openWindow(event.notification.data.url);
+                return clients.openWindow(targetUrl);
         })
     );
 });

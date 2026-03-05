@@ -124,6 +124,9 @@ function urlBase64ToUint8Array(base64String) {
 }
 
 function updateSubscriptionBtn() {
+    // Clear badge if supported when app loads
+    if ('clearAppBadge' in navigator) navigator.clearAppBadge().catch(() => { });
+
     const btn = document.getElementById('enableNotifications');
     if (!btn) return;
 
