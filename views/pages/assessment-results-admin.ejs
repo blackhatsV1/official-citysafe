@@ -2,99 +2,91 @@
 <html lang="en">
 
 <head>
-  <%- include('../partials/head'); %>
+    <%- include('../partials/head'); %>
 </head>
 <!-- ========================================================================= -->
 
-<body>
+<body class="app">
     <%- include('../partials/page-start'); %>
-    <div class="container-fluid position-relative d-flex p-0">
-    <!-- Spinner Start -->
-    <%- include('../partials/spinner'); %>
-    <!-- Spinner End -->
+        <header class="app-header fixed-top">
+            <%- include('../partials/admin-navbar'); %>
+                <%- include('../partials/admin-sidebar'); %>
+        </header>
 
+        <div class="app-wrapper">
+            <div class="app-content pt-3 p-md-3 p-lg-4">
+                <div class="container-xl">
+                    <h1 class="app-page-title">Assessment Records</h1>
 
-    <!-- Sidebar Start -->
-    <%- include('../partials/admin-sidebar'); %>
-      <!-- Sidebar End -->
-
-
-      <!-- Content Start -->
-      <div class="content">
-        <!-- Navbar Start -->
-        <%- include('../partials/admin-navbar'); %>
-          <!-- Navbar End -->
-
-          <!-- Widgets Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="container bg-secondary rounded p-4 mb-4">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h4 class="text-white mb-0">Assessment Records</h4>
-                    </div>
-
-                    <% if (assessments.length > 0) { %>
-                    <div class="table-responsive">
-                        <table class="table table-hover text-start align-middle table-bordered table-sm mb-0">
-                            <thead>
-                                <tr class="text-white">
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Date Assessed</th>
-                                    <th scope="col">Risk Score</th>
-                                    <th scope="col">Risk Level</th>
-                                    <th scope="col">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% for (let i = 0; i < assessments.length; i++) { %>
-                                <tr>
-                                    <td><%= assessments[i].firstname %> <%= assessments[i].lastname %></td>
-                                    <td><%= assessments[i].assessed_at %></td>
-                                    <td><%= assessments[i].risk_score %></td>
-                                    <td>
-                                        <% if(assessments[i].risk_level === 'High') { %>
-                                            <span class="text-danger fw-bold"><%= assessments[i].risk_level %></span>
-                                        <% } else if(assessments[i].risk_level === 'Medium') { %>
-                                            <span class="text-warning fw-bold"><%= assessments[i].risk_level %></span>
-                                        <% } else { %>
-                                            <span class="text-success fw-bold"><%= assessments[i].risk_level %></span>
-                                        <% } %>
-                                    </td>
-                                    <td>
-                                        <form action="/delete-result/<%= assessments[i].id %>" method="POST" class="d-inline">
-                                            <button type="submit" onclick="return confirm('Delete this Assessment?')" class="btn btn-sm btn-danger">Delete</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                <% } %>
-                            </tbody>
-                        </table>
-                    </div>
-                    <% } else { %>
-                        <div class="text-center p-4">
-                            <p class="text-white">No risk assessment records found.</p>
+                    <div class="app-card app-card-orders-table shadow-sm mb-5">
+                        <div class="app-card-body">
+                            <% if (assessments.length> 0) { %>
+                                <div class="table-responsive">
+                                    <table class="table app-table-hover mb-0 text-left">
+                                        <thead>
+                                            <tr>
+                                                <th class="cell">Name</th>
+                                                <th class="cell">Date Assessed</th>
+                                                <th class="cell">Risk Score</th>
+                                                <th class="cell">Risk Level</th>
+                                                <th class="cell">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% for (let i=0; i < assessments.length; i++) { %>
+                                                <tr>
+                                                    <td class="cell">
+                                                        <%= assessments[i].firstname %>
+                                                            <%= assessments[i].lastname %>
+                                                    </td>
+                                                    <td class="cell">
+                                                        <%= assessments[i].assessed_at %>
+                                                    </td>
+                                                    <td class="cell">
+                                                        <%= assessments[i].risk_score %>
+                                                    </td>
+                                                    <td class="cell">
+                                                        <% if(assessments[i].risk_level==='High' ) { %>
+                                                            <span class="badge bg-danger">
+                                                                <%= assessments[i].risk_level %>
+                                                            </span>
+                                                            <% } else if(assessments[i].risk_level==='Medium' ) { %>
+                                                                <span class="badge bg-warning text-dark">
+                                                                    <%= assessments[i].risk_level %>
+                                                                </span>
+                                                                <% } else { %>
+                                                                    <span class="badge bg-success">
+                                                                        <%= assessments[i].risk_level %>
+                                                                    </span>
+                                                                    <% } %>
+                                                    </td>
+                                                    <td class="cell">
+                                                        <form action="/delete-result/<%= assessments[i].id %>"
+                                                            method="POST" class="d-inline">
+                                                            <button type="submit"
+                                                                onclick="return confirm('Delete this Assessment?')"
+                                                                class="btn-sm btn-outline-danger border-0">Delete</button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                                <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <% } else { %>
+                                    <div class="text-center p-5">
+                                        <p class="text-muted mb-0">No risk assessment records found in the sector.</p>
+                                    </div>
+                                    <% } %>
                         </div>
-                    <% } %>
+                    </div>
                 </div>
             </div>
-            <!-- Widgets End -->
 
+            <footer class="app-footer">
+                <%- include('../partials/footer'); %>
+            </footer>
+        </div>
 
-          <!-- Footer Start -->
-          <%- include('../partials/page-end'); %>
-          <%- include('../partials/footer'); %>
-            <!-- Footer End -->
-
-      </div>
-      <!-- Content End -->
-
-
-      <!-- Back to Top -->
-      <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-  </div>
-
-  <script src="/js/script.js"></script>
+        <script src="/js/script.js"></script>
 </body>
-
-</html>
-
-

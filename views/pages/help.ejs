@@ -5,145 +5,106 @@
     <%- include('../partials/head'); %>
 </head>
 
-<body class="bg-dark text-white">
+<body class="app">
     <%- include('../partials/page-start'); %>
-    <div class="container-fluid position-relative d-flex p-0">
-        <%- include('../partials/spinner'); %>
-            <%- include('../partials/visitor-sidebar'); %>
+        <header class="app-header fixed-top">
+            <%- include('../partials/visitor-navbar'); %>
+                <%- include('../partials/visitor-sidebar'); %>
+        </header>
 
-                <div class="content">
-                    <%- include('../partials/visitor-navbar'); %>
+        <div class="app-wrapper">
+            <div class="app-content pt-3 p-md-3 p-lg-4">
+                <div class="container-xl">
+                    <h1 class="app-page-title">Help & Support</h1>
 
-                        <div class="container-fluid pt-4 px-4">
-                            <div class="bg-card shadow-sm text-center rounded mb-4 p-5">
-                                <div class="d-flex align-items-center justify-content-center gap-3">
-                                    <i class="bi bi-cloud-sun fs-1 text-primary"></i>
-                                    <h1 class="mb-0 fw-800 text-head letter-spacing-1">Welcome to CitySafe!</h1>
-                                </div>
-                            </div>
-                            
-                            <div class="row g-4">
-                                <!-- FAQ / Left Column -->
-                                <div class="col-sm-12 col-xl-8">
-                                    <div class="bg-card rounded p-4 h-100 shadow-sm border border-light">
-                                        <div class="d-flex align-items-center justify-content-between mb-4">
-                                            <h3 class="mb-0 fw-bold text-head">Help & Support</h3>
-                                        </div>
-                                        <p class="text-muted">
-                                            If you are experiencing any issues or have any questions, we are here to help!
-                                            Below are some commonly asked questions and their answers.
-                                        </p>
+                    <div class="row g-4 mb-4">
+                        <div class="col-12 col-lg-8">
+                            <div class="app-card app-card-settings shadow-sm p-4">
+                                <div class="app-card-body">
+                                    <p class="text-muted mb-4">
+                                        If you are experiencing any issues or have any questions, we are here to help!
+                                        Below are some commonly asked questions and their answers.
+                                    </p>
 
-                                        <h5 class="mt-4 mb-3 fw-bold text-uppercase letter-spacing-1 text-muted small">Frequently Asked Questions</h5>
-                                        <div class="accordion accordion-flush" id="faqAccordion">
-                                            <div class="accordion-item bg-transparent border border-light rounded mb-3">
-                                                <h2 class="accordion-header">
-                                                    <button class="accordion-button collapsed bg-dark text-white fw-bold shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                                                        How do I report an emergency?
-                                                    </button>
-                                                </h2>
-                                                <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                                                    <div class="accordion-body text-muted small">
-                                                        Use the "One-Tap SOS Reporting" feature to quickly send a distress signal to our team. We will respond as soon as possible to assist you.
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="accordion-item bg-transparent border border-light rounded mb-3">
-                                                <h2 class="accordion-header">
-                                                    <button class="accordion-button collapsed bg-dark text-white fw-bold shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                                                        How can I track my report status?
-                                                    </button>
-                                                </h2>
-                                                <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                                                    <div class="accordion-body text-muted small">
-                                                        Go to "My Reports" to view the status of your reported incidents and see if a responder has been assigned to your location.
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="accordion-item bg-transparent border border-light rounded mb-3">
-                                                <h2 class="accordion-header">
-                                                    <button class="accordion-button collapsed bg-dark text-white fw-bold shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                                                        How do I find nearby safe zones?
-                                                    </button>
-                                                </h2>
-                                                <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                                                    <div class="accordion-body text-muted small">
-                                                        Visit the "Nearby Stations" page to view a map of police stations, fire stations, and hospitals near you for quick navigation.
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="accordion-item bg-transparent border border-light rounded mb-3">
-                                                <h2 class="accordion-header">
-                                                    <button class="accordion-button collapsed bg-dark text-white fw-bold shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
-                                                        How do I check the weather?
-                                                    </button>
-                                                </h2>
-                                                <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                                                    <div class="accordion-body text-muted small">
-                                                        The "Weather" page provides real-time updates on local weather conditions to help you stay prepared for any potential hazards.
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="accordion-item bg-transparent border border-light rounded mb-3">
-                                                <h2 class="accordion-header">
-                                                    <button class="accordion-button collapsed bg-dark text-white fw-bold shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
-                                                        What is the Community Risk Assessment Tool?
-                                                    </button>
-                                                </h2>
-                                                <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                                                    <div class="accordion-body text-muted small">
-                                                        This tool helps assess disaster risks in your area, providing important data on natural disasters and preparedness.
-                                                    </div>
+                                    <div class="accordion accordion-flush" id="faqAccordion">
+                                        <div class="accordion-item border-bottom">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed fw-bold px-0 bg-transparent"
+                                                    type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                                    How do I report an emergency?
+                                                </button>
+                                            </h2>
+                                            <div id="faq1" class="accordion-collapse collapse"
+                                                data-bs-parent="#faqAccordion">
+                                                <div class="accordion-body px-0 text-muted">
+                                                    Use the "One-Tap SOS Reporting" feature to quickly send a distress
+                                                    signal to our team. We will respond as soon as possible to assist
+                                                    you.
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
 
-                                <!-- Contact / Right Column -->
-                                <div class="col-sm-12 col-xl-4">
-                                    <div class="bg-card rounded p-4 h-100 shadow-sm border border-light">
-                                        <h5 class="mt-2 mb-4 fw-bold text-uppercase letter-spacing-1 text-muted small">Contact Us</h5>
-                                        <p class="text-muted small mb-4">If you have any other questions or need further assistance, feel free to reach us through:</p>
-                                        
-                                        <div class="d-flex flex-column gap-3 mb-4">
-                                            <div class="p-3 rounded bg-dark border border-light">
-                                                <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.65rem;">Email</small>
-                                                <span class="text-white small">jayr.tabalina.ui@phinmaed.com</span>
-                                            </div>
-                                            <div class="p-3 rounded bg-dark border border-light">
-                                                <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.65rem;">Phone</small>
-                                                <span class="text-white small">(+63) 993 978 4619</span>
-                                            </div>
-                                            <div class="p-3 rounded bg-dark border border-light">
-                                                <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.65rem;">Social Media</small>
-                                                <span class="text-primary small">@CitySafeOfficial</span>
+                                        <div class="accordion-item border-bottom">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed fw-bold px-0 bg-transparent"
+                                                    type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                                    How can I track my report status?
+                                                </button>
+                                            </h2>
+                                            <div id="faq2" class="accordion-collapse collapse"
+                                                data-bs-parent="#faqAccordion">
+                                                <div class="accordion-body px-0 text-muted">
+                                                    Go to "My Reports" to view the status of your reported incidents and
+                                                    see if a responder has been assigned to your location.
+                                                </div>
                                             </div>
                                         </div>
 
-                                        <hr class="dropdown-divider bg-light opacity-10 my-4">
+                                        <div class="accordion-item border-bottom">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed fw-bold px-0 bg-transparent"
+                                                    type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                                    How do I find nearby safe zones?
+                                                </button>
+                                            </h2>
+                                            <div id="faq3" class="accordion-collapse collapse"
+                                                data-bs-parent="#faqAccordion">
+                                                <div class="accordion-body px-0 text-muted">
+                                                    Visit the "Nearby Stations" page to view a map of police stations,
+                                                    fire stations, and hospitals near you for quick navigation.
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                        <h5 class="mb-4 fw-bold text-uppercase letter-spacing-1 text-muted small">Emergency Assistance</h5>
-                                        <div class="list-group list-group-flush rounded border border-light overflow-hidden">
-                                            <div class="list-group-item bg-dark border-light text-muted d-flex justify-content-between align-items-center p-2">
-                                                <small>National Hotline</small>
-                                                <span class="badge bg-danger-soft text-danger fw-bold">911</span>
+                                        <div class="accordion-item border-bottom">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed fw-bold px-0 bg-transparent"
+                                                    type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                                    How do I check the weather?
+                                                </button>
+                                            </h2>
+                                            <div id="faq4" class="accordion-collapse collapse"
+                                                data-bs-parent="#faqAccordion">
+                                                <div class="accordion-body px-0 text-muted">
+                                                    The "Weather" page provides real-time updates on local weather
+                                                    conditions to help you stay prepared for any potential hazards.
+                                                </div>
                                             </div>
-                                            <div class="list-group-item bg-dark border-light text-muted d-flex justify-content-between align-items-center p-2">
-                                                <small>PNP</small>
-                                                <span class="badge bg-primary-soft text-primary fw-bold">117</span>
-                                            </div>
-                                            <div class="list-group-item bg-dark border-light text-muted d-flex justify-content-between align-items-center p-2">
-                                                <small>BFP</small>
-                                                <span class="badge bg-warning-soft text-warning fw-bold">(02) 8426</span>
-                                            </div>
-                                            <div class="list-group-item bg-dark border-light text-muted d-flex justify-content-between align-items-center p-2">
-                                                <small>Red Cross</small>
-                                                <span class="badge bg-info-soft text-info fw-bold">143</span>
+                                        </div>
+
+                                        <div class="accordion-item border-0">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed fw-bold px-0 bg-transparent"
+                                                    type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                                                    What is the Community Risk Assessment Tool?
+                                                </button>
+                                            </h2>
+                                            <div id="faq5" class="accordion-collapse collapse"
+                                                data-bs-parent="#faqAccordion">
+                                                <div class="accordion-body px-0 text-muted">
+                                                    This tool helps assess disaster risks in your area, providing
+                                                    important data on natural disasters and preparedness.
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -151,15 +112,58 @@
                             </div>
                         </div>
 
-                        <%- include('../partials/page-end'); %>
-                        <%- include('../partials/footer'); %>
+                        <div class="col-12 col-lg-4">
+                            <div class="app-card app-card-settings shadow-sm p-4 mb-4">
+                                <h4 class="app-card-title mb-3">Contact Us</h4>
+                                <div class="app-card-body">
+                                    <p class="text-muted small">Need further assistance?</p>
+                                    <div class="list-group list-group-flush">
+                                        <div
+                                            class="list-group-item bg-transparent px-0 border-light d-flex flex-column">
+                                            <small class="text-muted fw-bold">Email</small>
+                                            <span class="text-primary">jayr.tabalina.ui@phinmaed.com</span>
+                                        </div>
+                                        <div
+                                            class="list-group-item bg-transparent px-0 border-light d-flex flex-column">
+                                            <small class="text-muted fw-bold">Phone</small>
+                                            <span>(+63) 993 978 4619</span>
+                                        </div>
+                                        <div class="list-group-item bg-transparent px-0 border-0 d-flex flex-column">
+                                            <small class="text-muted fw-bold">Social Media</small>
+                                            <span class="text-info">@CitySafeOfficial</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
+                            <div class="app-card app-card-notification shadow-sm p-4">
+                                <h4 class="app-card-title mb-3">Hotlines</h4>
+                                <div class="app-card-body">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <small>National Hotline</small>
+                                        <span class="badge bg-danger">911</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <small>PNP</small>
+                                        <span class="badge bg-primary">117</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <small>BFP</small>
+                                        <span class="badge bg-warning text-dark">(02) 8426</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
 
-                <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top rounded-circle shadow-lg"><i class="bi bi-arrow-up"></i></a>
-    </div>
+            <footer class="app-footer">
+                <%- include('../partials/footer'); %>
+            </footer>
+        </div>
 
-    <script src="/js/script.js"></script>
+        <script src="/js/script.js"></script>
 </body>
 
 </html>

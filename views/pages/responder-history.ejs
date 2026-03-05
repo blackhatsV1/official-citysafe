@@ -1,81 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <%- include('../partials/head'); %>
 </head>
-<body>
+
+<body class="app">
     <%- include('../partials/page-start'); %>
-    <div class="container-fluid position-relative d-flex p-0">
-        <!-- Spinner Start -->
-        <%- include('../partials/spinner'); %>
-        <!-- Spinner End -->
-
-        <!-- Sidebar Start -->
-        <%- include('../partials/responder-sidebar'); %>
-        <!-- Sidebar End -->
-
-        <!-- Content Start -->
-        <div class="content">
-            <!-- Navbar Start -->
+        <header class="app-header fixed-top">
             <%- include('../partials/responder-navbar'); %>
-            <!-- Navbar End -->
+                <%- include('../partials/responder-sidebar'); %>
+        </header>
 
-            <!-- Table Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="bg-secondary text-center rounded p-4">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h6 class="mb-0">Reaction History</h6>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table text-start align-middle table-bordered table-hover mb-0">
-                            <thead>
-                                <tr class="text-white">
-                                    <th scope="col">Date/Time</th>
-                                    <th scope="col">Resolved Time</th>
-                                    <th scope="col">Type</th>
-                                    <th scope="col">Location</th>
-                                    <th scope="col">Resolved By</th>
-                                    <th scope="col">Message/Remarks</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% if (reports.length > 0) { %>
-                                    <% reports.forEach(function(report) { %>
-                                    <tr>
-                                        <td><%= new Date(report.reported_at).toLocaleString() %></td>
-                                        <td><%= report.resolved_at ? new Date(report.resolved_at).toLocaleString() : '-' %></td>
-                                        <td><%= report.disaster_type %></td>
-                                        <td><%= report.location || 'Unknown' %></td>
-                                        <td class="text-info"><%= report.resolved_by || 'Unknown' %></td>
-                                        <td>
-                                            <small><strong>Resp:</strong> <%= report.responder_message || '-' %></small><br>
-                                            <small><strong>User:</strong> <%= report.user_message || '-' %></small>
-                                        </td>
-                                    </tr>
-                                    <% }); %>
-                                <% } else { %>
-                                    <tr>
-                                        <td colspan="6" class="text-center">No history found.</td>
-                                    </tr>
-                                <% } %>
-                            </tbody>
-                        </table>
+        <div class="app-wrapper">
+            <div class="app-content pt-3 p-md-3 p-lg-4">
+                <div class="container-xl">
+                    <h1 class="app-page-title">Reaction History</h1>
+
+                    <div class="app-card app-card-orders shadow-sm mb-5">
+                        <div class="app-card-body">
+                            <div class="table-responsive">
+                                <table class="table app-table-hover mb-0 text-left">
+                                    <thead>
+                                        <tr>
+                                            <th class="cell">Date/Time</th>
+                                            <th class="cell">Resolved Time</th>
+                                            <th class="cell">Type</th>
+                                            <th class="cell">Location</th>
+                                            <th class="cell">Resolved By</th>
+                                            <th class="cell">Intelligence/Remarks</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% if (reports.length> 0) { %>
+                                            <% reports.forEach(function(report) { %>
+                                                <tr>
+                                                    <td class="cell"><span class="note">
+                                                            <%= new Date(report.reported_at).toLocaleString() %>
+                                                        </span></td>
+                                                    <td class="cell"><span class="note">
+                                                            <%= report.resolved_at ? new
+                                                                Date(report.resolved_at).toLocaleString() : '-' %>
+                                                        </span></td>
+                                                    <td class="cell"><span class="badge bg-danger">
+                                                            <%= report.disaster_type %>
+                                                        </span></td>
+                                                    <td class="cell small">
+                                                        <%= report.location || 'Unknown Coordinates' %>
+                                                    </td>
+                                                    <td class="cell"><span class="badge bg-success">
+                                                            <%= report.resolved_by || 'Unknown' %>
+                                                        </span></td>
+                                                    <td class="cell">
+                                                        <div class="small">
+                                                            <div class="mb-1"><strong
+                                                                    class="text-primary">Unit:</strong>
+                                                                <%= report.responder_message || '-' %>
+                                                            </div>
+                                                            <div><strong class="text-info">HQ/User:</strong>
+                                                                <%= report.user_message || '-' %>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <% }); %>
+                                                    <% } else { %>
+                                                        <tr>
+                                                            <td colspan="6" class="text-center py-4 text-muted">No
+                                                                historical deployments found.</td>
+                                                        </tr>
+                                                        <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <!-- Table End -->
-
-            <!-- Footer Start -->
-            <%- include('../partials/page-end'); %>
-            <%- include('../partials/footer'); %>
-            <!-- Footer End -->
+            <footer class="app-footer">
+                <%- include('../partials/footer'); %>
+            </footer>
         </div>
-        <!-- Content End -->
-        
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-    </div>
 
-    <script src="/js/script.js"></script>
+        <script src="/js/script.js"></script>
 </body>
+
 </html>

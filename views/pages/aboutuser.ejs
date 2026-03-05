@@ -4,115 +4,105 @@
 <head>
   <%- include('../partials/head'); %>
 </head>
-<!-- ========================================================================= -->
 
-<body>
+<body class="app">
   <%- include('../partials/page-start'); %>
-  <div class="container-fluid position-relative d-flex p-0">
-    <!-- Spinner Start -->
-    <%- include('../partials/spinner'); %>
-      <!-- Spinner End -->
 
+    <header class="app-header fixed-top">
+      <%- include('../partials/user-navbar'); %>
+        <%- include('../partials/user-sidebar'); %>
+    </header>
 
-      <!-- Sidebar Start -->
-      <%- include('../partials/user-sidebar'); %>
-        <!-- Sidebar End -->
-
-
-        <!-- Content Start -->
-        <div class="content">
-          <!-- Navbar Start -->
-          <%- include('../partials/user-navbar'); %>
-            <!-- Navbar End -->
-
-
-            <!-- Typography Start -->
-            <div class="container-fluid pt-4 px-4">
-
-              <div class="row g-4">
-                <div class="col-sm-8">
-                  <div class="bg-secondary rounded h-100 p-4 p-3 mb-3">
-                    <h1>About CitySafe</h1>
-                    <div class="p-4 pb-0 mb-4">
-                      <figure class="text-center">
-                        <blockquote class="blockquote">
-                          <p>CitySafe is a web-based disaster response app that provides
-                            real-time alerts, localized notifications, and reliable information
-                            during emergencies. It helps citizens stay informed, empowers them
-                            to send SOS requests for immediate assistance, and supports city officials and
-                            responders in coordinating relief efforts efficiently.</p>
-
-                          <p>
-                            CitySafe was developed as a <em>capstone research project</em> entitled
-                            “CitySafe: Urban Disaster Response App”, with the goal of creating a
-                            user-friendly, efficient, and compassionate system that strengthens
-                            disaster resilience in urban areas.
-                          </p>
-                        </blockquote>
-                        <figcaption class="blockquote-footer">
-                          Capstone Research Project <cite title="Source Title">“CitySafe: Urban Disaster Response
-                            App”</cite>
-                        </figcaption>
-                      </figure>
+    <div class="app-wrapper">
+      <div class="app-content pt-3 p-md-3 p-lg-4">
+        <div class="container-xl">
+          <div class="row g-4 mb-4">
+            <div class="col-12 col-lg-8">
+              <div class="app-card app-card-basic d-flex flex-column align-items-start shadow-sm h-100">
+                <div class="app-card-header p-3 border-bottom-0">
+                  <div class="row align-items-center gx-3">
+                    <div class="col-auto">
+                      <div class="app-icon-holder bg-primary text-white">
+                        <i class="fa fa-info-circle"></i>
+                      </div>
                     </div>
-
+                    <div class="col-auto">
+                      <h4 class="app-card-title">About CitySafe</h4>
+                    </div>
                   </div>
                 </div>
+                <div class="app-card-body px-4 pb-4">
+                  <figure class="text-center p-3 mb-0">
+                    <blockquote class="blockquote">
+                      <p>CitySafe is a web-based disaster response app that provides
+                        real-time alerts, localized notifications, and reliable information
+                        during emergencies. It helps citizens stay informed, empowers them
+                        to send SOS requests for immediate assistance, and supports city officials and
+                        responders in coordinating relief efforts efficiently.</p>
+                      <p>
+                        CitySafe was developed as a <em>capstone research project</em> entitled
+                        “CitySafe: Urban Disaster Response App”, with the goal of creating a
+                        user-friendly, efficient, and compassionate system that strengthens
+                        disaster resilience in urban areas.
+                      </p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer mt-2">
+                      Capstone Research Project <cite title="Source Title">“CitySafe: Urban Disaster Response
+                        App”</cite>
+                    </figcaption>
+                  </figure>
+                </div>
+              </div>
+            </div>
 
-                <div class="col-sm-4">
-                  <div class="p-4 mb-3 bg-secondary rounded h-100 p-4">
-                    <h3 class="mb-3 mt-3">Team Members:</h3>
-                    <div class="border rounded p-4 pb-0 mb-4">
-                      <figure>
-                        <blockquote class="blockquote">
-                          <p>Jayrold Tabalina</p>
-                        </blockquote>
-                        <figcaption class="blockquote-footer">
-                          Programmer <cite title="Source Title">PHINMA-University of Iloilo</cite>
-                        </figcaption>
-                      </figure>
-                    </div>
-                    <div class="border rounded p-4 pb-0 mb-4">
-                      <figure class="text-center">
-                        <blockquote class="blockquote">
-                          <p>Yasmine M. Talaman</p>
-                        </blockquote>
-                        <figcaption class="blockquote-footer">
-                          Documenter <cite title="Source Title">PHINMA-University of Iloilo</cite>
-                        </figcaption>
-                      </figure>
-                    </div>
-                    <div class="border rounded p-4 pb-0 mb-0">
-                      <figure class="text-end">
-                        <blockquote class="blockquote">
-                          <p>Mark Vincent Jabao</p>
-                        </blockquote>
-                        <figcaption class="blockquote-footer">
-                          UI/UX <cite title="Source Title">PHINMA-University of Iloilo</cite>
-                        </figcaption>
-                      </figure>
-                    </div>
+            <div class="col-12 col-lg-4">
+              <div class="app-card app-card-settings shadow-sm p-4 h-100">
+                <div class="app-card-body">
+                  <h4 class="app-card-title mb-4">Team Members:</h4>
+
+                  <div class="border rounded p-3 mb-3 text-center bg-light">
+                    <figure class="mb-0">
+                      <blockquote class="blockquote fs-6">
+                        <p class="mb-1 fw-bold">Jayrold Tabalina</p>
+                      </blockquote>
+                      <figcaption class="blockquote-footer mb-0">
+                        Programmer <cite title="Source Title">PHINMA-University of Iloilo</cite>
+                      </figcaption>
+                    </figure>
+                  </div>
+
+                  <div class="border rounded p-3 mb-3 text-center bg-light">
+                    <figure class="mb-0">
+                      <blockquote class="blockquote fs-6">
+                        <p class="mb-1 fw-bold">Yasmine M. Talaman</p>
+                      </blockquote>
+                      <figcaption class="blockquote-footer mb-0">
+                        Documenter <cite title="Source Title">PHINMA-University of Iloilo</cite>
+                      </figcaption>
+                    </figure>
+                  </div>
+
+                  <div class="border rounded p-3 text-center bg-light">
+                    <figure class="mb-0">
+                      <blockquote class="blockquote fs-6">
+                        <p class="mb-1 fw-bold">Mark Vincent Jabao</p>
+                      </blockquote>
+                      <figcaption class="blockquote-footer mb-0">
+                        UI/UX <cite title="Source Title">PHINMA-University of Iloilo</cite>
+                      </figcaption>
+                    </figure>
                   </div>
                 </div>
               </div>
             </div>
-            <!-- Typography End -->
-
-
-            <!-- Footer Start -->
-            <%- include('../partials/page-end'); %>
-            <%- include('../partials/footer'); %>
-              <!-- Footer End -->
-
+          </div>
         </div>
-        <!-- Content End -->
+      </div>
 
+      <%- include('../partials/footer'); %>
+    </div>
 
-        <!-- Back to Top -->
-        <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-  </div>
-
-  <script src="/js/script.js"></script>
+    <%- include('../partials/page-end'); %>
 </body>
 
 </html>

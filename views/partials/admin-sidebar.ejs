@@ -1,80 +1,105 @@
-<div class="sidebar">
-    <% const _cp=(typeof currentPage !=='undefined' ) ? currentPage : (typeof locals !=='undefined' && typeof
-        locals.currentPage !=='undefined' ? locals.currentPage : '' ); %>
-        <div class="px-4 mb-4">
-            <a href="/adminpage" class="d-flex align-items-center gap-2 text-white">
-                <i class="fa fa-shield-alt fs-4 text-primary"></i>
-                <h4 class="mb-0 text-white fw-bold letter-spacing-1">CITYSAFE</h4>
+<div id="app-sidepanel" class="app-sidepanel">
+    <div id="sidepanel-drop" class="sidepanel-drop"></div>
+    <div class="sidepanel-inner d-flex flex-column">
+        <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
+        <div class="app-branding">
+            <a class="app-logo" href="/adminpage">
+                <i class="fa fa-shield-alt text-primary me-2 fs-4"></i>
+                <span class="logo-text">CITYSAFE</span>
             </a>
-        </div>
+        </div><!--//app-branding-->
 
-        <!-- Admin Profile Summary -->
-        <div class="px-4 mb-4">
-            <div class="p-3 rounded-lg"
-                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="bg-white rounded-circle d-flex align-items-center justify-content-center"
-                        style="min-width: 32px; height: 32px;">
-                        <i class="fa fa-user-shield text-dark fs-6"></i>
-                    </div>
-                    <div class="overflow-hidden">
-                        <h6 class="mb-0 text-white text-truncate small fw-bold">
-                            <%= username %>
-                        </h6>
-                        <span class="text-muted d-block text-uppercase"
-                            style="font-size: 0.65rem; letter-spacing: 0.05em;">Admin Unit</span>
-                    </div>
-                </div>
+        <% const _cp=(typeof currentPage !=='undefined' ) ? currentPage : (typeof locals !=='undefined' && typeof
+            locals.currentPage !=='undefined' ? locals.currentPage : '' ); %>
+
+            <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
+                <ul class="app-menu list-unstyled accordion" id="menu-accordion">
+                    <li class="nav-item">
+                        <a class="nav-link <%= _cp === 'dashboard' ? 'active' : '' %>" href="/adminpage">
+                            <span class="nav-icon"><i class="fa fa-tachometer-alt"></i></span>
+                            <span class="nav-link-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <%= _cp === 'status' ? 'active' : '' %>" href="/status-overview">
+                            <span class="nav-icon"><i class="fa fa-th-large"></i></span>
+                            <span class="nav-link-text">Status Grid</span>
+                        </a>
+                    </li>
+                    <li class="nav-item has-submenu">
+                        <a class="nav-link submenu-toggle <%= ['sos', 'analytics', 'assessments'].includes(_cp) ? '' : 'collapsed' %>"
+                            href="#" data-bs-toggle="collapse" data-bs-target="#submenu-intel"
+                            aria-expanded="<%= ['sos', 'analytics', 'assessments'].includes(_cp) %>"
+                            aria-controls="submenu-intel">
+                            <span class="nav-icon"><i class="fa fa-brain"></i></span>
+                            <span class="nav-link-text">Intelligence</span>
+                            <span class="submenu-arrow">
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down"
+                                    fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+                                </svg>
+                            </span>
+                        </a>
+                        <div id="submenu-intel"
+                            class="collapse submenu submenu-intel <%= ['sos', 'analytics', 'assessments'].includes(_cp) ? 'show' : '' %>"
+                            data-bs-parent="#menu-accordion">
+                            <ul class="submenu-list list-unstyled">
+                                <li class="submenu-item"><a class="submenu-link <%= _cp === 'sos' ? 'active' : '' %>"
+                                        href="/disaster-reports">SOS Reports</a></li>
+                                <li class="submenu-item"><a
+                                        class="submenu-link <%= _cp === 'analytics' ? 'active' : '' %>"
+                                        href="/reports">Analytics</a></li>
+                                <li class="submenu-item"><a
+                                        class="submenu-link <%= _cp === 'assessments' ? 'active' : '' %>"
+                                        href="/assessment-results">Assessments</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav-item has-submenu">
+                        <a class="nav-link submenu-toggle <%= ['users', 'add-citizen', 'add-responder'].includes(_cp) ? '' : 'collapsed' %>"
+                            href="#" data-bs-toggle="collapse" data-bs-target="#submenu-management"
+                            aria-expanded="<%= ['users', 'add-citizen', 'add-responder'].includes(_cp) %>"
+                            aria-controls="submenu-management">
+                            <span class="nav-icon"><i class="fa fa-users-cog"></i></span>
+                            <span class="nav-link-text">Management</span>
+                            <span class="submenu-arrow">
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down"
+                                    fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
+                                </svg>
+                            </span>
+                        </a>
+                        <div id="submenu-management"
+                            class="collapse submenu submenu-management <%= ['users', 'add-citizen', 'add-responder'].includes(_cp) ? 'show' : '' %>"
+                            data-bs-parent="#menu-accordion">
+                            <ul class="submenu-list list-unstyled">
+                                <li class="submenu-item"><a class="submenu-link <%= _cp === 'users' ? 'active' : '' %>"
+                                        href="/userslist">Directory</a></li>
+                                <li class="submenu-item"><a
+                                        class="submenu-link <%= _cp === 'add-citizen' ? 'active' : '' %>"
+                                        href="/addusers">Register Citizen</a></li>
+                                <li class="submenu-item"><a
+                                        class="submenu-link <%= _cp === 'add-responder' ? 'active' : '' %>"
+                                        href="/addresponder">Register Responder</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="app-sidepanel-footer">
+                <nav class="app-nav app-nav-footer">
+                    <ul class="app-menu footer-menu list-unstyled">
+                        <li class="nav-item">
+                            <a class="nav-link text-danger" href="/logout">
+                                <span class="nav-icon"><i class="fa fa-sign-out-alt"></i></span>
+                                <span class="nav-link-text">Sign Out</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-        </div>
-
-        <div class="nav flex-column">
-            <span class="px-4 mb-2 text-muted text-uppercase fw-bold" style="font-size: 0.7rem; opacity: 0.5;">Main
-                Operations</span>
-            <a href="/adminpage" class="nav-link <%= _cp === 'dashboard' ? 'active' : '' %>">
-                <i class="fa fa-tachometer-alt"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="/status-overview" class="nav-link <%= _cp === 'status' ? 'active' : '' %>">
-                <i class="fa fa-th-large"></i>
-                <span>Status Grid</span>
-            </a>
-
-            <span class="px-4 mt-4 mb-2 text-muted text-uppercase fw-bold"
-                style="font-size: 0.7rem; opacity: 0.5;">Intelligence</span>
-            <a href="/disaster-reports" class="nav-link <%= _cp === 'sos' ? 'active' : '' %>">
-                <i class="fa fa-bullhorn text-danger"></i>
-                <span>SOS Reports</span>
-            </a>
-            <a href="/reports" class="nav-link <%= _cp === 'analytics' ? 'active' : '' %>">
-                <i class="fa fa-chart-line"></i>
-                <span>Analytics</span>
-            </a>
-            <a href="/assessment-results" class="nav-link <%= _cp === 'assessments' ? 'active' : '' %>">
-                <i class="fa fa-file-contract"></i>
-                <span>Assessments</span>
-            </a>
-
-            <span class="px-4 mt-4 mb-2 text-muted text-uppercase fw-bold"
-                style="font-size: 0.7rem; opacity: 0.5;">Management</span>
-            <div class="nav-item">
-                <a href="/userslist" class="nav-link <%= _cp === 'users' ? 'active' : '' %>">
-                    <i class="fa fa-users"></i>
-                    <span>Directory</span>
-                </a>
-                <a href="/addusers" class="nav-link <%= _cp === 'add-citizen' ? 'active' : '' %>">
-                    <i class="fa fa-user-plus"></i>
-                    <span>Register Citizen</span>
-                </a>
-                <a href="/addresponder" class="nav-link <%= _cp === 'add-responder' ? 'active' : '' %>">
-                    <i class="fa fa-user-shield"></i>
-                    <span>Register Responder</span>
-                </a>
-            </div>
-
-            <a href="/logout" class="nav-link mt-4 text-danger opacity-75">
-                <i class="fa fa-sign-out-alt"></i>
-                <span>Sign Out</span>
-            </a>
-        </div>
+    </div>
 </div>

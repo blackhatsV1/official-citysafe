@@ -5,101 +5,128 @@
     <%- include('../partials/head'); %>
 </head>
 
-<body class="bg-dark text-white">
-    <%- include('../partials/page-start'); %>
-    <div class="container-fluid p-0">
-        <%- include('../partials/spinner'); %>
+<body class="app app-signup p-0">
+    <div class="row g-0 auth-wrapper">
+        <div class="col-12 col-md-7 col-lg-6 auth-main-col p-5">
+            <div class="d-flex flex-column align-content-end h-100">
+                <div class="app-auth-body mx-auto">
+                    <div class="app-auth-branding mb-4">
+                        <a class="app-logo" href="/visitor"><i class="fa fa-shield-alt text-primary fs-2 me-2"></i><span
+                                class="logo-text">CITYSAFE</span></a>
+                    </div>
+                    <h2 class="auth-heading text-center mb-2">Create Citizen Account</h2>
+                    <div class="auth-intro mb-4 text-center">Join the network to receive early warning alerts and manage
+                        safety reports.</div>
 
-            <div class="container">
-                <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
-                    <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
-                        <div class="bg-card p-4 p-sm-5 my-4 rounded shadow-lg border border-light">
-                            <div class="text-center mb-4">
-                                <a href="/visitor" class="d-inline-flex align-items-center gap-2 mb-2 text-decoration-none">
-                                    <i class="fa fa-shield-alt fs-2 text-primary"></i>
-                                    <h3 class="mb-0 text-head fw-800 letter-spacing-1">CITYSAFE</h3>
-                                </a>
-                                <p class="text-muted small fw-600 text-uppercase letter-spacing-1">Join the Response Network</p>
+                    <div class="auth-form-container text-start">
+                        <form class="auth-form signup-form" method="POST" action="/register">
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="sr-only" for="signup-first">Firstname</label>
+                                    <input id="signup-first" name="firstname" type="text" class="form-control"
+                                        placeholder="Firstname" required="required">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="sr-only" for="signup-last">Lastname</label>
+                                    <input id="signup-last" name="lastname" type="text" class="form-control"
+                                        placeholder="Lastname" required="required">
+                                </div>
+                            </div>
+                            <div class="email mb-3">
+                                <label class="sr-only" for="signup-email">Email Address</label>
+                                <input id="signup-email" name="email" type="email" class="form-control"
+                                    placeholder="Email Address" required="required">
+                            </div>
+                            <div class="contact mb-3">
+                                <label class="sr-only" for="signup-contact">Contact Number</label>
+                                <input id="signup-contact" name="contact_number" type="text" class="form-control"
+                                    placeholder="Contact Number" required="required">
+                            </div>
+                            <div class="password mb-3 position-relative">
+                                <label class="sr-only" for="signup-password">Password</label>
+                                <input id="signup-password" name="password" type="password" class="form-control"
+                                    placeholder="Password" required="required">
+                                <i class="fa fa-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 text-muted opacity-50"
+                                    id="toggleSignupPass" style="cursor: pointer; z-index: 10;"></i>
+                            </div><!--//form-group-->
+                            <div class="password mb-4 position-relative">
+                                <label class="sr-only" for="confirm-password">Confirm Password</label>
+                                <input id="confirm-password" name="confirm_password" type="password"
+                                    class="form-control" placeholder="Confirm Password" required="required">
+                                <i class="fa fa-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 text-muted opacity-50"
+                                    id="toggleConfirmPass" style="cursor: pointer; z-index: 10;"></i>
+                            </div><!--//form-group-->
+
+                            <div id="passError" class="alert alert-danger mb-4 small py-2" style="display:none;">
+                                <i class="fa fa-exclamation-triangle me-2"></i> Passwords do not match!
                             </div>
 
-                            <div class="mb-4 text-center">
-                                <h4 class="mb-1 fw-bold text-head">Create Citizen Account</h4>
-                                <p class="text-muted small">Provide your details to receive early warning alerts and manage safety reports.</p>
+                            <div class="text-center">
+                                <button type="submit" class="btn app-btn-primary w-100 theme-btn mx-auto"
+                                    onclick="return validateSignup()">CREATE ACCOUNT</button>
                             </div>
+                        </form>
 
-                            <form method="POST" action="/register">
-                                <div class="row g-3 mb-3">
-                                    <div class="col-md-6">
-                                        <div class="form-floating">
-                                            <input type="text" name="firstname" class="form-control" id="floatingFirst" placeholder="Firstname" required>
-                                            <label for="floatingFirst">Firstname</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-floating">
-                                            <input type="text" name="lastname" class="form-control" id="floatingLast" placeholder="Lastname" required>
-                                            <label for="floatingLast">Lastname</label>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="auth-option text-center pt-5">Already have an account? <a class="app-link"
+                                href="/login">Sign In</a></div>
+                    </div><!--//auth-form-container-->
 
-                                <div class="form-floating mb-3">
-                                    <input type="email" name="email" class="form-control" id="floatingEmail" placeholder="Email Address" required>
-                                    <label for="floatingEmail">Email Address</label>
-                                </div>
-                                <div class="form-floating mb-3">
-                                    <input type="number" name="contact_number" class="form-control" id="floatingContact" placeholder="Contact Number" required>
-                                    <label for="floatingContact">Contact Number</label>
-                                </div>
-                                <div class="form-floating mb-3 position-relative">
-                                    <input type="password" name="password" class="form-control" id="signupPassword" placeholder="Password" required>
-                                    <label for="signupPassword">Password</label>
-                                    <i class="fa fa-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 text-muted opacity-50" id="toggleSignupPass" style="cursor: pointer; z-index: 10;"></i>
-                                </div>
+                </div><!--//auth-body-->
 
-                                <div class="form-floating mb-4 position-relative">
-                                    <input type="password" name="confirm_password" class="form-control" id="confirmPassword" placeholder="Confirm Password" required>
-                                    <label for="confirmPassword">Confirm Password</label>
-                                    <i class="fa fa-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 text-muted opacity-50" id="toggleConfirmPass" style="cursor: pointer; z-index: 10;"></i>
-                                </div>
-
-                                <div id="passError" class="alert alert-danger mb-4 small py-2" style="display:none;">
-                                    <i class="fa fa-exclamation-triangle me-2"></i> Passwords do not match!
-                                </div>
-
-                                <button type="submit" class="btn btn-primary py-3 w-100 mb-4 shadow fw-bold letter-spacing-1" onclick="return validateSignup()">CREATE ACCOUNT</button>
-                                <p class="text-center mb-0 small text-muted">Already have an account? <a href="/login" class="text-primary fw-bold text-decoration-none">Sign In</a></p>
-                            </form>
-                        </div>
+                <footer class="app-auth-footer">
+                    <div class="container text-center py-3">
+                        <small class="copyright">Designed with <span class="sr-only">love</span><i class="fas fa-heart"
+                                style="color: #fb866a;"></i> by <a class="app-link" href="#" target="_blank">CitySafe
+                                Team</a></small>
+                    </div>
+                </footer><!--//app-auth-footer-->
+            </div><!--//flex-column-->
+        </div><!--//auth-main-col-->
+        <div class="col-12 col-md-5 col-lg-6 auth-background-col">
+            <div class="auth-background-mask"></div>
+            <div class="auth-background-overlay p-3 p-lg-5">
+                <div class="d-flex flex-column align-content-end h-100">
+                    <div class="copy-content p-3 p-lg-5 text-white">
+                        <h2 class="display-5 fw-bold mb-3">Join CitySafe Today</h2>
+                        <div class="auth-intro">Protecting your community starts with information. Get verified access
+                            to real-time safety data.</div>
+                    </div>
+                    <div class="auth-footer-notes text-white-50 p-3 p-lg-5">
+                        Reliable. Resilient. Responsive.
                     </div>
                 </div>
-            </div>
+            </div><!--//auth-background-overlay-->
+        </div><!--//auth-background-col-->
+    </div><!--//row-->
 
-            <!-- OTP Modal (simple custom modal) -->
-            <div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content bg-card border-light text-white">
-                        <div class="modal-header border-light">
-                            <h5 class="modal-title fw-bold text-head" id="otpModalLabel">Verify Your Email</h5>
-                        </div>
-                        <div class="modal-body text-center p-4">
-                            <div class="bg-dark text-white rounded p-3 mb-4 border border-light">
-                                <i class="fa fa-envelope-open-text text-primary fs-2 mb-2"></i>
-                                <p class="mb-0 small text-muted">We sent a verification code to</p>
-                                <strong id="otpEmailDisplay" class="text-primary"></strong>
-                            </div>
-                            <div class="my-4">
-                                <input type="text" id="otpInput" class="form-control form-control-lg text-center fw-800 letter-spacing-1 bg-dark text-white border-light" maxlength="4" placeholder="0 0 0 0" style="font-size: 2rem; letter-spacing: 0.5rem !important;">
-                            </div>
-                            <div id="otpError" class="text-danger mb-2 small" style="display:none;">Invalid verification code</div>
-                        </div>
-                        <div class="modal-footer border-light">
-                            <button type="button" class="btn btn-primary px-5 py-2 fw-bold" onclick="verifyOtp()">Verify Identity</button>
-                        </div>
+    <!-- OTP Modal -->
+    <div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="otpModalLabel">Verify Your Email</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center p-4">
+                    <div class="bg-light rounded p-3 mb-4 border">
+                        <i class="fa fa-envelope-open-text text-primary fs-2 mb-2"></i>
+                        <p class="mb-0 small text-muted">We sent a verification code to</p>
+                        <strong id="otpEmailDisplay" class="text-primary"></strong>
+                    </div>
+                    <div class="my-4">
+                        <input type="text" id="otpInput" class="form-control form-control-lg text-center fw-800"
+                            maxlength="4" placeholder="0 0 0 0"
+                            style="font-size: 2rem; letter-spacing: 0.5rem !important;">
+                    </div>
+                    <div id="otpError" class="text-danger mb-2 small" style="display:none;">Invalid verification code
                     </div>
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn app-btn-primary px-5 py-2 fw-bold" onclick="verifyOtp()">Verify
+                        Identity</button>
+                </div>
             </div>
-    <%- include('../partials/page-end'); %>
+        </div>
     </div>
 
     <!-- Core Libraries -->
@@ -118,8 +145,8 @@
             });
         }
 
-        setupToggle("#toggleSignupPass", "#signupPassword");
-        setupToggle("#toggleConfirmPass", "#confirmPassword");
+        setupToggle("#toggleSignupPass", "#signup-password");
+        setupToggle("#toggleConfirmPass", "#confirm-password");
 
         function validateSignup() {
             const form = document.querySelector('form');
@@ -128,8 +155,8 @@
                 return false;
             }
 
-            const p1 = document.getElementById("signupPassword").value;
-            const p2 = document.getElementById("confirmPassword").value;
+            const p1 = document.getElementById("signup-password").value;
+            const p2 = document.getElementById("confirm-password").value;
             const err = document.getElementById("passError");
 
             if (p1 !== p2) {
@@ -137,13 +164,6 @@
                 return false;
             }
             err.style.display = "none";
-
-            // AJAX Submission
-            const btn = document.querySelector('button[type="submit"]');
-            const spinner = document.getElementById('spinner');
-
-            spinner.classList.add('show');
-            btn.disabled = true;
 
             const formData = {
                 firstname: document.querySelector('input[name="firstname"]').value,
@@ -160,27 +180,17 @@
             })
                 .then(res => res.json())
                 .then(data => {
-                    spinner.classList.remove('show');
-                    btn.disabled = false;
-
                     if (data.success) {
                         document.getElementById('otpEmailDisplay').innerText = data.email;
-                        
-                        // Use Bootstrap 5 Modal API if available, otherwise fallback to custom
-                        if(typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
                             const otpModal = new bootstrap.Modal(document.getElementById('otpModal'));
                             otpModal.show();
-                        } else {
-                             // Fallback to custom show
-                            showModal('otpModal');
                         }
                     } else {
                         alert(data.message || 'Registration failed');
                     }
                 })
                 .catch(err => {
-                    spinner.classList.remove('show');
-                    btn.disabled = false;
                     alert('Error connecting to server');
                     console.error(err);
                 });
@@ -215,53 +225,8 @@
                 })
                 .catch(err => console.error(err));
         }
-
-        /* Minimal modal helpers to replace Bootstrap modals */
-        function ensureBackdrop() {
-            let bd = document.getElementById('customModalBackdrop');
-            if (!bd) {
-                bd = document.createElement('div');
-                bd.id = 'customModalBackdrop';
-                bd.className = 'modal-backdrop fade show';
-                document.body.appendChild(bd);
-            }
-            return bd;
-        }
-
-        function showModal(id) {
-            const modal = document.getElementById(id);
-            if (!modal) return;
-            const bd = ensureBackdrop();
-            modal.style.display = 'block';
-            modal.classList.add('show');
-            document.body.style.overflow = 'hidden';
-            
-             // Close on click outside
-            modal.addEventListener('click', (e) => {
-                if(e.target === modal) hideModal(id);
-            });
-        }
-
-        function hideModal(id) {
-            const modal = document.getElementById(id);
-            const bd = document.getElementById('customModalBackdrop');
-            if (modal) {
-                modal.classList.remove('show');
-                modal.style.display = 'none';
-            }
-            if (bd) bd.remove();
-            document.body.style.overflow = '';
-        }
-
-        // Handle auto-spinner
-        window.addEventListener('load', () => {
-            const spinner = document.getElementById('spinner');
-            if (spinner) {
-                spinner.classList.remove('show');
-                setTimeout(() => spinner.remove(), 300);
-            }
-        });
     </script>
+    <%- include('../partials/page-end'); %>
 </body>
 
 </html>

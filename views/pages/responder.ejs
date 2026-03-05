@@ -7,351 +7,315 @@
             href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
         <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.min.js"></script>
 
-        
+
 </head>
 
-<body class="bg-dark text-white responder-page">
+<body class="app">
     <%- include('../partials/page-start'); %>
-    <div class="container-fluid position-relative d-flex p-0">
-        <%- include('../partials/spinner'); %>
-            <%- include('../partials/responder-sidebar'); %>
+        <header class="app-header fixed-top">
+            <%- include('../partials/responder-navbar'); %>
+                <%- include('../partials/responder-sidebar'); %>
+        </header>
 
-                <div class="content">
-                    <%- include('../partials/responder-navbar'); %>
+        <div class="app-wrapper">
+            <div class="app-content pt-3 p-md-3 p-lg-4">
+                <div class="container-xl">
+                    <div class="row g-3 mb-4 align-items-center justify-content-between">
+                        <div class="col-auto">
+                            <h1 class="app-page-title mb-0">Field Operations</h1>
+                        </div>
+                        <div class="col-auto">
+                            <div class="page-utilities">
+                                <div class="row g-2 justify-content-start justify-content-md-end align-items-center">
+                                    <div class="col-auto">
+                                        <span class="badge bg-success">LIVE SYSTEM</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                        <!-- Operational Workspace -->
-                        <div class="container-fluid pt-4 px-4 pb-4">
-                            <div class="row g-4">
-                                <!-- Mission Grid -->
-                                <div class="col-12">
-                                    <div class="card overflow-hidden h-100 shadow-sm border-0">
-                                        <div
-                                            class="p-3 bg-secondary border-bottom d-flex align-items-center justify-content-between">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <div class="bg-primary-soft p-2 rounded">
-                                                    <i class="fa fa-crosshairs text-primary small"></i>
-                                                </div>
-                                                <div>
-                                                    <h6 class="mb-0 fw-bold text-head text-uppercase small">Field
-                                                        Operations Grid</h6>
-                                                    <small class="text-muted" style="font-size: 0.7rem;">Real-time
-                                                        Incident Coordination</small>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center gap-2">
-                                                <span
-                                                    class="badge bg-success-soft text-success px-2 py-1 rounded-pill small">LIVE
-                                                    STREAM</span>
+                    <!-- Operational Workspace -->
+                    <div class="row g-4 mb-4">
+                        <!-- Map Component -->
+                        <div class="col-12">
+                            <div class="app-card app-card-map shadow-sm h-100">
+                                <div class="app-card-header p-3 border-bottom-0">
+                                    <div class="row align-items-center gx-3">
+                                        <div class="col-auto">
+                                            <div class="app-icon-holder">
+                                                <i class="fa fa-crosshairs"></i>
                                             </div>
                                         </div>
-                                        <div class="position-relative">
-                                            <div id="map"></div>
-                                            <div class="position-absolute bottom-0 start-0 m-3 p-2 bg-secondary text-white rounded shadow border"
-                                                style="z-index: 1000; min-width: 200px;">
-                                                <div class="d-flex align-items-center gap-2 mb-1">
-                                                    <i class="fa fa-location-arrow text-primary small"></i>
-                                                    <span id="locationStatus"
-                                                        class="small fw-600 text-head">Initializing GPS...</span>
-                                                </div>
-                                                <div class="progress" style="height: 4px;">
-                                                    <div class="progress-bar bg-success progress-bar-striped progress-bar-animated"
-                                                        role="progressbar" style="width: 100%"></div>
-                                                </div>
+                                        <div class="col-auto">
+                                            <h4 class="app-card-title">Operations Grid</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="app-card-body p-0">
+                                    <div class="position-relative">
+                                        <div id="map" style="height: 500px; width: 100%;"></div>
+                                        <div class="position-absolute bottom-0 start-0 m-3 p-2 bg-white rounded shadow-sm border"
+                                            style="z-index: 1000; min-width: 200px;">
+                                            <div class="d-flex align-items-center gap-2 mb-1">
+                                                <i class="fa fa-location-arrow text-primary small"></i>
+                                                <span id="locationStatus" class="small fw-bold text-dark">Initializing
+                                                    GPS...</span>
+                                            </div>
+                                            <div class="progress" style="height: 4px;">
+                                                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated"
+                                                    role="progressbar" style="width: 100%"></div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
 
-                                <!-- Operations Log -->
-                                <div class="col-12" id="nearby-reports">
-                                    <div class="card shadow-sm border-0 h-100">
-                                        <div
-                                            class="p-3 bg-secondary border-bottom d-flex align-items-center justify-content-between">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <div class="bg-indigo-soft p-2 rounded">
-                                                    <i class="fa fa-satellite-dish text-indigo small"></i>
-                                                </div>
-                                                <div>
-                                                    <h6 class="mb-0 fw-bold text-head text-uppercase small">Local
-                                                        Deployments</h6>
-                                                    <small class="text-muted" style="font-size: 0.7rem;">Active reports
-                                                        within 2KM radius</small>
-                                                </div>
-                                            </div>
+                        <!-- Local Deployments Table -->
+                        <div class="col-12" id="nearby-reports">
+                            <div class="app-card app-card-orders shadow-sm h-100">
+                                <div class="app-card-header p-3">
+                                    <div class="row justify-content-between align-items-center">
+                                        <div class="col-auto">
+                                            <h4 class="app-card-title">Local Deployments</h4>
                                         </div>
-                                        <div class="table-responsive">
-                                            <table class="table table-hover align-middle mb-0">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="ps-4">TIMESTAMP</th>
-                                                        <th>REPORTED BY</th>
-                                                        <th>CLASSIFICATION</th>
-                                                        <th>OPERATIONAL ADDRESS</th>
-                                                        <th class="text-end pe-4">ACTION</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="reportsTableBody">
-                                                    <tr>
-                                                        <td colspan="5" class="text-center py-5">
-                                                            <div class="spinner-border spinner-border-sm text-primary mb-2"
-                                                                role="status"></div>
-                                                            <p class="text-muted small mb-0">Scanning operational
-                                                                sectors for reported incidents...</p>
-                                                            <style>
-                                                                #map {
-                                                                    height: 550px;
-                                                                    width: 100%;
-                                                                }
+                                        <div class="col-auto text-end">
+                                            <small class="text-muted">Active reports within 2KM radius</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="app-card-body">
+                                    <div class="table-responsive">
+                                        <table class="table app-table-hover mb-0 text-left">
+                                            <thead>
+                                                <tr>
+                                                    <th class="cell">Timestamp</th>
+                                                    <th class="cell">Reported By</th>
+                                                    <th class="cell">Classification</th>
+                                                    <th class="cell">Operational Address</th>
+                                                    <th class="cell text-end">Action</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="reportsTableBody">
+                                                <tr>
+                                                    <td colspan="5" class="text-center py-5">
+                                                        <div class="spinner-border spinner-border-sm text-primary mb-2"
+                                                            role="status"></div>
+                                                        <p class="text-muted small mb-0">Scanning operational sectors
+                                                            for reported incidents...</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="app-footer">
+                <%- include('../partials/footer'); %>
+            </footer>
+        </div>
 
-                                                                'Flood': L.icon({
-                                                                    iconUrl: 'https://cdn-icons-png.flaticon.com/512/3012/3012727.png', iconSize: [32, 32]
+        <!-- Map and Logic Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            // Use standard Leaflet initialization
+            const map = L.map('map').setView([10.7202, 122.5621], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
 
-                                                                }),
-                                                                'default': L.icon({
-                                                                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-                                                                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                                                                    iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
-                                                                })
-                                                                }
+            let userLocation = null;
+            let userMarker = null;
+            let userCircle = null;
+            const currentMarkers = {};
+            const addressCache = {};
 
-                                                                ;
+            const icons = {
+                'default': L.icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                    iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+                })
+            };
 
-                                                                function addMarker(report) {
-                                                                    if (currentMarkers[report.id]) return;
+            function addMarker(report) {
+                if (currentMarkers[report.id]) return;
 
-                                                                    const marker=L.marker([report.latitude, report.longitude], {
-                                                                        icon: icons['default']
-                                                                    }).addTo(map);
-                                                                const date=new Date(report.reported_at).toLocaleString();
+                const marker = L.marker([report.latitude, report.longitude], {
+                    icon: icons['default']
+                }).addTo(map);
 
-                                                                const popupContent=` <div class="p-1" style="min-width: 180px;"><div class="badge bg-danger text-uppercase mb-2" style="font-size: 10px;">$ {
-                                                                    report.disaster_type
-                                                                }
+                const date = new Date(report.reported_at).toLocaleString();
+                const popupContent = `
+                <div class="p-1" style="min-width: 180px;">
+                    <div class="badge bg-danger text-uppercase mb-2">${report.disaster_type}</div>
+                    <p class="mb-1 small"><strong>Status:</strong> <span class="text-primary">${report.status.toUpperCase()}</span></p>
+                    <p class="mb-2 small"><strong>Reported:</strong> ${date}</p>
+                    <div class="p-2 bg-light rounded small mb-2" id="addr-${report.id}">
+                        <i class="fa fa-spinner fa-spin me-2 opacity-50"></i>Resolving address...
+                    </div>
+                    <button class="btn app-btn-primary btn-sm w-100 py-1 fw-bold" onclick="respondToReport(${report.id}, '${report.disaster_type}')">RESPOND NOW</button>
+                </div>
+            `;
+                marker.bindPopup(popupContent);
 
-                                                                </div><p class="mb-1 small"><strong>Status:</strong><span class="text-primary">$ {
-                                                                    report.status.toUpperCase()
-                                                                }
+                marker.on('popupopen', () => {
+                    const el = document.getElementById(`addr-${report.id}`);
+                    if (!el || !el.innerText.includes('Resolving')) return;
 
-                                                                </span></p><p class="mb-2 small"><strong>Reported:</strong>$ {
-                                                                    date
-                                                                }
+                    if (addressCache[report.id]) {
+                        el.innerText = addressCache[report.id];
+                    } else {
+                        fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${report.latitude}&lon=${report.longitude}`)
+                            .then(r => r.json())
+                            .then(d => {
+                                const addr = d.display_name || "Unknown Location";
+                                addressCache[report.id] = addr;
+                                if (el) el.innerText = addr;
+                                // Also update table if it exists
+                                const tableAddr = document.getElementById(`table-addr-${report.id}`);
+                                if (tableAddr) tableAddr.innerText = addr;
+                            });
+                    }
+                });
+                currentMarkers[report.id] = marker;
+            }
 
-                                                                </p><div class="p-2 bg-light rounded small" id="addr-${report.id}"><i class="fa fa-spinner fa-spin me-2 opacity-50"></i>Resolving address... </div><button class="btn btn-primary btn-sm w-100 mt-2 py-1 small fw-bold" onclick="respondToReport(${report.id}, '${report.disaster_type}')">RESPOND NOW</button></div>`;
-                                                                marker.bindPopup(popupContent);
+            function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+                const R = 6371;
+                const dLat = (lat2 - lat1) * Math.PI / 180;
+                const dLon = (lon2 - lon1) * Math.PI / 180;
+                const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            }
 
-                                                                marker.on('popupopen', ()=> {
-                                                                        const el=document.getElementById(`addr-$ {
-                                                                                report.id
-                                                                            }
+            window.respondToReport = function (id, type) {
+                Swal.fire({
+                    title: 'DEPLOY MISSION?',
+                    text: `Confirm deployment to ${type} incident?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#15a362',
+                    cancelButtonColor: '#828d99',
+                    confirmButtonText: 'DEPLOY NOW'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch('/api/respond', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ reportId: id })
+                        })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire({
+                                        icon: 'success', title: 'Mission Accepted', showConfirmButton: false, timer: 1500
+                                    }).then(() => window.location.href = '/responding');
+                                } else {
+                                    Swal.fire('Error', data.message || data.error, 'error');
+                                }
+                            });
+                    }
+                });
+            };
 
-                                                                            `);
-                                                                        if ( !el || !el.innerText.includes('Resolving')) return;
+            function pollResponder() {
+                fetch('/api/responder-reports')
+                    .then(res => res.json())
+                    .then(newReports => {
+                        const newIds = new Set(newReports.map(r => r.id));
+                        newReports.forEach(r => addMarker(r));
+                        Object.keys(currentMarkers).forEach(id => {
+                            if (!newIds.has(parseInt(id))) {
+                                map.removeLayer(currentMarkers[id]);
+                                delete currentMarkers[id];
+                            }
+                        });
+                        updateNearbyTable(newReports);
+                    })
+                    .catch(err => console.error("Polling error:", err));
+            }
 
-                                                                        if (addressCache[report.id]) {
-                                                                            el.innerText=addressCache[report.id];
-                                                                        }
+            function updateNearbyTable(reportsList) {
+                if (!userLocation) return;
+                const tbody = document.getElementById('reportsTableBody');
+                let rows = '';
+                let hasNearby = false;
 
-                                                                        else {
-                                                                            fetch(`https: //nominatim.openstreetmap.org/reverse?format=json&lat=${report.latitude}&lon=${report.longitude}`)
+                reportsList.forEach(report => {
+                    if (!report.latitude || !report.longitude) return;
+                    const dist = getDistanceFromLatLonInKm(userLocation.lat, userLocation.lon, report.latitude, report.longitude);
 
-                                                                                .then(r=> r.json()).then(d=> {
-                                                                                        const addr=d.display_name || "Unknown Location";
-                                                                                        addressCache[report.id]=addr;
-                                                                                        if (el) el.innerText=addr;
-                                                                                    });
-                                                                            }
-                                                                        });
-                                                                    currentMarkers[report.id]=marker;
-                                                                }
+                    if (dist <= 2) {
+                        hasNearby = true;
+                        const dateStr = new Date(report.reported_at).toLocaleString();
+                        const reporterName = (report.firstname && report.lastname) ? `${report.firstname} ${report.lastname}` : 'Anonymous Citizen';
+                        const addr = addressCache[report.id] || "Pending Geocode...";
 
-                                                                reports.forEach(r=> {
-                                                                        if (r.latitude && r.longitude) addMarker(r);
-                                                                    });
+                        rows += `
+                        <tr>
+                            <td class="cell"><small class="text-muted fw-bold">${dateStr}</small></td>
+                            <td class="cell">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="app-icon-holder small" style="width:24px; height:24px; font-size: 10px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="fa fa-user"></i>
+                                    </div>
+                                    <span class="small fw-600">${reporterName}</span>
+                                </div>
+                            </td>
+                            <td class="cell"><span class="badge bg-danger">${report.disaster_type}</span></td>
+                            <td class="cell"><small class="text-muted d-block text-truncate" style="max-width: 250px;" id="table-addr-${report.id}">${addr}</small></td>
+                            <td class="cell text-end"><button class="btn app-btn-primary btn-sm" onclick="respondToReport(${report.id}, '${report.disaster_type}')">DEPLOY</button></td>
+                        </tr>
+                    `;
+                    }
+                });
 
-                                                                function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
-                                                                    const R=6371;
-                                                                    const dLat=(lat2 - lat1) * Math.PI / 180;
-                                                                    const dLon=(lon2 - lon1) * Math.PI / 180;
-                                                                    const a=Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-                                                                    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-                                                                }
+                if (!hasNearby) {
+                    rows = '<tr><td colspan="5" class="text-center py-5 text-muted small">No active incidents detected in your immediate sector.</td></tr>';
+                }
+                tbody.innerHTML = rows;
+            }
 
-                                                                window.respondToReport=function (id, type) {
-                                                                    Swal.fire({
+            if (navigator.geolocation) {
+                navigator.geolocation.watchPosition(pos => {
+                    userLocation = { lat: pos.coords.latitude, lon: pos.coords.longitude };
+                    document.getElementById('locationStatus').innerText = `${userLocation.lat.toFixed(4)}, ${userLocation.lon.toFixed(4)}`;
 
-                                                                        title: 'DEPLOY MISSION?',
-                                                                        text: `Confirm deployment to $ {
-                                                                            type
-                                                                        }
+                    const responderIcon = L.icon({
+                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                        iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+                    });
 
-                                                                        incident?`,
-                                                                        icon: 'warning',
-                                                                        showCancelButton: true,
-                                                                        confirmButtonColor: 'var(--accent)',
-                                                                        cancelButtonColor: 'var(--text-muted)',
-                                                                        confirmButtonText: 'DEPLOY NOW'
+                    if (userMarker) {
+                        userMarker.setLatLng([userLocation.lat, userLocation.lon]);
+                        userCircle.setLatLng([userLocation.lat, userLocation.lon]);
+                    } else {
+                        userMarker = L.marker([userLocation.lat, userLocation.lon], { icon: responderIcon }).addTo(map).bindPopup("<b>Your Unit Position</b>").openPopup();
+                        userCircle = L.circle([userLocation.lat, userLocation.lon], {
+                            color: '#15a362', weight: 1, fillOpacity: 0.05, radius: 2000
+                        }).addTo(map);
+                    }
 
-                                                                    }).then((result)=> {
-                                                                        if (result.isConfirmed) {
-                                                                            fetch('/api/respond', {
+                    fetch('/api/responder/location', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ lat: userLocation.lat, lng: userLocation.lon })
+                    });
+                }, null, { enableHighAccuracy: true });
+            }
 
-                                                                                method: 'POST',
-                                                                                headers: {
-                                                                                    'Content-Type': 'application/json'
-                                                                                }
+            setInterval(pollResponder, 5000);
+            pollResponder();
+            window.addEventListener('load', () => setTimeout(() => map.invalidateSize(), 500));
+        </script>
+        <%- include('../partials/page-end'); %>
+</body>
 
-                                                                                ,
-                                                                                body: JSON.stringify({
-                                                                                    reportId: id
-                                                                                })
-
-                                                                        }) .then(res=> res.json()) .then(data=> {
-                                                                            if (data.success) {
-                                                                                Swal.fire({
-                                                                                    icon: 'success', title: 'Mission Accepted', showConfirmButton: false, timer: 1500
-                                                                                }) .then(()=> window.location.href='/responding');
-                                                                        }
-
-                                                                        else {
-                                                                            Swal.fire('Error', data.message || data.error, 'error');
-                                                                        }
-                                                                    });
-                                                                }
-                                                                });
-                                                                }
-
-                                                                ;
-
-                                                                function pollResponder() {
-                                                                    fetch('/api/responder-reports') .then(res=> res.json()) .then(newReports=> {
-                                                                            const newIds=new Set(newReports.map(r=> r.id));
-                                                                            newReports.forEach(r=> addMarker(r));
-
-                                                                            Object.keys(currentMarkers).forEach(id=> {
-                                                                                    if ( !newIds.has(parseInt(id))) {
-                                                                                        map.removeLayer(currentMarkers[id]);
-                                                                                        delete currentMarkers[id];
-                                                                                    }
-                                                                                });
-                                                                            updateNearbyTable(newReports);
-                                                                        });
-                                                                }
-
-                                                                function updateNearbyTable(reportsList) {
-                                                                    if ( !userLocation) return;
-                                                                    const tbody=document.getElementById('reportsTableBody');
-                                                                    let rows='';
-                                                                    let hasNearby=false;
-
-                                                                    reportsList.forEach(report=> {
-                                                                            if ( !report.latitude || !report.longitude) return;
-                                                                            const dist=getDistanceFromLatLonInKm(userLocation.lat, userLocation.lon, report.latitude, report.longitude);
-
-                                                                            if (dist <=2) {
-                                                                                hasNearby=true;
-                                                                                const dateStr=new Date(report.reported_at).toLocaleString();
-
-                                                                                const reporterName=(report.firstname && report.lastname) ? `$ {
-                                                                                    report.firstname
-                                                                                }
-
-                                                                                $ {
-                                                                                    report.lastname
-                                                                                }
-
-                                                                                ` : 'Anonymous Citizen';
-                                                                                const addr=addressCache[report.id] || "Pending Geocode...";
-
-                                                                                rows +=` <tr> <td class="ps-4" ><small class="text-muted fw-bold" >$ {
-                                                                                    dateStr
-                                                                                }
-
-                                                                                </small></td> <td><div class="d-flex align-items-center gap-2" ><div class="avatar-xs bg-secondary text-primary rounded-circle d-flex align-items-center justify-content-center" style="width:24px; height:24px;" ><i class="fa fa-user small" ></i></div><span class="small fw-600" >$ {
-                                                                                    reporterName
-                                                                                }
-
-                                                                                </span></div></td> <td><span class="badge bg-danger-soft text-danger" >$ {
-                                                                                    report.disaster_type
-                                                                                }
-
-                                                                                </span></td> <td><small class="text-muted text-truncate d-inline-block" style="max-width: 200px;" >$ {
-                                                                                    addr
-                                                                                }
-
-                                                                                </small></td> <td class="text-end pe-4" ><button class="btn btn-primary btn-xs py-1 px-3 small fw-bold" onclick="respondToReport(${report.id}, '${report.disaster_type}')" >DEPLOY</button></td> </tr> `;
-                                                                            }
-                                                                        });
-
-                                                                    if ( !hasNearby) {
-                                                                        rows='<tr><td colspan="5" class="text-center py-5 text-muted small">No active incidents detected in your immediate sector.</td></tr>';
-                                                                    }
-
-                                                                    tbody.innerHTML=rows;
-                                                                }
-
-                                                                if (navigator.geolocation) {
-                                                                    navigator.geolocation.watchPosition(pos=> {
-                                                                            userLocation= {
-                                                                                lat: pos.coords.latitude, lon: pos.coords.longitude
-                                                                            }
-
-                                                                            ;
-
-                                                                            document.getElementById('locationStatus').innerText=`$ {
-                                                                                userLocation.lat.toFixed(4)
-                                                                            }
-
-                                                                            , $ {
-                                                                                userLocation.lon.toFixed(4)
-                                                                            }
-
-                                                                            `;
-
-                                                                            const responderIcon=L.icon({
-                                                                                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-                                                                                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                                                                                iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
-                                                                            });
-
-                                                                        if (userMarker) {
-                                                                            userMarker.setLatLng([userLocation.lat, userLocation.lon]);
-                                                                            userCircle.setLatLng([userLocation.lat, userLocation.lon]);
-                                                                        }
-
-                                                                        else {
-                                                                            userMarker=L.marker([userLocation.lat, userLocation.lon], {
-                                                                                icon: responderIcon
-                                                                            }).addTo(map).bindPopup("<b>Unit Position</b>").openPopup();
-
-                                                                        userCircle=L.circle([userLocation.lat, userLocation.lon], {
-                                                                            color: 'var(--accent)', weight: 1, fillOpacity: 0.05, radius: 2000
-                                                                        }).addTo(map);
-                                                                }
-
-                                                                fetch('/api/responder/location', {
-
-                                                                    method: 'POST',
-                                                                    headers: {
-                                                                        'Content-Type': 'application/json'
-                                                                    }
-
-                                                                    ,
-                                                                    body: JSON.stringify({
-                                                                        lat: userLocation.lat, lng: userLocation.lon
-                                                                    })
-                                                                });
-                                                                }
-
-                                                                , null, {
-                                                                enableHighAccuracy: true
-                                                                });
-                                                                }
-
-                                                                setInterval(pollResponder, 5000);
-                                                                pollResponder();
-
-                                                                window.addEventListener('load', ()=> setTimeout(()=> map.invalidateSize(), 500));
-                                                                </script>
-                                                            <%- include('../partials/page-end'); %>
-                                                            </body>
-                                                            </html>
+</html>

@@ -2,89 +2,107 @@
 <html lang="en">
 
 <head>
-  <%- include('../partials/head'); %>
+    <%- include('../partials/head'); %>
 </head>
 
-<body class="bg-dark text-white">
-  <%- include('../partials/page-start'); %>
-  <div class="container-fluid position-relative d-flex p-0">
-    <%- include('../partials/spinner'); %>
-      <%- include('../partials/visitor-sidebar'); %>
+<body class="app">
+    <%- include('../partials/page-start'); %>
+        <header class="app-header fixed-top">
+            <%- include('../partials/visitor-navbar'); %>
+                <%- include('../partials/visitor-sidebar'); %>
+        </header>
 
-        <div class="content">
-          <%- include('../partials/visitor-navbar'); %>
+        <div class="app-wrapper">
+            <div class="app-content pt-3 p-md-3 p-lg-4">
+                <div class="container-xl">
+                    <h1 class="app-page-title">Contact Us</h1>
 
-            <div class="container-fluid pt-4 px-4">
-                <div class="bg-card shadow-sm text-center rounded mb-4 p-5">
-                    <div class="d-flex align-items-center justify-content-center gap-3">
-                        <i class="bi bi-cloud-sun fs-1 text-primary"></i>
-                        <h1 class="mb-0 fw-800 text-head letter-spacing-1">Welcome to CitySafe!</h1>
-                    </div>
-                </div>
-
-                <div class="row g-4">                    
-                    <div class="col-sm-12 col-xl-6">
-                        <div class="bg-card rounded h-100 p-4 shadow-sm border border-light">
-                            <h6 class="mb-4 fw-bold text-uppercase letter-spacing-1 text-muted small">Send Us a Message</h6>
-                            <form action="/send-message" method="POST" onsubmit="return showLoading()">
-                                <div class="form-floating mb-3">
-                                    <input type="email" class="form-control" id="floatingEmail" name="email" placeholder="name@example.com" required>
-                                    <label for="floatingEmail">Email address</label>
-                                    <div id="emailHelp" class="form-text text-muted ps-2 small">We'll never share your email with anyone else.</div>
+                    <div class="row g-4 overflow-hidden">
+                        <div class="col-12 col-lg-6">
+                            <div class="app-card app-card-settings shadow-sm p-4">
+                                <div class="app-card-header p-0 border-0 mb-3">
+                                    <h4 class="app-card-title">Send Us a Message</h4>
                                 </div>
-                                <div class="form-floating mb-3">
-                                    <input type="text" class="form-control" id="floatingName" name="name" placeholder="Name" required>
-                                    <label for="floatingName">Name</label>
+                                <div class="app-card-body">
+                                    <form action="/send-message" method="POST" onsubmit="return showLoading()">
+                                        <div class="mb-3">
+                                            <label for="floatingEmail" class="form-label">Email address</label>
+                                            <input type="email" class="form-control" id="floatingEmail" name="email"
+                                                placeholder="name@example.com" required>
+                                            <div id="emailHelp" class="form-text">We'll never share your email with
+                                                anyone else.</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="floatingName" class="form-label">Name</label>
+                                            <input type="text" class="form-control" id="floatingName" name="name"
+                                                placeholder="Your Name" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="floatingTextarea" class="form-label">Message</label>
+                                            <textarea class="form-control" placeholder="Leave a comment here"
+                                                id="floatingTextarea" name="message" style="height: 150px;"
+                                                required></textarea>
+                                        </div>
+                                        <button type="submit" class="btn app-btn-primary w-100 py-3">SEND
+                                            MESSAGE</button>
+                                    </form>
                                 </div>
-                                <div class="form-floating mb-3">
-                                    <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea" name="message" style="height: 150px;" required></textarea>
-                                    <label for="floatingTextarea">Comments</label>
-                                </div>
-                                <button type="submit" class="btn btn-primary py-3 w-100 shadow fw-bold letter-spacing-1">SEND MESSAGE</button>
-                            </form>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="col-sm-12 col-xl-6">
-                        <div class="bg-card rounded h-100 p-4 shadow-sm border border-light">
-                            <h6 class="mb-4 fw-bold text-uppercase letter-spacing-1 text-muted small">Team Contacts</h6>
-                            <div class="list-group list-group-flush mb-4 rounded border border-light overflow-hidden">
-                                <div class="list-group-item bg-dark border-light text-muted">
-                                    <strong class="text-white">Jayrold Tabalina:</strong> jayroldtabalina@gmail.com
+                        <div class="col-12 col-lg-6">
+                            <div class="app-card app-card-notification shadow-sm mb-4 p-4">
+                                <div class="app-card-header p-0 border-0 mb-3">
+                                    <h4 class="app-card-title">Emergency Hotlines</h4>
                                 </div>
-                                <div class="list-group-item bg-dark border-light text-muted">
-                                    <strong class="text-white">Yasmine Talaman:</strong> yama.talaman.ui@phinmaed.com
-                                </div>
-                                <div class="list-group-item bg-dark border-light text-muted">
-                                    <strong class="text-white">Mark Vincent Jabao:</strong> mark.jabao@gmail.com
+                                <div class="app-card-body">
+                                    <div class="d-flex flex-column gap-2">
+                                        <div
+                                            class="d-flex justify-content-between align-items-center p-2 bg-light rounded">
+                                            <span>National Emergency Hotline</span>
+                                            <span class="badge bg-danger">911</span>
+                                        </div>
+                                        <div
+                                            class="d-flex justify-content-between align-items-center p-2 bg-light rounded">
+                                            <span>Police (PNP)</span>
+                                            <span class="badge bg-primary">117</span>
+                                        </div>
+                                        <div
+                                            class="d-flex justify-content-between align-items-center p-2 bg-light rounded">
+                                            <span>Fire (BFP)</span>
+                                            <span class="badge bg-warning text-dark">(02) 8426-0219</span>
+                                        </div>
+                                        <div
+                                            class="d-flex justify-content-between align-items-center p-2 bg-light rounded">
+                                            <span>Red Cross</span>
+                                            <span class="badge bg-info">143</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <h6 class="mb-4 fw-bold text-uppercase letter-spacing-1 text-muted small">Emergency Hotlines</h6>
-                            <div class="list-group list-group-flush rounded border border-light overflow-hidden">
-                                <div class="list-group-item bg-dark border-light text-muted d-flex justify-content-between align-items-center">
-                                    <span>National Emergency Hotline</span>
-                                    <span class="badge bg-danger-soft text-danger fw-bold">911</span>
+                            <div class="app-card app-card-settings shadow-sm p-4">
+                                <div class="app-card-header p-0 border-0 mb-3">
+                                    <h4 class="app-card-title">Direct Contacts</h4>
                                 </div>
-                                <div class="list-group-item bg-dark border-light text-muted d-flex justify-content-between align-items-center">
-                                    <span>PNP (Police)</span>
-                                    <span class="badge bg-primary-soft text-primary fw-bold">117</span>
-                                </div>
-                                <div class="list-group-item bg-dark border-light text-muted d-flex justify-content-between align-items-center">
-                                    <span>BFP (Fire)</span>
-                                    <span class="badge bg-warning-soft text-warning fw-bold">(02) 8426-0219</span>
-                                </div>
-                                <div class="list-group-item bg-dark border-light text-muted d-flex justify-content-between align-items-center">
-                                    <span>Red Cross</span>
-                                    <span class="badge bg-info-soft text-info fw-bold">143</span>
-                                </div>
-                                <div class="list-group-item bg-dark border-light text-muted d-flex justify-content-between align-items-center">
-                                    <span>MMDA</span>
-                                    <span class="badge bg-secondary text-white fw-bold">136</span>
-                                </div>
-                                <div class="list-group-item bg-dark border-light text-muted d-flex justify-content-between align-items-center">
-                                    <span>NDRRMC</span>
-                                    <span class="badge bg-success-soft text-success fw-bold">(02) 8911-5061</span>
+                                <div class="app-card-body">
+                                    <div class="list-group list-group-flush">
+                                        <div
+                                            class="list-group-item bg-transparent px-0 border-light d-flex justify-content-between">
+                                            <span class="text-muted">Jayrold Tabalina</span>
+                                            <span class="fw-bold">jayroldtabalina@gmail.com</span>
+                                        </div>
+                                        <div
+                                            class="list-group-item bg-transparent px-0 border-light d-flex justify-content-between">
+                                            <span class="text-muted">Yasmine Talaman</span>
+                                            <span class="fw-bold">yama.talaman.ui@phinmaed.com</span>
+                                        </div>
+                                        <div
+                                            class="list-group-item bg-transparent px-0 border-0 d-flex justify-content-between">
+                                            <span class="text-muted">Mark Vincent Jabao</span>
+                                            <span class="fw-bold">mark.jabao@gmail.com</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -92,69 +110,47 @@
                 </div>
             </div>
 
-            <%- include('../partials/page-end'); %>
-            <%- include('../partials/footer'); %>
+            <footer class="app-footer">
+                <%- include('../partials/footer'); %>
+            </footer>
+        </div>
 
-      </div>
+        <script src="/js/script.js"></script>
+        <script>
+            function showLoading() {
+                Swal.fire({
+                    title: 'Sending Message',
+                    html: '<div class="spinner-border text-primary" role="status"></div><p class="mt-2">Please wait...</p>',
+                    allowOutsideClick: false,
+                    showConfirmButton: false
+                });
+                return true;
+            }
 
-      <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top rounded-circle shadow-lg"><i class="bi bi-arrow-up"></i></a>
-  </div>
+            document.addEventListener('DOMContentLoaded', function () {
+                const urlParams = new URLSearchParams(window.location.search);
+                const status = urlParams.get('status');
 
-  <script src="/js/script.js"></script>
-
-  <!-- Contact Form SweetAlert Logic -->
-  <script>
-    // Loading Spinner
-    function showLoading() {
-      Swal.fire({
-        title: 'Sending Message',
-        html: `
-          <div class="dots-loading">
-            <div class="dot"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
-          </div>
-          <p class="mt-2 text-muted">Please wait...</p>
-        `,
-        allowOutsideClick: false,
-        showConfirmButton: false, 
-        background: '#191C24',
-        color: '#fff'
-      });
-      return true; // Allow form submission
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const status = urlParams.get('status');
-
-        if (status === 'success') {
-            Swal.fire({
-                icon: 'success',
-                title: 'Message Sent!',
-                text: 'We have received your message and will contact you shortly.',
-                confirmButtonColor: '#EB1616',
-                background: '#191C24',
-                color: '#fff'
-            }).then(() => {
-                // Clean URL
-                window.history.replaceState({}, document.title, window.location.pathname);
+                if (status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Message Sent!',
+                        text: 'We have received your message and will contact you shortly.',
+                        confirmButtonColor: '#15a362'
+                    }).then(() => {
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    });
+                } else if (status === 'error') {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Sending Failed',
+                        text: 'Something went wrong. Please try again later.'
+                    }).then(() => {
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                    });
+                }
             });
-        } else if (status === 'error') {
-            Swal.fire({
-                icon: 'error',
-                title: 'Sending Failed',
-                text: 'Something went wrong. Please try again later.',
-                confirmButtonColor: '#EB1616',
-                background: '#191C24',
-                color: '#fff'
-            }).then(() => {
-                window.history.replaceState({}, document.title, window.location.pathname);
-            });
-        }
-    });
-  </script>
+        </script>
 </body>
 
 </html>
-

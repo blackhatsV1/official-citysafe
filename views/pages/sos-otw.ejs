@@ -18,175 +18,181 @@
 </head>
 <!-- ========================================================================= -->
 
-<body>
+<body class="app">
     <%- include('../partials/page-start'); %>
-    <div class="container-fluid position-relative d-flex p-0">
-        <!-- Spinner Start -->
-        <%- include('../partials/spinner'); %>
-            <!-- Spinner End -->
 
+        <header class="app-header fixed-top">
+            <%- include('../partials/user-navbar'); %>
+                <%- include('../partials/user-sidebar'); %>
+        </header>
 
-            <!-- Sidebar Start -->
-            <%- include('../partials/user-sidebar'); %>
-                <!-- Sidebar End -->
-
-
-                <!-- Content Start -->
-                <div class="content">
-                    <!-- Navbar Start -->
-                    <%- include('../partials/user-navbar'); %>
-                        <!-- Navbar End -->
-
-                        <!-- Weather Info -->
-                        <!-- Page Header -->
-                        <div class="container-fluid pt-4 px-4">
-                            <div class="bg-secondary rounded p-4 text-center">
-                                <h1 class="mb-0">Emergency Resources</h1>
+        <div class="app-wrapper">
+            <div class="app-content pt-3 p-md-3 p-lg-4">
+                <div class="container-xl">
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="app-card app-card-settings shadow-sm p-4 text-center">
+                                <h1 class="app-page-title text-danger mb-2"><i
+                                        class="fa fa-triangle-exclamation me-2"></i>Emergency Resources</h1>
                                 <p class="mb-0 text-muted">Locate nearest safe zones and contact emergency hotlines.</p>
                             </div>
                         </div>
-                        <!-- Weather Info End -->
+                    </div>
 
-                        <!-- Sales Chart Start -->
-                        <div class="container-fluid pt-4 px-4">
-                            <div class="row g-4">
-                                <!-- Left Column (Bigger) -->
-                                <div class="col-sm-12 col-xl-8">
-                                    <div class="bg-secondary text-center rounded p-4 h-100">
-                                        <div class="d-flex align-items-center justify-content-between mb-4">
-                                            <h6 class="mb-0">Nearby Help Stations</h6>
-                                        </div>
-                                        <div class="container mt-0">
-                                            <div class="bg-secondary p-3">
-                                                <p id="address">Address:</p>
-                                                <p id="coords"></p>
-                                                <div id="map"></div>
-                                            </div>
+                    <div class="row g-4 mb-4">
+                        <!-- Left Column (Bigger) -->
+                        <div class="col-12 col-xl-8">
+                            <div class="app-card app-card-settings shadow-sm h-100">
+                                <div class="app-card-header p-3 border-bottom-0">
+                                    <h4 class="app-card-title">Nearby Help Stations</h4>
+                                </div>
+                                <div class="app-card-body p-4 pt-0">
+                                    <div class="bg-light rounded p-3 mb-3 border">
+                                        <p id="address" class="mb-1 text-primary fw-bold">Address: Loading...</p>
+                                        <p id="coords" class="small text-muted mb-0"></p>
+                                    </div>
 
-                                            <script>
-                                                const redIcon = new L.Icon({
-                                                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-                                                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.4/images/marker-shadow.png',
-                                                    iconSize: [25, 41],
-                                                    iconAnchor: [12, 41],
-                                                    popupAnchor: [1, -34],
-                                                    shadowSize: [41, 41]
+                                    <div id="map" class="rounded shadow-sm border" style="height: 400px; width: 100%;">
+                                    </div>
+
+                                    <script>
+                                        const redIcon = new L.Icon({
+                                            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+                                            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.4/images/marker-shadow.png',
+                                            iconSize: [25, 41],
+                                            iconAnchor: [12, 41],
+                                            popupAnchor: [1, -34],
+                                            shadowSize: [41, 41]
+                                        });
+
+                                        const map = L.map('map');
+
+                                        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                            maxZoom: 18,
+                                            attribution: '© OpenStreetMap'
+                                        }).addTo(map);
+
+                                        map.locate({ setView: true, maxZoom: 16 });
+
+                                        function onLocationFound(e) {
+                                            const { lat, lng } = e.latlng;
+                                            const radius = e.accuracy;
+
+                                            L.marker([lat, lng]).addTo(map)
+                                                .bindPopup(`You are within ${radius.toFixed(0)} meters.`).openPopup();
+                                            L.circle([lat, lng], radius).addTo(map);
+
+                                            document.getElementById("coords").textContent = `Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`;
+
+                                            fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+                                                .then(res => res.json())
+                                                .then(data => {
+                                                    document.getElementById("address").innerHTML = `<b>${data.display_name}</b>`;
                                                 });
 
-                                                const map = L.map('map');
+                                            // Automatically fetch nearby stations
+                                            fetch('/nearby-stations', {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/json'
+                                                },
+                                                body: JSON.stringify({ lat, lng })
+                                            })
+                                                .then(res => res.json())
+                                                .then(data => {
+                                                    data.forEach(station => {
+                                                        L.marker([station.latitude, station.longitude], { icon: redIcon })
+                                                            .addTo(map)
+                                                            .bindPopup(`<b>${station.name}</b><br>Type: ${station.type}<br>Distance: ${station.distance.toFixed(2)} km`);
+                                                    });
 
-                                                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                                                    maxZoom: 300,
-                                                    attribution: '© OpenStreetMap'
-                                                }).addTo(map);
+                                                    if (data.length > 0) {
+                                                        const nearest = data[0];
+                                                        L.Routing.control({
+                                                            waypoints: [
+                                                                L.latLng(lat, lng),
+                                                                L.latLng(nearest.latitude, nearest.longitude)
+                                                            ],
+                                                            lineOptions: {
+                                                                styles: [{ color: 'blue', weight: 5, opacity: 0.7 }]
+                                                            },
+                                                            routeWhileDragging: false,
+                                                            showAlternatives: false,
+                                                            addWaypoints: false,
+                                                            draggableWaypoints: false,
+                                                            fitSelectedRoutes: true,
+                                                            createMarker: function () { return null; }
+                                                        }).addTo(map);
+                                                    }
+                                                })
+                                                .catch(error => {
+                                                    console.error('Error fetching nearby stations:', error);
+                                                });
+                                        }
 
-                                                map.locate({ setView: true, maxZoom: 16 });
-
-                                                function onLocationFound(e) {
-                                                    const { lat, lng } = e.latlng;
-                                                    const radius = e.accuracy;
-
-                                                    L.marker([lat, lng]).addTo(map)
-                                                        .bindPopup(`You are within ${radius.toFixed(0)} meters.`).openPopup();
-                                                    L.circle([lat, lng], radius).addTo(map);
-
-                                                    document.getElementById("coords").textContent = `Lat: ${lat}, Lng: ${lng}`;
-
-                                                    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
-                                                        .then(res => res.json())
-                                                        .then(data => {
-                                                            document.getElementById("address").innerHTML = `<b>${data.display_name}</b>`;
-                                                        });
-
-                                                    // Automatically fetch nearby stations
-                                                    fetch('/nearby-stations', {
-                                                        method: 'POST',
-                                                        headers: {
-                                                            'Content-Type': 'application/json'
-                                                        },
-                                                        body: JSON.stringify({ lat, lng })  // Send lat and lng
-                                                    })
-                                                        .then(res => res.json())
-                                                        .then(data => {
-                                                            // Show all stations as red markers
-                                                            data.forEach(station => {
-                                                                L.marker([station.latitude, station.longitude], { icon: redIcon })
-                                                                    .addTo(map)
-                                                                    .bindPopup(`<b>${station.name}</b><br>Type: ${station.type}<br>Distance: ${station.distance.toFixed(2)} km`);
-                                                            });
-
-                                                            // Draw route only to the nearest station (first one in the list)
-                                                            const nearest = data[0];
-                                                            L.Routing.control({
-                                                                waypoints: [
-                                                                    L.latLng(lat, lng),
-                                                                    L.latLng(nearest.latitude, nearest.longitude)
-                                                                ],
-                                                                lineOptions: {
-                                                                    styles: [{ color: 'blue', weight: 5 }]
-                                                                },
-                                                                routeWhileDragging: false,
-                                                                showAlternatives: false,
-                                                                addWaypoints: false,
-                                                                draggableWaypoints: true,
-                                                                fitSelectedRoutes: true
-                                                            }).addTo(map);
-                                                        })
-                                                        .catch(error => {
-                                                            console.error('Error fetching nearby stations:', error);
-                                                        });
-                                                }
-
-                                                map.on('locationfound', onLocationFound);
-                                            </script>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Right Column (Smaller but same height) -->
-                                <div class="col-sm-12 col-xl-4">
-                                    <div class="bg-secondary justify-content-center rounded p-4 h-100">
-                                        <div class="d-flex justify-content-between mb-4">
-                                            <h6 class="mb-0">Emergency Assistance</h6>
-                                        </div>
-                                        <p>If you need immediate assistance, please refer to the following emergency
-                                            contact numbers:</p>
-                                        <hr>
-                                        <ul class="list-group mt-3">
-                                            <li class="list-group-item bg-transparent"><strong>National Emergency
-                                                    Hotline:</strong> 911</li>
-                                            <li class="list-group-item bg-transparent"><strong>PNP (Police):</strong>
-                                                117 or (02) 8722-0650</li>
-                                            <li class="list-group-item bg-transparent"><strong>BFP (Fire):</strong> (02)
-                                                8426-0219</li>
-                                            <li class="list-group-item bg-transparent"><strong>Red Cross:</strong> 143
-                                                or (02) 8790-2300</li>
-                                            <li class="list-group-item bg-transparent"><strong>MMDA:</strong> 136</li>
-                                            <li class="list-group-item bg-transparent"><strong>NDRRMC Operations
-                                                    Center:</strong> (02) 8911-5061 to 65</li>
-                                        </ul>
-                                    </div>
+                                        map.on('locationfound', onLocationFound);
+                                        map.on('locationerror', function (e) {
+                                            alert("Location error. Please enable location services.");
+                                        });
+                                    </script>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Sales Chart End -->
+                        <!-- Right Column (Smaller but same height) -->
+                        <div class="col-12 col-xl-4">
+                            <div class="app-card app-card-notification shadow-sm p-4 h-100">
+                                <h4 class="app-card-title mb-3">Emergency Assistance</h4>
+                                <div class="app-card-body">
+                                    <p class="text-muted small">If you need immediate assistance, please refer to the
+                                        following emergency contact numbers:</p>
 
-
-                        <!-- Footer Start -->
-                        <%- include('../partials/page-end'); %>
-                        <%- include('../partials/footer'); %>
-                            <!-- Footer End -->
-
+                                    <div class="list-group list-group-flush border rounded mt-3">
+                                        <div
+                                            class="list-group-item bg-light border-bottom d-flex justify-content-between align-items-center p-3">
+                                            <div class="fw-bold">National Hotline</div>
+                                            <span class="badge bg-danger fs-6">911</span>
+                                        </div>
+                                        <div
+                                            class="list-group-item bg-light border-bottom d-flex justify-content-between align-items-center p-3">
+                                            <div class="fw-bold">PNP (Police)</div>
+                                            <div><span class="badge bg-primary fs-6 me-1">117</span> <span
+                                                    class="small">(02) 8722-0650</span></div>
+                                        </div>
+                                        <div
+                                            class="list-group-item bg-light border-bottom d-flex justify-content-between align-items-center p-3">
+                                            <div class="fw-bold">BFP (Fire)</div>
+                                            <span class="small">(02) 8426-0219</span>
+                                        </div>
+                                        <div
+                                            class="list-group-item bg-light border-bottom d-flex justify-content-between align-items-center p-3">
+                                            <div class="fw-bold">Red Cross</div>
+                                            <div><span class="badge bg-info text-white fs-6 me-1">143</span> <span
+                                                    class="small">(02) 8790-2300</span></div>
+                                        </div>
+                                        <div
+                                            class="list-group-item bg-light border-bottom d-flex justify-content-between align-items-center p-3">
+                                            <div class="fw-bold">MMDA</div>
+                                            <span class="badge bg-success fs-6">136</span>
+                                        </div>
+                                        <div
+                                            class="list-group-item bg-light border-0 d-flex justify-content-between align-items-center p-3">
+                                            <div class="fw-bold">NDRRMC</div>
+                                            <span class="small">(02) 8911-5061</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <!-- Content End -->
+            </div>
 
+            <%- include('../partials/footer'); %>
+        </div>
 
-                <!-- Back to Top -->
-                <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-    </div>
-
-    <script src="/js/script.js"></script>
+        <%- include('../partials/page-end'); %>
+            <script src="/js/script.js"></script>
 </body>
 
 </html>

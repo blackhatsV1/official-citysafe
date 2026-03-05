@@ -4,76 +4,84 @@
 <head>
   <%- include('../partials/head'); %>
 </head>
-<body>
+
+<body class="app">
   <%- include('../partials/page-start'); %>
-  <div class="container-fluid position-relative d-flex p-0">
-    <!-- Spinner Start -->
-    <%- include('../partials/spinner'); %>
-    <!-- Spinner End -->
 
+    <header class="app-header fixed-top">
+      <%- include('../partials/user-navbar'); %>
+        <%- include('../partials/user-sidebar'); %>
+    </header>
 
-    <!-- Sidebar Start -->
-    <%- include('../partials/user-sidebar'); %>
-      <!-- Sidebar End -->
+    <div class="app-wrapper">
+      <div class="app-content pt-3 p-md-3 p-lg-4">
+        <div class="container-xl">
+          <div class="row g-3 mb-4 align-items-center justify-content-between">
+            <div class="col-auto">
+              <h1 class="app-page-title mb-0">Help Center Dashboard</h1>
+            </div>
+          </div>
 
-
-      <!-- Content Start -->
-      <div class="content">
-        <!-- Navbar Start -->
-        <%- include('../partials/user-navbar'); %>
-          <!-- Navbar End -->
-
-          <!-- Map Start -->
-          <div class="container-fluid pt-4 px-4">
-            <div class="row g-4">
-              <div class="col-sm-12 col-xl-6">
-                <div class="bg-secondary text-center rounded p-4">
-                  <div class="d-flex align-items-center justify-content-between mb-4">
-                    <h6 class="mb-0">Viewing Live Location</h6>
-                  </div>
-                  <div>
-                        <%- include('../partials/selectloc'); %>
-                  </div>
+          <div class="row g-4 mb-4">
+            <div class="col-12 col-lg-8 mx-auto">
+              <div class="app-card app-card-settings shadow-sm p-4">
+                <div class="app-card-header p-3 border-bottom-0">
+                  <h4 class="app-card-title">Request Medical Assistance</h4>
                 </div>
-              </div>
-              <div class="col-sm-12 col-xl-6">
-                <div class="h-100 bg-secondary rounded p-4">
-                  <div class="d-flex align-items-center justify-content-between mb-4">
-                    <h6 class="mb-0">Request Help</h6>
-                  </div>
-                  <form action="/postrequest" method="POST">
-                        <label class="form-label mb-1">Your Name:</label>
-                        <input class="form-control mb-3" type="text" name="name" placeholder="Your Name" value="<%= username %>" required>
-                
-                        <label class="form-label mb-1">Your Location:</label>
-                        <textarea class="form-control mb-3" id="location" name="location" placeholder="Your Location" required></textarea>
-                
-                        <label class="form-label mb-1">Your Needs:</label>
-                        <textarea class="form-control mb-3" name="needs" placeholder="Describe your need" required></textarea>
-                
-                        <button class="btn btn-primary mb-0" type="submit">Post Request</button>
-                    </form>
+                <div class="app-card-body">
+
+                  <form action="/api/med-request" method="POST">
+                    <div class="mb-4">
+                      <label for="address" class="form-label">Current Location Address</label>
+                      <input type="text" class="form-control bg-light" id="address" name="address" readonly>
+                    </div>
+
+                    <div class="mb-4">
+                      <label class="form-label">Select Location on Map</label>
+                      <div id="map" class="rounded border mb-2" style="height: 300px; width: 100%;"></div>
+                      <small class="text-muted d-block"><i class="fa fa-info-circle me-1"></i>Click on the map to select
+                        your exact location for the request.</small>
+                    </div>
+
+                    <div class="row g-3">
+                      <div class="col-md-6">
+                        <label for="latitude" class="form-label">Latitude</label>
+                        <input type="text" class="form-control bg-light" id="latitude" name="latitude" required
+                          readonly>
+                      </div>
+                      <div class="col-md-6">
+                        <label for="longitude" class="form-label">Longitude</label>
+                        <input type="text" class="form-control bg-light" id="longitude" name="longitude" required
+                          readonly>
+                      </div>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-top text-end">
+                      <button type="submit" class="btn app-btn-primary theme-btn w-100 py-2">
+                        <i class="fa fa-paper-plane me-2"></i>Submit Request
+                      </button>
+                    </div>
+                  </form>
 
                 </div>
               </div>
             </div>
           </div>
-          <!-- Map End -->
-
-          <!-- Footer Start -->
-          <%- include('../partials/page-end'); %>
-          <%- include('../partials/footer'); %>
-            <!-- Footer End -->
-
+        </div>
       </div>
-      <!-- Content End -->
 
+      <%- include('../partials/footer'); %>
+    </div>
 
-      <!-- Back to Top -->
-      <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-  </div>
+    <%- include('../partials/page-end'); %>
 
-  <script src="/js/script.js"></script>
+      <!-- External Scripts for Map -->
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+      <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-routing-machine/3.2.12/leaflet-routing-machine.min.js"></script>
+      <script src="/js/script.js"></script>
+      <script src="/js/sos.js"></script>
 </body>
 
 </html>

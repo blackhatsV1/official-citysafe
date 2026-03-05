@@ -1,49 +1,64 @@
-<div class="sidebar">
-    <div class="px-4 mb-4">
-        <a href="/visitor" class="d-flex align-items-center gap-2 text-decoration-none">
-            <i class="fa fa-shield-alt fs-4 text-primary"></i>
-            <h4 class="mb-0 text-white fw-bold letter-spacing-1">CITYSAFE</h4>
-        </a>
-    </div>
+<div id="app-sidepanel" class="app-sidepanel shadow-sm">
+    <div id="sidepanel-drop" class="sidepanel-drop border-0"></div>
+    <div class="sidepanel-inner d-flex flex-column">
+        <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
+        <div class="app-branding text-center">
+            <a class="app-logo" href="/visitor">
+                <i class="fa fa-shield-alt text-primary fs-4 me-2"></i>
+                <span class="logo-text">CITYSAFE</span>
+            </a>
+        </div>
 
-    <!-- Visitor Info Summary -->
-    <div class="px-4 mb-4">
-        <div class="p-3 rounded bg-secondary border border-light">
-            <div class="d-flex align-items-center gap-3">
-                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center" style="min-width: 32px; height: 32px;">
-                    <i class="fa fa-user-secret text-dark fs-6"></i>
+        <div class="app-sidepanel-user px-3 py-2 border-bottom mb-3">
+            <div class="d-flex align-items-center gap-2">
+                <div class="app-icon-holder small shadow-sm bg-light">
+                    <i class="fa fa-user-secret text-secondary"></i>
                 </div>
                 <div class="overflow-hidden">
-                    <h6 class="mb-0 text-white text-truncate small fw-bold">GUEST</h6>
-                    <span class="text-muted d-block text-uppercase small" style="font-size: 0.65rem; letter-spacing: 0.05em;">Public Access</span>
+                    <h6 class="mb-0 text-truncate small fw-bold text-dark">GUEST ACCESS</h6>
+                    <span class="badge bg-secondary" style="font-size: 0.6rem;">PUBLIC</span>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="nav flex-column">
-        <span class="px-4 mb-2 text-muted text-uppercase fw-bold" style="font-size: 0.7rem; opacity: 0.5;">General</span>
-        <a href="/visitor" class="nav-link active">
-            <i class="fa fa-home"></i>
-            <span>Portal Overview</span>
-        </a>
-        <a href="/services" class="nav-link">
-            <i class="fa fa-th-list"></i>
-            <span>Our Services</span>
-        </a>
-        <a href="/about" class="nav-link">
-            <i class="fa fa-info-circle"></i>
-            <span>About Us</span>
-        </a>
-        <a href="/contact" class="nav-link">
-            <i class="fa fa-envelope"></i>
-            <span>Contact</span>
-        </a>
+        <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
+            <ul class="app-menu list-unstyled accordion" id="menu-accordion">
+                <li class="nav-item">
+                    <a class="nav-link <%= (typeof page !== 'undefined' && page === 'visitor') ? 'active' : '' %>"
+                        href="/visitor">
+                        <span class="nav-icon"><i class="fa fa-home"></i></span>
+                        <span class="nav-link-text">Portal Home</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <%= (typeof page !== 'undefined' && page === 'services') ? 'active' : '' %>"
+                        href="/services">
+                        <span class="nav-icon"><i class="fa fa-th-list"></i></span>
+                        <span class="nav-link-text">Services</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <%= (typeof page !== 'undefined' && page === 'about') ? 'active' : '' %>"
+                        href="/about">
+                        <span class="nav-icon"><i class="fa fa-info-circle"></i></span>
+                        <span class="nav-link-text">About us</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <%= (typeof page !== 'undefined' && page === 'contact') ? 'active' : '' %>"
+                        href="/contact">
+                        <span class="nav-icon"><i class="fa fa-envelope"></i></span>
+                        <span class="nav-link-text">Contact</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
 
-        <span class="px-4 mt-4 mb-2 text-muted text-uppercase fw-bold" style="font-size: 0.7rem; opacity: 0.5;">Access</span>
-        <div class="px-4 mt-2 d-flex flex-column gap-2">
-            <a href="/login" class="btn btn-primary w-100 text-uppercase small py-2 fw-bold">Sign In</a>
-            <a href="/register" class="btn btn-outline-secondary w-100 text-uppercase small py-2 fw-bold">Register</a>
+        <div class="app-sidepanel-footer mt-auto p-3">
+            <div class="d-grid gap-2">
+                <a href="/login" class="btn app-btn-primary">Sign In</a>
+                <a href="/register" class="btn app-btn-secondary">Register</a>
+            </div>
         </div>
     </div>
 </div>

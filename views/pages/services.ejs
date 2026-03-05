@@ -5,109 +5,94 @@
     <%- include('../partials/head'); %>
 </head>
 
-<body class="bg-dark text-white">
+<body class="app">
     <%- include('../partials/page-start'); %>
-    <div class="container-fluid position-relative d-flex p-0">
-        <%- include('../partials/spinner'); %>
-            <%- include('../partials/visitor-sidebar'); %>
+        <header class="app-header fixed-top">
+            <%- include('../partials/visitor-navbar'); %>
+                <%- include('../partials/visitor-sidebar'); %>
+        </header>
 
-                <div class="content">
-                    <%- include('../partials/visitor-navbar'); %>
+        <div class="app-wrapper">
+            <div class="app-content pt-3 p-md-3 p-lg-4">
+                <div class="container-xl">
+                    <h1 class="app-page-title">Our Services</h1>
 
-                        <div class="container-fluid pt-4 px-4">
-                            <div class="bg-card shadow-sm text-center rounded mb-4 p-5">
-                                <div class="d-flex align-items-center justify-content-center gap-3">
-                                    <i class="bi bi-cloud-sun fs-1 text-primary"></i>
-                                    <h1 class="mb-0 fw-800 text-head letter-spacing-1">Welcome to CitySafe!</h1>
-                                </div>
-                            </div>
-                            <div class="row g-4">
-                                <div class="col-sm-12 col-xl-6">
-                                    <div class="bg-card rounded h-100 p-4 shadow-sm border border-light">
-                                        <h6 class="mb-4 fw-bold text-uppercase letter-spacing-1 text-muted small">Our Services</h6>
-                                        <dl class="row mb-0">
-                                            <dt class="col-sm-4 text-primary fw-600">Real-time Information</dt>
-                                            <dd class="col-sm-8 text-muted">Disaster-related updates through specific weather tracking and real-time status.</dd>
-                                            <div class="col-12"><hr class="dropdown-divider bg-light opacity-10 my-3"></div>
-
-                                            <dt class="col-sm-4 text-primary fw-600">Localized Notifications</dt>
-                                            <dd class="col-sm-8 text-muted">Relevant alerts and updates based on the user's active report location.</dd>
-                                            <div class="col-12"><hr class="dropdown-divider bg-light opacity-10 my-3"></div>
-
-                                            <dt class="col-sm-4 text-primary fw-600">Emergency Alert</dt>
-                                            <dd class="col-sm-8 text-muted">Quickly send SOS requests with location to nearby responders.</dd>
-                                            <div class="col-12"><hr class="dropdown-divider bg-light opacity-10 my-3"></div>
-
-                                            <dt class="col-sm-4 text-primary fw-600">Relief Coordination</dt>
-                                            <dd class="col-sm-8 text-muted">Connects responders with active incidents to efficiently manage relief.</dd>
-                                            <div class="col-12"><hr class="dropdown-divider bg-light opacity-10 my-3"></div>
-
-                                            <dt class="col-sm-4 text-primary fw-600">Mapping Service</dt>
-                                            <dd class="col-sm-8 text-muted">Visualizes incidents, nearby stations, and responders for situational awareness.</dd>
-                                            <div class="col-12"><hr class="dropdown-divider bg-light opacity-10 my-3"></div>
-
-                                            <dt class="col-sm-4 text-primary fw-600">Survival Guidelines</dt>
-                                            <dd class="col-sm-8 text-muted">Essential survival information and guides for various disaster scenarios.</dd>
-                                        </dl>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-12 col-xl-6">
-                                    <div class="bg-card rounded h-100 p-4 shadow-sm border border-light">
-                                        <h6 class="mb-4 fw-bold text-uppercase letter-spacing-1 text-muted small">The Team</h6>
-                                        <div class="row g-3">
-                                            <div class="col-12">
-                                                <div class="p-4 rounded bg-dark border border-light">
-                                                    <figure class="mb-0">
-                                                        <blockquote class="blockquote mb-2">
-                                                            <p class="fs-6 fw-bold mb-0">Jayrold Tabalina</p>
-                                                        </blockquote>
-                                                        <figcaption class="blockquote-footer mb-0 text-muted">
-                                                            Programmer <cite title="Source Title" class="text-primary">PHINMA-UI</cite>
-                                                        </figcaption>
-                                                    </figure>
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="p-4 rounded bg-dark border border-light">
-                                                    <figure class="mb-0 text-center">
-                                                        <blockquote class="blockquote mb-2">
-                                                            <p class="fs-6 fw-bold mb-0">Yasmine M. Talaman</p>
-                                                        </blockquote>
-                                                        <figcaption class="blockquote-footer mb-0 text-muted">
-                                                            Documenter <cite title="Source Title" class="text-primary">PHINMA-UI</cite>
-                                                        </figcaption>
-                                                    </figure>
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="p-4 rounded bg-dark border border-light">
-                                                    <figure class="mb-0 text-end">
-                                                        <blockquote class="blockquote mb-2">
-                                                            <p class="fs-6 fw-bold mb-0">Mark Vincent Jabao</p>
-                                                        </blockquote>
-                                                        <figcaption class="blockquote-footer mb-0 text-muted">
-                                                            UI/UX <cite title="Source Title" class="text-primary">PHINMA-UI</cite>
-                                                        </figcaption>
-                                                    </figure>
-                                                </div>
-                                            </div>
+                    <div class="row g-4 mb-4">
+                        <div class="col-12 col-lg-8">
+                            <div class="app-card app-card-settings shadow-sm p-4">
+                                <div class="app-card-body">
+                                    <div class="list-group list-group-flush">
+                                        <div class="list-group-item bg-transparent px-0 py-3 border-light">
+                                            <h5 class="text-primary mb-1">Real-time Information</h5>
+                                            <p class="text-muted mb-0">Disaster-related updates through specific weather
+                                                tracking and real-time status.</p>
+                                        </div>
+                                        <div class="list-group-item bg-transparent px-0 py-3 border-light">
+                                            <h5 class="text-primary mb-1">Localized Notifications</h5>
+                                            <p class="text-muted mb-0">Relevant alerts and updates based on the user's
+                                                active report location.</p>
+                                        </div>
+                                        <div class="list-group-item bg-transparent px-0 py-3 border-light">
+                                            <h5 class="text-primary mb-1">Emergency Alert</h5>
+                                            <p class="text-muted mb-0">Quickly send SOS requests with location to nearby
+                                                responders.</p>
+                                        </div>
+                                        <div class="list-group-item bg-transparent px-0 py-3 border-light">
+                                            <h5 class="text-primary mb-1">Relief Coordination</h5>
+                                            <p class="text-muted mb-0">Connects responders with active incidents to
+                                                efficiently manage relief.</p>
+                                        </div>
+                                        <div class="list-group-item bg-transparent px-0 py-3 border-light">
+                                            <h5 class="text-primary mb-1">Mapping Service</h5>
+                                            <p class="text-muted mb-0">Visualizes incidents, nearby stations, and
+                                                responders for situational awareness.</p>
+                                        </div>
+                                        <div class="list-group-item bg-transparent px-0 py-3 border-0">
+                                            <h5 class="text-primary mb-1">Survival Guidelines</h5>
+                                            <p class="text-muted mb-0">Essential survival information and guides for
+                                                various disaster scenarios.</p>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
 
-                        <%- include('../partials/page-end'); %>
-                        <%- include('../partials/footer'); %>
-
+                        <div class="col-12 col-lg-4">
+                            <div class="app-card app-card-settings shadow-sm p-4">
+                                <div class="app-card-header p-0 border-0 mb-3">
+                                    <h4 class="app-card-title">The Development Team</h4>
+                                </div>
+                                <div class="app-card-body">
+                                    <div class="mb-4 text-center">
+                                        <div class="p-3 bg-light rounded border mb-3">
+                                            <h6 class="mb-1">Jayrold Tabalina</h6>
+                                            <small class="text-primary">Programmer</small>
+                                        </div>
+                                        <div class="p-3 bg-light rounded border mb-3">
+                                            <h6 class="mb-1">Yasmine M. Talaman</h6>
+                                            <small class="text-primary">Documenter</small>
+                                        </div>
+                                        <div class="p-3 bg-light rounded border">
+                                            <h6 class="mb-1">Mark Vincent Jabao</h6>
+                                            <small class="text-primary">UI/UX Designer</small>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <small class="text-muted">PHINMA University of Iloilo</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
 
-                <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top rounded-circle shadow-lg"><i class="bi bi-arrow-up"></i></a>
-    </div>
+            <footer class="app-footer">
+                <%- include('../partials/footer'); %>
+            </footer>
+        </div>
 
-    <script src="/js/script.js"></script>
+        <script src="/js/script.js"></script>
 </body>
 
 </html>

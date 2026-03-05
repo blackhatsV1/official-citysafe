@@ -16,224 +16,195 @@
         </style>
 </head>
 
-<body>
+<body class="app">
     <%- include('../partials/page-start'); %>
-    <div class="container-fluid position-relative d-flex p-0">
-        <!-- Spinner Start -->
-        <%- include('../partials/spinner'); %>
-            <!-- Spinner End -->
 
+        <header class="app-header fixed-top">
+            <%- include('../partials/user-navbar'); %>
+                <%- include('../partials/user-sidebar'); %>
+        </header>
 
-            <!-- Sidebar Start -->
-            <%- include('../partials/user-sidebar'); %>
-                <!-- Sidebar End -->
+        <div class="app-wrapper">
+            <div class="app-content pt-3 p-md-3 p-lg-4">
+                <div class="container-xl">
+                    <h1 class="app-page-title">Nearby Stations</h1>
 
+                    <div class="row g-4 mb-4">
+                        <div class="col-12 col-lg-8">
+                            <div class="app-card app-card-settings shadow-sm h-100">
+                                <div class="app-card-header p-3 border-bottom-0">
+                                    <h4 class="app-card-title">Live Map View</h4>
+                                </div>
+                                <div class="app-card-body p-4 pt-0">
+                                    <div class="bg-light rounded p-3 mb-3 text-center border">
+                                        <h5 id="address" class="text-primary mb-1">Loading Address...</h5>
+                                        <p id="coords" class="small text-muted mb-0"></p>
+                                    </div>
 
-                <!-- Content Start -->
-                <div class="content">
-                    <!-- Navbar Start -->
-                    <%- include('../partials/user-navbar'); %>
-                        <!-- Navbar End -->
+                                    <div id="map" class="rounded shadow-sm"></div>
 
-                        <!-- Sales Chart Start -->
-                        <div class="container-fluid pt-4 px-4">
-                            <div class="row g-4">
-                                <!-- Left Column (Bigger) -->
-                                <div class="col-sm-12 col-xl-8">
-                                    <div class="bg-secondary text-center rounded p-4 h-100">
-                                        <div class="d-flex align-items-center justify-content-between mb-4">
-                                            <h6 class="mb-0">Nearby Stations</h6>
-                                        </div>
-                                        <div class="container mt-5">
-                                            <div class="bg-secondary p-3">
-                                                <h4 id="address">Loading Address...</h4>
-                                                <p id="coords"></p>
-                                                <div id="map"></div>
-                                                <!-- <div class="d-flex justify-content-center">
-                                                    <button class="btn btn-primary mt-3" id="scanButton" style="display:none;" disabled>Scan Locations</button>
-                                                </div> -->
-                                            </div>
-
-                                            <div class="modal fade" id="myModal" tabindex="-1"
-                                                aria-labelledby="myModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog text-light modal-dialog-centered ">
-                                                    <div class="modal-content bg-secondary">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="myModalLabel">
-                                                                <h3>Nearest Help Station (PNP/BFP):</h3>
-                                                            </h5>
-                                                            <button type="button" class="btn-close"
-                                                                data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <p class="fs-5"><strong>Station Name:</strong> <span
-                                                                    id="stationName">Loading...</span></p>
-                                                            <p class="fs-5"><strong>Distance:</strong> <span
-                                                                    id="stationDistance">Loading...</span></p>
-                                                            <p class="fs-5"><strong>Address:</strong> <span
-                                                                    id="stationAddress">Loading...</span></p>
-
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-warning"
-                                                                data-bs-dismiss="modal">Close</button>
-                                                        </div>
-                                                    </div>
+                                    <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="myModalLabel">Nearest Help Station
+                                                        (PNP/BFP)</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p><strong>Station Name:</strong> <span
+                                                            id="stationName">Loading...</span></p>
+                                                    <p><strong>Distance:</strong> <span
+                                                            id="stationDistance">Loading...</span></p>
+                                                    <p><strong>Address:</strong> <span
+                                                            id="stationAddress">Loading...</span></p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
 
-                                            <script>
-                                                const redIcon = new L.Icon({
-                                                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-                                                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.4/images/marker-shadow.png',
-                                                    iconSize: [25, 41],
-                                                    iconAnchor: [12, 41],
-                                                    popupAnchor: [1, -34],
-                                                    shadowSize: [41, 41]
+                                    <script>
+                                        const redIcon = new L.Icon({
+                                            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+                                            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.4/images/marker-shadow.png',
+                                            iconSize: [25, 41],
+                                            iconAnchor: [12, 41],
+                                            popupAnchor: [1, -34],
+                                            shadowSize: [41, 41]
+                                        });
+                                        const map = L.map('map');
+
+                                        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                            maxZoom: 18,
+                                            attribution: '© OpenStreetMap'
+                                        }).addTo(map);
+
+                                        map.locate({ setView: true, maxZoom: 13 });
+
+                                        let userLat, userLng;
+                                        let hasScanned = false; // Prevent double scan
+
+                                        function onLocationFound(e) {
+                                            const { lat, lng } = e.latlng;
+                                            userLat = lat;
+                                            userLng = lng;
+
+                                            L.marker([lat, lng]).addTo(map)
+                                                .bindPopup(`You are here.`).openPopup();
+                                            L.circle([lat, lng], e.accuracy).addTo(map);
+
+                                            document.getElementById("coords").textContent = `Latitude: ${lat.toFixed(5)}, Longitude: ${lng.toFixed(5)}`;
+
+                                            fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+                                                .then(res => res.json())
+                                                .then(data => {
+                                                    document.getElementById("address").innerHTML = `<b>${data.display_name}</b>`;
                                                 });
-                                                const map = L.map('map');
 
-                                                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                                                    maxZoom: 18,
-                                                    attribution: '© OpenStreetMap'
-                                                }).addTo(map);
+                                            if (!hasScanned) {
+                                                hasScanned = true;
+                                                fetchStations(lat, lng);
+                                            }
+                                        }
 
-                                                map.locate({ setView: true, maxZoom: 13 });
+                                        function onLocationError(e) {
+                                            alert("Could not access your location. Please enable location services.");
+                                        }
 
-                                                let userLat, userLng;
-                                                let hasScanned = false; // Prevent double scan
+                                        map.on('locationfound', onLocationFound);
+                                        map.on('locationerror', onLocationError);
 
-                                                function onLocationFound(e) {
-                                                    const { lat, lng } = e.latlng;
-                                                    userLat = lat;
-                                                    userLng = lng;
-
-                                                    L.marker([lat, lng]).addTo(map)
-                                                        .bindPopup(`You are here.`).openPopup();
-                                                    L.circle([lat, lng], e.accuracy).addTo(map);
-
-                                                    document.getElementById("coords").textContent = `Latitude: ${lat.toFixed(5)}, Longitude: ${lng.toFixed(5)}`;
-
-                                                    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
-                                                        .then(res => res.json())
-                                                        .then(data => {
-                                                            document.getElementById("address").innerHTML = `<b>${data.display_name}</b>`;
-                                                        });
-
-                                                    if (!hasScanned) {
-                                                        hasScanned = true;
-                                                        fetchStations(lat, lng);
+                                        function fetchStations(lat, lng) {
+                                            document.getElementById("stationName1").textContent = "Scanning...";
+                                            fetch('/nearby-stations', {
+                                                method: 'POST',
+                                                headers: { 'Content-Type': 'application/json' },
+                                                body: JSON.stringify({ lat: lat, lng: lng })
+                                            })
+                                                .then(res => res.json())
+                                                .then(data => {
+                                                    if (!data || data.length === 0) {
+                                                        document.getElementById("stationName1").textContent = "No stations found nearby.";
+                                                        return;
                                                     }
-                                                }
 
-                                                function onLocationError(e) {
-                                                    alert("Could not access your location. Please enable location services.");
-                                                }
+                                                    const nearest = data[0];
+                                                    document.getElementById("stationName1").textContent = nearest.name;
+                                                    document.getElementById("stationAddress1").textContent = nearest.address;
+                                                    document.getElementById("stationDistance1").textContent = `${nearest.distance.toFixed(2)} km`;
 
-                                                map.on('locationfound', onLocationFound);
-                                                map.on('locationerror', onLocationError);
+                                                    data.forEach(station => {
+                                                        L.marker([station.latitude, station.longitude], { icon: redIcon })
+                                                            .addTo(map)
+                                                            .bindPopup(`<b>${station.name}</b><br>Type: ${station.type}<br>Distance: ${station.distance.toFixed(2)} km<br>Address: ${station.address}`);
+                                                    });
 
-                                                function fetchStations(lat, lng) {
-                                                    // Show loading state
-                                                    document.getElementById("stationName1").textContent = "Scanning...";
-
-                                                    fetch('/nearby-stations', {
-                                                        method: 'POST',
-                                                        headers: { 'Content-Type': 'application/json' },
-                                                        body: JSON.stringify({ lat: lat, lng: lng })
-                                                    })
-                                                        .then(res => res.json())
-                                                        .then(data => {
-                                                            if (!data || data.length === 0) {
-                                                                document.getElementById("stationName1").textContent = "No stations found nearby.";
-                                                                return;
-                                                            }
-
-                                                            // Get the nearest station (first in sorted array)
-                                                            const nearest = data[0];
-
-                                                            // Update Sidebar Info
-                                                            document.getElementById("stationName1").textContent = nearest.name;
-                                                            document.getElementById("stationAddress1").textContent = nearest.address;
-                                                            document.getElementById("stationDistance1").textContent = `${nearest.distance.toFixed(2)} km`;
-
-                                                            // Add marker for each station
-                                                            data.forEach(station => {
-                                                                L.marker([station.latitude, station.longitude], { icon: redIcon })
-                                                                    .addTo(map)
-                                                                    .bindPopup(`<b>${station.name}</b><br>Type: ${station.type}<br>Distance: ${station.distance.toFixed(2)} km<br>Address: ${station.address}`);
-                                                            });
-
-                                                            // Add route from user to nearest station
-                                                            L.Routing.control({
-                                                                waypoints: [
-                                                                    L.latLng(lat, lng),
-                                                                    L.latLng(nearest.latitude, nearest.longitude)
-                                                                ],
-                                                                lineOptions: {
-                                                                    styles: [{ color: 'blue', weight: 5, opacity: 0.7 }]
-                                                                },
-                                                                routeWhileDragging: false,
-                                                                showAlternatives: false,
-                                                                addWaypoints: false,
-                                                                draggableWaypoints: false,
-                                                                fitSelectedRoutes: true,
-                                                                createMarker: function () { return null; } // Don't create extra markers, we already have them
-                                                            }).addTo(map);
-                                                        })
-                                                        .catch(err => {
-                                                            console.error(err);
-                                                            document.getElementById("stationName1").textContent = "Error loading stations.";
-                                                        });
-                                                }
-                                            </script>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Right Column (Smaller but same height) -->
-                                <div class="col-sm-12 col-xl-4">
-                                    <div class="bg-secondary justify-content-center rounded p-4 h-100">
-                                        <div class="d-flex justify-content-between mb-4">
-                                            <h6 class="mb-5">Nearest Station</h6>
-                                        </div>
-                                        <ul class="list-group list-group-flush">
-                                            <li class="list-group-item bg-transparent">
-                                                <p class="fs-5"><strong>Station Name:</strong> <span
-                                                        id="stationName1">Loading...</span></p>
-                                            </li>
-                                            <li class="list-group-item bg-transparent">
-                                                <p class="fs-5"><strong>Distance:</strong> <span
-                                                        id="stationDistance1">Loading...</span></p>
-                                            </li>
-                                            <li class="list-group-item bg-transparent">
-                                                <p class="fs-5"><strong>Address:</strong> <span
-                                                        id="stationAddress1">Loading...</span></p>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                                    L.Routing.control({
+                                                        waypoints: [
+                                                            L.latLng(lat, lng),
+                                                            L.latLng(nearest.latitude, nearest.longitude)
+                                                        ],
+                                                        lineOptions: {
+                                                            styles: [{ color: 'blue', weight: 5, opacity: 0.7 }]
+                                                        },
+                                                        routeWhileDragging: false,
+                                                        showAlternatives: false,
+                                                        addWaypoints: false,
+                                                        draggableWaypoints: false,
+                                                        fitSelectedRoutes: true,
+                                                        createMarker: function () { return null; }
+                                                    }).addTo(map);
+                                                })
+                                                .catch(err => {
+                                                    console.error(err);
+                                                    document.getElementById("stationName1").textContent = "Error loading stations.";
+                                                });
+                                        }
+                                    </script>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Sales Chart End -->
-
-
-
-                        <!-- Footer Start -->
-                        <%- include('../partials/page-end'); %>
-                        <%- include('../partials/footer'); %>
-                            <!-- Footer End -->
-
+                        <div class="col-12 col-lg-4">
+                            <div class="app-card app-card-notification shadow-sm h-100">
+                                <div class="app-card-header p-3 border-bottom-0">
+                                    <h4 class="app-card-title">Nearest Station Info</h4>
+                                </div>
+                                <div class="app-card-body p-4 pt-0">
+                                    <div class="list-group list-group-flush align-items-start border rounded">
+                                        <div
+                                            class="list-group-item bg-light border-bottom d-flex flex-column w-100 p-3">
+                                            <small class="text-muted fw-bold mb-1">Station Name</small>
+                                            <span id="stationName1" class="text-primary fw-bold">Loading...</span>
+                                        </div>
+                                        <div
+                                            class="list-group-item bg-light border-bottom d-flex flex-column w-100 p-3">
+                                            <small class="text-muted fw-bold mb-1">Distance</small>
+                                            <span id="stationDistance1" class="fw-bold">Loading...</span>
+                                        </div>
+                                        <div class="list-group-item bg-light border-0 d-flex flex-column w-100 p-3">
+                                            <small class="text-muted fw-bold mb-1">Address</small>
+                                            <span id="stationAddress1" class="small">Loading...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <!-- Content End -->
+            </div>
 
+            <%- include('../partials/footer'); %>
+        </div>
 
-                <!-- Back to Top -->
-                <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-    </div>
-
-    <script src="/js/script.js"></script>
+        <%- include('../partials/page-end'); %>
+            <script src="/js/script.js"></script>
 </body>
 
 </html>

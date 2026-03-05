@@ -1,20 +1,26 @@
-<nav class="navbar navbar-expand-lg">
-    <div class="container-fluid d-flex align-items-center justify-content-between p-0">
-        <div class="d-flex align-items-center gap-3">
-            <button class="btn btn-outline-secondary d-lg-none" id="sidebar-toggle">
-                <i class="fa fa-bars"></i>
-            </button>
-            <h6 class="mb-0 fw-bold d-none d-sm-block">PUBLIC SAFETY PORTAL</h6>
-        </div>
+<div class="app-header-inner">
+    <div class="container-xl">
+        <div class="app-header-content">
+            <div class="row justify-content-between align-items-center">
+                <div class="col-auto">
+                    <a id="sidepanel-toggler" class="sidepanel-toggler d-inline-block d-xl-none" href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" role="img">
+                            <title>Menu</title>
+                            <path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"
+                                d="M4 7h22M4 15h22M4 23h22"></path>
+                        </svg>
+                    </a>
+                </div>
 
-        <div class="d-flex align-items-center gap-4">
-            <a href="/help" class="nav-link small fw-bold text-uppercase">Help Center</a>
-            <div class="d-none d-sm-block">
-                <a href="/login" class="btn btn-primary btn-sm px-4">SIGN IN</a>
+                <div class="app-utilities col-auto">
+                    <a href="/help" class="nav-link d-none d-md-inline-block small fw-bold text-uppercase me-3">Help
+                        Center</a>
+                    <a href="/login" class="btn app-btn-primary btn-sm">SIGN IN</a>
+                </div>
             </div>
         </div>
     </div>
-</nav>
+</div>
 
 <script>
     document.getElementById('sidebar-toggle')?.addEventListener('click', function () {

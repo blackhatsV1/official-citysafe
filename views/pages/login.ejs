@@ -5,61 +5,76 @@
     <%- include('../partials/head'); %>
 </head>
 
-<body class="bg-dark text-white">
-    <%- include('../partials/page-start'); %>
-    <div class="container-fluid p-0">
-        <%- include('../partials/spinner'); %>
+<body class="app app-login p-0">
+    <div class="row g-0 auth-wrapper">
+        <div class="col-12 col-md-7 col-lg-6 auth-main-col p-5">
+            <div class="d-flex flex-column align-content-end h-100">
+                <div class="app-auth-body mx-auto">
+                    <div class="app-auth-branding mb-4">
+                        <a class="app-logo" href="/visitor"><i class="fa fa-shield-alt text-primary fs-2 me-2"></i><span
+                                class="logo-text">CITYSAFE</span></a>
+                    </div>
+                    <h2 class="auth-heading text-center mb-2">Welcome Back</h2>
+                    <div class="auth-intro mb-4 text-center">Enter your credentials to access the command center.</div>
 
-            <div class="container">
-                <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
-                    <div class="col-12 col-sm-8 col-md-6 col-lg-5 col-xl-4">
-                        <div class="bg-card p-4 p-sm-5 my-4 rounded shadow-lg border border-light">
-                            <div class="text-center mb-4">
-                                <a href="/visitor" class="d-inline-flex align-items-center gap-2 mb-2 text-decoration-none">
-                                    <i class="fa fa-shield-alt fs-2 text-primary"></i>
-                                    <h3 class="mb-0 text-head fw-800 letter-spacing-1">CITYSAFE</h3>
-                                </a>
-                                <p class="text-muted small fw-600 text-uppercase letter-spacing-1">Urban Response Hub</p>
+                    <div class="auth-form-container text-start">
+                        <form class="auth-form login-form" method="POST" action="/login">
+                            <div class="email mb-3">
+                                <label class="sr-only" for="signin-email">Email or Username</label>
+                                <input id="signin-email" name="identifier" type="text" class="form-control signin-email"
+                                    placeholder="Email or Username" required="required">
+                            </div><!--//form-group-->
+                            <div class="password mb-3 position-relative">
+                                <label class="sr-only" for="signin-password">Password</label>
+                                <input id="signin-password" name="password" type="password"
+                                    class="form-control signin-password" placeholder="Password" required="required">
+                                <i class="fa fa-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 text-muted opacity-50"
+                                    id="toggleLoginPass" style="cursor: pointer; z-index: 10;"></i>
+                            </div><!--//form-group-->
+                            <div class="text-center">
+                                <button type="submit" id="login-btn"
+                                    class="btn app-btn-primary w-100 theme-btn mx-auto">SIGN IN</button>
                             </div>
+                        </form>
 
-                            <div class="mb-4 text-center">
-                                <h4 class="mb-1 fw-bold text-head">Welcome Back</h4>
-                                <p class="text-muted small">Enter your credentials to access the command center.</p>
-                            </div>
+                        <div class="auth-option text-center pt-5">Awaiting access? <a class="app-link"
+                                href="/register">Request Registration</a></div>
+                    </div><!--//auth-form-container-->
 
-                            <form method="POST" action="/login">
-                                <div class="form-floating mb-3">
-                                    <input type="text" name="identifier" class="form-control" id="floatingInput" placeholder="Email or Username" required>
-                                    <label for="floatingInput">Email or Username</label>
-                                </div>
-                                <div class="form-floating mb-4 position-relative">
-                                    <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password" required>
-                                    <label for="floatingPassword">Password</label>
-                                    <i class="fa fa-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 text-muted opacity-50" id="toggleLoginPass" style="cursor: pointer; z-index: 10;"></i>
-                                </div>
+                </div><!--//auth-body-->
 
-                                <button type="submit" id="login-btn" class="btn btn-primary py-3 w-100 mb-4 shadow fw-bold letter-spacing-1">SIGN IN</button>
-
-                                <div class="text-center">
-                                    <p class="mb-0 small text-muted">Awaiting access? <a href="/register" class="text-primary fw-bold text-decoration-none">Request Registration</a></p>
-                                </div>
-                            </form>
-                        </div>
-
-                        <div class="text-center">
-                            <a href="/visitor" class="small text-muted text-decoration-none hover-indigo"><i class="fa fa-arrow-left me-1"></i> Return to Public Safety Portal</a>
-                        </div>
+                <footer class="app-auth-footer">
+                    <div class="container text-center py-3">
+                        <small class="copyright">Designed with <span class="sr-only">love</span><i class="fas fa-heart"
+                                style="color: #fb866a;"></i> by <a class="app-link" href="#" target="_blank">CitySafe
+                                Team</a></small>
+                    </div>
+                </footer><!--//app-auth-footer-->
+            </div><!--//flex-column-->
+        </div><!--//auth-main-col-->
+        <div class="col-12 col-md-5 col-lg-6 auth-background-col">
+            <div class="auth-background-mask"></div>
+            <div class="auth-background-overlay p-3 p-lg-5">
+                <div class="d-flex flex-column align-content-end h-100">
+                    <div class="copy-content p-3 p-lg-5 text-white">
+                        <h2 class="display-5 fw-bold mb-3">Redefining Urban Safety</h2>
+                        <div class="auth-intro">CitySafe provides real-time monitoring and emergency response
+                            coordination for modern cities.</div>
+                    </div>
+                    <div class="auth-footer-notes text-white-50 p-3 p-lg-5">
+                        Reliable. Resilient. Responsive.
                     </div>
                 </div>
-            </div>
-    </div>
+            </div><!--//auth-background-overlay-->
+        </div><!--//auth-background-col-->
+    </div><!--//row-->
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script>
         const toggleLoginPass = document.querySelector("#toggleLoginPass");
-        const loginPassInput = document.querySelector("#floatingPassword");
+        const loginPassInput = document.querySelector("#signin-password");
 
-        if(toggleLoginPass && loginPassInput){
+        if (toggleLoginPass && loginPassInput) {
             toggleLoginPass.addEventListener("click", function () {
                 const isPassword = loginPassInput.getAttribute("type") === "password";
                 loginPassInput.setAttribute("type", isPassword ? "text" : "password");
@@ -67,15 +82,6 @@
                 this.classList.toggle("fa-eye-slash");
             });
         }
-
-        // Handle auto-spinner
-        window.addEventListener('load', () => {
-            const spinner = document.getElementById('spinner');
-            if (spinner) {
-                spinner.classList.remove('show');
-                setTimeout(() => spinner.remove(), 300);
-            }
-        });
     </script>
     <%- include('../partials/page-end'); %>
 </body>

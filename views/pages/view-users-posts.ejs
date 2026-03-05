@@ -4,92 +4,112 @@
 <head>
   <%- include('../partials/head'); %>
 </head>
-<body>
+
+<body class="app">
   <%- include('../partials/page-start'); %>
-  <div class="container-fluid position-relative d-flex p-0">
-    <!-- Spinner Start -->
-    <%- include('../partials/spinner'); %>
-    <!-- Spinner End -->
 
+    <header class="app-header fixed-top">
+      <%- include('../partials/admin-navbar'); %>
+        <%- include('../partials/admin-sidebar'); %>
+    </header>
 
-    <!-- Sidebar Start -->
-    <%- include('../partials/admin-sidebar'); %>
-      <!-- Sidebar End -->
-
-
-      <!-- Content Start -->
-      <div class="content">
-        <!-- Navbar Start -->
-        <%- include('../partials/admin-navbar'); %>
-          <!-- Navbar End -->
-
-
-          <!-- Recent Post Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="bg-secondary text-center rounded p-4">
-                    <div class="d-flex align-items-center justify-content-between mb-4">
-                        <h6 class="mb-0">Recent Posts</h6>
-                    </div>
-                    <h6 class="mb-4 p-3">To see the number of post per day, go to <a href="/reports">Charts Tab</a></h6>
-                
-                    <div class="container w-60 mt-1">
-                      <% for (let i = 0; i < users.length; i++) { %>
-                      <hr class="mt-0 mb-5 grey-line">
-                      <div class="mb-0 text-light">
-                          <p><strong><%= users[i].name %></strong> - posted a request.</p>
-                          <p>
-                          Posted on: <%= users[i].created_at %>
-                          </p>
-                      </div>
-            
-                      <div class="container">
-                          <div class="bg-light text-dark rounded p-3" style="border: 1px solid black;">
-                          <p><strong>Location:</strong> <%= users[i].location %></p>
-                          <p><strong>Requesting for:</strong> <%= users[i].needs %></p>
-                          </div>
-                  
-                          <form action="/sendhelp" method="POST">
-                          <input type="hidden" name="id" value="<%= users[i].id %>">
-                          <input type="hidden" name="name" value="<%= users[i].name %>">
-                          <input type="hidden" name="location" value="<%= users[i].location %>">
-                          <input type="hidden" name="needs" value="<%= users[i].needs %>">
-                          
-                          <button class="btn btn-secondary mb-1 mt-1" style="opacity: 1;" disabled>
-                              Number of People who helped: <%= users[i].help_count %>
-                          </button>
-                          <span class="d-flex">
-                              <button type="button" class="btn btn-success mt-2 me-1 w-auto" onclick="window.location.href='#'">Mark as Resolved</button>
-
-                              <form action="#" method="POST">
-                                <button type="button" onclick="return confirm('Put on Hold?')" class="btn btn-warning me-1 mt-2 w-auto">Put on Hold</button>
-                              </form>
-                              <form action="#" method="POST">
-                                <button type="submit" onclick="return confirm('Delete this Post?')" class="btn btn-danger me-1 mt-2 w-auto">Remove</button>
-                              </form>
-                            </span>
-                          <hr>
-                          </form>
-                      </div>
-                      <% } %>
-                    </div>
-                </div>
+    <div class="app-wrapper">
+      <div class="app-content pt-3 p-md-3 p-lg-4">
+        <div class="container-xl">
+          <div class="row g-3 mb-4 align-items-center justify-content-between">
+            <div class="col-auto">
+              <h1 class="app-page-title mb-0">Recent Posts</h1>
             </div>
-            <!-- Recent Sales End -->
+            <div class="col-auto">
+              <div class="page-utilities">
+                <span class="text-muted pe-2">To see the number of posts per day, go to</span>
+                <a class="btn app-btn-secondary" href="/reports">
+                  <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-bar-chart-line me-2"
+                    fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                      d="M11 2a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v12h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7h1V2zm1 12h2V2h-2v12zm-3 0V7H7v7h2zm-5 0v-3H2v3h2z" />
+                  </svg>
+                  Charts Tab
+                </a>
+              </div>
+            </div>
+          </div>
 
-          <!-- Footer Start -->
-          <%- include('../partials/page-end'); %>
-          <%- include('../partials/footer'); %>
-            <!-- Footer End -->
+          <div class="row g-4">
+            <% for (let i=0; i < users.length; i++) { %>
+              <div class="col-12 col-lg-6">
+                <div class="app-card app-card-basic shadow-sm h-100">
+                  <div class="app-card-header p-3 border-bottom-0">
+                    <div class="row align-items-center gx-3">
+                      <div class="col-auto">
+                        <div class="app-icon-holder">
+                          <i class="fa fa-user"></i>
+                        </div>
+                      </div>
+                      <div class="col-auto">
+                        <h4 class="app-card-title">
+                          <%= users[i].name %>
+                        </h4>
+                        <div class="small text-muted">Posted a request on: <%= users[i].created_at %>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="app-card-body p-3 pt-0">
+                    <div class="bg-light p-3 rounded mb-4">
+                      <div class="mb-2"><strong>Location:</strong>
+                        <%= users[i].location %>
+                      </div>
+                      <div class="mb-0"><strong>Requesting for:</strong>
+                        <%= users[i].needs %>
+                      </div>
+                    </div>
 
+                    <form action="/sendhelp" method="POST" class="d-flex flex-column h-100">
+                      <input type="hidden" name="id" value="<%= users[i].id %>">
+                      <input type="hidden" name="name" value="<%= users[i].name %>">
+                      <input type="hidden" name="location" value="<%= users[i].location %>">
+                      <input type="hidden" name="needs" value="<%= users[i].needs %>">
+
+                      <div class="mb-3">
+                        <span class="badge bg-secondary font-weight-normal fs-6">
+                          Helpers count: <%= users[i].help_count %>
+                        </span>
+                      </div>
+
+                      <div class="d-flex flex-wrap gap-2 mt-auto">
+                        <button type="button" class="btn app-btn-primary theme-btn mx-auto w-100 mb-2"
+                          onclick="window.location.href='#'">Mark as Resolved</button>
+
+                        <button form="holdForm_<%= users[i].id %>" type="submit"
+                          onclick="return confirm('Put on Hold?')" class="btn btn-warning flex-fill text-white">Put on
+                          Hold</button>
+                        <button form="deleteForm_<%= users[i].id %>" type="submit"
+                          onclick="return confirm('Delete this Post?')"
+                          class="btn btn-danger flex-fill text-white">Remove</button>
+                      </div>
+                    </form>
+                    <form id="holdForm_<%= users[i].id %>" action="#" method="POST" style="display: none;"></form>
+                    <form id="deleteForm_<%= users[i].id %>" action="#" method="POST" style="display: none;"></form>
+                  </div>
+                </div>
+              </div>
+              <% } %>
+
+                <% if (users.length===0) { %>
+                  <div class="col-12 text-center py-5">
+                    <div class="text-muted">No recent posts found.</div>
+                  </div>
+                  <% } %>
+          </div>
+        </div>
       </div>
-      <!-- Content End -->
 
+      <%- include('../partials/footer'); %>
+    </div>
 
-      <!-- Back to Top -->
-      <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-  </div>
-
-  <script src="/js/script.js"></script>
+    <%- include('../partials/page-end'); %>
+      <script src="/js/script.js"></script>
 </body>
 
 </html>

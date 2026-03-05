@@ -1,37 +1,83 @@
-<aside class="sidebar bg-light border-end vh-100">
-  <div class="p-3">
-    <a href="/" class="d-flex align-items-center gap-2 text-dark text-decoration-none mb-3">
-      <i class="fa fa-shield-alt fs-4 text-primary"></i>
-      <h5 class="mb-0 fw-bold">CITYSAFE</h5>
-    </a>
+<div id="app-sidepanel" class="app-sidepanel">
+  <div id="sidepanel-drop" class="sidepanel-drop"></div>
+  <div class="sidepanel-inner d-flex flex-column">
+    <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
+    <div class="app-branding text-center">
+      <a class="app-logo" href="/">
+        <i class="fa fa-shield-alt text-primary fs-4 me-2"></i>
+        <span class="logo-text">CITYSAFE</span>
+      </a>
+    </div>
 
-    <!-- User Profile Summary -->
-    <div class="mb-3">
-      <div class="p-3 rounded bg-white border">
-        <div class="d-flex align-items-center gap-3">
-          <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width:40px; height:40px;">
-            <i class="fa fa-user text-secondary"></i>
-          </div>
-          <div class="overflow-hidden">
-            <h6 class="mb-0 text-truncate small fw-bold"><%= username %></h6>
-            <small class="text-muted text-uppercase">Citizen Unit</small>
-          </div>
+    <div class="app-sidepanel-user px-3 py-2 border-bottom mb-3">
+      <div class="d-flex align-items-center gap-2">
+        <div class="app-icon-holder small shadow-sm">
+          <i class="fa fa-user"></i>
+        </div>
+        <div class="overflow-hidden">
+          <h6 class="mb-0 text-truncate small fw-bold text-dark">
+            <%= username %>
+          </h6>
+          <span class="badge bg-info text-dark" style="font-size: 0.6rem;">CITIZEN UNIT</span>
         </div>
       </div>
     </div>
 
-    <nav class="nav flex-column">
-      <small class="text-muted text-uppercase mb-2">Emergency</small>
-      <a href="/send-sos" class="nav-link <%= (typeof page !== 'undefined' && page === 'send-sos') ? 'active' : '' %>"><i class="fa fa-bullhorn text-danger me-2"></i>SOS Panel</a>
-      <a href="/my-reports" class="nav-link <%= (typeof page !== 'undefined' && page === 'my-reports') ? 'active' : '' %>"><i class="fa fa-history me-2"></i>Incident Activity</a>
-
-      <small class="text-muted text-uppercase mt-3 mb-2">Intelligence</small>
-      <a href="/nearby-stations" class="nav-link <%= (typeof page !== 'undefined' && page === 'stations') ? 'active' : '' %>"><i class="fa fa-map-marked-alt me-2"></i>Facilities</a>
-      <a href="/assess-risk" class="nav-link"><i class="fa fa-file-contract me-2"></i>Safety Assessment</a>
-
-      <small class="text-muted text-uppercase mt-3 mb-2">Account</small>
-      <a href="/editaccount" class="nav-link"><i class="fa fa-cog me-2"></i>Settings</a>
-      <a href="/logout" class="nav-link text-danger"><i class="fa fa-sign-out-alt me-2"></i>Sign Out</a>
+    <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
+      <ul class="app-menu list-unstyled accordion" id="menu-accordion">
+        <li class="nav-item">
+          <a class="nav-link <%= (typeof page !== 'undefined' && page === 'dashboard') ? 'active' : '' %>" href="/">
+            <span class="nav-icon"><i class="fa fa-tachometer-alt"></i></span>
+            <span class="nav-link-text">Control Center</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= (typeof page !== 'undefined' && page === 'send-sos') ? 'active' : '' %>"
+            href="/send-sos">
+            <span class="nav-icon"><i class="fa fa-bullhorn text-danger"></i></span>
+            <span class="nav-link-text">Emergency SOS</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= (typeof page !== 'undefined' && page === 'my-reports') ? 'active' : '' %>"
+            href="/my-reports">
+            <span class="nav-icon"><i class="fa fa-history"></i></span>
+            <span class="nav-link-text">Incident Logs</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link <%= (typeof page !== 'undefined' && page === 'stations') ? 'active' : '' %>"
+            href="/nearby-stations">
+            <span class="nav-icon"><i class="fa fa-map-marked-alt"></i></span>
+            <span class="nav-link-text">Stations & Maps</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/assess-risk">
+            <span class="nav-icon"><i class="fa fa-file-contract"></i></span>
+            <span class="nav-link-text">Risk Audit</span>
+          </a>
+        </li>
+      </ul>
     </nav>
+
+    <div class="app-sidepanel-footer mt-auto">
+      <nav class="app-nav app-nav-footer">
+        <ul class="app-menu footer-menu list-unstyled">
+          <li class="nav-item">
+            <a class="nav-link" href="/editaccount">
+              <span class="nav-icon"><i class="fa fa-cog"></i></span>
+              <span class="nav-link-text">Account Settings</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-danger" href="/logout">
+              <span class="nav-icon"><i class="fa fa-sign-out-alt"></i></span>
+              <span class="nav-link-text">Sign Out</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
   </div>
-</aside>
+</div>
