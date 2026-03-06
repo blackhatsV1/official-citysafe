@@ -3,7 +3,6 @@
 
 <head>
     <%- include('../partials/head'); %>
-
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
         <link rel="stylesheet"
@@ -13,186 +12,307 @@
             #map {
                 height: 400px;
                 width: 100%;
+                z-index: 10;
             }
         </style>
 </head>
-<!-- ========================================================================= -->
 
-<body class="app">
+<body
+    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
     <%- include('../partials/page-start'); %>
 
-        <header class="app-header fixed-top">
-            <%- include('../partials/user-navbar'); %>
-                <%- include('../partials/user-sidebar'); %>
+        <header class="sticky top-0 z-50">
+            <%- include('../partials/user-navbar', { currentPage: 'sos-otw' }); %>
         </header>
 
-        <div class="app-wrapper">
-            <div class="app-content pt-3 p-md-3 p-lg-4">
-                <div class="container-xl">
-                    <div class="row mb-4">
-                        <div class="col-12">
-                            <div class="app-card app-card-settings shadow-sm p-4 text-center">
-                                <h1 class="app-page-title text-danger mb-2"><i
-                                        class="fa fa-triangle-exclamation me-2"></i>Emergency Resources</h1>
-                                <p class="mb-0 text-muted">Locate nearest safe zones and contact emergency hotlines.</p>
+        <div class="flex flex-1 overflow-hidden relative">
+            <aside class="z-40">
+                <%- include('../partials/user-sidebar', { currentPage: 'sos-otw' }); %>
+            </aside>
+
+            <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8 overflow-y-auto w-full relative">
+                <div class="max-w-7xl mx-auto space-y-6">
+
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 flex items-center justify-center shadow-inner animate-pulse">
+                                <i class="fa fa-triangle-exclamation text-xl"></i>
+                            </div>
+                            <h1 class="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight uppercase">
+                                Emergency Resources</h1>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+                        <!-- Left Column (Map) -->
+                        <div class="xl:col-span-2 space-y-6">
+                            <div
+                                class="glass-panel overflow-hidden border-t-4 border-indigo-500 shadow-xl relative h-[550px] flex flex-col">
+                                <div
+                                    class="px-6 py-4 border-b border-indigo-100 dark:border-indigo-900/30 bg-indigo-50/50 dark:bg-indigo-900/10 flex items-center justify-between z-20">
+                                    <h4
+                                        class="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 m-0">
+                                        Nearby Safe Zones & Extraction Points
+                                    </h4>
+                                </div>
+
+                                <div
+                                    class="p-4 bg-white/40 dark:bg-gray-800/40 border-b border-gray-100 dark:border-gray-800 z-20">
+                                    <div class="flex items-start gap-3">
+                                        <i class="fa fa-location-crosshairs text-indigo-500 mt-1"></i>
+                                        <div>
+                                            <p id="address" class="text-sm font-bold text-gray-900 dark:text-white m-0">
+                                                Acquiring satellite lock...</p>
+                                            <p id="coords"
+                                                class="text-[10px] font-mono text-gray-500 dark:text-gray-400 m-0 mt-0.5 tracking-wider uppercase">
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex-1 relative z-10 p-0 m-0 bg-gray-100 dark:bg-gray-800">
+                                    <div id="map" class="h-full w-full"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column (Hotlines) -->
+                        <div class="xl:col-span-1 space-y-6">
+                            <div
+                                class="glass-panel overflow-hidden border-t-4 border-red-500 shadow-lg shadow-red-500/5 h-full">
+                                <div
+                                    class="px-6 py-4 border-b border-red-100 dark:border-red-900/30 bg-red-50/50 dark:bg-red-900/10 flex items-center justify-between">
+                                    <h4
+                                        class="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 flex items-center gap-2 m-0">
+                                        <i class="fa fa-phone-volume text-red-500 animate-pulse"></i> Critical Hotlines
+                                    </h4>
+                                </div>
+                                <div class="p-6">
+                                    <p
+                                        class="text-xs font-medium text-gray-500 dark:text-gray-400 mb-6 border-l-2 border-red-400 pl-3">
+                                        If you require immediate tactical assistance or extraction, utilize these direct
+                                        action lines.
+                                    </p>
+
+                                    <ul class="space-y-3">
+                                        <li
+                                            class="flex items-center justify-between p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700/50 group hover:border-red-300 dark:hover:border-red-700 transition-colors shadow-sm">
+                                            <div
+                                                class="text-sm font-black uppercase tracking-widest text-gray-700 dark:text-gray-300 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
+                                                National Emergency</div>
+                                            <span
+                                                class="px-3 py-1 bg-red-500 text-white rounded-lg text-sm font-black shadow-md tracking-wider">911</span>
+                                        </li>
+                                        <li
+                                            class="flex items-center justify-between p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700/50 group hover:border-blue-300 dark:hover:border-blue-700 transition-colors shadow-sm">
+                                            <div class="flex flex-col">
+                                                <span
+                                                    class="text-sm font-black uppercase tracking-widest text-gray-700 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">PNP
+                                                    (Police)</span>
+                                                <span
+                                                    class="text-[10px] font-mono text-gray-500 dark:text-gray-400 mt-0.5">(02)
+                                                    8722-0650</span>
+                                            </div>
+                                            <span
+                                                class="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm font-black shadow-md tracking-wider">117</span>
+                                        </li>
+                                        <li
+                                            class="flex items-center justify-between p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700/50 group hover:border-orange-300 dark:hover:border-orange-700 transition-colors shadow-sm">
+                                            <div class="flex flex-col">
+                                                <span
+                                                    class="text-sm font-black uppercase tracking-widest text-gray-700 dark:text-gray-300 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">BFP
+                                                    (Fire)</span>
+                                                <span
+                                                    class="text-[10px] font-mono text-gray-500 dark:text-gray-400 mt-0.5">(02)
+                                                    8426-0219</span>
+                                            </div>
+                                            <span
+                                                class="w-10 h-10 bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400 rounded-lg flex items-center justify-center text-lg shadow-sm border border-orange-200 dark:border-orange-800/50"><i
+                                                    class="fa fa-fire"></i></span>
+                                        </li>
+                                        <li
+                                            class="flex items-center justify-between p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700/50 group hover:border-rose-300 dark:hover:border-rose-700 transition-colors shadow-sm">
+                                            <div class="flex flex-col">
+                                                <span
+                                                    class="text-sm font-black uppercase tracking-widest text-gray-700 dark:text-gray-300 group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">Red
+                                                    Cross Medivac</span>
+                                                <span
+                                                    class="text-[10px] font-mono text-gray-500 dark:text-gray-400 mt-0.5">(02)
+                                                    8790-2300</span>
+                                            </div>
+                                            <span
+                                                class="px-3 py-1 bg-rose-500 text-white rounded-lg text-sm font-black shadow-md tracking-wider">143</span>
+                                        </li>
+                                        <li
+                                            class="flex items-center justify-between p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700/50 group hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors shadow-sm">
+                                            <div
+                                                class="text-sm font-black uppercase tracking-widest text-gray-700 dark:text-gray-300 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                                                MMDA Dispatch</div>
+                                            <span
+                                                class="px-3 py-1 bg-emerald-500 text-white rounded-lg text-sm font-black shadow-md tracking-wider">136</span>
+                                        </li>
+                                        <li
+                                            class="flex items-center justify-between p-3 rounded-xl bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-700/50 group hover:border-gray-400 dark:hover:border-gray-600 transition-colors shadow-sm">
+                                            <div
+                                                class="text-sm font-black uppercase tracking-widest text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors">
+                                                NDRRMC Hub</div>
+                                            <span
+                                                class="text-xs font-bold font-mono text-gray-600 dark:text-gray-400">(02)
+                                                8911-5061</span>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row g-4 mb-4">
-                        <!-- Left Column (Bigger) -->
-                        <div class="col-12 col-xl-8">
-                            <div class="app-card app-card-settings shadow-sm h-100">
-                                <div class="app-card-header p-3 border-bottom-0">
-                                    <h4 class="app-card-title">Nearby Help Stations</h4>
-                                </div>
-                                <div class="app-card-body p-4 pt-0">
-                                    <div class="bg-light rounded p-3 mb-3 border">
-                                        <p id="address" class="mb-1 text-primary fw-bold">Address: Loading...</p>
-                                        <p id="coords" class="small text-muted mb-0"></p>
-                                    </div>
-
-                                    <div id="map" class="rounded shadow-sm border" style="height: 400px; width: 100%;">
-                                    </div>
-
-                                    <script>
-                                        const redIcon = new L.Icon({
-                                            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-                                            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.4/images/marker-shadow.png',
-                                            iconSize: [25, 41],
-                                            iconAnchor: [12, 41],
-                                            popupAnchor: [1, -34],
-                                            shadowSize: [41, 41]
-                                        });
-
-                                        const map = L.map('map');
-
-                                        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                                            maxZoom: 18,
-                                            attribution: '© OpenStreetMap'
-                                        }).addTo(map);
-
-                                        map.locate({ setView: true, maxZoom: 16 });
-
-                                        function onLocationFound(e) {
-                                            const { lat, lng } = e.latlng;
-                                            const radius = e.accuracy;
-
-                                            L.marker([lat, lng]).addTo(map)
-                                                .bindPopup(`You are within ${radius.toFixed(0)} meters.`).openPopup();
-                                            L.circle([lat, lng], radius).addTo(map);
-
-                                            document.getElementById("coords").textContent = `Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`;
-
-                                            fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
-                                                .then(res => res.json())
-                                                .then(data => {
-                                                    document.getElementById("address").innerHTML = `<b>${data.display_name}</b>`;
-                                                });
-
-                                            // Automatically fetch nearby stations
-                                            fetch('/nearby-stations', {
-                                                method: 'POST',
-                                                headers: {
-                                                    'Content-Type': 'application/json'
-                                                },
-                                                body: JSON.stringify({ lat, lng })
-                                            })
-                                                .then(res => res.json())
-                                                .then(data => {
-                                                    data.forEach(station => {
-                                                        L.marker([station.latitude, station.longitude], { icon: redIcon })
-                                                            .addTo(map)
-                                                            .bindPopup(`<b>${station.name}</b><br>Type: ${station.type}<br>Distance: ${station.distance.toFixed(2)} km`);
-                                                    });
-
-                                                    if (data.length > 0) {
-                                                        const nearest = data[0];
-                                                        L.Routing.control({
-                                                            waypoints: [
-                                                                L.latLng(lat, lng),
-                                                                L.latLng(nearest.latitude, nearest.longitude)
-                                                            ],
-                                                            lineOptions: {
-                                                                styles: [{ color: 'blue', weight: 5, opacity: 0.7 }]
-                                                            },
-                                                            routeWhileDragging: false,
-                                                            showAlternatives: false,
-                                                            addWaypoints: false,
-                                                            draggableWaypoints: false,
-                                                            fitSelectedRoutes: true,
-                                                            createMarker: function () { return null; }
-                                                        }).addTo(map);
-                                                    }
-                                                })
-                                                .catch(error => {
-                                                    console.error('Error fetching nearby stations:', error);
-                                                });
-                                        }
-
-                                        map.on('locationfound', onLocationFound);
-                                        map.on('locationerror', function (e) {
-                                            alert("Location error. Please enable location services.");
-                                        });
-                                    </script>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Right Column (Smaller but same height) -->
-                        <div class="col-12 col-xl-4">
-                            <div class="app-card app-card-notification shadow-sm p-4 h-100">
-                                <h4 class="app-card-title mb-3">Emergency Assistance</h4>
-                                <div class="app-card-body">
-                                    <p class="text-muted small">If you need immediate assistance, please refer to the
-                                        following emergency contact numbers:</p>
-
-                                    <div class="list-group list-group-flush border rounded mt-3">
-                                        <div
-                                            class="list-group-item bg-light border-bottom d-flex justify-content-between align-items-center p-3">
-                                            <div class="fw-bold">National Hotline</div>
-                                            <span class="badge bg-danger fs-6">911</span>
-                                        </div>
-                                        <div
-                                            class="list-group-item bg-light border-bottom d-flex justify-content-between align-items-center p-3">
-                                            <div class="fw-bold">PNP (Police)</div>
-                                            <div><span class="badge bg-primary fs-6 me-1">117</span> <span
-                                                    class="small">(02) 8722-0650</span></div>
-                                        </div>
-                                        <div
-                                            class="list-group-item bg-light border-bottom d-flex justify-content-between align-items-center p-3">
-                                            <div class="fw-bold">BFP (Fire)</div>
-                                            <span class="small">(02) 8426-0219</span>
-                                        </div>
-                                        <div
-                                            class="list-group-item bg-light border-bottom d-flex justify-content-between align-items-center p-3">
-                                            <div class="fw-bold">Red Cross</div>
-                                            <div><span class="badge bg-info text-white fs-6 me-1">143</span> <span
-                                                    class="small">(02) 8790-2300</span></div>
-                                        </div>
-                                        <div
-                                            class="list-group-item bg-light border-bottom d-flex justify-content-between align-items-center p-3">
-                                            <div class="fw-bold">MMDA</div>
-                                            <span class="badge bg-success fs-6">136</span>
-                                        </div>
-                                        <div
-                                            class="list-group-item bg-light border-0 d-flex justify-content-between align-items-center p-3">
-                                            <div class="fw-bold">NDRRMC</div>
-                                            <span class="small">(02) 8911-5061</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
-            </div>
-
-            <%- include('../partials/footer'); %>
+            </main>
         </div>
 
-        <%- include('../partials/page-end'); %>
-            <script src="/js/script.js"></script>
+        <script>
+            const redIcon = new L.Icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.4/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+
+            // Initialize map with a default view before location is found
+            const map = L.map('map').setView([14.5995, 120.9842], 13); // Manila coordinates
+
+            // Determine if dark mode is active to use appropriate tile layer
+            const isDarkMode = document.documentElement.classList.contains('dark');
+
+            let tileUrl = 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+            if (isDarkMode) {
+                // Dark theme tiles for OpenStreetMap via CartoDB
+                tileUrl = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
+                L.tileLayer(tileUrl, {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+                    subdomains: 'abcd',
+                    maxZoom: 20
+                }).addTo(map);
+            } else {
+                L.tileLayer(tileUrl, {
+                    maxZoom: 18,
+                    attribution: '© OpenStreetMap'
+                }).addTo(map);
+            }
+
+            map.locate({ setView: true, maxZoom: 16 });
+
+            function onLocationFound(e) {
+                const { lat, lng } = e.latlng;
+                const radius = e.accuracy;
+
+                const userMarker = L.marker([lat, lng]).addTo(map)
+                    .bindPopup(`<div class="font-bold uppercase tracking-wider text-xs p-1">Current Position</div>`).openPopup();
+
+                L.circle([lat, lng], {
+                    radius: radius,
+                    color: '#4f46e5',
+                    fillColor: '#4f46e5',
+                    fillOpacity: 0.15,
+                    weight: 2
+                }).addTo(map);
+
+                document.getElementById("coords").textContent = `LAT ${lat.toFixed(5)} :: LON ${lng.toFixed(5)}`;
+
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        document.getElementById("address").innerHTML = `${data.display_name}`;
+                    })
+                    .catch(() => {
+                        document.getElementById("address").innerHTML = "Coordinates Acquired (Address mapping failed)";
+                    });
+
+                // Fetch nearby stations
+                fetch('/nearby-stations', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ lat, lng })
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        let nearest = null;
+
+                        if (data && data.length > 0) {
+                            data.forEach(station => {
+                                const marker = L.marker([station.latitude, station.longitude], { icon: redIcon }).addTo(map);
+
+                                let iconStr = '<i class="fa fa-shield-halved text-red-500"></i>';
+                                if (station.type.toLowerCase().includes('police')) iconStr = '<i class="fa fa-building-shield text-blue-500"></i>';
+                                if (station.type.toLowerCase().includes('fire')) iconStr = '<i class="fa fa-fire-extinguisher text-orange-500"></i>';
+                                if (station.type.toLowerCase().includes('hospital')) iconStr = '<i class="fa fa-truck-medical text-rose-500"></i>';
+
+                                marker.bindPopup(`
+                            <div class="flex flex-col gap-1 p-1">
+                                <div class="font-black text-xs uppercase tracking-wider border-b pb-1 mb-1">${iconStr} ${station.name}</div>
+                                <div class="text-[10px] text-gray-500 font-bold uppercase">${station.type}</div>
+                                <div class="text-[10px] text-gray-500 font-mono">DIST: ${station.distance.toFixed(2)} KM</div>
+                            </div>
+                        `);
+                            });
+
+                            nearest = data[0];
+
+                            if (nearest) {
+                                try {
+                                    const routingControl = L.Routing.control({
+                                        waypoints: [
+                                            L.latLng(lat, lng),
+                                            L.latLng(nearest.latitude, nearest.longitude)
+                                        ],
+                                        lineOptions: {
+                                            styles: [{ color: '#4f46e5', weight: 4, opacity: 0.8, dashArray: '10, 10' }]
+                                        },
+                                        routeWhileDragging: false,
+                                        showAlternatives: false,
+                                        addWaypoints: false,
+                                        draggableWaypoints: false,
+                                        fitSelectedRoutes: true,
+                                        createMarker: function () { return null; },
+                                        show: false // Hide text instructions by default
+                                    }).addTo(map);
+
+                                    // Adjust map bounds slightly to ensure both points fit well
+                                    const group = new L.featureGroup([
+                                        L.marker([lat, lng]),
+                                        L.marker([nearest.latitude, nearest.longitude])
+                                    ]);
+                                    setTimeout(() => { map.fitBounds(group.getBounds().pad(0.1)); }, 1000);
+
+                                } catch (err) {
+                                    console.error("Routing error:", err);
+                                }
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Network logic anomaly:', error);
+                    });
+            }
+
+            map.on('locationfound', onLocationFound);
+            map.on('locationerror', function (e) {
+                console.warn("Location services inaccessible.");
+                document.getElementById("address").innerHTML = "Location Services Offline/Denied";
+                document.getElementById("coords").innerHTML = "Awaiting manual override...";
+            });
+
+            // Handle window resize for map
+            window.addEventListener('resize', function () {
+                setTimeout(() => { map.invalidateSize(); }, 200);
+            });
+        </script>
+
+        <%- include('../partials/footer'); %>
+            <%- include('../partials/page-end'); %>
 </body>
 
 </html>

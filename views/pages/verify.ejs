@@ -6,53 +6,86 @@
         <title>Verify Account | CitySafe</title>
 </head>
 
-<body class="app app-login p-0">
+<body
+    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex text-sm">
     <%- include('../partials/page-start'); %>
-        <div class="row g-0 app-auth-wrapper justify-content-center align-items-center w-100"
-            style="min-height: 100vh;">
-            <div class="col-12 col-md-7 col-lg-6 col-xl-4 auth-main-col text-center p-5">
-                <div class="d-flex flex-column align-content-end">
-                    <div class="app-auth-body mx-auto shadow-sm p-5 bg-white rounded border w-100">
-                        <div class="app-auth-branding mb-4">
-                            <a class="app-logo" href="/">
-                                <h3 class="text-primary"><i class="fa fa-user-edit me-2"></i>CitySafe</h3>
-                            </a>
-                        </div>
-                        <h2 class="auth-heading text-center mb-4">Verify</h2>
-                        <div class="auth-intro mb-4 text-center text-muted">We sent a 6-digit code to your <%= method
-                                || 'contact info' %>.</div>
 
-                        <% if (typeof error !=='undefined' && error) { %>
-                            <div class="alert alert-danger" role="alert">
-                                <%= error %>
-                            </div>
-                            <% } %>
-
-                                <form action="/verify-code" method="POST" class="auth-form login-form text-start">
-                                    <input type="hidden" name="email" value="<%= email %>">
-                                    <div class="form-floating mb-3">
-                                        <input type="text" class="form-control" name="code" id="floatingInput"
-                                            placeholder="123456" required>
-                                        <label for="floatingInput">Enter 6-Digit Code</label>
-                                    </div>
-                                    <div class="text-center">
-                                        <button type="submit"
-                                            class="btn app-btn-primary w-100 theme-btn mx-auto py-3 mb-4">Verify
-                                            Account</button>
-                                    </div>
-                                </form>
-
-                                <div class="auth-option text-center pt-3 text-muted">
-                                    Didn't receive it? <a class="text-link"
-                                        href="/resend-code?email=<%= email %>">Resend Code</a>
-                                </div>
+        <div class="flex flex-1 w-full justify-center">
+            <!-- Auth Form Column (Centered for Verify) -->
+            <div class="w-full flex flex-col justify-center items-center px-4 sm:px-8 py-12 relative z-10">
+                <!-- Decorative blur background -->
+                <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none flex justify-center items-center">
+                    <div
+                        class="w-[400px] h-[400px] bg-indigo-500/10 dark:bg-indigo-500/20 rounded-full blur-[80px] animate-pulse">
                     </div>
+                </div>
+
+                <div
+                    class="max-w-md w-full space-y-8 glass-panel p-8 sm:p-10 relative z-10 shadow-2xl border-t-4 border-indigo-500">
+                    <!-- Branding -->
+                    <div class="text-center">
+                        <a href="/" class="inline-flex items-center justify-center gap-2 group mb-6">
+                            <div
+                                class="w-12 h-12 rounded-xl bg-indigo-600 dark:bg-indigo-500 text-white flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform">
+                                <i class="fa fa-shield-alt text-2xl"></i>
+                            </div>
+                        </a>
+                        <h2 class="text-3xl font-black text-gray-900 dark:text-white tracking-tight mb-2">Verification
+                        </h2>
+                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                            We sent a 6-digit transmission code to your <br>
+                            <strong class="text-indigo-600 dark:text-indigo-400">
+                                <%= method || 'contact info' %>
+                            </strong>.
+                        </p>
+                    </div>
+
+                    <% if (typeof error !=='undefined' && error) { %>
+                        <div
+                            class="p-4 bg-red-50/80 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-xl flex items-center gap-3 text-red-600 dark:text-red-400 text-sm font-bold shadow-sm">
+                            <i class="fa fa-circle-exclamation text-lg"></i>
+                            <%= error %>
+                        </div>
+                        <% } %>
+
+                            <!-- Form -->
+                            <form class="space-y-6" method="POST" action="/verify-code">
+                                <input type="hidden" name="email" value="<%= email %>">
+
+                                <div class="space-y-1">
+                                    <label for="code"
+                                        class="block text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-400 pl-1 text-center">Auth
+                                        Code</label>
+                                    <div class="relative">
+                                        <input type="text" id="code" name="code"
+                                            class="input-glass text-center text-3xl tracking-[0.5em] font-mono py-4 font-black text-gray-900 dark:text-white"
+                                            placeholder="••••••" maxlength="6" required autofocus>
+                                    </div>
+                                </div>
+
+                                <button type="submit"
+                                    class="w-full py-4 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-black text-sm uppercase tracking-widest rounded-xl shadow-lg shadow-indigo-500/30 border border-indigo-500/50 transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2 mt-4">
+                                    <i class="fa fa-fingerprint text-lg"></i> VERIFY IDENTITY
+                                </button>
+                            </form>
+
+                            <!-- Footer text -->
+                            <div class="text-center pt-6 border-t border-gray-100 dark:border-gray-800 mt-8">
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                    Didn't receive the transmission? <br>
+                                    <a href="/resend-code?email=<%= email %>"
+                                        class="font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 inline-flex items-center gap-1 transition-colors mt-2">
+                                        <i class="fa fa-rotate-right"></i> Resend Code
+                                    </a>
+                                </p>
+                            </div>
                 </div>
             </div>
         </div>
+
         <%- include('../partials/page-end'); %>
-            <script src="/js/script.js"></script>
             <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+            <script src="/js/script.js"></script>
 </body>
 
 </html>

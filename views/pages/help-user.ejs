@@ -5,195 +5,235 @@
     <%- include('../partials/head'); %>
 </head>
 
-<body class="app">
+<body
+    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
     <%- include('../partials/page-start'); %>
 
-        <header class="app-header fixed-top">
-            <%- include('../partials/user-navbar'); %>
-                <%- include('../partials/user-sidebar'); %>
+        <header class="sticky top-0 z-50">
+            <%- include('../partials/user-navbar', { currentPage: 'help' }); %>
         </header>
 
-        <div class="app-wrapper">
-            <div class="app-content pt-3 p-md-3 p-lg-4">
-                <div class="container-xl">
-                    <h1 class="app-page-title">Help & Support</h1>
+        <div class="flex flex-1 overflow-hidden relative">
+            <aside class="z-40">
+                <%- include('../partials/user-sidebar', { currentPage: 'help' }); %>
+            </aside>
 
-                    <div class="row g-4 mb-4">
-                        <div class="col-12 col-lg-8">
-                            <div class="app-card app-card-settings shadow-sm p-4 h-100">
-                                <div class="app-card-body">
-                                    <p class="text-muted mb-4">
+            <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8 overflow-y-auto w-full relative">
+                <div class="max-w-7xl mx-auto space-y-6">
+
+                    <div class="flex items-center gap-3 px-2 mb-2">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+                            <i class="fa fa-circle-question text-xl"></i>
+                        </div>
+                        <h1 class="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight uppercase">Help &
+                            Support</h1>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                        <!-- FAQ Section -->
+                        <div class="lg:col-span-2 space-y-6">
+                            <div
+                                class="glass-panel overflow-hidden h-full flex flex-col border-t-4 border-indigo-500 relative">
+                                <!-- Background abstract shape -->
+                                <div
+                                    class="absolute -bottom-10 -left-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none">
+                                </div>
+
+                                <div class="p-6 md:p-8 flex-1 relative z-10">
+                                    <p
+                                        class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-8 max-w-2xl border-l-2 border-indigo-400 pl-3">
                                         If you are experiencing any issues or have any questions, we are here to help!
-                                        Below are some commonly asked questions and their answers.
+                                        Below are some commonly asked questions and their comprehensive answers.
                                     </p>
 
-                                    <div class="accordion accordion-flush" id="faqAccordion">
-                                        <div class="accordion-item border-bottom">
-                                            <h2 class="accordion-header">
-                                                <button class="accordion-button collapsed fw-bold px-0 bg-transparent"
-                                                    type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                                                    How do I report an emergency?
-                                                </button>
-                                            </h2>
-                                            <div id="faq1" class="accordion-collapse collapse"
-                                                data-bs-parent="#faqAccordion">
-                                                <div class="accordion-body px-0 text-muted">
-                                                    Use the "One-Tap SOS Reporting" feature to quickly send a distress
-                                                    signal to our team. We will respond as soon as possible to assist
-                                                    you.
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div class="space-y-4" x-data="{ activeAccordion: null }">
+                                        <% const faqs=[ { q: "How do I report an emergency?" ,
+                                            a: "Use the 'One-Tap SOS Reporting' feature to quickly send a distress signal to our team. We will respond as soon as possible to assist you."
+                                            }, { q: "How can I track my report status?" ,
+                                            a: "Go to 'My Reports' to view the status of your reported incidents and see if a responder has been assigned to your location."
+                                            }, { q: "How do I find nearby safe zones?" ,
+                                            a: "Visit the 'Nearby Stations' page to view a map of police stations, fire stations, and hospitals near you for quick navigation."
+                                            }, { q: "How do I check the weather?" ,
+                                            a: "The 'Weather' page provides real-time updates on local weather conditions to help you stay prepared for any potential hazards."
+                                            }, { q: "What is the Community Risk Assessment Tool?" ,
+                                            a: "This tool helps assess disaster risks in your area, providing important data on natural disasters and preparedness."
+                                            } ]; %>
 
-                                        <div class="accordion-item border-bottom">
-                                            <h2 class="accordion-header">
-                                                <button class="accordion-button collapsed fw-bold px-0 bg-transparent"
-                                                    type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                                                    How can I track my report status?
-                                                </button>
-                                            </h2>
-                                            <div id="faq2" class="accordion-collapse collapse"
-                                                data-bs-parent="#faqAccordion">
-                                                <div class="accordion-body px-0 text-muted">
-                                                    Go to "My Reports" to view the status of your reported incidents and
-                                                    see if a responder has been assigned to your location.
+                                            <% faqs.forEach((faq, index)=> { %>
+                                                <div class="border border-gray-200 dark:border-gray-700/50 rounded-xl overflow-hidden bg-white/40 dark:bg-gray-800/20 transition-all duration-300"
+                                                    :class="activeAccordion === <%= index %> ? 'shadow-md border-indigo-200 dark:border-indigo-800/50 bg-indigo-50/30 dark:bg-indigo-900/10' : 'hover:border-indigo-200 dark:hover:border-indigo-800/30'">
+                                                    <button
+                                                        @click="activeAccordion = activeAccordion === <%= index %> ? null : <%= index %>"
+                                                        class="w-full text-left px-5 py-4 flex items-center justify-between focus:outline-none group">
+                                                        <h3
+                                                            class="font-bold text-gray-800 dark:text-gray-200 text-sm group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                                                            <%= faq.q %>
+                                                        </h3>
+                                                        <div class="w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 transition-transform duration-300"
+                                                            :class="activeAccordion === <%= index %> ? 'rotate-180 bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400' : ''">
+                                                            <i class="fa fa-chevron-down text-xs"></i>
+                                                        </div>
+                                                    </button>
+                                                    <div x-show="activeAccordion === <%= index %>" x-collapse x-cloak>
+                                                        <div
+                                                            class="px-5 pb-4 pt-1 text-sm text-gray-600 dark:text-gray-400 leading-relaxed border-t border-gray-100 dark:border-gray-800/50 mx-5 mt-2">
+                                                            <%= faq.a %>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="accordion-item border-bottom">
-                                            <h2 class="accordion-header">
-                                                <button class="accordion-button collapsed fw-bold px-0 bg-transparent"
-                                                    type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                                                    How do I find nearby safe zones?
-                                                </button>
-                                            </h2>
-                                            <div id="faq3" class="accordion-collapse collapse"
-                                                data-bs-parent="#faqAccordion">
-                                                <div class="accordion-body px-0 text-muted">
-                                                    Visit the "Nearby Stations" page to view a map of police stations,
-                                                    fire stations, and hospitals near you for quick navigation.
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="accordion-item border-bottom">
-                                            <h2 class="accordion-header">
-                                                <button class="accordion-button collapsed fw-bold px-0 bg-transparent"
-                                                    type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
-                                                    How do I check the weather?
-                                                </button>
-                                            </h2>
-                                            <div id="faq4" class="accordion-collapse collapse"
-                                                data-bs-parent="#faqAccordion">
-                                                <div class="accordion-body px-0 text-muted">
-                                                    The "Weather" page provides real-time updates on local weather
-                                                    conditions to help you stay prepared for any potential hazards.
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="accordion-item border-0">
-                                            <h2 class="accordion-header">
-                                                <button class="accordion-button collapsed fw-bold px-0 bg-transparent"
-                                                    type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
-                                                    What is the Community Risk Assessment Tool?
-                                                </button>
-                                            </h2>
-                                            <div id="faq5" class="accordion-collapse collapse"
-                                                data-bs-parent="#faqAccordion">
-                                                <div class="accordion-body px-0 text-muted">
-                                                    This tool helps assess disaster risks in your area, providing
-                                                    important data on natural disasters and preparedness.
-                                                </div>
-                                            </div>
-                                        </div>
+                                                <% }) %>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="col-12 col-lg-4">
-                            <div class="app-card app-card-settings shadow-sm p-4 mb-4">
-                                <h4 class="app-card-title mb-3">Contact Us</h4>
-                                <div class="app-card-body">
-                                    <p class="text-muted small">Need further assistance?</p>
-                                    <div class="list-group list-group-flush">
-                                        <div
-                                            class="list-group-item bg-transparent px-0 border-light d-flex flex-column">
-                                            <small class="text-muted fw-bold">Email</small>
-                                            <span class="text-primary">jayr.tabalina.ui@phinmaed.com</span>
-                                        </div>
-                                        <div
-                                            class="list-group-item bg-transparent px-0 border-light d-flex flex-column">
-                                            <small class="text-muted fw-bold">Phone</small>
-                                            <span>(+63) 993 978 4619</span>
-                                        </div>
-                                        <div class="list-group-item bg-transparent px-0 border-0 d-flex flex-column">
-                                            <small class="text-muted fw-bold">Social Media</small>
-                                            <span class="text-info">@CitySafeOfficial</span>
-                                        </div>
-                                    </div>
+                        <!-- Contact & Hotlines Section -->
+                        <div class="lg:col-span-1 space-y-6">
+
+                            <!-- Contact Us -->
+                            <div class="glass-panel overflow-hidden border-t-4 border-emerald-500">
+                                <div
+                                    class="px-6 py-4 border-b border-emerald-100 dark:border-emerald-900/30 bg-emerald-50/50 dark:bg-emerald-900/10 flex items-center justify-between">
+                                    <h4
+                                        class="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                                        <i class="fa fa-address-book text-emerald-500"></i> Contact Us
+                                    </h4>
+                                </div>
+                                <div class="p-6">
+                                    <p class="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4">Direct
+                                        Communication Lines</p>
+
+                                    <ul class="space-y-4">
+                                        <li class="flex items-start gap-3">
+                                            <div
+                                                class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                                                <i class="fa fa-envelope"></i>
+                                            </div>
+                                            <div>
+                                                <div
+                                                    class="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                                    Email Relay</div>
+                                                <div class="text-sm font-medium text-emerald-600 dark:text-emerald-400">
+                                                    jayr.tabalina.ui@phinmaed.com</div>
+                                            </div>
+                                        </li>
+                                        <li class="flex items-start gap-3">
+                                            <div
+                                                class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                                                <i class="fa fa-phone"></i>
+                                            </div>
+                                            <div>
+                                                <div
+                                                    class="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                                    Secure Line</div>
+                                                <div class="text-sm font-bold text-gray-800 dark:text-gray-200">(+63)
+                                                    993 978 4619</div>
+                                            </div>
+                                        </li>
+                                        <li class="flex items-start gap-3">
+                                            <div
+                                                class="w-8 h-8 rounded-lg bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+                                                <i class="fa fa-hashtag"></i>
+                                            </div>
+                                            <div>
+                                                <div
+                                                    class="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                                    Public Feeds</div>
+                                                <div class="text-sm font-medium text-blue-500 dark:text-blue-400">
+                                                    @CitySafeOfficial</div>
+                                            </div>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
 
-                            <div class="app-card app-card-notification shadow-sm p-4">
-                                <h4 class="app-card-title mb-3">Emergency Hotlines</h4>
-                                <div class="app-card-body">
-                                    <div
-                                        class="d-flex justify-content-between align-items-center border-bottom border-light py-2">
-                                        <div class="d-flex flex-column">
-                                            <span class="fw-bold">National Hotline</span>
-                                        </div>
-                                        <span class="badge bg-danger fs-6">911</span>
-                                    </div>
-                                    <div
-                                        class="d-flex justify-content-between align-items-center border-bottom border-light py-2">
-                                        <div class="d-flex flex-column">
-                                            <span class="fw-bold">PNP (Police)</span>
-                                            <small class="text-muted">(02) 8722-0650</small>
-                                        </div>
-                                        <span class="badge bg-primary fs-6">117</span>
-                                    </div>
-                                    <div
-                                        class="d-flex justify-content-between align-items-center border-bottom border-light py-2">
-                                        <div class="d-flex flex-column">
-                                            <span class="fw-bold">BFP (Fire)</span>
-                                        </div>
-                                        <span class="badge bg-warning text-dark fs-6">(02) 8426</span>
-                                    </div>
-                                    <div
-                                        class="d-flex justify-content-between align-items-center border-bottom border-light py-2">
-                                        <div class="d-flex flex-column">
-                                            <span class="fw-bold">Red Cross</span>
-                                            <small class="text-muted">(02) 8790-2300</small>
-                                        </div>
-                                        <span class="badge bg-info text-white fs-6">143</span>
-                                    </div>
-                                    <div
-                                        class="d-flex justify-content-between align-items-center border-bottom border-light py-2">
-                                        <div class="d-flex flex-column">
-                                            <span class="fw-bold">MMDA</span>
-                                        </div>
-                                        <span class="badge bg-success fs-6">136</span>
-                                    </div>
-                                    <div class="d-flex justify-content-between align-items-center py-2">
-                                        <div class="d-flex flex-column">
-                                            <span class="fw-bold">NDRRMC Opcen</span>
-                                        </div>
-                                        <span class="badge bg-secondary fs-6 text-dark">(02) 8911</span>
-                                    </div>
+                            <!-- Full Hotlines List for User -->
+                            <div
+                                class="glass-panel overflow-hidden border-t-4 border-red-500 shadow-lg shadow-red-500/5">
+                                <div
+                                    class="px-6 py-4 border-b border-red-100 dark:border-red-900/30 bg-red-50/50 dark:bg-red-900/10 flex items-center justify-between">
+                                    <h4
+                                        class="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                                        <i class="fa fa-phone-volume text-red-500 animate-pulse"></i> Emergency Hotlines
+                                    </h4>
+                                </div>
+                                <div class="p-6">
+                                    <ul class="space-y-2">
+                                        <li
+                                            class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                                            <div class="flex flex-col">
+                                                <span
+                                                    class="text-sm font-bold text-gray-700 dark:text-gray-300">National
+                                                    Hotline</span>
+                                            </div>
+                                            <span
+                                                class="px-2 py-1 bg-red-500 text-white rounded text-xs font-black">911</span>
+                                        </li>
+                                        <li
+                                            class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                                            <div class="flex flex-col">
+                                                <span class="text-sm font-bold text-gray-700 dark:text-gray-300">PNP
+                                                    (Police)</span>
+                                                <span class="text-[10px] font-medium tracking-wide text-gray-400">(02)
+                                                    8722-0650</span>
+                                            </div>
+                                            <span
+                                                class="px-2 py-1 bg-blue-600 text-white rounded text-xs font-black">117</span>
+                                        </li>
+                                        <li
+                                            class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                                            <div class="flex flex-col">
+                                                <span class="text-sm font-bold text-gray-700 dark:text-gray-300">BFP
+                                                    (Fire)</span>
+                                            </div>
+                                            <span
+                                                class="px-2 py-1 bg-yellow-500 text-gray-900 rounded text-xs font-black">(02)
+                                                8426</span>
+                                        </li>
+                                        <li
+                                            class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                                            <div class="flex flex-col">
+                                                <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Red
+                                                    Cross</span>
+                                                <span class="text-[10px] font-medium tracking-wide text-gray-400">(02)
+                                                    8790-2300</span>
+                                            </div>
+                                            <span
+                                                class="px-2 py-1 bg-cyan-500 text-white rounded text-xs font-black">143</span>
+                                        </li>
+                                        <li
+                                            class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                                            <div class="flex flex-col">
+                                                <span
+                                                    class="text-sm font-bold text-gray-700 dark:text-gray-300">MMDA</span>
+                                            </div>
+                                            <span
+                                                class="px-2 py-1 bg-green-500 text-white rounded text-xs font-black">136</span>
+                                        </li>
+                                        <li class="flex items-center justify-between py-2">
+                                            <div class="flex flex-col">
+                                                <span class="text-sm font-bold text-gray-700 dark:text-gray-300">NDRRMC
+                                                    Opcen</span>
+                                            </div>
+                                            <span
+                                                class="px-2 py-1 bg-gray-500 text-white rounded text-xs font-black">(02)
+                                                8911</span>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
+
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <%- include('../partials/footer'); %>
+                </div>
+            </main>
         </div>
 
-        <%- include('../partials/page-end'); %>
+        <%- include('../partials/footer'); %>
+            <%- include('../partials/page-end'); %>
 </body>
 
 </html>

@@ -1,0 +1,315 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+/* Base Overrides for Premium Feel */
+body.app {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    background-color: #f8f9fa;
+    color: #2b3445;
+}
+
+/* Typography Enhancements */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.app-page-title,
+.app-card-title {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-weight: 700;
+    color: #1e293b;
+    letter-spacing: -0.02em;
+}
+
+/* Glassmorphism & Soft Shadows for Cards */
+.app-card {
+    background: #ffffff;
+    border: none !important;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    overflow: hidden;
+}
+
+.app-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08), 0 4px 6px rgba(0, 0, 0, 0.04) !important;
+}
+
+.app-card-header {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04) !important;
+    padding-bottom: 1rem !important;
+}
+
+/* Premium Buttons */
+.btn.app-btn-primary {
+    background: linear-gradient(135deg, #15a362 0%, #108750 100%) !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 10px rgba(21, 163, 98, 0.3) !important;
+    transition: all 0.3s ease !important;
+    padding: 0.6rem 1.5rem;
+}
+
+.btn.app-btn-primary:hover {
+    background: linear-gradient(135deg, #108750 0%, #0c693e 100%) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(21, 163, 98, 0.4) !important;
+}
+
+.btn.app-btn-secondary {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #475569 !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02) !important;
+}
+
+.btn.app-btn-secondary:hover {
+    border-color: #cbd5e1 !important;
+    background: #f8fafc !important;
+    color: #1e293b !important;
+    transform: translateY(-2px);
+}
+
+/* Sidebar Styling */
+.app-sidebar {
+    background: #ffffff !important;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.03) !important;
+    border-right: none !important;
+}
+
+.app-menu .nav-link {
+    border-radius: 8px;
+    margin: 0.2rem 1rem;
+    transition: all 0.2s ease !important;
+}
+
+.app-menu .nav-link:hover {
+    background: rgba(21, 163, 98, 0.05) !important;
+    color: #15a362 !important;
+    transform: translateX(4px);
+}
+
+.app-menu .nav-link.active {
+    background: rgba(21, 163, 98, 0.1) !important;
+    color: #15a362 !important;
+    border-left: 4px solid #15a362 !important;
+    font-weight: 600;
+}
+
+.app-menu .nav-icon {
+    color: inherit !important;
+    transition: transform 0.2s ease !important;
+}
+
+.app-menu .nav-link:hover .nav-icon {
+    transform: scale(1.1);
+}
+
+/* Header Styling */
+.app-header {
+    background: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02) !important;
+    border-bottom: none !important;
+}
+
+/* Form Controls */
+.form-control {
+    border-radius: 8px !important;
+    border: 1px solid #e2e8f0 !important;
+    padding: 0.75rem 1rem !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.01) inset !important;
+}
+
+.form-control:focus {
+    border-color: #15a362 !important;
+    box-shadow: 0 0 0 3px rgba(21, 163, 98, 0.15) !important;
+    background: #ffffff !important;
+}
+
+/* Tables */
+.app-table-hover tbody tr {
+    transition: all 0.2s ease;
+}
+
+.app-table-hover tbody tr:hover {
+    background-color: rgba(21, 163, 98, 0.02) !important;
+    transform: scale(1.002);
+}
+
+/* Badges and Soft Backgrounds */
+.badge {
+    padding: 0.5em 0.8em;
+    border-radius: 6px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.bg-success {
+    background: #15a362 !important;
+    color: #fff;
+}
+
+.bg-danger {
+    background: #ef4444 !important;
+    color: #fff;
+}
+
+.bg-warning {
+    background: #f59e0b !important;
+    color: #fff;
+}
+
+.bg-primary-soft {
+    background: rgba(21, 163, 98, 0.1) !important;
+    color: #15a362 !important;
+}
+
+.bg-danger-soft {
+    background: rgba(239, 68, 68, 0.1) !important;
+    color: #ef4444 !important;
+}
+
+.bg-warning-soft {
+    background: rgba(245, 158, 11, 0.1) !important;
+    color: #f59e0b !important;
+}
+
+.bg-info-soft {
+    background: rgba(59, 130, 246, 0.1) !important;
+    color: #3b82f6 !important;
+}
+
+/* Dashboard Widgets */
+.app-card-stat .app-card-body {
+    padding: 2rem !important;
+}
+
+.app-card-stat .stats-type {
+    font-size: 0.875rem !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #64748b !important;
+    font-weight: 600 !important;
+}
+
+.app-card-stat .stats-figure {
+    font-size: 2.25rem !important;
+    font-weight: 800 !important;
+    color: #1e293b !important;
+    margin-top: 0.5rem;
+}
+
+/* Maps and Charts container */
+#map,
+#weather-map,
+.chart-container {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Alerts and Banners */
+.alert.border-left-decoration {
+    border-left: 4px solid #15a362 !important;
+    background: linear-gradient(to right, #ffffff, #f8fafc) !important;
+    border-radius: 12px;
+}
+
+/* Auth Pages Specific */
+.app-login,
+.app-signup {
+    background: #ffffff;
+}
+
+.auth-wrapper .auth-main-col {
+    background-color: #ffffff;
+    position: relative;
+    z-index: 10;
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.03);
+}
+
+.auth-background-col {
+    background: linear-gradient(135deg, rgba(16, 135, 80, 0.95) 0%, rgba(12, 105, 62, 0.95) 100%), url('https://images.unsplash.com/photo-1541888052065-985c2c77603c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') center/cover !important;
+    position: relative;
+}
+
+.auth-background-mask {
+    background: transparent !important;
+}
+
+.auth-background-overlay {
+    background: rgba(0, 0, 0, 0.1) !important;
+    backdrop-filter: blur(2px);
+}
+
+.copy-content h2 {
+    font-weight: 800 !important;
+    letter-spacing: -1px;
+    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Auth Floating Labels & Inputs */
+.form-floating>.form-control {
+    border-radius: 12px !important;
+    border: 1px solid #e2e8f0;
+    padding: 1rem 1.25rem;
+    height: calc(3.5rem + 5px);
+    background-color: #f8fafc !important;
+    font-weight: 500;
+}
+
+.form-floating>.form-control:focus {
+    border-color: #15a362 !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 0 0 4px rgba(21, 163, 98, 0.1) !important;
+}
+
+.form-floating>label {
+    padding: 1rem 1.25rem;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.form-floating>.form-control:focus~label,
+.form-floating>.form-control:not(:placeholder-shown)~label {
+    color: #15a362;
+    transform: scale(0.85) translateY(-0.75rem) translateX(0.15rem);
+    background: transparent;
+}
+
+/* Maps inside forms (like SOS page) */
+.form-group label {
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 0.5rem;
+}

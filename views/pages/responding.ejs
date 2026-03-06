@@ -6,105 +6,193 @@
         <link rel="stylesheet"
             href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
         <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.min.js"></script>
-
         <style>
             #missionMap {
                 height: 450px;
                 width: 100%;
+                z-index: 10;
+            }
+
+            /* Glassmorphic popup */
+            .leaflet-popup-content-wrapper {
+                background: rgba(255, 255, 255, 0.9);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.4);
+                border-radius: 1rem;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                color: #1f2937;
+            }
+
+            .dark .leaflet-popup-content-wrapper {
+                background: rgba(17, 24, 39, 0.9);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                color: #f3f4f6;
+            }
+
+            .leaflet-popup-tip {
+                background: rgba(255, 255, 255, 0.9);
+            }
+
+            .dark .leaflet-popup-tip {
+                background: rgba(17, 24, 39, 0.9);
+            }
+
+            /* Glassmorphic SweetAlert */
+            .swal2-popup.glass-swal {
+                background: rgba(255, 255, 255, 0.9);
+                backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 255, 255, 0.4);
+                border-radius: 1.5rem;
+                color: #1f2937;
+            }
+
+            .dark .swal2-popup.glass-swal {
+                background: rgba(17, 24, 39, 0.85);
+                border: 1px solid rgba(255, 255, 255, 0.05);
+                color: #f3f4f6;
             }
         </style>
 </head>
 
-<body class="app">
+<body
+    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
     <%- include('../partials/page-start'); %>
-        <header class="app-header fixed-top">
-            <%- include('../partials/responder-navbar'); %>
-                <%- include('../partials/responder-sidebar'); %>
+
+        <header class="sticky top-0 z-50">
+            <%- include('../partials/responder-navbar', { currentPage: 'responding' }); %>
         </header>
 
-        <div class="app-wrapper">
-            <div class="app-content pt-3 p-md-3 p-lg-4">
-                <div class="container-xl">
-                    <div class="row g-3 mb-4 align-items-center justify-content-between">
-                        <div class="col-auto">
-                            <h1 class="app-page-title mb-0">Active Response</h1>
-                        </div>
-                    </div>
+        <div class="flex flex-1 overflow-hidden relative">
+            <aside class="z-40">
+                <%- include('../partials/responder-sidebar', { currentPage: 'responding' }); %>
+            </aside>
 
-                    <div class="row g-4 mb-4">
+            <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8 overflow-y-auto w-full relative">
+                <div class="max-w-7xl mx-auto space-y-6">
+
+                    <h1
+                        class="text-3xl font-black text-gray-900 dark:text-white tracking-tight uppercase px-2 mb-2 flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 flex items-center justify-center shadow-inner">
+                            <i class="fa fa-truck-medical text-xl animate-pulse"></i>
+                        </div>
+                        Active Mission
+                    </h1>
+
+                    <div class="grid grid-cols-1 gap-6">
+
                         <!-- Mission Status Card -->
-                        <div class="col-12">
-                            <div class="app-card app-card-notification shadow-sm">
-                                <div class="app-card-header p-3">
-                                    <div class="row justify-content-between align-items-center">
-                                        <div class="col-auto">
-                                            <h4 class="app-card-title"><i
-                                                    class="fa fa-ambulance me-2 text-warning"></i>Mission: <%=
-                                                    mission.disaster_type.toUpperCase() %>
-                                            </h4>
-                                        </div>
-                                        <div class="col-auto">
-                                            <span class="badge bg-warning text-dark">STATUS: RESPONDING</span>
-                                        </div>
+                        <div class="glass-panel overflow-hidden border-t-4 border-amber-500 shadow-lg relative">
+                            <!-- Glow -->
+                            <div
+                                class="absolute -top-10 -right-10 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl pointer-events-none">
+                            </div>
+
+                            <div
+                                class="px-6 py-4 border-b border-amber-100 dark:border-amber-900/30 bg-amber-50/50 dark:bg-amber-900/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
+                                <h4
+                                    class="text-lg font-black uppercase tracking-wider text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                                    <i class="fa fa-exclamation-triangle text-amber-500 animate-pulse"></i>
+                                    Objective: <span class="text-amber-600 dark:text-amber-400">
+                                        <%= mission.disaster_type.toUpperCase() %>
+                                    </span>
+                                </h4>
+                                <div
+                                    class="px-3 py-1.5 bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-lg text-xs font-black uppercase tracking-widest flex items-center gap-2 shadow-sm animate-pulse w-fit">
+                                    <div class="w-2 h-2 rounded-full bg-amber-500"></div> STATUS: RESPONDING
+                                </div>
+                            </div>
+
+                            <div class="p-6 md:p-8 relative z-10">
+
+                                <!-- Directive Alert -->
+                                <div
+                                    class="flex flex-col md:flex-row items-center justify-between gap-4 p-4 lg:p-6 mb-8 rounded-2xl bg-white/40 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-700/50 shadow-sm backdrop-blur-sm">
+                                    <div>
+                                        <h6
+                                            class="font-black text-gray-800 dark:text-gray-200 uppercase tracking-widest text-[10px] mb-1">
+                                            Operational Directive</h6>
+                                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400 m-0">
+                                            Navigate to the incident coordinates. Once the situation is neutralized and
+                                            secured, finalize the operational report.
+                                        </p>
+                                    </div>
+                                    <div id="resolve-btn-container" class="shrink-0 w-full md:w-auto">
+                                        <% if (!mission.user_confirmed_at) { %>
+                                            <button
+                                                class="w-full md:w-auto px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded-xl text-xs font-black uppercase tracking-widest shadow-sm cursor-not-allowed flex items-center justify-center gap-2"
+                                                disabled>
+                                                <i class="fa fa-hourglass-half animate-pulse"></i> Waiting for HQ / User
+                                                Conf.
+                                            </button>
+                                            <% } else { %>
+                                                <button onclick="resolveMission(<%= mission.incident_id %>)"
+                                                    class="w-full md:w-auto px-6 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-md hover:shadow-emerald-500/25 flex items-center justify-center gap-2 transform hover:-translate-y-0.5">
+                                                    <i class="fa fa-badge-check text-lg"></i> MARK AS RESOLVED
+                                                </button>
+                                                <% } %>
                                     </div>
                                 </div>
-                                <div class="app-card-body p-3">
-                                    <div class="alert alert-info border-0 mb-3">
-                                        <div class="d-flex align-items-center justify-content-between">
-                                            <div>
-                                                <h6 class="mb-1">Operational Directive:</h6>
-                                                <p class="mb-0 small">Go to the incident location. Once resolved, click
-                                                    the button to finalize the response.</p>
-                                            </div>
-                                            <div id="resolve-btn-container">
-                                                <% if (!mission.user_confirmed_at) { %>
-                                                    <button class="btn btn-secondary btn-sm" disabled>
-                                                        <i class="fa fa-hourglass-half me-2"></i>Waiting for User
-                                                        Report...
-                                                    </button>
-                                                    <% } else { %>
-                                                        <button onclick="resolveMission(<%= mission.incident_id %>)"
-                                                            class="btn app-btn-primary">
-                                                            <i class="fa fa-check-circle me-2"></i>MARK AS RESOLVED
-                                                        </button>
-                                                        <% } %>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <div class="row g-4">
-                                        <div class="col-12 col-lg-4">
-                                            <div class="p-3 bg-light rounded shadow-sm border h-100">
-                                                <h6 class="border-bottom pb-2 mb-3">Unit Intelligence</h6>
-                                                <div class="mb-3">
-                                                    <small class="text-muted d-block">Reporter Name</small>
-                                                    <span class="fw-bold">
+                                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                                    <div class="lg:col-span-1 space-y-4">
+                                        <div
+                                            class="p-5 bg-gray-50/50 dark:bg-gray-800/50 rounded-2xl border border-gray-200 dark:border-gray-700 h-full">
+                                            <h6
+                                                class="font-black text-gray-800 dark:text-gray-200 uppercase tracking-widest border-b border-gray-200 dark:border-gray-700 pb-3 mb-4 flex items-center gap-2">
+                                                <i class="fa fa-clipboard-user text-indigo-500"></i> Unit Intelligence
+                                            </h6>
+
+                                            <div class="space-y-4">
+                                                <div>
+                                                    <small
+                                                        class="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 block mb-0.5">Reporter
+                                                        Target</small>
+                                                    <span
+                                                        class="text-sm font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                                                        <i class="fa fa-user text-gray-400"></i>
                                                         <%= mission.firstname %>
                                                             <%= mission.lastname %>
                                                     </span>
                                                 </div>
-                                                <div class="mb-3">
-                                                    <small class="text-muted d-block">Contact Number</small>
-                                                    <span class="fw-bold">
+                                                <div>
+                                                    <small
+                                                        class="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 block mb-0.5">Contact
+                                                        Vector</small>
+                                                    <span
+                                                        class="text-sm font-bold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                                                        <i class="fa fa-phone text-gray-400"></i>
                                                         <%= mission.contact_number %>
                                                     </span>
                                                 </div>
-                                                <div class="mb-3">
-                                                    <small class="text-muted d-block">Address</small>
-                                                    <span class="fw-bold small" id="incident-addr">Loading
-                                                        address...</span>
+                                                <div>
+                                                    <small
+                                                        class="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 block mb-0.5">Physical
+                                                        Address</small>
+                                                    <div class="text-xs font-bold text-gray-800 dark:text-gray-200 bg-white/60 dark:bg-gray-900/60 p-2 rounded-lg border border-gray-200 dark:border-gray-700"
+                                                        id="incident-addr">
+                                                        <i class="fa fa-spinner fa-spin text-indigo-500 mr-1"></i>
+                                                        Decrypting address...
+                                                    </div>
                                                 </div>
                                                 <div>
-                                                    <small class="text-muted d-block">Coordinates</small>
+                                                    <small
+                                                        class="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 block mb-0.5">Raw
+                                                        Coordinates</small>
                                                     <code
-                                                        class="small"><%= mission.incident_lat %>, <%= mission.incident_lng %></code>
+                                                        class="text-xs text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-900/30 px-2 py-1 rounded">
+                                                    <%= mission.incident_lat %>, <%= mission.incident_lng %>
+                                                </code>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-lg-8">
-                                            <div class="app-card app-card-map shadow-sm">
-                                                <div id="missionMap" style="height: 400px; width: 100%;"></div>
-                                            </div>
+                                    </div>
+
+                                    <div class="lg:col-span-2">
+                                        <div
+                                            class="rounded-2xl overflow-hidden shadow-inner border border-gray-200 dark:border-gray-700 relative h-full min-h-[400px]">
+                                            <div id="missionMap" class="absolute inset-0 z-10"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -112,81 +200,124 @@
                         </div>
 
                         <!-- Nearby Disasters -->
-                        <div class="col-12">
-                            <div class="app-card app-card-orders shadow-sm">
-                                <div class="app-card-header p-3">
-                                    <h4 class="app-card-title">Nearby Incident Awareness</h4>
-                                </div>
-                                <div class="app-card-body">
-                                    <div class="table-responsive">
-                                        <table class="table app-table-hover mb-0 text-left">
-                                            <thead>
-                                                <tr>
-                                                    <th class="cell">Date & Time</th>
-                                                    <th class="cell">Type</th>
-                                                    <th class="cell">Address</th>
-                                                    <th class="cell">Status</th>
+                        <div class="glass-panel overflow-hidden border-t-4 border-gray-500 shadow-lg">
+                            <div
+                                class="px-6 py-4 border-b border-gray-100 dark:border-gray-900/30 bg-gray-50/50 dark:bg-gray-900/10 flex items-center justify-between">
+                                <h4
+                                    class="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                                    <i class="fa fa-radar text-gray-500"></i> Nearby Incident Awareness
+                                </h4>
+                            </div>
+                            <div class="p-0 overflow-x-auto">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr
+                                            class="bg-gray-50/50 dark:bg-gray-800/50 border-b border-gray-100 dark:border-gray-800">
+                                            <th
+                                                class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                                Date & Time</th>
+                                            <th
+                                                class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                                Type</th>
+                                            <th
+                                                class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                                Address</th>
+                                            <th
+                                                class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                                Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                                        <% if (reports.length> 0) { %>
+                                            <% reports.forEach(function(report) { %>
+                                                <tr
+                                                    class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
+                                                    <td
+                                                        class="px-6 py-4 text-xs font-bold text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                                                        <%= new Date(report.reported_at).toLocaleString() %>
+                                                    </td>
+                                                    <td class="px-6 py-4">
+                                                        <span
+                                                            class="px-2 py-1 bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 rounded text-[10px] font-bold uppercase tracking-widest border border-red-200 dark:border-red-800">
+                                                            <%= report.disaster_type %>
+                                                        </span>
+                                                    </td>
+                                                    <td class="px-6 py-4 text-xs text-gray-600 dark:text-gray-400 addr-load max-w-[200px] truncate"
+                                                        data-lat="<%= report.latitude %>"
+                                                        data-lon="<%= report.longitude %>" title="Loading data...">
+                                                        <i class="fa fa-spinner fa-spin mr-1"></i> Loading geographical
+                                                        data...
+                                                    </td>
+                                                    <td class="px-6 py-4">
+                                                        <span
+                                                            class="px-2 py-1 bg-cyan-100 dark:bg-cyan-900/40 text-cyan-700 dark:text-cyan-400 rounded text-[10px] font-bold uppercase tracking-widest border border-cyan-200 dark:border-cyan-800">
+                                                            <%= report.status %>
+                                                        </span>
+                                                    </td>
                                                 </tr>
-                                            </thead>
-                                            <tbody>
-                                                <% if (reports.length> 0) { %>
-                                                    <% reports.forEach(function(report) { %>
+                                                <% }); %>
+                                                    <% } else { %>
                                                         <tr>
-                                                            <td class="cell small">
-                                                                <%= new Date(report.reported_at).toLocaleString() %>
+                                                            <td colspan="4" class="px-6 py-12 text-center">
+                                                                <span
+                                                                    class="text-xs font-bold uppercase tracking-widest text-gray-400">No
+                                                                    other active reports in your immediate
+                                                                    sector.</span>
                                                             </td>
-                                                            <td class="cell"><span class="badge bg-danger">
-                                                                    <%= report.disaster_type %>
-                                                                </span></td>
-                                                            <td class="cell small addr-load"
-                                                                data-lat="<%= report.latitude %>"
-                                                                data-lon="<%= report.longitude %>">Loading geographical
-                                                                data...</td>
-                                                            <td class="cell"><span class="badge bg-info text-dark">
-                                                                    <%= report.status %>
-                                                                </span></td>
                                                         </tr>
-                                                        <% }); %>
-                                                            <% } else { %>
-                                                                <tr>
-                                                                    <td colspan="4" class="text-center py-4 text-muted">
-                                                                        No other active reports in your immediate
-                                                                        sector.</td>
-                                                                </tr>
-                                                                <% } %>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                                                        <% } %>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
+
                     </div>
+
                 </div>
-            </div>
-            <footer class="app-footer">
-                <%- include('../partials/footer'); %>
-            </footer>
+            </main>
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
+            // Use glassmorphism theme for SweetAlert
+            const GlassSwal = Swal.mixin({
+                customClass: {
+                    popup: 'glass-swal',
+                    confirmButton: 'rounded-lg px-4 py-2 font-bold uppercase tracking-widest text-xs shadow-md shadow-emerald-500/20 mx-2',
+                    cancelButton: 'rounded-lg px-4 py-2 font-bold uppercase tracking-widest text-xs mx-2',
+                    input: 'rounded-xl border border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-800/50 text-sm focus:ring-2 focus:ring-emerald-500/50 p-3 w-[90%] mx-auto'
+                },
+                background: document.documentElement.classList.contains('dark') ? 'rgba(17, 24, 39, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+                color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#111827'
+            });
+
             const incidentLat = <%= mission.incident_lat || 'null' %>;
             const incidentLng = <%= mission.incident_lng || 'null' %>;
 
             if (incidentLat !== null && incidentLng !== null) {
-                const map = L.map('missionMap').setView([incidentLat, incidentLng], 13);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; OpenStreetMap contributors'
+                const map = L.map('missionMap', { zoomControl: false }).setView([incidentLat, incidentLng], 13);
+                L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                    attribution: '&copy; OpenStreetMap | Carto'
                 }).addTo(map);
 
-                L.marker([incidentLat, incidentLng]).addTo(map)
-                    .bindPopup("<b>INCIDENT LOCATION</b><br><%= mission.disaster_type %>").openPopup();
+                const hazardIcon = L.icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                    iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+                });
+
+                L.marker([incidentLat, incidentLng], { icon: hazardIcon }).addTo(map)
+                    .bindPopup("<div class='text-center'><div class='text-[10px] font-black uppercase text-red-500 mb-1'>Target Objective</div><div class='font-bold text-gray-800 dark:text-gray-200'><%= mission.disaster_type %></div></div>", { className: 'glass-popup' }).openPopup();
 
                 fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${incidentLat}&lon=${incidentLng}`)
                     .then(res => res.json())
                     .then(data => {
                         const addrEl = document.getElementById('incident-addr');
-                        if (addrEl) addrEl.innerText = data.display_name || "Address not found";
+                        if (addrEl) {
+                            addrEl.innerHTML = `<i class="fa fa-location-dot text-indigo-500 mr-1"></i> ${data.display_name || "Address not found"}`;
+                        }
                     });
 
                 if (navigator.geolocation) {
@@ -201,11 +332,21 @@
                         });
 
                         if (!window.routingControl) {
+                            const unitIconHtml = `
+                            <div class="relative flex h-6 w-6">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-6 w-6 border-2 border-white dark:border-gray-800 bg-emerald-500 flex items-center justify-center">
+                                    <i class="fa fa-shield-halved" style="font-size: 10px; color: white;"></i>
+                                </span>
+                            </div>
+                        `;
+                            const unitIcon = L.divIcon({ className: 'bg-transparent', html: unitIconHtml, iconSize: [24, 24], iconAnchor: [12, 12] });
+
                             window.routingControl = L.Routing.control({
                                 waypoints: [L.latLng(myLat, myLng), L.latLng(incidentLat, incidentLng)],
-                                lineOptions: { styles: [{ color: '#15a362', opacity: 0.8, weight: 6 }] },
+                                lineOptions: { styles: [{ color: '#10b981', opacity: 0.8, weight: 6, className: 'animate-route dash-array' }] },
                                 createMarker: function (i, wp) {
-                                    if (i === 0) return L.marker(wp.latLng).bindPopup("<b>Your Unit</b>");
+                                    if (i === 0) return L.marker(wp.latLng, { icon: unitIcon }).bindPopup("<b class='text-[10px] font-black uppercase text-emerald-500'>Your Unit</b>", { className: 'glass-popup' });
                                     return null;
                                 },
                                 addWaypoints: false,
@@ -213,6 +354,14 @@
                                 fitSelectedRoutes: true,
                                 show: false
                             }).addTo(map);
+
+                            const style = document.createElement('style');
+                            style.innerHTML = `
+                            .animate-route { stroke-dasharray: 10, 10; animation: dash 1s linear infinite; }
+                            @keyframes dash { to { stroke-dashoffset: -20; } }
+                        `;
+                            document.head.appendChild(style);
+
                         } else {
                             window.routingControl.setWaypoints([L.latLng(myLat, myLng), L.latLng(incidentLat, incidentLng)]);
                         }
@@ -221,15 +370,17 @@
             }
 
             function resolveMission(id) {
-                Swal.fire({
-                    title: 'Resolve Incident?',
-                    text: "Are you sure this incident is resolved? This will notify HQ and the citizen.",
+                GlassSwal.fire({
+                    title: '<span class="text-xl font-black uppercase tracking-tight text-emerald-500">Formally Resolve?</span>',
+                    html: '<span class="text-sm text-gray-600 dark:text-gray-300">Confirm operational resolution. Provide final remarks below.</span>',
                     icon: 'question',
+                    iconColor: '#10b981',
                     input: 'textarea',
                     inputPlaceholder: 'Enter resolution remarks (e.g., situation stabilized, casualty handled)...',
                     showCancelButton: true,
-                    confirmButtonColor: '#15a362',
-                    confirmButtonText: 'Confirm Resolution'
+                    confirmButtonColor: '#10b981',
+                    cancelButtonColor: '#6b7280',
+                    confirmButtonText: 'CONFIRM RESOLUTION'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         const remarks = result.value || "Resolved by responding unit";
@@ -241,10 +392,15 @@
                             .then(res => res.json())
                             .then(data => {
                                 if (data.success) {
-                                    Swal.fire('Success', 'Response logged. Waiting for final verification.', 'success')
-                                        .then(() => location.reload());
+                                    GlassSwal.fire({
+                                        icon: 'success',
+                                        title: '<span class="font-black text-emerald-500">LOGGED</span>',
+                                        html: '<span class="text-sm">Standing by for HQ verification.</span>',
+                                        showConfirmButton: false,
+                                        timer: 2000
+                                    }).then(() => location.reload());
                                 } else {
-                                    Swal.fire('Error', 'Failed to update mission status', 'error');
+                                    GlassSwal.fire('Error', 'Failed to update mission status', 'error');
                                 }
                             });
                     }
@@ -258,7 +414,8 @@
                     fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
                         .then(res => res.json())
                         .then(data => {
-                            td.innerText = data.display_name || "Unknown Address";
+                            td.innerHTML = `<i class="fa fa-map-pin text-gray-400 mr-1"></i> ${data.display_name || "Unknown Address"}`;
+                            td.title = data.display_name;
                         });
                 }
             });
@@ -275,15 +432,17 @@
                         if (container) {
                             const currentBtn = container.querySelector('button');
                             if (mission.user_confirmed_at && currentBtn.disabled) {
-                                container.innerHTML = `<button onclick="resolveMission(${mission.incident_id})" class="btn app-btn-primary"><i class="fa fa-check-circle me-2"></i>MARK AS RESOLVED</button>`;
+                                container.innerHTML = `<button onclick="resolveMission(${mission.incident_id})" class="w-full md:w-auto px-6 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-md hover:shadow-emerald-500/25 flex items-center justify-center gap-2 transform hover:-translate-y-0.5"><i class="fa fa-badge-check text-lg"></i> MARK AS RESOLVED</button>`;
                             } else if (!mission.user_confirmed_at && !currentBtn.disabled) {
-                                container.innerHTML = `<button class="btn btn-secondary btn-sm" disabled><i class="fa fa-hourglass-half me-2"></i>Waiting for User Report...</button>`;
+                                container.innerHTML = `<button class="w-full md:w-auto px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded-xl text-xs font-black uppercase tracking-widest shadow-sm cursor-not-allowed flex items-center justify-center gap-2" disabled><i class="fa fa-hourglass-half animate-pulse"></i> Waiting for HQ / User Conf.</button>`;
                             }
                         }
                     })
                     .catch(err => console.error("Polling error:", err));
             }, 5000);
         </script>
+        <%- include('../partials/footer'); %>
+            <%- include('../partials/page-end'); %>
 </body>
 
 </html>

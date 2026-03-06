@@ -4,251 +4,278 @@
 <head>
   <%- include('../partials/head'); %>
 </head>
-<body>
+
+<body
+  class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
   <%- include('../partials/page-start'); %>
-  <div class="container-fluid position-relative d-flex p-0">
-    <!-- Spinner Start -->
-    <%- include('../partials/spinner'); %>
-    <!-- Spinner End -->
 
+    <header class="sticky top-0 z-50">
+      <%- include('../partials/admin-navbar'); %>
+    </header>
 
-    <!-- Sidebar Start -->
-    <%- include('../partials/admin-sidebar'); %>
-      <!-- Sidebar End -->
+    <div class="flex flex-1 overflow-hidden relative">
+      <aside class="z-40">
+        <%- include('../partials/admin-sidebar'); %>
+      </aside>
 
+      <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8 overflow-y-auto w-full">
+        <div class="max-w-7xl mx-auto space-y-8">
 
-      <!-- Content Start -->
-      <div class="content">
-        <!-- Navbar Start -->
-        <%- include('../partials/admin-navbar'); %>
-          <!-- Navbar End -->
+          <h1 class="text-2xl font-black text-gray-900 dark:text-gray-100 tracking-tight">ANALYTICS & REPORTING</h1>
 
-
-          <!-- Blank Start -->
-            <div class="container-fluid pt-4 px-4">
-                <div class="row bg-secondary rounded align-items-center justify-content-center mx-0">
-                    
-                    <div class="container mt-5">
-                      <h2 class="mb-4 bg-light p-3 sticky-header">All Data Records</h2>
-                      <div class="row">
-                        <div class="col-12 mb-4">
-                          <h4 class="bg-danger p-2 rounded text-white">High Risk Users</h4>
-                          <div class="table-responsive">
-                            <table class="table table-danger table-bordered">
-                            <thead>
-                              <tr><th>Fullname</th><th>Risk Score</th><th>Assessed At</th></tr>
-                            </thead>
-                            <tbody>
-                              <% riskTables['High'].forEach(user => { %>
-                                <tr>
-                                  <td><%= user.username %></td>
-                                  <td><%= user.risk_score %></td>
-                                  <td><%= user.assessed_at.toLocaleString() %></td>
-                                </tr>
-                              <% }) %>
-                            </tbody>
-                          </table>
-                        </div>
-                      
-                        <div class="col-12 mb-4">
-                          <h4 class="bg-warning p-2 rounded text-dark">Moderate Risk Users</h4>
-                          <div class="table-responsive">
-                            <table class="table table-warning table-bordered">
-                            <thead>
-                              <tr><th>Fullname</th><th>Risk Score</th><th>Assessed At</th></tr>
-                            </thead>
-                            <tbody>
-                              <% riskTables['Moderate'].forEach(user => { %>
-                                <tr>
-                                  <td><%= user.username %></td>
-                                  <td><%= user.risk_score %></td>
-                                  <td><%= user.assessed_at.toLocaleString() %></td>
-                                </tr>
-                              <% }) %>
-                            </tbody>
-                          </table>
-                        </div>
-                      
-                        <div class="col-12 mb-4">
-                          <h4 class="bg-success p-2 rounded text-white">Low Risk Users</h4>
-                          <div class="table-responsive">
-                            <table class="table table-success table-bordered">
-                            <thead>
-                              <tr><th>Fullname</th><th>Risk Score</th><th>Assessed At</th></tr>
-                            </thead>
-                            <tbody>
-                              <% riskTables['Low'].forEach(user => { %>
-                                <tr>
-                                  <td><%= user.username %></td>
-                                  <td><%= user.risk_score %></td>
-                                  <td><%= user.assessed_at.toLocaleString() %></td>
-                                </tr>
-                              <% }) %>
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-
-                      <div class="row g-4">
-                        <div class="col-sm-12 col-xl-6">
-                            <div class="bg-secondary rounded h-100 p-4">
-                                <h4 class="mb-4 text-white">Checklist Completion</h4>
-                                <canvas id="checklistChart"></canvas>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-xl-6">
-                            <div class="bg-secondary rounded h-100 p-4">
-                                <h4 class="mb-4 text-white">Number of posts per day</h4>
-                                <canvas id="userChart"></canvas>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-xl-6">
-                            <div class="bg-secondary rounded h-100 p-4">
-                                <h4 class="mb-4 text-white">Risk Level Data</h4>
-                                <canvas id="riskLevelChart"></canvas>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-xl-6">
-                            <div class="bg-secondary rounded h-100 p-4">
-                                <h4 class="mb-4 text-white">Risk Score Trend</h4>
-                                <canvas id="trendChart"></canvas>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 col-xl-6">
-                            <div class="bg-secondary rounded h-100 p-4">
-                                <h4 class="mb-4 text-white">Hazard Level</h4>
-                                <canvas id="hazardsChart"></canvas>
-                            </div>
-                        </div>
-                      </div>
-
-                      <!-- Chart.js Library -->
-                      <!-- Note: Typically scripts are at end of body. Moving logic there or inline is fine. -->
-                      <script>
-                        // Wait for jQuery or DOM Content
-                        document.addEventListener("DOMContentLoaded", function() {
-                           // Chart Global Color
-                           Chart.defaults.color = "#ffffff";
-                           Chart.defaults.borderColor = "rgba(255,255,255,0.1)";
-                           Chart.defaults.font.family = "'Roboto', 'Open Sans', sans-serif";
-                           Chart.defaults.font.size = 14;
-
-                           // --- Checklist Chart ---
-                           var ctxCheck = document.getElementById("checklistChart").getContext("2d");
-                           new Chart(ctxCheck, {
-                               type: "bar",
-                               data: {
-                                   labels: ["Near River", "Near Fault", "Has Emergency Kit", "Has Evacuation Plan"],
-                                   datasets: [{
-                                       label: "Completed",
-                                       data: [<%= checklistData.near_river %>, <%= checklistData.near_fault %>, <%= checklistData.has_emergency_kit %>, <%= checklistData.has_evacuation_plan %>],
-                                       backgroundColor: "rgba(235, 22, 22, .7)"
-                                   }]
-                               },
-                               options: { responsive: true, plugins: { legend: { display: false } } }
-                           });
-
-                           // --- User Chart (Posts per Day) ---
-                           var ctxUser = document.getElementById("userChart").getContext("2d");
-                           new Chart(ctxUser, {
-                               type: "bar",
-                               data: {
-                                   labels: [ <% chartData.forEach(function(item, index) { %> '<%= item.day %>'<% if (index < chartData.length-1) { %>, <% } %> <% }); %> ],
-                                   datasets: [{
-                                       label: "Posts",
-                                       data: [ <% chartData.forEach(function(item, index) { %> <%= item.total %><% if (index < chartData.length-1) { %>, <% } %> <% }); %> ],
-                                       backgroundColor: "rgba(235, 22, 22, .7)"
-                                   }]
-                               },
-                               options: { responsive: true, plugins: { legend: { display: false } } }
-                           });
-
-                           // --- Risk Level Chart ---
-                           var ctxRisk = document.getElementById("riskLevelChart").getContext("2d");
-                           new Chart(ctxRisk, {
-                               type: "doughnut",
-                               data: {
-                                   labels: [ <% riskLevelData.forEach(function(item, index) { %> '<%= item.risk_level %>'<% if (index < riskLevelData.length-1) { %>, <% } %> <% }); %> ],
-                                   datasets: [{
-                                       data: [ <% riskLevelData.forEach(function(item, index) { %> <%= item.total %><% if (index < riskLevelData.length-1) { %>, <% } %> <% }); %> ],
-                                       backgroundColor: [
-                                           "rgba(235, 22, 22, .7)",
-                                           "rgba(235, 22, 22, .6)",
-                                           "rgba(235, 22, 22, .5)",
-                                           "rgba(235, 22, 22, .4)"
-                                       ],
-                                       borderWidth: 0
-                                   }]
-                               },
-                               options: { responsive: true }
-                           });
-
-                           // --- Trend Chart ---
-                           var ctxTrend = document.getElementById("trendChart").getContext("2d");
-                           new Chart(ctxTrend, {
-                               type: "line",
-                               data: {
-                                   labels: [ <% trendData.forEach(function(item, index) { %> '<%= item.date %>'<% if (index < trendData.length-1) { %>, <% } %> <% }); %> ],
-                                   datasets: [{
-                                       label: "Avg Risk Score",
-                                       data: [ <% trendData.forEach(function(item, index) { %> <%= item.avg_score %><% if (index < trendData.length-1) { %>, <% } %> <% }); %> ],
-                                       borderColor: "rgba(235, 22, 22, .7)",
-                                       backgroundColor: "rgba(235, 22, 22, .3)",
-                                       tension: 0.4,
-                                       fill: true,
-                                       pointBackgroundColor: "rgba(235, 22, 22, .9)",
-                                       pointRadius: 4
-                                   }]
-                               },
-                               options: {
-                                   responsive: true,
-                                   scales: {
-                                       x: { ticks: { display: false }, grid: { display: false } },
-                                       y: { beginAtZero: true, grid: { color: "rgba(255,255,255,0.05)" } }
-                                   }
-                               }
-                           });
-
-                           // --- Hazards Chart ---
-                           var ctxHazard = document.getElementById("hazardsChart").getContext("2d");
-                           new Chart(ctxHazard, {
-                               type: "bar",
-                               data: {
-                                   labels: ["Near River", "Near Fault"],
-                                   datasets: [{
-                                       label: "Users",
-                                       data: [<%= hazardsData.near_river %>, <%= hazardsData.near_fault %>],
-                                       backgroundColor: [
-                                           "rgba(235, 22, 22, .7)",
-                                           "rgba(235, 22, 22, .5)"
-                                       ]
-                                   }]
-                               },
-                               options: { responsive: true, plugins: { legend: { display: false } } }
-                           });
-                        });
-                      </script>
-                    </div>
-                </div>
+          <!-- Risk Tables -->
+          <div class="space-y-6">
+            <!-- High Risk -->
+            <div class="glass-panel overflow-hidden border-t-4 border-red-500">
+              <div class="px-6 py-4 bg-white/40 dark:bg-gray-900/40 border-b border-gray-100 dark:border-gray-800">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-red-600 dark:text-red-400">High Risk Profiles
+                </h2>
+              </div>
+              <div class="overflow-x-auto w-full p-4">
+                <table class="w-full text-left border-collapse">
+                  <thead>
+                    <tr
+                      class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-bold border-b border-gray-100 dark:border-gray-800">
+                      <th class="px-4 py-3">Fullname</th>
+                      <th class="px-4 py-3">Risk Score</th>
+                      <th class="px-4 py-3">Assessed At</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-100 dark:divide-gray-800/60 text-sm">
+                    <% riskTables['High'].forEach(user=> { %>
+                      <tr class="hover:bg-red-50/50 dark:hover:bg-red-900/10 transition-colors">
+                        <td class="px-4 py-3 font-semibold text-gray-900 dark:text-gray-100">
+                          <%= user.username %>
+                        </td>
+                        <td class="px-4 py-3 font-mono font-bold text-red-600 dark:text-red-400">
+                          <%= user.risk_score %>
+                        </td>
+                        <td class="px-4 py-3 text-gray-600 dark:text-gray-400">
+                          <%= user.assessed_at.toLocaleString() %>
+                        </td>
+                      </tr>
+                      <% }) %>
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <!-- Blank End -->
 
-          <!-- Footer Start -->
-            <%- include('../partials/page-end'); %>
-            <%- include('../partials/footer'); %>
-            <!-- Footer End -->
+            <!-- Moderate Risk -->
+            <div class="glass-panel overflow-hidden border-t-4 border-yellow-500">
+              <div class="px-6 py-4 bg-white/40 dark:bg-gray-900/40 border-b border-gray-100 dark:border-gray-800">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-yellow-600 dark:text-yellow-400">Moderate
+                  Risk Profiles</h2>
+              </div>
+              <div class="overflow-x-auto w-full p-4">
+                <table class="w-full text-left border-collapse">
+                  <thead>
+                    <tr
+                      class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-bold border-b border-gray-100 dark:border-gray-800">
+                      <th class="px-4 py-3">Fullname</th>
+                      <th class="px-4 py-3">Risk Score</th>
+                      <th class="px-4 py-3">Assessed At</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-100 dark:divide-gray-800/60 text-sm">
+                    <% riskTables['Moderate'].forEach(user=> { %>
+                      <tr class="hover:bg-yellow-50/50 dark:hover:bg-yellow-900/10 transition-colors">
+                        <td class="px-4 py-3 font-semibold text-gray-900 dark:text-gray-100">
+                          <%= user.username %>
+                        </td>
+                        <td class="px-4 py-3 font-mono font-bold text-yellow-600 dark:text-yellow-400">
+                          <%= user.risk_score %>
+                        </td>
+                        <td class="px-4 py-3 text-gray-600 dark:text-gray-400">
+                          <%= user.assessed_at.toLocaleString() %>
+                        </td>
+                      </tr>
+                      <% }) %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
 
-      </div>
-      <!-- Content End -->
+            <!-- Low Risk -->
+            <div class="glass-panel overflow-hidden border-t-4 border-green-500">
+              <div class="px-6 py-4 bg-white/40 dark:bg-gray-900/40 border-b border-gray-100 dark:border-gray-800">
+                <h2 class="text-sm font-bold uppercase tracking-wider text-green-600 dark:text-green-400">Low Risk
+                  Profiles</h2>
+              </div>
+              <div class="overflow-x-auto w-full p-4">
+                <table class="w-full text-left border-collapse">
+                  <thead>
+                    <tr
+                      class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-bold border-b border-gray-100 dark:border-gray-800">
+                      <th class="px-4 py-3">Fullname</th>
+                      <th class="px-4 py-3">Risk Score</th>
+                      <th class="px-4 py-3">Assessed At</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-100 dark:divide-gray-800/60 text-sm">
+                    <% riskTables['Low'].forEach(user=> { %>
+                      <tr class="hover:bg-green-50/50 dark:hover:bg-green-900/10 transition-colors">
+                        <td class="px-4 py-3 font-semibold text-gray-900 dark:text-gray-100">
+                          <%= user.username %>
+                        </td>
+                        <td class="px-4 py-3 font-mono font-bold text-green-600 dark:text-green-400">
+                          <%= user.risk_score %>
+                        </td>
+                        <td class="px-4 py-3 text-gray-600 dark:text-gray-400">
+                          <%= user.assessed_at.toLocaleString() %>
+                        </td>
+                      </tr>
+                      <% }) %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
 
+          <!-- Charts Array -->
+          <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <div class="glass-panel p-6">
+              <h2 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-6">Checklist
+                Completion</h2>
+              <div class="relative h-[280px] w-full">
+                <canvas id="checklistChart"></canvas>
+              </div>
+            </div>
+            <div class="glass-panel p-6">
+              <h2 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-6">System
+                Engagement (Posts)</h2>
+              <div class="relative h-[280px] w-full">
+                <canvas id="userChart"></canvas>
+              </div>
+            </div>
+            <div class="glass-panel p-6">
+              <h2 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-6">Risk
+                Stratification</h2>
+              <div class="relative h-[280px] w-full">
+                <canvas id="riskLevelChart"></canvas>
+              </div>
+            </div>
+            <div class="glass-panel p-6">
+              <h2 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-6">Risk Velocity
+                Trend</h2>
+              <div class="relative h-[280px] w-full">
+                <canvas id="trendChart"></canvas>
+              </div>
+            </div>
+            <div class="glass-panel p-6 xl:col-span-2">
+              <h2 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-6">Environmental
+                Hazards</h2>
+              <div class="relative h-[280px] w-full">
+                <canvas id="hazardsChart"></canvas>
+              </div>
+            </div>
+          </div>
 
-      <!-- Back to Top -->
-      <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
-  </div>
+        </div>
+      </main>
+    </div>
 
-  <script src="/js/script.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <%- include('../partials/footer'); %>
 
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script src="/js/script.js"></script>
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const isDark = document.documentElement.classList.contains('dark');
+          Chart.defaults.color = isDark ? "#94a3b8" : "#64748b";
+          Chart.defaults.borderColor = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)";
+          Chart.defaults.font.family = "'Inter', sans-serif";
+
+          // Colors based on theme
+          const primaryColor = "#6366f1"; // Indigo
+          const dangerColor = "#ef4444";  // Red
+          const warningColor = "#f59e0b"; // Amber
+          const successColor = "#10b981"; // Emerald
+
+          // --- Checklist Chart ---
+          const checklistDataArr = [<%= checklistData.near_river %>, <%= checklistData.near_fault %>, <%= checklistData.has_emergency_kit %>, <%= checklistData.has_evacuation_plan %>];
+          new Chart(document.getElementById("checklistChart").getContext("2d"), {
+            type: "bar",
+            data: {
+              labels: ["Near River", "Near Fault", "Has Kit", "Has Plan"],
+              datasets: [{
+                label: "Completed",
+                data: checklistDataArr,
+                backgroundColor: primaryColor,
+                borderRadius: 6
+              }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } } } }
+          });
+
+          // --- User Chart (Posts per Day) ---
+          new Chart(document.getElementById("userChart").getContext("2d"), {
+            type: "bar",
+            data: {
+              labels: [ <% chartData.forEach(function (item, index) { %> '<%= item.day %>' <% if (index < chartData.length - 1) { %>, <% } %> <% }); %> ],
+            datasets: [{
+              label: "Posts",
+              data: [ <% chartData.forEach(function (item, index) { %> <%= item.total %><% if (index < chartData.length - 1) { %>, <% } %> <% }); %> ],
+            backgroundColor: dangerColor,
+            borderRadius: 6
+          }]
+                },
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } } } }
+            });
+
+        // --- Risk Level Chart ---
+        new Chart(document.getElementById("riskLevelChart").getContext("2d"), {
+          type: "doughnut",
+          data: {
+            labels: [ <% riskLevelData.forEach(function (item, index) { %> '<%= item.risk_level %>' <% if (index < riskLevelData.length - 1) { %>, <% } %> <% }); %> ],
+          datasets: [{
+            data: [ <% riskLevelData.forEach(function (item, index) { %> <%= item.total %><% if (index < riskLevelData.length - 1) { %>, <% } %> <% }); %> ],
+          backgroundColor: [dangerColor, warningColor, primaryColor, successColor],
+          borderWidth: 0
+        }]
+                },
+          options: { responsive: true, maintainAspectRatio: false, cutout: '75%' }
+            });
+
+        // --- Trend Chart ---
+        new Chart(document.getElementById("trendChart").getContext("2d"), {
+          type: "line",
+          data: {
+            labels: [ <% trendData.forEach(function (item, index) { %> '<%= item.date %>' <% if (index < trendData.length - 1) { %>, <% } %> <% }); %> ],
+          datasets: [{
+            label: "Avg Risk Score",
+            data: [ <% trendData.forEach(function (item, index) { %> <%= item.avg_score %><% if (index < trendData.length - 1) { %>, <% } %> <% }); %> ],
+          borderColor: warningColor,
+          backgroundColor: "rgba(245, 158, 11, 0.1)",
+          tension: 0.4,
+          fill: true,
+          pointBackgroundColor: warningColor,
+          pointRadius: 4
+        }]
+                },
+          options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { x: { ticks: { display: false }, grid: { display: false } } }
+        }
+            });
+
+        // --- Hazards Chart ---
+        new Chart(document.getElementById("hazardsChart").getContext("2d"), {
+          type: "bar",
+          data: {
+            labels: ["Near River", "Near Fault"],
+            datasets: [{
+              label: "Users",
+              data: [<%= hazardsData.near_river %>, <%= hazardsData.near_fault %>],
+              backgroundColor: [primaryColor, dangerColor],
+              borderRadius: 6
+            }]
+          },
+          options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { grid: { display: false } } } }
+        });
+        });
+      </script>
 </body>
 
 </html>

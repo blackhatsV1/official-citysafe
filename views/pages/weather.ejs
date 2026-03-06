@@ -7,75 +7,115 @@
     <script>
       const apiKey = "<%= apiKey %>";
     </script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+      #weather-map,
+      #map {
+        z-index: 10;
+      }
+    </style>
 </head>
 
-<body class="app">
+<body
+  class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
   <%- include('../partials/page-start'); %>
 
-    <header class="app-header fixed-top">
-      <%- include('../partials/user-navbar'); %>
-        <%- include('../partials/user-sidebar'); %>
+    <header class="sticky top-0 z-50">
+      <%- include('../partials/user-navbar', { currentPage: 'weather' }); %>
     </header>
 
-    <div class="app-wrapper">
-      <div class="app-content pt-3 p-md-3 p-lg-4">
-        <div class="container-xl">
-          <div class="row g-4 mb-4">
-            <div class="col-12">
-              <div class="app-card app-card-settings shadow-sm p-4">
-                <div class="app-card-body text-center">
-                  <h1 class="mb-3 text-primary"><i class="bi bi-cloud-sun me-2"></i>Welcome to CitySafe!</h1>
-                  <hr class="mb-4">
-                  <p id="address" class="lead fw-bold text-muted">Loading Address...</p>
-                  <p id="coords" class="small text-secondary"></p>
-                  <div class="bg-light rounded p-3 mt-3 d-inline-block shadow-sm" id="weather-info">
-                    Loading weather data...
-                  </div>
+    <div class="flex flex-1 overflow-hidden relative">
+      <aside class="z-40">
+        <%- include('../partials/user-sidebar', { currentPage: 'weather' }); %>
+      </aside>
+
+      <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8 overflow-y-auto w-full relative">
+        <div class="max-w-7xl mx-auto space-y-6">
+
+          <div class="flex items-center gap-3 px-2 mb-2">
+            <div
+              class="w-10 h-10 rounded-xl bg-cyan-100 dark:bg-cyan-900/40 text-cyan-600 dark:text-cyan-400 flex items-center justify-center shadow-inner">
+              <i class="fa fa-cloud-sun text-xl"></i>
+            </div>
+            <h1 class="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight uppercase">Meteorological
+              Data</h1>
+          </div>
+
+          <div class="glass-panel overflow-hidden border-t-4 border-cyan-500 shadow-lg relative mb-6">
+            <!-- Glow -->
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none">
+            </div>
+
+            <div class="p-6 md:p-8 relative z-10 text-center">
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2 flex justify-center items-center gap-2">
+                <i class="fa fa-satellite-dish text-cyan-500 animate-pulse"></i> Localized Weather Scan
+              </h2>
+              <div class="w-16 h-1 bg-cyan-500/50 mx-auto rounded-full mb-6 relative overflow-hidden">
+                <div class="absolute inset-0 bg-cyan-400 animate-[pulse_1.5s_ease-in-out_infinite]"></div>
+              </div>
+
+              <div
+                class="inline-block bg-white/40 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-700/50 rounded-2xl p-6 shadow-sm backdrop-blur-md min-w-[300px]">
+                <h5 id="address" class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-1">Acquiring Location...
+                </h5>
+                <p id="coords"
+                  class="text-[10px] font-mono tracking-widest uppercase text-gray-500 dark:text-gray-400 mb-4"></p>
+
+                <div
+                  class="bg-cyan-50/80 dark:bg-cyan-900/40 border border-cyan-100 dark:border-cyan-800/50 rounded-xl p-4 text-cyan-800 dark:text-cyan-200 font-medium"
+                  id="weather-info">
+                  <i class="fa fa-arrows-rotate fa-spin mr-2"></i> Syncing atmospheric data...
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="row g-4">
-            <div class="col-12 col-lg-6">
-              <div class="app-card app-card-basic shadow-sm h-100">
-                <div class="app-card-header p-3 border-bottom-0">
-                  <h4 class="app-card-title">Live Weather View</h4>
-                </div>
-                <div class="app-card-body p-3">
-                  <div id="weather-map" class="rounded" style="height: 400px; width: 100%;"></div>
-                </div>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+            <!-- Weather Map -->
+            <div class="glass-panel overflow-hidden border-t-4 border-indigo-500 h-full flex flex-col min-h-[500px]">
+              <div
+                class="px-6 py-4 border-b border-indigo-100 dark:border-indigo-900/30 bg-indigo-50/50 dark:bg-indigo-900/10 flex items-center justify-between z-20">
+                <h4
+                  class="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                  <i class="fa fa-layer-group text-indigo-500"></i> Radar Overlay
+                </h4>
+              </div>
+              <div class="flex-1 relative bg-gray-100 dark:bg-gray-800 z-10 p-2">
+                <div id="weather-map"
+                  class="w-full h-full rounded-xl shadow-inner border border-gray-200 dark:border-gray-700"></div>
               </div>
             </div>
-            <div class="col-12 col-lg-6">
-              <div class="app-card app-card-basic shadow-sm h-100">
-                <div class="app-card-header p-3 border-bottom-0">
-                  <h4 class="app-card-title">Live Location</h4>
+
+            <!-- Live Location -->
+            <div class="glass-panel overflow-hidden border-t-4 border-emerald-500 h-full flex flex-col min-h-[500px]">
+              <div
+                class="px-6 py-4 border-b border-emerald-100 dark:border-emerald-900/30 bg-emerald-50/50 dark:bg-emerald-900/10 flex items-center justify-between z-20">
+                <h4
+                  class="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                  <i class="fa fa-crosshairs text-emerald-500"></i> Live Positional Tracking
+                </h4>
+              </div>
+              <div class="flex-1 relative bg-gray-50 dark:bg-gray-800/50 z-10 p-4 flex flex-col gap-4">
+                <div id="map"
+                  class="w-full flex-1 rounded-xl shadow-inner border border-gray-200 dark:border-gray-700 min-h-[300px]">
                 </div>
-                <div class="app-card-body p-3 text-center">
-                  <div id="map" class="rounded mb-3" style="height: 350px; width: 100%;"></div>
+                <div class="w-full glass-panel-inner p-4 rounded-xl">
                   <%- include('../partials/selectloc-visitor'); %>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
 
-      <%- include('../partials/footer'); %>
+          </div>
+
+        </div>
+      </main>
     </div>
 
-    <%- include('../partials/page-end'); %>
+    <%- include('../partials/footer'); %>
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
       <script src="/js/script.js"></script>
+      <%- include('../partials/page-end'); %>
 </body>
 
 </html>
-
-<!-- <h1><i class="bi bi-cloud-sun"></i>CitySafe Weather View</h1>
-<hr class="grey-line">
-<h4 class="mb-5">Please <a href="/login">Login</a> to experience full feature!</h4>
-<p id="address"></p>
-<p id="coords"></p>
-<div class="rounded p-3" id="weather-info">Loading weather data...</div>
-<div id="weather-map"></div>
-<p><%- include('../partials/selectloc-visitor'); %></p> -->

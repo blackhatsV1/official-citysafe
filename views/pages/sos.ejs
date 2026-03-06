@@ -3,133 +3,202 @@
 
 <head>
     <%- include('../partials/head'); %>
-        <!-- removed non-map styling -->
 </head>
 
-<body class="app">
+<body
+    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
     <%- include('../partials/page-start'); %>
 
-        <header class="app-header fixed-top">
-            <%- include('../partials/user-navbar'); %>
-                <%- include('../partials/user-sidebar'); %>
+        <header class="sticky top-0 z-50">
+            <%- include('../partials/user-navbar', { currentPage: 'sos' }); %>
         </header>
 
-        <div class="app-wrapper">
-            <div class="app-content pt-3 p-md-3 p-lg-4">
-                <div class="container-xl">
-                    <h1 class="app-page-title text-danger"><i class="fa fa-triangle-exclamation me-2"></i>SOS Dispatch
+        <div class="flex flex-1 overflow-hidden relative">
+            <aside class="z-40">
+                <%- include('../partials/user-sidebar', { currentPage: 'sos' }); %>
+            </aside>
+
+            <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8 overflow-y-auto w-full relative">
+                <div class="max-w-7xl mx-auto space-y-6">
+
+                    <h1
+                        class="text-3xl font-black text-red-600 dark:text-red-500 tracking-tight uppercase px-2 mb-2 flex items-center gap-3">
+                        <i class="fa fa-triangle-exclamation"></i> SOS DISPATCH
                     </h1>
 
-                    <div class="row g-4 mb-4">
-                        <!-- Location Grid -->
-                        <div class="col-sm-12 col-xl-6">
-                            <div class="app-card app-card-settings shadow-sm h-100 border-top border-4 border-primary">
-                                <div class="app-card-header p-3 border-bottom-0 d-flex align-items-center gap-2">
-                                    <div class="bg-primary-soft p-2 rounded text-primary">
-                                        <i class="fa fa-map-location-dot small"></i>
-                                    </div>
-                                    <h6 class="mb-0 fw-bold text-uppercase small">Operational Coordinates</h6>
+                    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+                        <!-- Location Selection Area -->
+                        <div class="glass-panel flex flex-col overflow-hidden border-t-4 border-indigo-500">
+                            <div
+                                class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-indigo-50/50 dark:bg-indigo-900/10 flex items-center gap-3">
+                                <div
+                                    class="w-8 h-8 rounded-lg bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+                                    <i class="fa fa-map-location-dot"></i>
                                 </div>
-                                <div class="app-card-body p-3 pt-0">
-                                    <div class="p-0 flex-grow-1">
-                                        <%- include('../partials/selectloc'); %>
-                                    </div>
-                                </div>
+                                <h2 class="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200">
+                                    Operational Coordinates</h2>
+                            </div>
+                            <div class="flex-1 relative z-0 bg-gray-100 dark:bg-gray-800 min-h-[400px]">
+                                <!-- The map partial -->
+                                <%- include('../partials/selectloc'); %>
                             </div>
                         </div>
 
-                        <!-- Dispatch Form -->
-                        <div class="col-sm-12 col-xl-6">
-                            <div class="app-card app-card-settings shadow-sm h-100 border-top border-4 border-danger">
-                                <div class="app-card-header p-3 border-bottom-0 d-flex align-items-center gap-2">
-                                    <div class="bg-danger-soft p-2 rounded text-danger">
-                                        <i class="fa fa-bullhorn small"></i>
-                                    </div>
-                                    <h6 class="mb-0 fw-bold text-uppercase small">Emergency Dispatch Request</h6>
+                        <!-- Dispatch Request Form -->
+                        <div class="glass-panel flex flex-col overflow-hidden border-t-4 border-red-500 relative">
+                            <!-- Alert Pulse Background -->
+                            <div
+                                class="absolute top-0 right-0 w-64 h-64 bg-red-500/5 rounded-full blur-[80px] pointer-events-none">
+                            </div>
+
+                            <div
+                                class="px-6 py-4 border-b border-red-100 dark:border-red-900/30 bg-red-50/50 dark:bg-red-900/10 flex items-center gap-3 relative z-10">
+                                <div
+                                    class="w-8 h-8 rounded-lg bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 flex items-center justify-center">
+                                    <i class="fa fa-bullhorn animate-pulse"></i>
                                 </div>
-                                <div class="app-card-body p-4 pt-0">
-                                    <form action="/report" method="POST" id="sosForm" autocomplete="off">
-                                        <p class="text-muted small mb-4">Select the nature of the emergency. Dispatch
-                                            will be initiated to your verified coordinates immediately.</p>
+                                <h2 class="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200">
+                                    Emergency Dispatch Request</h2>
+                            </div>
 
-                                        <input type="hidden" name="type_of_disaster" id="selected_disaster_type">
+                            <div class="p-6 md:p-8 flex-1 flex flex-col relative z-10">
+                                <form action="/report" method="POST" id="sosForm" autocomplete="off"
+                                    class="flex flex-col flex-1 h-full">
 
-                                        <div class="row g-3 mb-4">
-                                            <% [ { type: 'Fire' , icon: 'fa-fire' , label: 'FIRE' }, { type: 'Flood' ,
-                                                icon: 'fa-water' , label: 'FLOOD' }, { type: 'Earthquake' ,
-                                                icon: 'fa-globe-americas' , label: 'EARTHQUAKE' }, { type: 'Landslide' ,
-                                                icon: 'fa-mountain' , label: 'LANDSLIDE' } ].forEach(emergency=> { %>
-                                                <div class="col-6">
-                                                    <button type="button"
-                                                        onclick="triggerSosReport('<%= emergency.type %>')"
-                                                        class="btn app-btn-secondary w-100 h-100 p-4 disaster-btn text-center d-flex flex-column align-items-center gap-3 border shadow-sm transition-hover">
-                                                        <div class="avatar-md bg-dark text-white rounded-circle d-flex align-items-center justify-content-center border"
-                                                            style="width: 56px; height: 56px;">
-                                                            <i class="fa <%= emergency.icon %> fs-3 text-danger"></i>
-                                                        </div>
-                                                        <span class="fw-bold small letter-spacing-1 text-dark">
-                                                            <%= emergency.label %>
-                                                        </span>
-                                                    </button>
-                                                </div>
+                                    <p
+                                        class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-6 border-l-2 border-red-400 pl-3">
+                                        Select the nature of the emergency. Dispatch operations will be initiated
+                                        sequentially to your verified coordinates.
+                                    </p>
+
+                                    <input type="hidden" name="type_of_disaster" id="selected_disaster_type">
+
+                                    <div class="grid grid-cols-2 gap-4 mb-8">
+                                        <% [ { type: 'Fire' , icon: 'fa-fire' , label: 'FIRE' , color: 'red' }, {
+                                            type: 'Flood' , icon: 'fa-water' , label: 'FLOOD' , color: 'blue' }, {
+                                            type: 'Earthquake' , icon: 'fa-globe-americas' , label: 'QUAKE' ,
+                                            color: 'yellow' }, { type: 'Landslide' , icon: 'fa-mountain' ,
+                                            label: 'LANDSLIDE' , color: 'stone' } ].forEach(emergency=> { %>
+                                            <!-- Using Tailwind variables for colors mapping from original EJS data -->
+                                            <% let borderHover="hover:border-red-400 dark:hover:border-red-500" ; let
+                                                bgHover="hover:bg-red-50 dark:hover:bg-red-900/20" ; let
+                                                iconBg="bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400" ;
+                                                let textHover="group-hover:text-red-600 dark:group-hover:text-red-400" ;
+                                                if(emergency.color==='blue' ) {
+                                                borderHover="hover:border-blue-400 dark:hover:border-blue-500" ;
+                                                bgHover="hover:bg-blue-50 dark:hover:bg-blue-900/20" ;
+                                                iconBg="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400"
+                                                ; textHover="group-hover:text-blue-600 dark:group-hover:text-blue-400" ;
+                                                } else if(emergency.color==='yellow' ) {
+                                                borderHover="hover:border-yellow-400 dark:hover:border-yellow-500" ;
+                                                bgHover="hover:bg-yellow-50 dark:hover:bg-yellow-900/20" ;
+                                                iconBg="bg-yellow-100 dark:bg-yellow-900/40 text-yellow-600 dark:text-yellow-400"
+                                                ;
+                                                textHover="group-hover:text-yellow-600 dark:group-hover:text-yellow-400"
+                                                ; } else if(emergency.color==='stone' ) {
+                                                borderHover="hover:border-stone-400 dark:hover:border-stone-500" ;
+                                                bgHover="hover:bg-stone-50 dark:hover:bg-stone-900/20" ;
+                                                iconBg="bg-stone-100 dark:bg-stone-800/80 text-stone-700 dark:text-stone-300"
+                                                ; textHover="group-hover:text-stone-700 dark:group-hover:text-stone-400"
+                                                ; } %>
+                                                <button type="button"
+                                                    onclick="triggerSosReport('<%= emergency.type %>')"
+                                                    class="group p-6 bg-white/50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 <%= bgHover %> <%= borderHover %> rounded-2xl flex flex-col items-center justify-center gap-4 transition-all duration-300 shadow-sm hover:shadow h-full">
+                                                    <div
+                                                        class="w-16 h-16 rounded-full flex items-center justify-center transition-transform duration-300 shadow-inner group-hover:scale-110 <%= iconBg %>">
+                                                        <i class="fa <%= emergency.icon %> text-3xl"></i>
+                                                    </div>
+                                                    <span
+                                                        class="text-xs font-black uppercase tracking-widest text-gray-800 dark:text-gray-200 <%= textHover %> transition-colors">
+                                                        <%= emergency.label %>
+                                                    </span>
+                                                </button>
                                                 <% }) %>
-                                        </div>
+                                    </div>
 
-                                        <div class="mb-4">
-                                            <label
-                                                class="small fw-700 text-uppercase text-muted letter-spacing-1 mb-2 d-block">Verified
-                                                Dispatch Address</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-white border px-3"><i
-                                                        class="fa fa-location-arrow text-primary"></i></span>
-                                                <textarea class="form-control bg-light" id="location" name="location"
-                                                    rows="2" placeholder="Acquiring satellite lock..." required
-                                                    readonly></textarea>
+                                    <div class="mt-auto space-y-2 relative group">
+                                        <label
+                                            class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 pl-1">Verified
+                                            Dispatch Address</label>
+                                        <div class="relative">
+                                            <div
+                                                class="absolute left-0 top-0 bottom-0 w-12 bg-white/50 dark:bg-gray-900/50 border-r border-gray-200 dark:border-gray-700 flex items-center justify-center rounded-l-xl z-10 backdrop-blur-sm">
+                                                <i
+                                                    class="fa fa-location-arrow text-indigo-500 dark:text-indigo-400"></i>
                                             </div>
-                                            <input type="hidden" id="lat" name="lat">
-                                            <input type="hidden" id="lon" name="lon">
+                                            <textarea id="location" name="location" rows="3"
+                                                class="input-glass pl-14 font-mono text-xs cursor-not-allowed bg-gray-50/50 dark:bg-gray-800/30 resize-none transition-all group-hover:border-indigo-300 dark:group-hover:border-indigo-700"
+                                                placeholder="Acquiring satellite lock..." required readonly></textarea>
                                         </div>
+                                        <input type="hidden" id="lat" name="lat">
+                                        <input type="hidden" id="lon" name="lon">
+                                    </div>
 
-                                        <button type="submit" disabled class="d-none"></button>
-                                    </form>
-                                </div>
+                                    <button type="submit" disabled class="hidden"></button>
+                                </form>
                             </div>
                         </div>
+
                     </div>
                 </div>
-            </div>
-
-            <%- include('../partials/footer'); %>
+            </main>
         </div>
 
-        <%- include('../partials/page-end'); %>
+        <%- include('../partials/footer'); %>
+
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <script>
                 function triggerSosReport(type) {
                     const input = document.getElementById('selected_disaster_type');
                     if (input) input.value = type;
 
-                    const loc = document.getElementById('location').value;
-                    if (!loc || loc.trim() === "" || loc.includes('Acquiring')) {
+                    const locField = document.getElementById('location');
+                    if (!locField.value || locField.value.trim() === "" || locField.value.includes('Acquiring') || locField.value.includes('Waiting for location')) {
                         Swal.fire({
                             icon: 'warning',
                             title: 'Awaiting Location',
                             text: 'Satellite signal is still being processed. Please wait to ensure accurate dispatch.',
-                            confirmButtonColor: 'var(--bs-primary)'
+                            confirmButtonColor: '#4f46e5',
+                            background: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff',
+                            color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#111827'
                         });
                         return;
                     }
 
+                    // Type icon/color mapping for SweetAlert
+                    let iconHtml = '<i class="fa fa-exclamation-triangle" style="font-size:3rem;color:#ef4444;"></i>';
+                    if (type === 'Fire') { iconHtml = '<i class="fa fa-fire text-red-500" style="font-size:3rem;"></i>'; }
+                    if (type === 'Flood') { iconHtml = '<i class="fa fa-water text-blue-500" style="font-size:3rem;"></i>'; }
+                    if (type === 'Earthquake') { iconHtml = '<i class="fa fa-house-crack text-yellow-500" style="font-size:3rem;"></i>'; }
+                    if (type === 'Landslide') { iconHtml = '<i class="fa fa-mountain text-stone-500" style="font-size:3rem;"></i>'; }
+
                     Swal.fire({
-                        title: 'INITIATE DISPATCH?',
-                        text: `You are requesting emergency response for a ${type.toUpperCase()} incident.`,
-                        icon: 'warning',
+                        title: `<span style="font-weight:900;text-transform:uppercase;letter-spacing:1px;font-size:1.5rem">INITIATE DISPATCH?</span>`,
+                        html: `
+                    <div style="margin-bottom:15px">${iconHtml}</div>
+                    <p style="font-weight:500;color:inherit;font-size:1rem;">You are requesting emergency response for a <strong>${type.toUpperCase()}</strong> incident.</p>
+                `,
                         showCancelButton: true,
-                        confirmButtonColor: '#dc3545', // Danger color
-                        cancelButtonColor: '#6c757d', // Secondary color
-                        confirmButtonText: 'CONFIRM & SEND',
-                        reverseButtons: true
+                        confirmButtonColor: '#ef4444',
+                        cancelButtonColor: '#6b7280',
+                        confirmButtonText: '<span style="font-weight:bold;letter-spacing:1px">CONFIRM & SEND</span>',
+                        cancelButtonText: '<span style="font-weight:bold;letter-spacing:1px">CANCEL</span>',
+                        reverseButtons: true,
+                        background: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff',
+                        color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#111827',
+                        customClass: { confirmButton: 'shadow-lg shadow-red-500/50' }
                     }).then((result) => {
                         if (result.isConfirmed) {
+                            Swal.fire({
+                                title: 'Transmitting...',
+                                text: 'Sending your distress protocol.',
+                                allowOutsideClick: false,
+                                showConfirmButton: false,
+                                background: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff',
+                                color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#111827',
+                                didOpen: () => { Swal.showLoading() }
+                            });
                             document.getElementById('sosForm').submit();
                         }
                     });

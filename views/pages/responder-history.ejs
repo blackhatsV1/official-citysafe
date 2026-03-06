@@ -5,84 +5,133 @@
     <%- include('../partials/head'); %>
 </head>
 
-<body class="app">
+<body
+    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
     <%- include('../partials/page-start'); %>
-        <header class="app-header fixed-top">
-            <%- include('../partials/responder-navbar'); %>
-                <%- include('../partials/responder-sidebar'); %>
+
+        <header class="sticky top-0 z-50">
+            <%- include('../partials/responder-navbar', { currentPage: 'responder-history' }); %>
         </header>
 
-        <div class="app-wrapper">
-            <div class="app-content pt-3 p-md-3 p-lg-4">
-                <div class="container-xl">
-                    <h1 class="app-page-title">Reaction History</h1>
+        <div class="flex flex-1 overflow-hidden relative">
+            <aside class="z-40">
+                <%- include('../partials/responder-sidebar', { currentPage: 'responder-history' }); %>
+            </aside>
 
-                    <div class="app-card app-card-orders shadow-sm mb-5">
-                        <div class="app-card-body">
-                            <div class="table-responsive">
-                                <table class="table app-table-hover mb-0 text-left">
-                                    <thead>
-                                        <tr>
-                                            <th class="cell">Date/Time</th>
-                                            <th class="cell">Resolved Time</th>
-                                            <th class="cell">Type</th>
-                                            <th class="cell">Location</th>
-                                            <th class="cell">Resolved By</th>
-                                            <th class="cell">Intelligence/Remarks</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <% if (reports.length> 0) { %>
-                                            <% reports.forEach(function(report) { %>
-                                                <tr>
-                                                    <td class="cell"><span class="note">
-                                                            <%= new Date(report.reported_at).toLocaleString() %>
-                                                        </span></td>
-                                                    <td class="cell"><span class="note">
-                                                            <%= report.resolved_at ? new
-                                                                Date(report.resolved_at).toLocaleString() : '-' %>
-                                                        </span></td>
-                                                    <td class="cell"><span class="badge bg-danger">
-                                                            <%= report.disaster_type %>
-                                                        </span></td>
-                                                    <td class="cell small">
-                                                        <%= report.location || 'Unknown Coordinates' %>
-                                                    </td>
-                                                    <td class="cell"><span class="badge bg-success">
-                                                            <%= report.resolved_by || 'Unknown' %>
-                                                        </span></td>
-                                                    <td class="cell">
-                                                        <div class="small">
-                                                            <div class="mb-1"><strong
-                                                                    class="text-primary">Unit:</strong>
-                                                                <%= report.responder_message || '-' %>
-                                                            </div>
-                                                            <div><strong class="text-info">HQ/User:</strong>
-                                                                <%= report.user_message || '-' %>
-                                                            </div>
+            <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8 overflow-y-auto w-full relative">
+                <div class="max-w-7xl mx-auto space-y-6">
+
+                    <h1
+                        class="text-3xl font-black text-gray-900 dark:text-white tracking-tight uppercase px-2 mb-2 flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 flex items-center justify-center shadow-inner border border-gray-200 dark:border-gray-700">
+                            <i class="fa fa-clock-rotate-left text-xl"></i>
+                        </div>
+                        Reaction History
+                    </h1>
+
+                    <div class="glass-panel overflow-hidden border-t-4 border-gray-500 shadow-lg">
+                        <div
+                            class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-white/40 dark:bg-gray-900/40 flex items-center justify-between">
+                            <h4
+                                class="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                                <i class="fa fa-folder-open text-gray-500"></i> Operation Logs
+                            </h4>
+                        </div>
+
+                        <div class="p-0 overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr
+                                        class="bg-gray-50/50 dark:bg-gray-800/50 border-b border-gray-100 dark:border-gray-800">
+                                        <th
+                                            class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                            Date/Time</th>
+                                        <th
+                                            class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                            Resolved Time</th>
+                                        <th
+                                            class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                            Type</th>
+                                        <th
+                                            class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                            Location</th>
+                                        <th
+                                            class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                            Resolved By</th>
+                                        <th
+                                            class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                            Intelligence / Remarks</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                                    <% if (reports.length> 0) { %>
+                                        <% reports.forEach(function(report) { %>
+                                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
+                                                <td
+                                                    class="px-6 py-4 text-xs font-bold text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                                                    <%= new Date(report.reported_at).toLocaleString() %>
+                                                </td>
+                                                <td
+                                                    class="px-6 py-4 text-xs font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                                                    <%= report.resolved_at ? new
+                                                        Date(report.resolved_at).toLocaleString() : '-' %>
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <span
+                                                        class="px-2 py-1 bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 rounded text-[10px] font-bold uppercase tracking-widest border border-red-200 dark:border-red-800">
+                                                        <%= report.disaster_type %>
+                                                    </span>
+                                                </td>
+                                                <td class="px-6 py-4 text-xs text-gray-600 dark:text-gray-400 max-w-[200px] truncate"
+                                                    title="<%= report.location || 'Unknown Coordinates' %>">
+                                                    <i class="fa fa-map-pin text-gray-400 mr-1"></i>
+                                                    <%= report.location || 'Unknown Coordinates' %>
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <span
+                                                        class="px-2 py-1 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 rounded text-[10px] font-bold uppercase tracking-widest border border-emerald-200 dark:border-emerald-800">
+                                                        <%= report.resolved_by || 'Unknown' %>
+                                                    </span>
+                                                </td>
+                                                <td
+                                                    class="px-6 py-4 text-[10px] text-gray-500 dark:text-gray-400 max-w-[200px]">
+                                                    <div class="truncate"
+                                                        title="Unit: <%= report.responder_message || '-' %> | HQ: <%= report.user_message || '-' %>">
+                                                        <div class="truncate mb-0.5"><span
+                                                                class="font-bold text-indigo-500 dark:text-indigo-400">OP:</span>
+                                                            <%= report.responder_message || '-' %>
                                                         </div>
-                                                    </td>
-                                                </tr>
-                                                <% }); %>
-                                                    <% } else { %>
-                                                        <tr>
-                                                            <td colspan="6" class="text-center py-4 text-muted">No
-                                                                historical deployments found.</td>
-                                                        </tr>
-                                                        <% } %>
-                                    </tbody>
-                                </table>
-                            </div>
+                                                        <div class="truncate"><span
+                                                                class="font-bold text-gray-700 dark:text-gray-300">HQ:</span>
+                                                            <%= report.user_message || '-' %>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <% }); %>
+                                                <% } else { %>
+                                                    <tr>
+                                                        <td colspan="6" class="px-6 py-12 text-center">
+                                                            <div class="text-gray-300 dark:text-gray-600 mb-3"><i
+                                                                    class="fa fa-folder-open text-4xl"></i></div>
+                                                            <span
+                                                                class="text-sm font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">No
+                                                                historical deployments found.</span>
+                                                        </td>
+                                                    </tr>
+                                                    <% } %>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
+
                 </div>
-            </div>
-            <footer class="app-footer">
-                <%- include('../partials/footer'); %>
-            </footer>
+            </main>
         </div>
 
-        <script src="/js/script.js"></script>
+        <%- include('../partials/footer'); %>
+            <%- include('../partials/page-end'); %>
 </body>
 
 </html>

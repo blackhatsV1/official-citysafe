@@ -3,151 +3,215 @@
 
 <head>
     <%- include('../partials/head'); %>
+        <style>
+            /* OTP Modal styles matching glassmorphism */
+            .swal2-popup.glass-swal {
+                background: rgba(255, 255, 255, 0.9);
+                backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 255, 255, 0.4);
+                border-radius: 1.5rem;
+                color: #1f2937;
+            }
+
+            .dark .swal2-popup.glass-swal {
+                background: rgba(17, 24, 39, 0.85);
+                border: 1px solid rgba(255, 255, 255, 0.05);
+                color: #f3f4f6;
+            }
+        </style>
 </head>
 
-<body class="app app-signup p-0">
-    <div class="row g-0 auth-wrapper">
-        <div class="col-12 col-md-7 col-lg-6 auth-main-col p-5">
-            <div class="d-flex flex-column align-content-end h-100">
-                <div class="app-auth-body mx-auto">
-                    <div class="app-auth-branding mb-4">
-                        <a class="app-logo" href="/visitor"><i class="fa fa-shield-alt text-primary fs-2 me-2"></i><span
-                                class="logo-text">CITYSAFE</span></a>
-                    </div>
-                    <h2 class="auth-heading text-center mb-2">Create Citizen Account</h2>
-                    <div class="auth-intro mb-4 text-center">Join the network to receive early warning alerts and manage
-                        safety reports.</div>
-
-                    <div class="auth-form-container text-start">
-                        <form class="auth-form signup-form" method="POST" action="/register">
-                            <div class="row g-3 mb-3">
-                                <div class="col-md-6">
-                                    <label class="sr-only" for="signup-first">Firstname</label>
-                                    <input id="signup-first" name="firstname" type="text" class="form-control"
-                                        placeholder="Firstname" required="required">
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="sr-only" for="signup-last">Lastname</label>
-                                    <input id="signup-last" name="lastname" type="text" class="form-control"
-                                        placeholder="Lastname" required="required">
-                                </div>
-                            </div>
-                            <div class="email mb-3">
-                                <label class="sr-only" for="signup-email">Email Address</label>
-                                <input id="signup-email" name="email" type="email" class="form-control"
-                                    placeholder="Email Address" required="required">
-                            </div>
-                            <div class="contact mb-3">
-                                <label class="sr-only" for="signup-contact">Contact Number</label>
-                                <input id="signup-contact" name="contact_number" type="text" class="form-control"
-                                    placeholder="Contact Number" required="required">
-                            </div>
-                            <div class="password mb-3 position-relative">
-                                <label class="sr-only" for="signup-password">Password</label>
-                                <input id="signup-password" name="password" type="password" class="form-control"
-                                    placeholder="Password" required="required">
-                                <i class="fa fa-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 text-muted opacity-50"
-                                    id="toggleSignupPass" style="cursor: pointer; z-index: 10;"></i>
-                            </div><!--//form-group-->
-                            <div class="password mb-4 position-relative">
-                                <label class="sr-only" for="confirm-password">Confirm Password</label>
-                                <input id="confirm-password" name="confirm_password" type="password"
-                                    class="form-control" placeholder="Confirm Password" required="required">
-                                <i class="fa fa-eye-slash position-absolute top-50 end-0 translate-middle-y me-3 text-muted opacity-50"
-                                    id="toggleConfirmPass" style="cursor: pointer; z-index: 10;"></i>
-                            </div><!--//form-group-->
-
-                            <div id="passError" class="alert alert-danger mb-4 small py-2" style="display:none;">
-                                <i class="fa fa-exclamation-triangle me-2"></i> Passwords do not match!
-                            </div>
-
-                            <div class="text-center">
-                                <button type="submit" class="btn app-btn-primary w-100 theme-btn mx-auto"
-                                    onclick="return validateSignup()">CREATE ACCOUNT</button>
-                            </div>
-                        </form>
-
-                        <div class="auth-option text-center pt-5">Already have an account? <a class="app-link"
-                                href="/login">Sign In</a></div>
-                    </div><!--//auth-form-container-->
-
-                </div><!--//auth-body-->
-
-                <footer class="app-auth-footer">
-                    <div class="container text-center py-3">
-                        <small class="copyright">Designed with <span class="sr-only">love</span><i class="fas fa-heart"
-                                style="color: #fb866a;"></i> by <a class="app-link" href="#" target="_blank">CitySafe
-                                Team</a></small>
-                    </div>
-                </footer><!--//app-auth-footer-->
-            </div><!--//flex-column-->
-        </div><!--//auth-main-col-->
-        <div class="col-12 col-md-5 col-lg-6 auth-background-col">
-            <div class="auth-background-mask"></div>
-            <div class="auth-background-overlay p-3 p-lg-5">
-                <div class="d-flex flex-column align-content-end h-100">
-                    <div class="copy-content p-3 p-lg-5 text-white">
-                        <h2 class="display-5 fw-bold mb-3">Join CitySafe Today</h2>
-                        <div class="auth-intro">Protecting your community starts with information. Get verified access
-                            to real-time safety data.</div>
-                    </div>
-                    <div class="auth-footer-notes text-white-50 p-3 p-lg-5">
-                        Reliable. Resilient. Responsive.
-                    </div>
+<body
+    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex text-sm">
+    <div class="flex flex-1 w-full flex-row-reverse">
+        <!-- Auth Form Column -->
+        <div
+            class="w-full lg:w-1/2 flex flex-col justify-center px-8 sm:px-16 py-8 bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl relative z-10 border-l border-gray-200 dark:border-gray-800 overflow-y-auto max-h-screen">
+            <div class="max-w-md w-full mx-auto space-y-6">
+                <!-- Branding -->
+                <div class="text-center sm:text-left pt-4">
+                    <a href="/visitor" class="inline-flex items-center gap-2 group">
+                        <div
+                            class="w-10 h-10 rounded-lg bg-indigo-600 dark:bg-indigo-500 text-white flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform">
+                            <i class="fa fa-shield-alt text-xl"></i>
+                        </div>
+                        <span
+                            class="text-2xl font-black tracking-tight text-gray-900 dark:text-white uppercase">CitySafe</span>
+                    </a>
                 </div>
-            </div><!--//auth-background-overlay-->
-        </div><!--//auth-background-col-->
-    </div><!--//row-->
 
-    <!-- OTP Modal -->
-    <div class="modal fade" id="otpModal" tabindex="-1" aria-labelledby="otpModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title fw-bold" id="otpModalLabel">Verify Your Email</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <!-- Intro -->
+                <div class="text-center sm:text-left">
+                    <h2 class="text-3xl font-black text-gray-900 dark:text-white tracking-tight mb-2">Create Identity
+                    </h2>
+                    <p class="text-gray-500 dark:text-gray-400 font-medium text-xs">Join the network to receive early
+                        warning alerts and manage localized safety operations.</p>
                 </div>
-                <div class="modal-body text-center p-4">
-                    <div class="bg-light rounded p-3 mb-4 border">
-                        <i class="fa fa-envelope-open-text text-primary fs-2 mb-2"></i>
-                        <p class="mb-0 small text-muted">We sent a verification code to</p>
-                        <strong id="otpEmailDisplay" class="text-primary"></strong>
+
+                <!-- Form -->
+                <form class="space-y-4" method="POST" action="/register">
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="space-y-1">
+                            <label for="signup-first"
+                                class="block text-[10px] font-bold uppercase tracking-widest text-gray-600 dark:text-gray-400 pl-1">First
+                                Name</label>
+                            <input id="signup-first" name="firstname" type="text" class="input-glass" placeholder="John"
+                                required>
+                        </div>
+                        <div class="space-y-1">
+                            <label for="signup-last"
+                                class="block text-[10px] font-bold uppercase tracking-widest text-gray-600 dark:text-gray-400 pl-1">Last
+                                Name</label>
+                            <input id="signup-last" name="lastname" type="text" class="input-glass" placeholder="Doe"
+                                required>
+                        </div>
                     </div>
-                    <div class="my-4">
-                        <input type="text" id="otpInput" class="form-control form-control-lg text-center fw-800"
-                            maxlength="4" placeholder="0 0 0 0"
-                            style="font-size: 2rem; letter-spacing: 0.5rem !important;">
+
+                    <div class="space-y-1">
+                        <label for="signup-email"
+                            class="block text-[10px] font-bold uppercase tracking-widest text-gray-600 dark:text-gray-400 pl-1">Email
+                            Terminal</label>
+                        <div class="relative">
+                            <i class="fa fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input id="signup-email" name="email" type="email" class="input-glass pl-11"
+                                placeholder="john.doe@example.com" required>
+                        </div>
                     </div>
-                    <div id="otpError" class="text-danger mb-2 small" style="display:none;">Invalid verification code
+
+                    <div class="space-y-1">
+                        <label for="signup-contact"
+                            class="block text-[10px] font-bold uppercase tracking-widest text-gray-600 dark:text-gray-400 pl-1">Comms
+                            Frequency</label>
+                        <div class="relative">
+                            <i class="fa fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input id="signup-contact" name="contact_number" type="text" class="input-glass pl-11"
+                                placeholder="+63 912 345 6789" required>
+                        </div>
                     </div>
+
+                    <div class="space-y-1">
+                        <label for="signup-password"
+                            class="block text-[10px] font-bold uppercase tracking-widest text-gray-600 dark:text-gray-400 pl-1">Security
+                            Passcode</label>
+                        <div class="relative">
+                            <i class="fa fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input id="signup-password" name="password" type="password" class="input-glass pl-11 pr-12"
+                                placeholder="••••••••" required>
+                            <button type="button"
+                                class="toggle-pass absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-indigo-500 dark:hover:text-indigo-400 focus:outline-none transition-colors"
+                                data-target="signup-password">
+                                <i class="fa fa-eye-slash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-1">
+                        <label for="confirm-password"
+                            class="block text-[10px] font-bold uppercase tracking-widest text-gray-600 dark:text-gray-400 pl-1">Confirm
+                            Passcode</label>
+                        <div class="relative">
+                            <i class="fa fa-shield-check absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input id="confirm-password" name="confirm_password" type="password"
+                                class="input-glass pl-11 pr-12" placeholder="••••••••" required>
+                            <button type="button"
+                                class="toggle-pass absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-indigo-500 dark:hover:text-indigo-400 focus:outline-none transition-colors"
+                                data-target="confirm-password">
+                                <i class="fa fa-eye-slash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="passError"
+                        class="hidden text-[10px] font-bold uppercase tracking-widest text-red-500 bg-red-50 dark:bg-red-900/20 py-2 border border-red-200 dark:border-red-900/50 rounded-lg text-center mt-2 flex items-center justify-center gap-1.5">
+                        <i class="fa fa-exclamation-triangle"></i> Security passcodes do not align.
+                    </div>
+
+                    <button type="button" onclick="validateSignup()"
+                        class="w-full py-3.5 mt-6 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-black text-sm uppercase tracking-widest rounded-xl shadow-lg shadow-indigo-500/30 border border-indigo-500/50 transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                        INITIALIZE CLEARANCE <i class="fa fa-arrow-right ml-1"></i>
+                    </button>
+                </form>
+
+                <!-- Footer text -->
+                <div class="text-center pt-4 border-t border-gray-100 dark:border-gray-800">
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400">
+                        Already posess operational clearance? <br><a href="/login"
+                            class="font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 transition-colors mt-1 inline-block">Execute
+                            Login Sequence</a>
+                    </p>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn app-btn-primary px-5 py-2 fw-bold" onclick="verifyOtp()">Verify
-                        Identity</button>
+
+                <div class="text-center mt-auto pb-4">
+                    <p class="text-[10px] font-medium text-gray-400 dark:text-gray-500 uppercase tracking-widest">
+                        Designed with <i class="fa fa-heart text-red-500 mx-0.5"></i> by CitySafe
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visual Hero Column -->
+        <div class="hidden lg:flex w-1/2 relative flex-col justify-center p-12 overflow-hidden bg-indigo-900/10">
+            <!-- Huge abstract graphic background -->
+            <div class="absolute inset-0 z-0">
+                <div class="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] bg-indigo-500/20 rounded-full blur-[100px] animate-pulse"
+                    style="animation-duration: 6s;"></div>
+                <div class="absolute top-1/4 right-1/4 w-[600px] h-[600px] bg-blue-500/20 rounded-full blur-[120px] animate-pulse"
+                    style="animation-duration: 5s;"></div>
+
+                <!-- Grid pattern overlay -->
+                <div class="absolute inset-0 bg-[#00000005] dark:bg-[#ffffff02]"
+                    style="background-image: radial-gradient(var(--tw-gradient-stops) 1px, transparent 1px); background-size: 32px 32px;">
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="relative z-10 max-w-lg mb-10 ml-auto mr-12 text-right">
+                <div
+                    class="p-8 rounded-3xl bg-white/10 dark:bg-gray-900/30 backdrop-blur-md border border-white/20 dark:border-gray-700/50 shadow-2xl">
+                    <div class="flex justify-end mb-4">
+                        <div
+                            class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500/30 to-blue-500/30 border border-white/20 dark:border-gray-600/50 flex items-center justify-center">
+                            <i class="fa fa-users text-3xl text-indigo-600 dark:text-indigo-300 drop-shadow-md"></i>
+                        </div>
+                    </div>
+                    <h2 class="text-4xl font-black text-gray-900 dark:text-white tracking-tight mb-4">Join
+                        CitySafe<br><span class="text-indigo-600 dark:text-indigo-400">Node Array</span></h2>
+                    <p class="text-lg text-gray-700 dark:text-gray-300 font-medium leading-relaxed">
+                        Protecting your sector starts with information. Get verified operational access to real-time
+                        safety telemetry.
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Core Libraries -->
+    <!-- Hidden element to store email for OTP -->
+    <div id="otpEmailDisplay" class="hidden"></div>
+
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        function setupToggle(toggleId, inputId) {
-            const toggle = document.querySelector(toggleId);
-            const input = document.querySelector(inputId);
-            if (!toggle || !input) return;
-            toggle.addEventListener("click", function () {
-                const isPassword = input.getAttribute("type") === "password";
-                input.setAttribute("type", isPassword ? "text" : "password");
-                this.classList.toggle("fa-eye");
-                this.classList.toggle("fa-eye-slash");
+        // Password toggles
+        document.querySelectorAll('.toggle-pass').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const targetId = this.getAttribute('data-target');
+                const passInput = document.getElementById(targetId);
+                const icon = this.querySelector('i');
+
+                if (passInput.type === "password") {
+                    passInput.type = "text";
+                    icon.classList.remove("fa-eye-slash");
+                    icon.classList.add("fa-eye", "text-indigo-500", "dark:text-indigo-400");
+                } else {
+                    passInput.type = "password";
+                    icon.classList.add("fa-eye-slash");
+                    icon.classList.remove("fa-eye", "text-indigo-500", "dark:text-indigo-400");
+                }
             });
-        }
+        });
 
-        setupToggle("#toggleSignupPass", "#signup-password");
-        setupToggle("#toggleConfirmPass", "#confirm-password");
-
+        // Validation & OTP flow using SweetAlert2
         function validateSignup() {
             const form = document.querySelector('form');
             if (!form.checkValidity()) {
@@ -160,18 +224,28 @@
             const err = document.getElementById("passError");
 
             if (p1 !== p2) {
-                err.style.display = "block";
+                err.classList.remove('hidden');
                 return false;
             }
-            err.style.display = "none";
+            err.classList.add('hidden');
 
             const formData = {
-                firstname: document.querySelector('input[name="firstname"]').value,
-                lastname: document.querySelector('input[name="lastname"]').value,
-                email: document.querySelector('input[name="email"]').value,
-                contact_number: document.querySelector('input[name="contact_number"]').value,
+                firstname: document.getElementById('signup-first').value,
+                lastname: document.getElementById('signup-last').value,
+                email: document.getElementById('signup-email').value,
+                contact_number: document.getElementById('signup-contact').value,
                 password: p1
             };
+
+            Swal.fire({
+                title: 'Transmitting Clearance Request',
+                text: 'Please wait while we establish your operational node...',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                background: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff',
+                color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#111827',
+                didOpen: () => { Swal.showLoading() }
+            });
 
             fetch('/register', {
                 method: 'POST',
@@ -180,34 +254,82 @@
             })
                 .then(res => res.json())
                 .then(data => {
+                    Swal.close();
                     if (data.success) {
                         document.getElementById('otpEmailDisplay').innerText = data.email;
-                        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
-                            const otpModal = new bootstrap.Modal(document.getElementById('otpModal'));
-                            otpModal.show();
-                        }
+                        showOtpModal(data.email);
                     } else {
-                        alert(data.message || 'Registration failed');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Clearance Denied',
+                            text: data.message || 'Registration sequence failed.',
+                            background: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff',
+                            color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#111827'
+                        });
                     }
                 })
                 .catch(err => {
-                    alert('Error connecting to server');
+                    Swal.close();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Comms Failure',
+                        text: 'Unable to connect to the command center.',
+                        background: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff',
+                        color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#111827'
+                    });
                     console.error(err);
                 });
 
             return false;
         }
 
-        function verifyOtp() {
-            const code = document.getElementById('otpInput').value;
-            const email = document.getElementById('otpEmailDisplay').innerText;
-            const errorDiv = document.getElementById('otpError');
+        function showOtpModal(email) {
+            Swal.fire({
+                title: '<span class="font-black uppercase tracking-widest text-lg">Verify Clearance</span>',
+                html: `
+                    <div class="mb-4 text-sm font-medium text-gray-500">
+                        Authentication packet dispatched to:<br>
+                        <strong class="text-indigo-600 dark:text-indigo-400 mt-1 block">${email}</strong>
+                    </div>
+                    <input type="text" id="otpInput" class="swal2-input font-mono text-center tracking-[0.5em] text-2xl w-3/4 mx-auto !bg-transparent !border-gray-300 dark:!border-gray-600 focus:!border-indigo-500 !text-gray-900 dark:!text-white rounded-xl placeholder-gray-400/50" maxlength="4" placeholder="0000" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                    <div id="otpError" class="hidden text-xs font-bold text-red-500 uppercase tracking-widest mt-3">Invalid authorization code</div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: '<span class="font-bold tracking-widest uppercase text-xs">Authorize</span>',
+                cancelButtonText: '<span class="font-bold tracking-widest uppercase text-xs">Abort</span>',
+                confirmButtonColor: '#4f46e5',
+                cancelButtonColor: '#6b7280',
+                customClass: {
+                    popup: 'glass-swal',
+                    confirmButton: 'rounded-lg shadow-lg shadow-indigo-500/40',
+                    cancelButton: 'rounded-lg'
+                },
+                preConfirm: () => {
+                    const code = document.getElementById('otpInput').value;
+                    if (code.length !== 4) {
+                        Swal.showValidationMessage('Requires 4-digit code');
+                        return false;
+                    }
+                    return code;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    verifyOtp(result.value);
+                }
+            });
+        }
 
-            if (code.length !== 4) {
-                errorDiv.innerText = "Please enter 4 digits";
-                errorDiv.style.display = 'block';
-                return;
-            }
+        function verifyOtp(code) {
+            const email = document.getElementById('otpEmailDisplay').innerText;
+
+            Swal.fire({
+                title: 'Verifying Signal',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                background: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff',
+                color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#111827',
+                didOpen: () => { Swal.showLoading() }
+            });
 
             fetch('/verify-code-json', {
                 method: 'POST',
@@ -217,16 +339,36 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.success) {
-                        window.location.href = data.redirect;
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Clearance Granted',
+                            showConfirmButton: false,
+                            timer: 1500,
+                            background: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff',
+                            color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#111827'
+                        }).then(() => {
+                            window.location.href = data.redirect;
+                        });
                     } else {
-                        errorDiv.innerText = data.message || "Invalid Code";
-                        errorDiv.style.display = 'block';
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Clearance Denied',
+                            text: data.message || "Invalid Authorization Code.",
+                            confirmButtonText: 'Retry',
+                            confirmButtonColor: '#4f46e5',
+                            background: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff',
+                            color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#111827'
+                        }).then(() => {
+                            showOtpModal(email);
+                        });
                     }
                 })
-                .catch(err => console.error(err));
+                .catch(err => {
+                    console.error(err);
+                    Swal.close();
+                });
         }
     </script>
-    <%- include('../partials/page-end'); %>
 </body>
 
 </html>

@@ -1,71 +1,72 @@
-<div id="app-sidepanel" class="app-sidepanel">
-    <div id="sidepanel-drop" class="sidepanel-drop"></div>
-    <div class="sidepanel-inner d-flex flex-column">
-        <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
-        <div class="app-branding text-center">
-            <a class="app-logo" href="/responder">
-                <i class="fa fa-shield-alt text-primary fs-4 me-2"></i>
-                <span class="logo-text">CITYSAFE</span>
-            </a>
-        </div>
+<!-- Glassmorphic Responder Sidebar -->
+<div id="mobile-sidebar"
+    class="fixed inset-y-0 left-0 w-64 glass-panel z-40 transform -translate-x-full transition-transform duration-300 xl:translate-x-0 xl:static xl:block flex flex-col h-full overflow-y-auto">
+    <!-- Close Button for Mobile -->
+    <div class="flex justify-end p-4 xl:hidden">
+        <button
+            onclick="document.getElementById('mobile-sidebar').classList.add('-translate-x-full'); document.getElementById('sidebar-overlay').classList.add('hidden')"
+            class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+            <i class="fa fa-times text-xl"></i>
+        </button>
+    </div>
 
-        <div class="app-sidepanel-user px-3 py-2 border-bottom mb-3">
-            <div class="d-flex align-items-center gap-2">
-                <div class="app-icon-holder small shadow-sm">
-                    <i class="fa fa-user-md"></i>
-                </div>
-                <div class="overflow-hidden">
-                    <h6 class="mb-0 text-truncate small fw-bold text-dark">
-                        <%= username %>
-                    </h6>
-                    <span class="badge bg-success" style="font-size: 0.6rem;">FIELD UNIT</span>
-                </div>
+    <div class="p-6 text-center border-b border-gray-200 dark:border-gray-800">
+        <a href="/responder" class="flex items-center justify-center gap-2 text-indigo-600 dark:text-indigo-400">
+            <i class="fa fa-shield-alt text-3xl"></i>
+            <span class="font-bold text-2xl tracking-wider text-gray-900 dark:text-gray-100">CITYSAFE</span>
+        </a>
+    </div>
+
+    <div
+        class="p-4 border-b border-gray-200 dark:border-gray-800 mx-4 my-2 rounded-xl bg-red-50 dark:bg-red-900/20 shadow-sm border border-red-100 dark:border-red-800/30">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center shadow-sm">
+                <i class="fa fa-user-md"></i>
+            </div>
+            <div class="overflow-hidden">
+                <h6 class="font-bold text-sm text-gray-900 dark:text-gray-100 m-0 truncate">
+                    <%= typeof username !=='undefined' ? username : 'Responder' %>
+                </h6>
+                <span
+                    class="px-2 py-0.5 mt-1 rounded text-[10px] font-bold tracking-wider bg-red-200 text-red-800 dark:bg-red-800/50 dark:text-red-300 inline-block uppercase">FIELD
+                    UNIT</span>
             </div>
         </div>
+    </div>
 
-        <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
-            <ul class="app-menu list-unstyled accordion" id="menu-accordion">
-                <li class="nav-item">
-                    <a class="nav-link <%= (typeof page !== 'undefined' && page === 'dashboard') ? 'active' : '' %>"
-                        href="/responder">
-                        <span class="nav-icon"><i class="fa fa-tachometer-alt"></i></span>
-                        <span class="nav-link-text">Mission Control</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/responder#nearby-reports">
-                        <span class="nav-icon"><i class="fa fa-map-marker-alt"></i></span>
-                        <span class="nav-link-text">Nearby Ops</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <%= (typeof page !== 'undefined' && page === 'history') ? 'active' : '' %>"
-                        href="/responder-history">
-                        <span class="nav-icon"><i class="fa fa-history"></i></span>
-                        <span class="nav-link-text">History</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <%= (typeof page !== 'undefined' && page === 'about') ? 'active' : '' %>"
-                        href="/aboutresponder">
-                        <span class="nav-icon"><i class="fa fa-info-circle"></i></span>
-                        <span class="nav-link-text">Station Info</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+    <nav class="flex-1 px-4 py-4 space-y-1">
+        <a href="/responder"
+            class="flex items-center gap-3 px-4 py-3 rounded-lg <%= (typeof page !== 'undefined' && page === 'dashboard') ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 font-semibold shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50' %> transition-all">
+            <i class="fa fa-tachometer-alt w-5 text-center"></i>
+            <span>Mission Control</span>
+        </a>
+        <a href="/responder#nearby-reports"
+            class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all">
+            <i class="fa fa-map-marker-alt w-5 text-center text-red-500"></i>
+            <span>Nearby Ops</span>
+        </a>
+        <a href="/responder-history"
+            class="flex items-center gap-3 px-4 py-3 rounded-lg <%= (typeof page !== 'undefined' && page === 'history') ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 font-semibold shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50' %> transition-all">
+            <i class="fa fa-history w-5 text-center"></i>
+            <span>History</span>
+        </a>
+        <a href="/aboutresponder"
+            class="flex items-center gap-3 px-4 py-3 rounded-lg <%= (typeof page !== 'undefined' && page === 'about') ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 font-semibold shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50' %> transition-all">
+            <i class="fa fa-info-circle w-5 text-center"></i>
+            <span>Station Info</span>
+        </a>
+    </nav>
 
-        <div class="app-sidepanel-footer mt-auto">
-            <nav class="app-nav app-nav-footer">
-                <ul class="app-menu footer-menu list-unstyled">
-                    <li class="nav-item">
-                        <a class="nav-link text-danger" href="/logout">
-                            <span class="nav-icon"><i class="fa fa-power-off"></i></span>
-                            <span class="nav-link-text">Sign Off</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+    <div class="px-4 py-4 mt-auto border-t border-gray-200 dark:border-gray-800 bg-white/30 dark:bg-gray-900/30">
+        <a href="/logout"
+            class="flex items-center justify-center gap-2 px-4 py-3 rounded-lg bg-red-600 hover:bg-red-700 text-white transition-all text-sm font-bold w-full shadow-md hover:shadow-lg active:scale-95">
+            <i class="fa fa-power-off"></i>
+            <span>Sign Off</span>
+        </a>
     </div>
 </div>
+
+<!-- Overlay for mobile when sidebar is open -->
+<div id="sidebar-overlay"
+    onclick="document.getElementById('mobile-sidebar').classList.add('-translate-x-full'); this.classList.add('hidden')"
+    class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-30 hidden xl:hidden transition-opacity"></div>

@@ -12,723 +12,576 @@
                 height: 350px;
                 width: 100%;
             }
+
+            /* Glassmorphic SweetAlert matching original theme */
+            .swal2-popup.glass-swal {
+                background: rgba(255, 255, 255, 0.9);
+                backdrop-filter: blur(16px);
+                border: 1px solid rgba(255, 255, 255, 0.4);
+                border-radius: 1.5rem;
+                color: #1f2937;
+            }
+
+            .dark .swal2-popup.glass-swal {
+                background: rgba(17, 24, 39, 0.85);
+                border: 1px solid rgba(255, 255, 255, 0.05);
+                color: #f3f4f6;
+            }
         </style>
 </head>
 
-<body class="app">
+<body
+    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
     <%- include('../partials/page-start'); %>
 
-        <header class="app-header fixed-top">
-            <%- include('../partials/user-navbar'); %>
-                <%- include('../partials/user-sidebar'); %>
+        <header class="sticky top-0 z-50">
+            <%- include('../partials/user-navbar', { currentPage: 'my-reports' }); %>
         </header>
 
-        <div class="app-wrapper">
-            <div class="app-content pt-3 p-md-3 p-lg-4">
-                <div class="container-xl">
-                    <div class="row g-3 mb-4 align-items-center justify-content-between">
-                        <div class="col-auto">
-                            <h1 class="app-page-title mb-0">My SOS History</h1>
-                        </div>
-                    </div>
+        <div class="flex flex-1 overflow-hidden relative">
+            <aside class="z-40">
+                <%- include('../partials/user-sidebar', { currentPage: 'my-reports' }); %>
+            </aside>
+
+            <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8 overflow-y-auto w-full relative">
+                <div class="max-w-7xl mx-auto space-y-6">
+
+                    <h1 class="text-3xl font-black text-gray-900 dark:text-white tracking-tight uppercase px-2 mb-2">My
+                        Operations Log</h1>
 
                     <!-- Active Report Section -->
                     <% let activeReport=reports.find(r=> r.status === 'responding' || r.status === 'pending'); %>
                         <div id="activeReportContainer">
                             <% if (activeReport) { %>
-                                <div class="app-card shadow-sm mb-4 border-<%= activeReport.status === 'responding' ? 'warning' : 'danger' %>"
-                                    id="statusBoxBorder"
-                                    style="border-left: 4px solid var(--bs-<%= activeReport.status === 'responding' ? 'warning' : 'danger' %>) !important;">
-                                    <div
-                                        class="app-card-header p-3 border-bottom-0 d-flex align-items-center justify-content-between">
-                                        <h4 class="app-card-title mb-0">
-                                            <i class="fa <%= activeReport.status === 'responding' ? 'fa-ambulance text-warning' : 'fa-exclamation-circle text-danger' %> me-2"
-                                                id="statusIcon"></i>
-                                            Current Status: <span
-                                                class="<%= activeReport.status === 'responding' ? 'text-warning' : 'text-danger' %> fw-bold"
-                                                id="statusText">
-                                                <%= activeReport.status.toUpperCase() %>
-                                            </span>
-                                        </h4>
-                                        <div id="actionButtonContainer">
-                                            <% if (activeReport.status==='responding' && activeReport.user_confirmed_at)
-                                                { %>
-                                                <span class="badge bg-info p-2">Waiting for Responder
-                                                    Confirmation</span>
-                                                <% } else if (activeReport.status==='responding' ) { %>
-                                                    <button class="btn btn-success fw-bold text-white blink-bg"
-                                                        onclick="markResolved(<%= activeReport.id %>)">
-                                                        <i class="fa fa-check-circle me-2"></i>I AM SAFE / RESOLVED
-                                                    </button>
-                                                    <% } else if (activeReport.status==='pending' ) { %>
-                                                        <button class="btn btn-outline-danger" disabled>Cannot Cancel
-                                                            (Finding Responder...)</button>
-                                                        <% } %>
+                                <% let borderColor=activeReport.status==='responding'
+                                    ? 'border-yellow-500 shadow-yellow-500/20' : 'border-red-500 shadow-red-500/20' ;
+                                    let bgColor=activeReport.status==='responding'
+                                    ? 'bg-yellow-50/50 dark:bg-yellow-900/10' : 'bg-red-50/50 dark:bg-red-900/10' ; let
+                                    headerBorder=activeReport.status==='responding'
+                                    ? 'border-yellow-100 dark:border-yellow-900/30'
+                                    : 'border-red-100 dark:border-red-900/30' ; let
+                                    headerIcon=activeReport.status==='responding' ? 'fa-ambulance text-yellow-500'
+                                    : 'fa-exclamation-circle text-red-500 animate-pulse' ; let
+                                    textColor=activeReport.status==='responding'
+                                    ? 'text-yellow-600 dark:text-yellow-400' : 'text-red-600 dark:text-red-400' ; %>
+                                    <div class="glass-panel overflow-hidden border-t-4 <%= borderColor %> mb-6 shadow-lg relative"
+                                        id="statusBoxBorder">
+                                        <!-- Background glow -->
+                                        <div
+                                            class="absolute top-0 right-0 w-64 h-64 bg-current opacity-5 rounded-full blur-[80px] pointer-events-none <%= textColor %>">
                                         </div>
-                                    </div>
 
-                                    <div class="app-card-body p-4" id="dynamicContent">
-                                        <% if (activeReport.status==='responding' ) { %>
-                                            <div class="row g-4">
-                                                <div class="col-md-4">
-                                                    <div class="p-4 bg-light rounded text-center h-100 border">
-                                                        <div class="mb-3">
-                                                            <i class="fa fa-user-shield fs-1 text-primary"></i>
-                                                        </div>
-                                                        <small
-                                                            class="text-muted d-block text-uppercase fw-bold mb-1">RESPONDER
-                                                            DETAILS</small>
-                                                        <h5 class="mb-3 text-dark fw-bold" id="respName">
-                                                            <%= activeReport.responder_name %>
-                                                                <%= activeReport.responder_last %>
-                                                        </h5>
-                                                        <p class="mb-2 text-dark"><i
-                                                                class="fa fa-envelope text-muted me-2"></i><span
-                                                                id="respEmail">
-                                                                <%= activeReport.responder_email || 'No email' %>
-                                                            </span></p>
-                                                        <p class="mb-0 text-primary fw-bold"><i
-                                                                class="fa fa-phone me-2"></i><span id="respContact">
-                                                                <%= activeReport.responder_contact || 'No contact' %>
-                                                            </span></p>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-8">
-                                                    <div class="rounded border overflow-hidden">
-                                                        <div id="trackMap"></div>
-                                                    </div>
-                                                </div>
+                                        <div
+                                            class="px-6 py-4 border-b <%= headerBorder %> <%= bgColor %> flex flex-col sm:flex-row sm:items-center justify-between gap-4 relative z-10">
+                                            <h4
+                                                class="text-sm font-bold uppercase tracking-widest flex items-center gap-2">
+                                                <i class="fa <%= headerIcon %> text-lg" id="statusIcon"></i>
+                                                <span class="text-gray-800 dark:text-gray-200">Current Status:</span>
+                                                <span class="<%= textColor %> ml-1" id="statusText">
+                                                    <%= activeReport.status.toUpperCase() %>
+                                                </span>
+                                            </h4>
+                                            <div id="actionButtonContainer">
+                                                <% if (activeReport.status==='responding' &&
+                                                    activeReport.user_confirmed_at) { %>
+                                                    <span
+                                                        class="px-3 py-1.5 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-lg text-xs font-bold uppercase tracking-widest border border-blue-200 dark:border-blue-800/50 flex items-center gap-2">
+                                                        <i class="fa fa-circle-notch fa-spin"></i> Awaiting Responder
+                                                        Check-in
+                                                    </span>
+                                                    <% } else if (activeReport.status==='responding' ) { %>
+                                                        <button
+                                                            class="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-xs font-black uppercase tracking-widest transition-colors shadow-lg shadow-emerald-500/30 flex items-center gap-2 border border-emerald-400 dark:border-emerald-600 animate-pulse"
+                                                            onclick="markResolved(<%= activeReport.id %>)">
+                                                            <i class="fa fa-check-circle"></i> Confirm Safety / Resolve
+                                                        </button>
+                                                        <% } else if (activeReport.status==='pending' ) { %>
+                                                            <span
+                                                                class="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 rounded-lg text-xs font-bold uppercase tracking-widest border border-gray-200 dark:border-gray-700 flex items-center gap-2 cursor-not-allowed">
+                                                                <i class="fa fa-radar fa-beat-fade relative"><span
+                                                                        class="absolute inset-0 invisible">rad</span></i>
+                                                                Scanning for Units...
+                                                            </span>
+                                                            <% } %>
                                             </div>
-                                            <input type="hidden" id="activeReportId" value="<%= activeReport.id %>">
-                                            <input type="hidden" id="userLat" value="<%= activeReport.latitude %>">
-                                            <input type="hidden" id="userLng" value="<%= activeReport.longitude %>">
-                                            <input type="hidden" id="responderId"
-                                                value="<%= activeReport.responder_id %>">
-                                            <% } else { %>
-                                                <div class="alert alert-warning mb-0 text-center py-4">
-                                                    <h5 class="alert-heading mb-3"><i
-                                                            class="fa fa-spinner fa-spin me-2"></i>Contacting nearest
-                                                        emergency units...</h5>
-                                                    <p class="mb-0">Please stay in a safe location. Do not panic. We are
-                                                        transmitting your coordinates.</p>
+                                        </div>
+
+                                        <div class="p-6 relative z-10" id="dynamicContent">
+                                            <% if (activeReport.status==='responding' ) { %>
+                                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                                    <div class="md:col-span-1">
+                                                        <div
+                                                            class="h-full bg-white/50 dark:bg-gray-800/50 rounded-2xl border border-gray-200 dark:border-gray-700 p-6 flex flex-col items-center justify-center text-center shadow-inner relative overflow-hidden group hover:border-indigo-300 dark:hover:border-indigo-600 transition-colors">
+                                                            <div
+                                                                class="mb-4 w-16 h-16 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center border border-indigo-200 dark:border-indigo-800/50 shadow-md group-hover:scale-110 transition-transform">
+                                                                <i class="fa fa-user-shield text-2xl"></i>
+                                                            </div>
+                                                            <h6
+                                                                class="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-2">
+                                                                Assigned Operative</h6>
+                                                            <h5 class="text-xl font-bold text-gray-900 dark:text-white capitalize mb-4"
+                                                                id="respName">
+                                                                <%= activeReport.responder_name %>
+                                                                    <%= activeReport.responder_last %>
+                                                            </h5>
+                                                            <div class="w-full space-y-2 text-sm text-left">
+                                                                <div
+                                                                    class="flex items-center gap-3 px-3 py-2 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-100 dark:border-gray-800">
+                                                                    <i
+                                                                        class="fa fa-envelope text-gray-400 w-4 text-center"></i>
+                                                                    <span id="respEmail"
+                                                                        class="text-gray-600 dark:text-gray-300 font-medium truncate">
+                                                                        <%= activeReport.responder_email || 'Classified'
+                                                                            %>
+                                                                    </span>
+                                                                </div>
+                                                                <div
+                                                                    class="flex items-center gap-3 px-3 py-2 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg border border-indigo-100 dark:border-indigo-800/50">
+                                                                    <i class="fa fa-phone text-indigo-500 w-4 text-center fa-shake"
+                                                                        style="--fa-animation-duration: 3s;"></i>
+                                                                    <span id="respContact"
+                                                                        class="text-indigo-700 dark:text-indigo-300 font-bold">
+                                                                        <%= activeReport.responder_contact || 'Unlisted'
+                                                                            %>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="md:col-span-2">
+                                                        <div
+                                                            class="bg-gray-100 dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 overflow-hidden shadow-inner h-full min-h-[350px] relative">
+                                                            <div id="trackMap" class="absolute inset-0"></div>
+                                                            <div
+                                                                class="absolute top-4 left-4 z-[400] bg-white/80 dark:bg-gray-900/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm text-[10px] font-bold uppercase tracking-widest text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                                                                <div
+                                                                    class="w-2 h-2 rounded-full bg-green-500 animate-pulse">
+                                                                </div> Live Tracking
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <input type="hidden" id="activeReportId" value="<%= activeReport.id %>">
-                                                <% } %>
+                                                <input type="hidden" id="userLat" value="<%= activeReport.latitude %>">
+                                                <input type="hidden" id="userLng" value="<%= activeReport.longitude %>">
+                                                <input type="hidden" id="responderId"
+                                                    value="<%= activeReport.responder_id %>">
+                                                <% } else { %>
+                                                    <div
+                                                        class="flex flex-col items-center justify-center py-12 text-center relative">
+                                                        <!-- Radar Sweep Animation Context -->
+                                                        <div
+                                                            class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
+                                                            <div
+                                                                class="w-48 h-48 rounded-full border border-red-500 absolute animate-ping">
+                                                            </div>
+                                                            <div class="w-64 h-64 rounded-full border border-red-500 absolute"
+                                                                style="animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite; animation-delay: 0.5s;">
+                                                            </div>
+                                                        </div>
+
+                                                        <div
+                                                            class="w-16 h-16 bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 rounded-full flex items-center justify-center mb-4 border border-red-200 dark:border-red-800/50 shadow-lg relative z-10">
+                                                            <i class="fa fa-radar fa-spin text-3xl"></i>
+                                                        </div>
+                                                        <h5
+                                                            class="text-xl font-bold text-gray-900 dark:text-white mb-2 relative z-10 tracking-tight">
+                                                            Broadcasting Emergency Signal</h5>
+                                                        <p
+                                                            class="text-sm font-medium text-gray-500 dark:text-gray-400 max-w-md relative z-10">
+                                                            Please lock down in a secure location. We are actively
+                                                            cross-referencing nearest available emergency response
+                                                            units.
+                                                        </p>
+                                                    </div>
+                                                    <input type="hidden" id="activeReportId"
+                                                        value="<%= activeReport.id %>">
+                                                    <% } %>
+                                        </div>
                                     </div>
-                                </div>
-                                <% } %>
+                                    <% } %>
                         </div>
 
-                        <!-- Table Start -->
-                        <div class="app-card app-card-orders-table shadow-sm mb-5">
-                            <div class="app-card-body">
-                                <div class="table-responsive">
-                                    <table class="table app-table-hover mb-0 text-left">
-                                        <thead>
-                                            <tr>
-                                                <th class="cell">Date/Time</th>
-                                                <th class="cell">Type</th>
-                                                <th class="cell">Location</th>
-                                                <th class="cell">Responder</th>
-                                                <th class="cell">Status</th>
-                                                <th class="cell">Resolved By</th>
-                                                <th class="cell">Message</th>
-                                                <th class="cell">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="historyTableBody">
-                                            <% if (reports.length> 0) { %>
-                                                <% reports.forEach(function(report) { %>
-                                                    <tr>
-                                                        <td class="cell">
-                                                            <span class="truncate">
-                                                                <%= new Date(report.reported_at).toLocaleString() %>
-                                                            </span>
-                                                        </td>
-                                                        <td class="cell">
-                                                            <span class="badge bg-secondary">
-                                                                <%= report.disaster_type %>
-                                                            </span>
-                                                        </td>
-                                                        <td class="cell text-truncate" style="max-width: 150px;"
-                                                            title="<%= report.location || 'Unknown' %>">
-                                                            <span class="truncate">
-                                                                <%= report.location || 'Unknown' %>
-                                                            </span>
-                                                        </td>
-                                                        <td class="cell">
-                                                            <% if (report.responder_name) { %>
-                                                                <span class="fw-bold">
-                                                                    <%= report.responder_name %>
-                                                                        <%= report.responder_last %>
-                                                                </span>
-                                                                <br><small class="text-muted">
-                                                                    <%= report.station_name || 'Station' %>
-                                                                </small>
-                                                                <% } else { %>
-                                                                    <span class="text-muted small">Pending
-                                                                        Assignment</span>
-                                                                    <% } %>
-                                                        </td>
-                                                        <td class="cell">
-                                                            <% if (report.status==='pending' ) { %>
-                                                                <span class="badge bg-warning text-dark">Pending</span>
-                                                                <% } else if (report.status==='responding' ) { %>
-                                                                    <span
-                                                                        class="badge bg-info text-white">Responding</span>
-                                                                    <% } else if (report.status==='resolved' ) { %>
-                                                                        <span class="badge bg-success">Resolved</span>
-                                                                        <% } else if
-                                                                            (report.status==='cancelled by user' ) { %>
-                                                                            <span class="badge bg-danger">Cancelled by
-                                                                                User</span>
-                                                                            <% } else if
-                                                                                (report.status==='cancelled by admin' )
-                                                                                { %>
-                                                                                <span class="badge bg-danger">Cancelled
-                                                                                    by Admin</span>
-                                                                                <% } else if
-                                                                                    (report.status==='cancelled' ) { %>
-                                                                                    <span
-                                                                                        class="badge bg-danger">Cancelled</span>
-                                                                                    <% } %>
-                                                        </td>
-                                                        <td class="cell text-info fw-bold">
-                                                            <%= report.resolved_by || '-' %>
-                                                        </td>
-                                                        <td class="cell">
-                                                            <div class="text-truncate" style="max-width: 150px;"
-                                                                title="Resp: <%= report.responder_message || '-' %> | User: <%= report.user_message || '-' %>">
-                                                                <small class="d-block text-truncate"><strong>R:</strong>
-                                                                    <%= report.responder_message || '-' %>
-                                                                </small>
-                                                                <small class="d-block text-truncate"><strong>U:</strong>
-                                                                    <%= report.user_message || '-' %>
-                                                                </small>
+                        <!-- History Table Container -->
+                        <div class="glass-panel overflow-hidden">
+                            <div
+                                class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-white/40 dark:bg-gray-900/40 flex items-center gap-3">
+                                <i class="fa fa-history text-gray-400"></i>
+                                <h2 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                                    Operations Archive</h2>
+                            </div>
+
+                            <div class="p-0 overflow-x-auto">
+                                <table class="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr
+                                            class="bg-gray-50/50 dark:bg-gray-800/50 border-b border-gray-100 dark:border-gray-800">
+                                            <th
+                                                class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                                Date/Time</th>
+                                            <th
+                                                class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                                Type</th>
+                                            <th
+                                                class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                                Location</th>
+                                            <th
+                                                class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                                Operative</th>
+                                            <th
+                                                class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                                Status</th>
+                                            <th
+                                                class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                                Resolved By</th>
+                                            <th
+                                                class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                                Comms Log</th>
+                                            <th
+                                                class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                                Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="historyTableBody" class="divide-y divide-gray-100 dark:divide-gray-800">
+                                        <% if (reports.length> 0) { %>
+                                            <% reports.forEach(function(report) { %>
+                                                <tr
+                                                    class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors group">
+                                                    <td
+                                                        class="px-6 py-4 text-xs font-medium text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                                                        <%= new Date(report.reported_at).toLocaleString() %>
+                                                    </td>
+                                                    <td class="px-6 py-4">
+                                                        <span
+                                                            class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded text-[10px] font-bold uppercase tracking-widest border border-gray-200 dark:border-gray-700">
+                                                            <%= report.disaster_type %>
+                                                        </span>
+                                                    </td>
+                                                    <td class="px-6 py-4 text-xs text-gray-600 dark:text-gray-400 max-w-[150px] truncate"
+                                                        title="<%= report.location || 'Unknown' %>">
+                                                        <%= report.location || 'Unknown' %>
+                                                    </td>
+                                                    <td class="px-6 py-4 text-xs">
+                                                        <% if (report.responder_name) { %>
+                                                            <div class="font-bold text-gray-900 dark:text-gray-100">
+                                                                <%= report.responder_name %>
+                                                                    <%= report.responder_last %>
                                                             </div>
-                                                        </td>
-                                                        <td class="cell">
-                                                            <!-- ACTIONS -->
+                                                            <div class="text-[10px] font-medium text-gray-500 mt-0.5">
+                                                                <%= report.station_name || 'Station' %>
+                                                            </div>
+                                                            <% } else { %>
+                                                                <span
+                                                                    class="text-[10px] font-medium uppercase tracking-widest text-gray-400 italic">Pending
+                                                                    Assignment</span>
+                                                                <% } %>
+                                                    </td>
+                                                    <td class="px-6 py-4">
+                                                        <% if (report.status==='pending' ) { %>
+                                                            <span
+                                                                class="px-2 py-1 bg-yellow-100 dark:bg-yellow-900/40 text-yellow-700 dark:text-yellow-400 rounded text-[10px] font-bold uppercase tracking-widest border border-yellow-200 dark:border-yellow-800">Pending</span>
+                                                            <% } else if (report.status==='responding' ) { %>
+                                                                <span
+                                                                    class="px-2 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 rounded text-[10px] font-bold uppercase tracking-widest border border-blue-200 dark:border-blue-800">Responding</span>
+                                                                <% } else if (report.status==='resolved' ) { %>
+                                                                    <span
+                                                                        class="px-2 py-1 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 rounded text-[10px] font-bold uppercase tracking-widest border border-emerald-200 dark:border-emerald-800">Resolved</span>
+                                                                    <% } else if (report.status==='cancelled by user' )
+                                                                        { %>
+                                                                        <span
+                                                                            class="px-2 py-1 bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 rounded text-[10px] font-bold uppercase tracking-widest border border-red-200 dark:border-red-800">Usr
+                                                                            Cancel</span>
+                                                                        <% } else if
+                                                                            (report.status==='cancelled by admin' ) { %>
+                                                                            <span
+                                                                                class="px-2 py-1 bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 rounded text-[10px] font-bold uppercase tracking-widest border border-red-200 dark:border-red-800">Op
+                                                                                Cancel</span>
+                                                                            <% } else if (report.status==='cancelled' )
+                                                                                { %>
+                                                                                <span
+                                                                                    class="px-2 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 rounded text-[10px] font-bold uppercase tracking-widest border border-gray-200 dark:border-gray-700">Cancelled</span>
+                                                                                <% } %>
+                                                    </td>
+                                                    <td
+                                                        class="px-6 py-4 text-xs font-bold text-indigo-600 dark:text-indigo-400">
+                                                        <%= report.resolved_by || '-' %>
+                                                    </td>
+                                                    <td
+                                                        class="px-6 py-4 text-[10px] text-gray-500 dark:text-gray-400 max-w-[150px]">
+                                                        <div class="truncate"
+                                                            title="Op: <%= report.responder_message || '-' %> | Usr: <%= report.user_message || '-' %>">
+                                                            <div class="truncate mb-0.5"><span
+                                                                    class="font-bold text-gray-700 dark:text-gray-300">OP:</span>
+                                                                <%= report.responder_message || '-' %>
+                                                            </div>
+                                                            <div class="truncate"><span
+                                                                    class="font-bold text-indigo-500 dark:text-indigo-400">US:</span>
+                                                                <%= report.user_message || '-' %>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="px-6 py-4">
+                                                        <div class="flex flex-col gap-1.5">
                                                             <% if (report.status==='pending' ) { %>
                                                                 <button onclick="markResolved(<%= report.id %>)"
-                                                                    class="btn btn-sm btn-success text-white mb-1">Resolve</button>
+                                                                    class="px-2 py-1 bg-emerald-500 hover:bg-emerald-600 text-white rounded text-[10px] font-bold uppercase tracking-widest transition-colors w-full text-center">Resolve</button>
                                                                 <button onclick="cancelReport(<%= report.id %>)"
-                                                                    class="btn btn-sm btn-outline-danger">Cancel</button>
+                                                                    class="px-2 py-1 bg-white dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 rounded text-[10px] font-bold uppercase tracking-widest border border-red-200 dark:border-red-800 transition-colors w-full text-center">Cancel</button>
                                                                 <% } else if (report.status==='responding' ) { %>
                                                                     <% if (!report.user_confirmed_at) { %>
                                                                         <button onclick="markResolved(<%= report.id %>)"
-                                                                            class="btn btn-sm btn-success text-white">Resolve</button>
+                                                                            class="px-2 py-1 bg-emerald-500 hover:bg-emerald-600 text-white rounded text-[10px] font-bold uppercase tracking-widest transition-colors w-full text-center">Resolve</button>
                                                                         <% } else { %>
                                                                             <span
-                                                                                class="text-muted small italic">Waiting...</span>
+                                                                                class="text-[10px] font-medium text-gray-400 italic text-center block">Standby...</span>
                                                                             <% } %>
                                                                                 <% } else { %>
-                                                                                    <span class="text-muted">-</span>
+                                                                                    <span
+                                                                                        class="text-gray-300 dark:text-gray-600 text-center block w-full">-</span>
                                                                                     <% } %>
-                                                        </td>
-                                                    </tr>
-                                                    <% }); %>
-                                                        <% } else { %>
-                                                            <tr>
-                                                                <td colspan="8" class="text-center p-5">
-                                                                    <i
-                                                                        class="fa fa-clipboard text-muted fs-1 mb-3 d-block"></i>
-                                                                    <span class="text-muted">No emergency reports
-                                                                        found.</span>
-                                                                </td>
-                                                            </tr>
-                                                            <% } %>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <% }); %>
+                                                    <% } else { %>
+                                                        <tr>
+                                                            <td colspan="8" class="px-6 py-12 text-center">
+                                                                <div class="text-gray-300 dark:text-gray-600 mb-3"><i
+                                                                        class="fa fa-clipboard-list text-4xl"></i></div>
+                                                                <span
+                                                                    class="text-sm font-medium text-gray-500 dark:text-gray-400">Archive
+                                                                    is empty. No operations recorded.</span>
+                                                            </td>
+                                                        </tr>
+                                                        <% } %>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
-                        <!-- Table End -->
-                </div>
-            </div>
 
-            <%- include('../partials/footer'); %>
+                </div>
+            </main>
         </div>
 
-        <script src="/js/script.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <script>
-            // Real-time Poll for Reports
-            let previousReportsJSON = '';
+        <%- include('../partials/footer'); %>
+
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                // Use glassmorphism theme for SweetAlert globally in this view
+                const GlassSwal = Swal.mixin({
+                    customClass: {
+                        popup: 'glass-swal',
+                        confirmButton: 'rounded-lg px-4 py-2 font-bold uppercase tracking-widest text-xs',
+                        cancelButton: 'rounded-lg px-4 py-2 font-bold uppercase tracking-widest text-xs'
+                    },
+                    background: document.documentElement.classList.contains('dark') ? 'rgba(17, 24, 39, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+                    color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#111827'
+                });
+
+                // Real-time Poll for Reports
+                let previousReportsJSON = '';
 
         // Initialize status
         <%
-                let initialStatus = 'none';
-            let jsActive = reports.find(r => r.status === 'responding' || r.status === 'pending');
-            if (jsActive) { initialStatus = jsActive.status; }
+                    let initialStatus = 'none';
+                let jsActive = reports.find(r => r.status === 'responding' || r.status === 'pending');
+                if (jsActive) { initialStatus = jsActive.status; }
         %>
-                let currentPageStatus = "<%= initialStatus %>";
+                    let currentPageStatus = "<%= initialStatus %>";
 
-            function pollReports() {
-                fetch('/api/my-reports-list')
-                    .then(res => res.json())
-                    .then(reports => {
-                        const currentJSON = JSON.stringify(reports);
-                        if (currentJSON === previousReportsJSON) return; // No change
-                        previousReportsJSON = currentJSON;
-
-                        // CHECK FOR STATUS CHANGE (Active Report Section)
-                        const latestActive = reports.find(r => r.status === 'responding' || r.status === 'pending');
-                        const newStatus = latestActive ? latestActive.status : 'none';
-
-                        if (newStatus !== currentPageStatus) {
-                            console.log("Status changed. Reloading...");
-                            location.reload();
-                            return;
-                        }
-
-                        const tbody = document.querySelector('tbody');
-                        if (reports.length === 0) {
-                            tbody.innerHTML = '<tr><td colspan="8" class="text-center">No reports found.</td></tr>';
-                            return;
-                        }
-
-                        let html = '';
-                        reports.forEach(report => {
-                            // Date
-                            const date = new Date(report.reported_at).toLocaleString();
-
-                            // Responder Info
-                            let responderInfo = '<span class="text-muted">Pending Assignment</span>';
-                            if (report.responder_name) {
-                                responderInfo = `${report.responder_name} ${report.responder_last || ''}<br><small class="text-muted">${report.station_name || 'Station'}</small>`;
-                            }
-
-                            // Status Badge
-                            let badge = '';
-                            if (report.status === 'pending') badge = '<span class="badge bg-warning text-dark">Pending</span>';
-                            else if (report.status === 'responding') badge = '<span class="badge bg-info text-dark">Responding</span>';
-                            else if (report.status === 'resolved') badge = '<span class="badge bg-success">Resolved</span>';
-                            else if (report.status === 'cancelled by user') badge = '<span class="badge bg-danger">Cancelled by User</span>';
-                            else if (report.status === 'cancelled by admin') badge = '<span class="badge bg-danger">Cancelled by Admin</span>';
-                            else badge = '<span class="badge bg-danger">Cancelled</span>';
-
-                            // Messages
-                            const msgs = `
-                            <small><strong>Resp:</strong> ${report.responder_message || '-'}</small><br>
-                            <small><strong>User:</strong> ${report.user_message || '-'}</small>
-                        `;
-
-                            // Actions
-                            let actions = '';
-                            if (report.status === 'pending') {
-                                actions = `
-                                <button onclick="markResolved(${report.id})" class="btn btn-sm btn-success">Resolve</button>
-                                <button onclick="cancelReport(${report.id})" class="btn btn-sm btn-outline-danger">Cancel</button>
-                            `;
-                            } else if (report.status === 'responding') {
-                                if (!report.user_confirmed_at) {
-                                    actions = `<button onclick="markResolved(${report.id})" class="btn btn-sm btn-success">Resolve</button>`;
-                                } else {
-                                    actions = `<span class="text-muted small">Waiting for Responder</span>`;
-                                }
-                            } else {
-                                actions = '<span class="text-muted">-</span>';
-                            }
-
-                            html += `
-                            <tr>
-                                <td>${date}</td>
-                                <td>${report.disaster_type}</td>
-                                <td>${report.location || 'Unknown'}</td>
-                                <td>${responderInfo}</td>
-                                <td>${badge}</td>
-                                <td class="text-info">${report.resolved_by || '-'}</td>
-                                <td>${msgs}</td>
-                                <td>${actions}</td>
-                            </tr>
-                        `;
-                        });
-                        tbody.innerHTML = html;
-                    })
-                    .catch(err => console.error(err));
-            }
-
-            setInterval(pollReports, 3000);
-
-            function cancelReport(id) {
-                Swal.fire({
-                    title: 'Cancel Request?',
-                    text: "Are you sure you want to cancel this pending request?",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    confirmButtonText: 'Yes, Cancel'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        fetch('/api/cancel_report', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ id: id })
-                        }).then(res => res.json()).then(data => {
-                            if (data.success) {
-                                Swal.fire('Cancelled!', 'Report cancelled.', 'success').then(() => location.reload());
-                            } else {
-                                Swal.fire('Error', 'Failed to cancel.', 'error');
-                            }
-                        });
-                    }
-                })
-            }
-
-            function markResolved(id) {
-                Swal.fire({
-                    title: 'Confirm Resolution',
-                    text: "Please provide feedback or a short message describing how you were helped:",
-                    input: 'textarea',
-                    inputPlaceholder: 'Type your feedback here...',
-                    inputAttributes: {
-                        'aria-label': 'Type your feedback here'
-                    },
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonText: 'Submit & Mark Safe',
-                    confirmButtonColor: '#198754',
-                    showLoaderOnConfirm: true,
-                    preConfirm: (feedback) => {
-                        if (!feedback) {
-                            Swal.showValidationMessage('Feedback cannot be empty');
-                        }
-                        return fetch('/api/resolve', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ incidentId: id, remarks: feedback })
-                        })
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error(response.statusText)
-                                }
-                                return response.json()
-                            })
-                            .catch(error => {
-                                Swal.showValidationMessage(
-                                    `Request failed: ${error}`
-                                )
-                            })
-                    },
-                    allowOutsideClick: () => !Swal.isLoading()
-                }).then((result) => {
-                    if (result.isConfirmed && result.value.success) {
-                        let msg = 'Thank you for your feedback. ';
-                        if (result.value.status === 'resolved') {
-                            msg += 'The report has been fully resolved.';
-                        } else {
-                            msg += 'Waiting for the responder to confirm.';
-                        }
-                        Swal.fire('Submitted!', msg, 'success').then(() => location.reload());
-                    }
-                })
-            }
-
-            // MAP TRACKING LOGIC
-            const trackMapEl = document.getElementById('trackMap');
-            if (trackMapEl) {
-                const userLat = parseFloat(document.getElementById('userLat').value);
-                const userLng = parseFloat(document.getElementById('userLng').value);
-                const responderId = document.getElementById('responderId').value;
-
-                const map = L.map('trackMap').setView([userLat, userLng], 14);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap'
-                }).addTo(map);
-
-                // User Marker
-                L.marker([userLat, userLng]).addTo(map).bindPopup("<b>Your Location</b>").openPopup();
-
-                let responderMarker;
-                let routingControl;
-
-                function updateResponderLocation() {
-                    fetch(`/api/responder-track/${responderId}`)
+                // Logic relies on UI reload on status change for cleanly re-hydrating Alpine/Tailwind state.
+                function pollReports() {
+                    fetch('/api/my-reports-list')
                         .then(res => res.json())
-                        .then(data => {
-                            if (data.latitude && data.longitude) {
-                                const rLat = data.latitude;
-                                const rLng = data.longitude;
+                        .then(reports => {
+                            const currentJSON = JSON.stringify(reports);
+                            if (currentJSON === previousReportsJSON) return; // No change
+                            previousReportsJSON = currentJSON;
 
-                                if (!responderMarker) {
-                                    const ambIcon = L.divIcon({
-                                        className: 'custom-div-icon',
-                                        html: "<div style='background-color:orange; width: 15px; height: 15px; border-radius: 50%; border: 2px solid white;'></div>",
-                                        iconSize: [20, 20]
-                                    });
-                                    responderMarker = L.marker([rLat, rLng], { icon: ambIcon }).addTo(map).bindPopup("Responder");
-                                } else {
-                                    responderMarker.setLatLng([rLat, rLng]);
-                                }
+                            // CHECK FOR STATUS CHANGE (Active Report Section)
+                            const latestActive = reports.find(r => r.status === 'responding' || r.status === 'pending');
+                            const newStatus = latestActive ? latestActive.status : 'none';
 
-                                // Route
-                                if (routingControl) {
-                                    routingControl.setWaypoints([
-                                        L.latLng(rLat, rLng),
-                                        L.latLng(userLat, userLng)
-                                    ]);
-                                } else {
-                                    routingControl = L.Routing.control({
-                                        waypoints: [
-                                            L.latLng(rLat, rLng), // Start at Responder
-                                            L.latLng(userLat, userLng) // End at User
-                                        ],
-                                        lineOptions: { styles: [{ color: '#00d400', opacity: 0.9, weight: 6 }] },
-                                        show: false,
-                                        addWaypoints: false,
-                                        draggableWaypoints: false,
-                                        createMarker: function () { return null; }
-                                    }).addTo(map);
-                                }
+                            if (newStatus !== currentPageStatus) {
+                                console.log("Status changed. Reloading...");
+                                location.reload();
+                                return;
                             }
+
+                            // We only update the table dynamically here, active section is handled by reload/checkStatus
                         })
-                        .catch(err => console.error("Tracking error", err));
+                        .catch(err => console.error(err));
                 }
 
-                // Start tracking
-                updateResponderLocation();
-                setInterval(updateResponderLocation, 3000); // 3s refresh (Optimized for Rate Limit)
-            }
-        </script>
-        <script>
-            // Real-time Status Update
-            let previousStatus = null;
-            let mapInstance = null;
+                setInterval(pollReports, 3000);
 
-            function updateUI(data) {
-                const container = document.getElementById('activeReportContainer');
-                if (!data.exists) {
-                    container.innerHTML = ''; // Clear if resolved/cancelled
-                    return;
-                }
-
-                // Create Container if missing (First Load)
-                if (!container.innerHTML.trim()) {
-                    location.reload(); // Simplest way to hydrate initial layout
-                    return;
-                }
-
-                // Update Status Header
-                const statusText = document.getElementById('statusText');
-                if (statusText) {
-                    statusText.innerText = data.status.toUpperCase();
-                    statusText.className = data.status === 'responding' ? 'text-warning' : 'text-danger';
-                }
-
-                const statusIcon = document.getElementById('statusIcon');
-                if (statusIcon) {
-                    statusIcon.className = `fa ${data.status === 'responding' ? 'fa-ambulance' : 'fa-exclamation-circle'} me-2`;
-                }
-
-                const borderBox = document.getElementById('statusBoxBorder');
-                if (borderBox) {
-                    borderBox.classList.remove('border-danger', 'border-warning');
-                    borderBox.classList.add(data.status === 'responding' ? 'border-warning' : 'border-danger');
-                }
-
-                // Update Action Button
-                const actionContainer = document.getElementById('actionButtonContainer');
-                if (actionContainer) {
-                    if (data.status === 'responding' && data.user_confirmed_at) {
-                        actionContainer.innerHTML = '<span class="badge bg-info p-2">Waiting for Responder Confirmation</span>';
-                    } else if (data.status === 'responding') {
-                        actionContainer.innerHTML = `<button class="btn btn-success fw-bold blink-bg" onclick="markResolved(${data.id})"><i class="fa fa-check-circle me-2"></i>I AM SAFE / RESOLVED</button>`;
-                    } else {
-                        actionContainer.innerHTML = '<button class="btn btn-outline-danger" disabled>Cannot Cancel (Finding Responder...)</button>';
-                    }
-                }
-
-                // Switch Content View (Pending to Responding)
-                const dynamicContent = document.getElementById('dynamicContent');
-                if (dynamicContent) {
-                    if (data.status === 'responding') {
-                        // Check if we are already showing responding view
-                        if (!document.getElementById('trackMap')) {
-                            // Inject Responding HTML
-                            dynamicContent.innerHTML = `
-                        <div class="row g-3">
-                             <div class="col-md-4">
-                                 <div class="p-3 bg-dark rounded">
-                                     <small class="text-muted">RESPONDER DETAILS</small>
-                                     <h5 class="text-white mb-1" id="respName">${data.responder.name}</h5>
-                                     <p class="mb-0 text-white"><i class="fa fa-envelope me-2"></i><span id="respEmail">${data.responder.email || 'No email'}</span></p>
-                                     <p class="mb-0 text-warning"><i class="fa fa-phone me-2"></i><span id="respContact">${data.responder.contact || 'No contact'}</span></p>
-                                 </div>
-                             </div>
-                             <div class="col-md-8">
-                                 <div id="trackMap" style="height: 350px; width: 100%; border-radius: 8px;"></div>
-                             </div>
-                        </div>
-                        <input type="hidden" id="activeReportId" value="${data.id}">
-                        <input type="hidden" id="userLat" value="${data.location.lat}">
-                        <input type="hidden" id="userLng" value="${data.location.lng}">
-                        <input type="hidden" id="responderId" value="${data.responder.id}">
-                       `;
-
-                            // Initialize Map immediately after injection
-                            initTrackMap(data.location.lat, data.location.lng, data.responder.id);
-                        } else {
-                            // Just update Text
-                            const rName = document.getElementById('respName');
-                            if (rName) rName.innerText = data.responder.name;
-                            const rEmail = document.getElementById('respEmail');
-                            if (rEmail) rEmail.innerText = data.responder.email || 'No email';
-                            const rContact = document.getElementById('respContact');
-                            if (rContact) rContact.innerText = data.responder.contact || 'No contact';
-
-                            // Map updates handled by its own loop, just ensure ID matches
-                        }
-                    } else {
-                        // Pending View
-                        if (document.getElementById('trackMap')) {
-                            // Revert to Pending
-                            dynamicContent.innerHTML = `
-                            <div class="alert alert-dark mb-0 text-center">
-                                <h5><i class="fa fa-spinner fa-spin me-2"></i>Contacting nearest units...</h5>
-                                <p>Please stay in a safe location. Do not panic.</p>
-                            </div>
-                            <input type="hidden" id="activeReportId" value="${data.id}">
-                        `;
-                        }
-                    }
-                }
-            }
-
-            // Map Initialization Function (extracted)
-            function initTrackMap(userLat, userLng, responderId) {
-                if (mapInstance) { mapInstance.off(); mapInstance.remove(); }
-
-                const mapEl = document.getElementById('trackMap');
-                if (!mapEl) return;
-
-                mapInstance = L.map('trackMap').setView([userLat, userLng], 14);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapInstance);
-                L.marker([userLat, userLng]).addTo(mapInstance).bindPopup("<b>Your Location</b>").openPopup();
-
-                // Start tracking helper
-                trackResponderOnMap(mapInstance, responderId, userLat, userLng);
-            }
-
-            let routingControl = null;
-            let responderMarker = null;
-
-            function trackResponderOnMap(map, rId, uLat, uLng) {
-                function pollLoc() {
-                    fetch(`/api/responder-track/${rId}`)
-                        .then(res => res.json())
-                        .then(d => {
-                            if (d.latitude && d.longitude) {
-                                if (!responderMarker) {
-                                    const icon = L.divIcon({
-                                        className: 'custom-div-icon',
-                                        html: "<div style='background-color:orange; width: 15px; height: 15px; border-radius: 50%; border: 2px solid white;'></div>",
-                                        iconSize: [20, 20]
-                                    });
-                                    responderMarker = L.marker([d.latitude, d.longitude], { icon: icon }).addTo(map).bindPopup("Responder");
+                function cancelReport(id) {
+                    GlassSwal.fire({
+                        title: '<span class="text-xl font-black uppercase tracking-tight text-red-500">Abort Operation?</span>',
+                        html: '<span class="text-sm font-medium">Are you certain you wish to cancel this dispatch request?</span>',
+                        icon: 'warning',
+                        iconColor: '#ef4444',
+                        showCancelButton: true,
+                        confirmButtonColor: '#ef4444',
+                        cancelButtonColor: '#6b7280',
+                        confirmButtonText: 'CONFIRM ABORT',
+                        cancelButtonText: 'KEEP ACTIVE'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch('/api/cancel_report', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ id: id })
+                            }).then(res => res.json()).then(data => {
+                                if (data.success) {
+                                    GlassSwal.fire({
+                                        icon: 'success',
+                                        title: '<span class="font-black">ABORTED</span>',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    }).then(() => location.reload());
                                 } else {
-                                    responderMarker.setLatLng([d.latitude, d.longitude]);
+                                    GlassSwal.fire('Error', 'Failed to cancel.', 'error');
                                 }
-
-                                if (routingControl) {
-                                    routingControl.setWaypoints([L.latLng(d.latitude, d.longitude), L.latLng(uLat, uLng)]);
-                                } else {
-                                    routingControl = L.Routing.control({
-                                        waypoints: [L.latLng(d.latitude, d.longitude), L.latLng(uLat, uLng)],
-                                        lineOptions: { styles: [{ color: '#00d400', opacity: 0.9, weight: 6 }] },
-                                        show: false, addWaypoints: false, draggableWaypoints: false, createMarker: function () { return null; }
-                                    }).addTo(map);
-                                }
-                            }
-                        });
-                }
-                pollLoc();
-                setInterval(pollLoc, 2000);
-            }
-
-            // History Polling
-            let previousHistoryJSON = '';
-
-            function updateHistoryTable() {
-                fetch('/api/user/reports-history?t=' + Date.now())
-                    .then(res => res.json())
-                    .then(data => {
-                        const currentJSON = JSON.stringify(data);
-                        if (currentJSON === previousHistoryJSON) return;
-                        previousHistoryJSON = currentJSON;
-
-                        const tbody = document.getElementById('historyTableBody');
-                        if (!tbody) return;
-
-                        if (data.length === 0) {
-                            tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">No reports found.</td></tr>';
-                            return;
-                        }
-
-                        tbody.innerHTML = data.map(r => {
-                            let statusBadge = '';
-                            if (r.status === 'pending') statusBadge = '<span class="badge bg-warning text-dark">Pending</span>';
-                            else if (r.status === 'responding') statusBadge = '<span class="badge bg-info text-dark">Responding</span>';
-                            else if (r.status === 'resolved') statusBadge = '<span class="badge bg-success">Resolved</span>';
-                            else if (r.status.includes('cancelled')) statusBadge = '<span class="badge bg-danger text-white">' + r.status + '</span>';
-
-                            let actionBtn = '';
-                            if (r.status === 'pending') {
-                                actionBtn = `<button class="btn btn-sm btn-outline-danger" disabled>Finding Responder...</button>`;
-                            } else if (r.status === 'responding' && !r.user_confirmed_at) {
-                                actionBtn = `<button class="btn btn-sm btn-success fw-bold" onclick="markResolved(${r.id})">Mark Safe</button>`;
-                            } else if (r.status === 'responding') {
-                                actionBtn = `<span class="badge bg-info">Processing</span>`;
-                            }
-
-                            return `
-                        <tr>
-                            <td>${new Date(r.reported_at).toLocaleString()}</td>
-                            <td>${r.disaster_type}</td>
-                            <td>${r.location || 'Unknown'}</td>
-                            <td>${r.responder_name ? (r.responder_name + '<br><small class="text-muted">' + (r.station_name || 'Station') + '</small>') : '<span class="text-muted">Pending Assignment</span>'}</td>
-                            <td>${statusBadge}</td>
-                            <td class="text-info">${r.resolved_by || '-'}</td>
-                            <td>${r.resolution_remarks ? '<small>' + r.resolution_remarks + '</small>' : '-'}</td>
-                            <td>${actionBtn}</td>
-                        </tr>
-                    `;
-                        }).join('');
-                    })
-                    .catch(e => console.error("History Poll Error", e));
-            }
-
-            // Main Polling Loop
-            function checkStatus() {
-                // Poll Active Report
-                fetch('/api/user/active-report?t=' + Date.now())
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Update Active UI
-                            if (document.getElementById('activeReportContainer')) {
-                                updateUI(data); // Handles existence and non-existence
-                            }
-                            previousStatus = data.status || 'none';
+                            });
                         }
                     })
-                    .catch(e => console.error("Poll Error", e));
+                }
 
-                // Poll History
-                updateHistoryTable();
-            }
+                function markResolved(id) {
+                    GlassSwal.fire({
+                        title: '<span class="text-xl font-black uppercase tracking-tight text-emerald-500">Confirm Resolution</span>',
+                        html: '<span class="text-sm font-medium text-gray-500 dark:text-gray-400">Provide final debriefing remarks for the operational log:</span>',
+                        input: 'textarea',
+                        inputPlaceholder: 'Type your feedback here...',
+                        inputAttributes: { 'aria-label': 'Type your feedback here' },
+                        icon: 'question',
+                        iconColor: '#10b981',
+                        showCancelButton: true,
+                        confirmButtonText: 'SUBMIT DEBRIEF',
+                        cancelButtonText: 'CANCEL',
+                        confirmButtonColor: '#10b981',
+                        cancelButtonColor: '#6b7280',
+                        showLoaderOnConfirm: true,
+                        customClass: Object.assign({}, GlassSwal.params.customClass, {
+                            input: 'bg-white/50 dark:bg-gray-800/50 border border-gray-300 dark:border-gray-600 rounded-xl text-sm font-medium focus:ring-emerald-500 focus:border-emerald-500'
+                        }),
+                        preConfirm: (feedback) => {
+                            if (!feedback) {
+                                Swal.showValidationMessage('Feedback cannot be empty');
+                                return false;
+                            }
+                            return fetch('/api/resolve', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ incidentId: id, remarks: feedback })
+                            })
+                                .then(response => {
+                                    if (!response.ok) throw new Error(response.statusText)
+                                    return response.json()
+                                })
+                                .catch(error => {
+                                    Swal.showValidationMessage(`Request failed: ${error}`)
+                                })
+                        },
+                        allowOutsideClick: () => !Swal.isLoading()
+                    }).then((result) => {
+                        if (result.isConfirmed && result.value.success) {
+                            let msg = result.value.status === 'resolved'
+                                ? 'Operation fully resolved and archived.'
+                                : 'Awaiting responder counterpart confirmation.';
+                            GlassSwal.fire({
+                                icon: 'success',
+                                title: '<span class="font-black">LOGGED</span>',
+                                html: `<span class="text-sm font-medium text-gray-500">${msg}</span>`,
+                                confirmButtonColor: '#10b981'
+                            }).then(() => location.reload());
+                        }
+                    })
+                }
 
-            setInterval(checkStatus, 2000);
+                // MAP TRACKING LOGIC
+                let trackMapEl = document.getElementById('trackMap');
+                let mapInstance = null;
+                let responderMarker = null;
+                let routingControl = null;
 
-            // Init map on load if already present
-            if (document.getElementById('trackMap')) {
-                const uLt = parseFloat(document.getElementById('userLat').value);
-                const uLn = parseFloat(document.getElementById('userLng').value);
-                const rId = document.getElementById('responderId').value;
-                initTrackMap(uLt, uLn, rId);
-            }
+                function initTrackMap(userLat, userLng, responderId) {
+                    if (mapInstance) { mapInstance.off(); mapInstance.remove(); }
 
-        </script>
+                    trackMapEl = document.getElementById('trackMap');
+                    if (!trackMapEl) return;
+
+                    mapInstance = L.map('trackMap', { zoomControl: false }).setView([userLat, userLng], 14);
+                    L.control.zoom({ position: 'bottomright' }).addTo(mapInstance);
+
+                    // Subtle darkish map tiles matching the theme better
+                    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                        attribution: '&copy; OpenStreetMap | Carto'
+                    }).addTo(mapInstance);
+
+                    // User Marker - Pulse effect
+                    const userIconHtml = `
+                <div class="relative flex h-6 w-6">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-6 w-6 border-2 border-white bg-indigo-500 flex items-center justify-center">
+                        <i class="fa fa-user" style="font-size: 10px; color: white;"></i>
+                    </span>
+                </div>
+            `;
+                    const uIcon = L.divIcon({ className: 'bg-transparent', html: userIconHtml, iconSize: [24, 24], iconAnchor: [12, 12] });
+                    L.marker([userLat, userLng], { icon: uIcon }).addTo(mapInstance).bindPopup("<b class='font-bold text-xs uppercase'>Your Signal</b>", { className: 'glass-popup' });
+
+                    trackResponderOnMap(mapInstance, responderId, userLat, userLng);
+                }
+
+                function trackResponderOnMap(map, rId, uLat, uLng) {
+                    function pollLoc() {
+                        fetch(`/api/responder-track/${rId}`)
+                            .then(res => res.json())
+                            .then(d => {
+                                if (d.latitude && d.longitude) {
+                                    if (!responderMarker) {
+                                        const respIconHtml = `
+                                    <div class="relative flex h-8 w-8">
+                                        <span class="absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-20 animate-ping"></span>
+                                        <span class="relative shadow-lg inline-flex rounded-full h-8 w-8 border-2 border-white bg-yellow-500 flex items-center justify-center pt-0.5">
+                                            <i class="fa fa-ambulance shadow-sm" style="font-size: 14px; color: white;"></i>
+                                        </span>
+                                    </div>
+                                `;
+                                        const icon = L.divIcon({ className: 'bg-transparent', html: respIconHtml, iconSize: [32, 32], iconAnchor: [16, 16] });
+                                        responderMarker = L.marker([d.latitude, d.longitude], { icon: icon, zIndexOffset: 1000 }).addTo(map).bindPopup("<b class='font-bold text-xs uppercase'>Operative inbound</b>", { className: 'glass-popup' });
+                                    } else {
+                                        responderMarker.setLatLng([d.latitude, d.longitude]);
+                                    }
+
+                                    if (routingControl) {
+                                        routingControl.setWaypoints([L.latLng(d.latitude, d.longitude), L.latLng(uLat, uLng)]);
+                                    } else {
+                                        routingControl = L.Routing.control({
+                                            waypoints: [L.latLng(d.latitude, d.longitude), L.latLng(uLat, uLng)],
+                                            lineOptions: { styles: [{ color: '#f59e0b', opacity: 0.8, weight: 5, dashArray: '10, 10', className: 'animate-route' }] },
+                                            show: false, addWaypoints: false, draggableWaypoints: false, fitSelectedRoutes: false,
+                                            createMarker: function () { return null; }
+                                        }).addTo(map);
+                                    }
+                                }
+                            }).catch(e => console.warn("Tracking:", e));
+                    }
+                    pollLoc();
+                    setInterval(pollLoc, 3000);
+                }
+
+                // Initialize map on load if container exists
+                if (document.getElementById('trackMap')) {
+                    const uLt = parseFloat(document.getElementById('userLat').value);
+                    const uLn = parseFloat(document.getElementById('userLng').value);
+                    const rId = document.getElementById('responderId').value;
+                    initTrackMap(uLt, uLn, rId);
+                }
+            </script>
 </body>
 
 </html>

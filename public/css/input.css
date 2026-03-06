@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply antialiased transition-colors duration-300;
+  }
+}
+
+@layer components {
+  /* Core Glassmorphic Panel */
+  .glass-panel {
+    @apply bg-white/70 backdrop-blur-md border border-white/20 shadow-lg rounded-2xl;
+  }
+  
+  .dark .glass-panel {
+    @apply bg-gray-900/60 backdrop-blur-md border border-white/10 shadow-gray-900/50;
+  }
+
+  /* Glassmorphic Interactive Card */
+  .glass-card {
+    @apply glass-panel transition-all duration-300 hover:-translate-y-1 hover:shadow-xl;
+  }
+  
+  /* Glass Navbar */
+  .glass-nav {
+    @apply sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-white/20 shadow-sm;
+  }
+
+  .dark .glass-nav {
+    @apply bg-gray-900/80 backdrop-blur-lg border-b border-white/5 shadow-md;
+  }
+
+  /* Glass Buttons */
+  .btn-glass {
+    @apply px-4 py-2 font-medium tracking-wide text-gray-800 bg-white/50 backdrop-blur-sm border border-white/30 rounded-lg shadow-sm
+    hover:bg-white/80 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 active:scale-95;
+  }
+
+  .dark .btn-glass {
+    @apply text-gray-100 bg-gray-800/50 border-gray-700/50 hover:bg-gray-700/80 focus:ring-indigo-400 focus:ring-offset-gray-900;
+  }
+
+  .btn-glass-primary {
+    @apply btn-glass text-white bg-indigo-600/80 border-indigo-500/50 hover:bg-indigo-600/90;
+  }
+  
+  .dark .btn-glass-primary {
+    @apply bg-indigo-500/80 border-indigo-400/50 hover:bg-indigo-500/90;
+  }
+
+  /* Glass Inputs */
+  .input-glass {
+    @apply w-full px-4 py-2 bg-white/40 border border-white/30 rounded-lg backdrop-blur-sm 
+    focus:outline-none focus:ring-2 focus:ring-indigo-500/50 placeholder-gray-500 text-gray-800 transition-all duration-200;
+  }
+
+  .dark .input-glass {
+    @apply bg-gray-800/40 border-gray-700/50 text-gray-100 placeholder-gray-400 focus:ring-indigo-400/50;
+  }
+}
+
+/* Base gradients to support the glass look */
+.bg-gradient-glass-light {
+  background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+}
+
+.bg-gradient-glass-dark {
+  background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+}

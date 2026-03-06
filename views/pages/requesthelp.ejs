@@ -5,79 +5,113 @@
   <%- include('../partials/head'); %>
 </head>
 
-<body class="app">
+<body
+  class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
   <%- include('../partials/page-start'); %>
 
-    <header class="app-header fixed-top">
-      <%- include('../partials/user-navbar'); %>
-        <%- include('../partials/user-sidebar'); %>
+    <header class="sticky top-0 z-50">
+      <%- include('../partials/user-navbar', { currentPage: 'requesthelp' }); %>
     </header>
 
-    <div class="app-wrapper">
-      <div class="app-content pt-3 p-md-3 p-lg-4">
-        <div class="container-xl">
-          <div class="row g-3 mb-4 align-items-center justify-content-between">
-            <div class="col-auto">
-              <h1 class="app-page-title mb-0">Help Center Dashboard</h1>
+    <div class="flex flex-1 overflow-hidden relative">
+      <aside class="z-40">
+        <%- include('../partials/user-sidebar', { currentPage: 'requesthelp' }); %>
+      </aside>
+
+      <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8 overflow-y-auto w-full relative">
+        <div class="max-w-4xl mx-auto space-y-6">
+
+          <div class="flex items-center gap-3 px-2 mb-2">
+            <div
+              class="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 flex items-center justify-center">
+              <i class="fa fa-hand-holding-medical text-xl"></i>
             </div>
+            <h1 class="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight uppercase">Medical Assistance
+            </h1>
           </div>
 
-          <div class="row g-4 mb-4">
-            <div class="col-12 col-lg-8 mx-auto">
-              <div class="app-card app-card-settings shadow-sm p-4">
-                <div class="app-card-header p-3 border-bottom-0">
-                  <h4 class="app-card-title">Request Medical Assistance</h4>
-                </div>
-                <div class="app-card-body">
+          <div class="glass-panel overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-white/40 dark:bg-gray-900/40">
+              <h2 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">Request Form</h2>
+            </div>
 
-                  <form action="/api/med-request" method="POST">
-                    <div class="mb-4">
-                      <label for="address" class="form-label">Current Location Address</label>
-                      <input type="text" class="form-control bg-light" id="address" name="address" readonly>
-                    </div>
-
-                    <div class="mb-4">
-                      <label class="form-label">Select Location on Map</label>
-                      <div id="map" class="rounded border mb-2" style="height: 300px; width: 100%;"></div>
-                      <small class="text-muted d-block"><i class="fa fa-info-circle me-1"></i>Click on the map to select
-                        your exact location for the request.</small>
-                    </div>
-
-                    <div class="row g-3">
-                      <div class="col-md-6">
-                        <label for="latitude" class="form-label">Latitude</label>
-                        <input type="text" class="form-control bg-light" id="latitude" name="latitude" required
-                          readonly>
-                      </div>
-                      <div class="col-md-6">
-                        <label for="longitude" class="form-label">Longitude</label>
-                        <input type="text" class="form-control bg-light" id="longitude" name="longitude" required
-                          readonly>
-                      </div>
-                    </div>
-
-                    <div class="mt-4 pt-3 border-top text-end">
-                      <button type="submit" class="btn app-btn-primary theme-btn w-100 py-2">
-                        <i class="fa fa-paper-plane me-2"></i>Submit Request
-                      </button>
-                    </div>
-                  </form>
-
-                </div>
+            <div class="p-6 md:p-8 relative">
+              <!-- BG Logo fade -->
+              <div
+                class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] dark:opacity-[0.01]">
+                <i class="fa fa-briefcase-medical" style="font-size: 20rem;"></i>
               </div>
+
+              <form action="/api/med-request" method="POST" class="relative z-10 space-y-6 max-w-2xl mx-auto">
+
+                <div class="space-y-2">
+                  <label for="address"
+                    class="block text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 pl-1">
+                    Current Location Address
+                  </label>
+                  <div class="relative group">
+                    <i
+                      class="fa fa-building absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-purple-500 transition-colors"></i>
+                    <input type="text" id="address" name="address"
+                      class="input-glass pl-11 bg-gray-50/50 dark:bg-gray-800/30 cursor-not-allowed text-sm" readonly
+                      placeholder="Waiting for location selection...">
+                  </div>
+                </div>
+
+                <div class="space-y-2">
+                  <label
+                    class="block text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 pl-1">
+                    Select Coordinates on Map
+                  </label>
+                  <div
+                    class="bg-white/50 dark:bg-gray-800/50 p-1 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-inner">
+                    <!-- Map Container -->
+                    <div id="map"
+                      class="w-full h-[300px] rounded-xl z-0 overflow-hidden relative border border-gray-100 dark:border-gray-800">
+                    </div>
+                  </div>
+                  <p class="text-xs text-gray-500 dark:text-gray-400 font-medium pl-1 flex items-center gap-1.5 mt-2">
+                    <i class="fa fa-info-circle text-purple-500 dark:text-purple-400"></i> Click on the map to pinpoint
+                    your exact required extraction point.
+                  </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div class="space-y-2">
+                    <label for="latitude"
+                      class="block text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 pl-1">Latitude</label>
+                    <input type="text" id="latitude" name="latitude"
+                      class="input-glass font-mono text-xs bg-gray-50/50 dark:bg-gray-800/30 cursor-not-allowed"
+                      required readonly placeholder="0.000000">
+                  </div>
+                  <div class="space-y-2">
+                    <label for="longitude"
+                      class="block text-[10px] font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 pl-1">Longitude</label>
+                    <input type="text" id="longitude" name="longitude"
+                      class="input-glass font-mono text-xs bg-gray-50/50 dark:bg-gray-800/30 cursor-not-allowed"
+                      required readonly placeholder="0.000000">
+                  </div>
+                </div>
+
+                <div class="pt-6 border-t border-gray-100 dark:border-gray-800">
+                  <button type="submit"
+                    class="w-full py-3.5 bg-gradient-to-r from-purple-600 to-purple-500 hover:from-purple-500 hover:to-purple-400 text-white font-black text-sm uppercase tracking-widest rounded-xl shadow-lg shadow-purple-500/30 border border-purple-500/50 transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                    <i class="fa fa-paper-plane mr-1"></i> SUBMIT REQUEST
+                  </button>
+                </div>
+
+              </form>
             </div>
           </div>
-        </div>
-      </div>
 
-      <%- include('../partials/footer'); %>
+        </div>
+      </main>
     </div>
 
-    <%- include('../partials/page-end'); %>
+    <%- include('../partials/footer'); %>
 
       <!-- External Scripts for Map -->
-      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
       <script
         src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-routing-machine/3.2.12/leaflet-routing-machine.min.js"></script>
       <script src="/js/script.js"></script>

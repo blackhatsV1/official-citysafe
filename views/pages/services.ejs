@@ -5,94 +5,199 @@
     <%- include('../partials/head'); %>
 </head>
 
-<body class="app">
+<body
+    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
     <%- include('../partials/page-start'); %>
-        <header class="app-header fixed-top">
-            <%- include('../partials/visitor-navbar'); %>
-                <%- include('../partials/visitor-sidebar'); %>
+
+        <header class="sticky top-0 z-50">
+            <%- include('../partials/visitor-navbar', { currentPage: 'services' }); %>
         </header>
 
-        <div class="app-wrapper">
-            <div class="app-content pt-3 p-md-3 p-lg-4">
-                <div class="container-xl">
-                    <h1 class="app-page-title">Our Services</h1>
+        <div class="flex flex-1 overflow-hidden relative">
+            <aside class="z-40">
+                <%- include('../partials/visitor-sidebar', { currentPage: 'services' }); %>
+            </aside>
 
-                    <div class="row g-4 mb-4">
-                        <div class="col-12 col-lg-8">
-                            <div class="app-card app-card-settings shadow-sm p-4">
-                                <div class="app-card-body">
-                                    <div class="list-group list-group-flush">
-                                        <div class="list-group-item bg-transparent px-0 py-3 border-light">
-                                            <h5 class="text-primary mb-1">Real-time Information</h5>
-                                            <p class="text-muted mb-0">Disaster-related updates through specific weather
-                                                tracking and real-time status.</p>
-                                        </div>
-                                        <div class="list-group-item bg-transparent px-0 py-3 border-light">
-                                            <h5 class="text-primary mb-1">Localized Notifications</h5>
-                                            <p class="text-muted mb-0">Relevant alerts and updates based on the user's
-                                                active report location.</p>
-                                        </div>
-                                        <div class="list-group-item bg-transparent px-0 py-3 border-light">
-                                            <h5 class="text-primary mb-1">Emergency Alert</h5>
-                                            <p class="text-muted mb-0">Quickly send SOS requests with location to nearby
-                                                responders.</p>
-                                        </div>
-                                        <div class="list-group-item bg-transparent px-0 py-3 border-light">
-                                            <h5 class="text-primary mb-1">Relief Coordination</h5>
-                                            <p class="text-muted mb-0">Connects responders with active incidents to
-                                                efficiently manage relief.</p>
-                                        </div>
-                                        <div class="list-group-item bg-transparent px-0 py-3 border-light">
-                                            <h5 class="text-primary mb-1">Mapping Service</h5>
-                                            <p class="text-muted mb-0">Visualizes incidents, nearby stations, and
-                                                responders for situational awareness.</p>
-                                        </div>
-                                        <div class="list-group-item bg-transparent px-0 py-3 border-0">
-                                            <h5 class="text-primary mb-1">Survival Guidelines</h5>
-                                            <p class="text-muted mb-0">Essential survival information and guides for
-                                                various disaster scenarios.</p>
-                                        </div>
+            <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8 overflow-y-auto w-full relative">
+                <div class="max-w-6xl mx-auto space-y-8">
+
+                    <div class="text-center mb-10">
+                        <h1 class="text-4xl font-black text-gray-900 dark:text-white tracking-tight uppercase mb-2">
+                            Platform Capabilities</h1>
+                        <p class="text-gray-600 dark:text-gray-400">Discover the comprehensive suite of features
+                            designed to ensure your safety and readiness.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <!-- Features List -->
+                        <div
+                            class="col-span-1 lg:col-span-2 glass-panel overflow-hidden border-t-4 border-indigo-500 relative flex flex-col h-full shadow-xl">
+                            <div
+                                class="absolute -top-10 -right-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none">
+                            </div>
+                            <div
+                                class="px-8 py-6 border-b border-indigo-100 dark:border-indigo-900/30 bg-indigo-50/50 dark:bg-indigo-900/10 flex items-center gap-3 relative z-10">
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                                    <i class="fa fa-layer-group border-0"></i>
+                                </div>
+                                <h4 class="text-xl font-bold text-gray-800 dark:text-gray-100 m-0">Core Services</h4>
+                            </div>
+
+                            <div class="p-4 sm:p-6 md:p-8 relative z-10 flex-1 space-y-4">
+
+                                <!-- Feature Item -->
+                                <div
+                                    class="group p-5 bg-white/40 dark:bg-gray-800/40 rounded-2xl border border-gray-100 dark:border-gray-700/50 hover:border-indigo-300 dark:hover:border-indigo-700 transition-all hover:shadow-lg hover:-translate-y-1 flex gap-4 items-start">
+                                    <div
+                                        class="w-10 h-10 shrink-0 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center text-lg mt-1 transition-colors group-hover:bg-indigo-500 group-hover:text-white">
+                                        <i class="fa fa-satellite-dish"></i>
+                                    </div>
+                                    <div>
+                                        <h5
+                                            class="text-base font-black text-gray-900 dark:text-white uppercase tracking-tight mb-1">
+                                            Real-time Information</h5>
+                                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400 m-0">
+                                            Disaster-related updates through specific weather tracking and real-time
+                                            status.</p>
                                     </div>
                                 </div>
+
+                                <div
+                                    class="group p-5 bg-white/40 dark:bg-gray-800/40 rounded-2xl border border-gray-100 dark:border-gray-700/50 hover:border-blue-300 dark:hover:border-blue-700 transition-all hover:shadow-lg hover:-translate-y-1 flex gap-4 items-start">
+                                    <div
+                                        class="w-10 h-10 shrink-0 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center text-lg mt-1 transition-colors group-hover:bg-blue-500 group-hover:text-white">
+                                        <i class="fa fa-bell"></i>
+                                    </div>
+                                    <div>
+                                        <h5
+                                            class="text-base font-black text-gray-900 dark:text-white uppercase tracking-tight mb-1">
+                                            Localized Notifications</h5>
+                                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400 m-0">Relevant
+                                            alerts and updates based on the user's active report location.</p>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="group p-5 bg-white/40 dark:bg-gray-800/40 rounded-2xl border border-gray-100 dark:border-gray-700/50 hover:border-rose-300 dark:hover:border-rose-700 transition-all hover:shadow-lg hover:-translate-y-1 flex gap-4 items-start">
+                                    <div
+                                        class="w-10 h-10 shrink-0 rounded-full bg-rose-100 dark:bg-rose-900/40 text-rose-600 dark:text-rose-400 flex items-center justify-center text-lg mt-1 transition-colors group-hover:bg-rose-500 group-hover:text-white">
+                                        <i class="fa fa-triangle-exclamation"></i>
+                                    </div>
+                                    <div>
+                                        <h5
+                                            class="text-base font-black text-gray-900 dark:text-white uppercase tracking-tight mb-1">
+                                            Emergency Alert</h5>
+                                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400 m-0">Quickly send
+                                            SOS requests with precise GPS location to nearby responders.</p>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="group p-5 bg-white/40 dark:bg-gray-800/40 rounded-2xl border border-gray-100 dark:border-gray-700/50 hover:border-emerald-300 dark:hover:border-emerald-700 transition-all hover:shadow-lg hover:-translate-y-1 flex gap-4 items-start">
+                                    <div
+                                        class="w-10 h-10 shrink-0 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center text-lg mt-1 transition-colors group-hover:bg-emerald-500 group-hover:text-white">
+                                        <i class="fa fa-hand-holding-medical"></i>
+                                    </div>
+                                    <div>
+                                        <h5
+                                            class="text-base font-black text-gray-900 dark:text-white uppercase tracking-tight mb-1">
+                                            Relief Coordination</h5>
+                                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400 m-0">Connects
+                                            responders with active incidents to efficiently manage relief operations.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="group p-5 bg-white/40 dark:bg-gray-800/40 rounded-2xl border border-gray-100 dark:border-gray-700/50 hover:border-amber-300 dark:hover:border-amber-700 transition-all hover:shadow-lg hover:-translate-y-1 flex gap-4 items-start">
+                                    <div
+                                        class="w-10 h-10 shrink-0 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center text-lg mt-1 transition-colors group-hover:bg-amber-500 group-hover:text-white">
+                                        <i class="fa fa-map-location-dot"></i>
+                                    </div>
+                                    <div>
+                                        <h5
+                                            class="text-base font-black text-gray-900 dark:text-white uppercase tracking-tight mb-1">
+                                            Mapping Service</h5>
+                                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400 m-0">Visualizes
+                                            incidents, nearby stations, and responders for critical situational
+                                            awareness.</p>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="group p-5 bg-white/40 dark:bg-gray-800/40 rounded-2xl border border-gray-100 dark:border-gray-700/50 hover:border-cyan-300 dark:hover:border-cyan-700 transition-all hover:shadow-lg hover:-translate-y-1 flex gap-4 items-start">
+                                    <div
+                                        class="w-10 h-10 shrink-0 rounded-full bg-cyan-100 dark:bg-cyan-900/40 text-cyan-600 dark:text-cyan-400 flex items-center justify-center text-lg mt-1 transition-colors group-hover:bg-cyan-500 group-hover:text-white">
+                                        <i class="fa fa-book-medical"></i>
+                                    </div>
+                                    <div>
+                                        <h5
+                                            class="text-base font-black text-gray-900 dark:text-white uppercase tracking-tight mb-1">
+                                            Survival Guidelines</h5>
+                                        <p class="text-sm font-medium text-gray-600 dark:text-gray-400 m-0">Essential
+                                            survival information and practical guides for various disaster scenarios.
+                                        </p>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
 
-                        <div class="col-12 col-lg-4">
-                            <div class="app-card app-card-settings shadow-sm p-4">
-                                <div class="app-card-header p-0 border-0 mb-3">
-                                    <h4 class="app-card-title">The Development Team</h4>
+                        <!-- Development Team -->
+                        <div
+                            class="col-span-1 glass-panel flex flex-col border-t-4 border-emerald-500 h-fit sticky top-24">
+                            <div
+                                class="px-6 py-5 border-b border-emerald-100 dark:border-emerald-900/30 bg-emerald-50/30 dark:bg-emerald-900/10 flex items-center gap-3">
+                                <i class="fa fa-users-gear text-emerald-500 text-xl"></i>
+                                <h4
+                                    class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 m-0 flex items-center gap-2">
+                                    Development Team
+                                </h4>
+                            </div>
+                            <div class="p-6 space-y-4">
+
+                                <div
+                                    class="flex flex-col items-center justify-center p-4 bg-white/40 dark:bg-gray-800/40 rounded-xl border border-gray-100 dark:border-gray-700 text-center">
+                                    <h6 class="font-black text-gray-900 dark:text-white uppercase tracking-tight mb-1">
+                                        Jayrold Tabalina</h6>
+                                    <span
+                                        class="px-2 py-0.5 bg-indigo-100 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-400 rounded text-[10px] font-bold uppercase tracking-widest">Lead
+                                        Programmer</span>
                                 </div>
-                                <div class="app-card-body">
-                                    <div class="mb-4 text-center">
-                                        <div class="p-3 bg-light rounded border mb-3">
-                                            <h6 class="mb-1">Jayrold Tabalina</h6>
-                                            <small class="text-primary">Programmer</small>
-                                        </div>
-                                        <div class="p-3 bg-light rounded border mb-3">
-                                            <h6 class="mb-1">Yasmine M. Talaman</h6>
-                                            <small class="text-primary">Documenter</small>
-                                        </div>
-                                        <div class="p-3 bg-light rounded border">
-                                            <h6 class="mb-1">Mark Vincent Jabao</h6>
-                                            <small class="text-primary">UI/UX Designer</small>
-                                        </div>
-                                    </div>
-                                    <div class="text-center">
-                                        <small class="text-muted">PHINMA University of Iloilo</small>
-                                    </div>
+
+                                <div
+                                    class="flex flex-col items-center justify-center p-4 bg-white/40 dark:bg-gray-800/40 rounded-xl border border-gray-100 dark:border-gray-700 text-center">
+                                    <h6 class="font-black text-gray-900 dark:text-white uppercase tracking-tight mb-1">
+                                        Yasmine M. Talaman</h6>
+                                    <span
+                                        class="px-2 py-0.5 bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400 rounded text-[10px] font-bold uppercase tracking-widest">Documentation</span>
+                                </div>
+
+                                <div
+                                    class="flex flex-col items-center justify-center p-4 bg-white/40 dark:bg-gray-800/40 rounded-xl border border-gray-100 dark:border-gray-700 text-center">
+                                    <h6 class="font-black text-gray-900 dark:text-white uppercase tracking-tight mb-1">
+                                        Mark Vincent Jabao</h6>
+                                    <span
+                                        class="px-2 py-0.5 bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400 rounded text-[10px] font-bold uppercase tracking-widest">UI/UX
+                                        Designer</span>
+                                </div>
+
+                                <div class="pt-4 border-t border-gray-200 dark:border-gray-700/50 text-center">
+                                    <span
+                                        class="text-[10px] font-black uppercase tracking-widest text-gray-400 dark:text-gray-500">PHINMA
+                                        University of Iloilo</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <footer class="app-footer">
-                <%- include('../partials/footer'); %>
-            </footer>
+                </div>
+            </main>
         </div>
 
-        <script src="/js/script.js"></script>
+        <%- include('../partials/footer'); %>
+            <%- include('../partials/page-end'); %>
 </body>
 
 </html>

@@ -4,152 +4,193 @@
 <head>
     <%- include('../partials/head'); %>
 </head>
-<!-- ========================================================================= -->
 
-<body class="app">
+<body
+    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
     <%- include('../partials/page-start'); %>
-        <header class="app-header fixed-top">
-            <%- include('../partials/admin-navbar'); %>
-                <%- include('../partials/admin-sidebar'); %>
+
+        <header class="sticky top-0 z-50">
+            <%- include('../partials/admin-navbar', { currentPage: 'add-citizen' }); %>
         </header>
 
-        <div class="app-wrapper">
-            <div class="app-content pt-3 p-md-3 p-lg-4">
-                <div class="container-xl">
-                    <h1 class="app-page-title">Add New User</h1>
-                    <div class="row g-4 justify-content-center">
-                        <div class="col-12 col-lg-8">
-                            <div class="app-card app-card-settings shadow-sm p-4">
-                                <div class="app-card-body">
-                                    <form action="/add" method="POST">
-                                        <div class="row g-3">
-                                            <div class="col-12 col-md-6">
-                                                <label for="firstname" class="form-label">First Name</label>
-                                                <input type="text" class="form-control" name="firstname" id="firstname"
-                                                    required>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <label for="lastname" class="form-label">Last Name</label>
-                                                <input type="text" class="form-control" name="lastname" id="lastname"
-                                                    required>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <label for="email" class="form-label">Email Address</label>
-                                                <input type="email" class="form-control" name="email" id="email"
-                                                    required>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <label for="contact_number" class="form-label">Contact Number</label>
-                                                <input type="number" class="form-control" name="contact_number"
-                                                    id="contact_number" required>
-                                            </div>
+        <div class="flex flex-1 overflow-hidden relative">
+            <aside class="z-40">
+                <%- include('../partials/admin-sidebar', { currentPage: 'add-citizen' }); %>
+            </aside>
 
-                                            <div class="col-12 mt-4">
-                                                <h5 class="section-title">Address Details</h5>
-                                                <hr>
-                                            </div>
+            <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8 overflow-y-auto w-full">
+                <div class="max-w-4xl mx-auto space-y-6">
 
-                                            <div class="col-12 col-md-6">
-                                                <label for="street_address" class="form-label">Street Address</label>
-                                                <input type="text" class="form-control" name="street_address"
-                                                    id="street_address" required>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <label for="barangay" class="form-label">Barangay</label>
-                                                <input type="text" class="form-control" name="barangay" id="barangay"
-                                                    required>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <label for="city" class="form-label">City</label>
-                                                <input type="text" class="form-control" name="city" id="city" required>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <label for="province" class="form-label">Province</label>
-                                                <input type="text" class="form-control" name="province" id="province"
-                                                    required>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <label for="postal_code" class="form-label">Postal Code</label>
-                                                <input type="text" class="form-control" name="postal_code"
-                                                    id="postal_code" required>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <label for="country" class="form-label">Country</label>
-                                                <input type="text" class="form-control" name="country" id="country"
-                                                    required>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <label for="landmark" class="form-label">Landmark</label>
-                                                <input type="text" class="form-control" name="landmark" id="landmark"
-                                                    required>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <label for="address_type" class="form-label">Address Type</label>
-                                                <input type="text" class="form-control" name="address_type"
-                                                    id="address_type" placeholder="Home, Work, etc." required>
-                                            </div>
-                                            <div class="col-12">
-                                                <label for="additional_instructions" class="form-label">Additional
-                                                    Instructions</label>
-                                                <textarea class="form-control" name="additional_instructions"
-                                                    id="additional_instructions" rows="2" required></textarea>
-                                            </div>
+                    <div class="flex items-center gap-3">
+                        <a href="/userslist" class="text-gray-500 hover:text-indigo-600 transition-colors"><i
+                                class="fa fa-arrow-left"></i></a>
+                        <h1 class="text-2xl font-black text-gray-900 dark:text-gray-100 tracking-tight">ADD NEW CITIZEN
+                        </h1>
+                    </div>
 
-                                            <div class="col-12 mt-4">
-                                                <h5 class="section-title">Authentication</h5>
-                                                <hr>
-                                            </div>
+                    <div class="glass-panel overflow-hidden">
+                        <div
+                            class="px-8 py-5 border-b border-gray-100 dark:border-gray-800 bg-white/40 dark:bg-gray-900/40">
+                            <h2 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                                Registration Form</h2>
+                        </div>
 
-                                            <div class="col-12 col-md-6">
-                                                <label for="role" class="form-label">User Role</label>
-                                                <select class="form-select" id="role" name="role" required>
-                                                    <option value="user">User</option>
-                                                    <option value="admin">Admin</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <label for="password" class="form-label">Password</label>
-                                                <div class="input-group">
-                                                    <input type="password" class="form-control" name="password"
-                                                        id="password" required>
-                                                    <button class="btn btn-outline-secondary" type="button"
-                                                        id="togglePassword">
-                                                        <i class="bi bi-eye-slash"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
+                        <div class="p-8">
+                            <form action="/add" method="POST" class="space-y-8">
 
-                                            <div class="col-12 mt-4">
-                                                <button type="submit" class="btn app-btn-primary w-100">Add
-                                                    User</button>
+                                <!-- Personal Details -->
+                                <div>
+                                    <h3
+                                        class="text-xs font-black uppercase text-indigo-600 dark:text-indigo-400 tracking-widest mb-4">
+                                        Personal Information</h3>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div class="space-y-1">
+                                            <label for="firstname"
+                                                class="block text-sm font-bold text-gray-700 dark:text-gray-300">First
+                                                Name</label>
+                                            <input type="text" name="firstname" id="firstname" class="input-glass"
+                                                required>
+                                        </div>
+                                        <div class="space-y-1">
+                                            <label for="lastname"
+                                                class="block text-sm font-bold text-gray-700 dark:text-gray-300">Last
+                                                Name</label>
+                                            <input type="text" name="lastname" id="lastname" class="input-glass"
+                                                required>
+                                        </div>
+                                        <div class="space-y-1">
+                                            <label for="email"
+                                                class="block text-sm font-bold text-gray-700 dark:text-gray-300">Email
+                                                Address</label>
+                                            <input type="email" name="email" id="email" class="input-glass" required>
+                                        </div>
+                                        <div class="space-y-1">
+                                            <label for="contact_number"
+                                                class="block text-sm font-bold text-gray-700 dark:text-gray-300">Contact
+                                                Number</label>
+                                            <input type="number" name="contact_number" id="contact_number"
+                                                class="input-glass" required>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr class="border-gray-200 dark:border-gray-800">
+
+                                <!-- Address Details -->
+                                <div>
+                                    <h3
+                                        class="text-xs font-black uppercase text-indigo-600 dark:text-indigo-400 tracking-widest mb-4">
+                                        Address Details</h3>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div class="space-y-1">
+                                            <label for="street_address"
+                                                class="block text-sm font-bold text-gray-700 dark:text-gray-300">Street
+                                                Address</label>
+                                            <input type="text" name="street_address" id="street_address"
+                                                class="input-glass" required>
+                                        </div>
+                                        <div class="space-y-1">
+                                            <label for="barangay"
+                                                class="block text-sm font-bold text-gray-700 dark:text-gray-300">Barangay</label>
+                                            <input type="text" name="barangay" id="barangay" class="input-glass"
+                                                required>
+                                        </div>
+                                        <div class="space-y-1">
+                                            <label for="city"
+                                                class="block text-sm font-bold text-gray-700 dark:text-gray-300">City</label>
+                                            <input type="text" name="city" id="city" class="input-glass" required>
+                                        </div>
+                                        <div class="space-y-1">
+                                            <label for="province"
+                                                class="block text-sm font-bold text-gray-700 dark:text-gray-300">Province</label>
+                                            <input type="text" name="province" id="province" class="input-glass"
+                                                required>
+                                        </div>
+                                        <div class="space-y-1">
+                                            <label for="postal_code"
+                                                class="block text-sm font-bold text-gray-700 dark:text-gray-300">Postal
+                                                Code</label>
+                                            <input type="text" name="postal_code" id="postal_code" class="input-glass"
+                                                required>
+                                        </div>
+                                        <div class="space-y-1">
+                                            <label for="country"
+                                                class="block text-sm font-bold text-gray-700 dark:text-gray-300">Country</label>
+                                            <input type="text" name="country" id="country" class="input-glass" required>
+                                        </div>
+                                        <div class="space-y-1">
+                                            <label for="landmark"
+                                                class="block text-sm font-bold text-gray-700 dark:text-gray-300">Landmark</label>
+                                            <input type="text" name="landmark" id="landmark" class="input-glass"
+                                                required>
+                                        </div>
+                                        <div class="space-y-1">
+                                            <label for="address_type"
+                                                class="block text-sm font-bold text-gray-700 dark:text-gray-300">Address
+                                                Type</label>
+                                            <input type="text" name="address_type" id="address_type"
+                                                placeholder="Home, Work, etc." class="input-glass" required>
+                                        </div>
+                                        <div class="md:col-span-2 space-y-1">
+                                            <label for="additional_instructions"
+                                                class="block text-sm font-bold text-gray-700 dark:text-gray-300">Additional
+                                                Instructions</label>
+                                            <textarea name="additional_instructions" id="additional_instructions"
+                                                rows="3" class="input-glass resize-y" required></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr class="border-gray-200 dark:border-gray-800">
+
+                                <!-- Authentication -->
+                                <div>
+                                    <h3
+                                        class="text-xs font-black uppercase text-indigo-600 dark:text-indigo-400 tracking-widest mb-4">
+                                        System Identity</h3>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div class="space-y-1">
+                                            <label for="role"
+                                                class="block text-sm font-bold text-gray-700 dark:text-gray-300">User
+                                                Role</label>
+                                            <select id="role" name="role" class="input-glass" required>
+                                                <option value="user">User / Citizen</option>
+                                                <option value="admin">Administrator</option>
+                                            </select>
+                                        </div>
+                                        <div class="space-y-1" x-data="{ show: false }">
+                                            <label for="password"
+                                                class="block text-sm font-bold text-gray-700 dark:text-gray-300">Password</label>
+                                            <div class="relative">
+                                                <input :type="show ? 'text' : 'password'" name="password" id="password"
+                                                    class="input-glass pr-12" required>
+                                                <button type="button" @click="show = !show"
+                                                    class="absolute inset-y-0 right-0 px-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none flex items-center">
+                                                    <i class="fa fa-eye-slash" x-show="!show"></i>
+                                                    <i class="fa fa-eye" x-show="show" style="display: none;"></i>
+                                                </button>
                                             </div>
                                         </div>
-                                    </form>
+                                    </div>
                                 </div>
-                            </div>
+
+                                <div class="pt-6">
+                                    <button type="submit"
+                                        class="btn-glass-primary w-full py-3 text-lg font-bold shadow-lg shadow-indigo-500/30">
+                                        REGISTER ACCOUNT
+                                    </button>
+                                </div>
+
+                            </form>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <footer class="app-footer">
-                <%- include('../partials/footer'); %>
-            </footer>
+                </div>
+            </main>
         </div>
 
-        <script src="/js/script.js"></script>
-        <script>
-            const togglePassword = document.querySelector("#togglePassword");
-            const passwordInput = document.querySelector("#password");
-            const icon = togglePassword.querySelector("i");
-
-            togglePassword.addEventListener("click", function () {
-                const isPassword = passwordInput.getAttribute("type") === "password";
-                passwordInput.setAttribute("type", isPassword ? "text" : "password");
-                icon.classList.toggle("bi-eye");
-                icon.classList.toggle("bi-eye-slash");
-            });
-        </script>
+        <%- include('../partials/footer'); %>
+            <script src="/js/script.js"></script>
 </body>
 
 </html>

@@ -1,105 +1,119 @@
-<div id="app-sidepanel" class="app-sidepanel">
-    <div id="sidepanel-drop" class="sidepanel-drop"></div>
-    <div class="sidepanel-inner d-flex flex-column">
-        <a href="#" id="sidepanel-close" class="sidepanel-close d-xl-none">&times;</a>
-        <div class="app-branding">
-            <a class="app-logo" href="/adminpage">
-                <i class="fa fa-shield-alt text-primary me-2 fs-4"></i>
-                <span class="logo-text">CITYSAFE</span>
-            </a>
-        </div><!--//app-branding-->
-
-        <% const _cp=(typeof currentPage !=='undefined' ) ? currentPage : (typeof locals !=='undefined' && typeof
-            locals.currentPage !=='undefined' ? locals.currentPage : '' ); %>
-
-            <nav id="app-nav-main" class="app-nav app-nav-main flex-grow-1">
-                <ul class="app-menu list-unstyled accordion" id="menu-accordion">
-                    <li class="nav-item">
-                        <a class="nav-link <%= _cp === 'dashboard' ? 'active' : '' %>" href="/adminpage">
-                            <span class="nav-icon"><i class="fa fa-tachometer-alt"></i></span>
-                            <span class="nav-link-text">Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <%= _cp === 'status' ? 'active' : '' %>" href="/status-overview">
-                            <span class="nav-icon"><i class="fa fa-th-large"></i></span>
-                            <span class="nav-link-text">Status Grid</span>
-                        </a>
-                    </li>
-                    <li class="nav-item has-submenu">
-                        <a class="nav-link submenu-toggle <%= ['sos', 'analytics', 'assessments'].includes(_cp) ? '' : 'collapsed' %>"
-                            href="#" data-bs-toggle="collapse" data-bs-target="#submenu-intel"
-                            aria-expanded="<%= ['sos', 'analytics', 'assessments'].includes(_cp) %>"
-                            aria-controls="submenu-intel">
-                            <span class="nav-icon"><i class="fa fa-brain"></i></span>
-                            <span class="nav-link-text">Intelligence</span>
-                            <span class="submenu-arrow">
-                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down"
-                                    fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd"
-                                        d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
-                                </svg>
-                            </span>
-                        </a>
-                        <div id="submenu-intel"
-                            class="collapse submenu submenu-intel <%= ['sos', 'analytics', 'assessments'].includes(_cp) ? 'show' : '' %>"
-                            data-bs-parent="#menu-accordion">
-                            <ul class="submenu-list list-unstyled">
-                                <li class="submenu-item"><a class="submenu-link <%= _cp === 'sos' ? 'active' : '' %>"
-                                        href="/disaster-reports">SOS Reports</a></li>
-                                <li class="submenu-item"><a
-                                        class="submenu-link <%= _cp === 'analytics' ? 'active' : '' %>"
-                                        href="/reports">Analytics</a></li>
-                                <li class="submenu-item"><a
-                                        class="submenu-link <%= _cp === 'assessments' ? 'active' : '' %>"
-                                        href="/assessment-results">Assessments</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="nav-item has-submenu">
-                        <a class="nav-link submenu-toggle <%= ['users', 'add-citizen', 'add-responder'].includes(_cp) ? '' : 'collapsed' %>"
-                            href="#" data-bs-toggle="collapse" data-bs-target="#submenu-management"
-                            aria-expanded="<%= ['users', 'add-citizen', 'add-responder'].includes(_cp) %>"
-                            aria-controls="submenu-management">
-                            <span class="nav-icon"><i class="fa fa-users-cog"></i></span>
-                            <span class="nav-link-text">Management</span>
-                            <span class="submenu-arrow">
-                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-chevron-down"
-                                    fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd"
-                                        d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z" />
-                                </svg>
-                            </span>
-                        </a>
-                        <div id="submenu-management"
-                            class="collapse submenu submenu-management <%= ['users', 'add-citizen', 'add-responder'].includes(_cp) ? 'show' : '' %>"
-                            data-bs-parent="#menu-accordion">
-                            <ul class="submenu-list list-unstyled">
-                                <li class="submenu-item"><a class="submenu-link <%= _cp === 'users' ? 'active' : '' %>"
-                                        href="/userslist">Directory</a></li>
-                                <li class="submenu-item"><a
-                                        class="submenu-link <%= _cp === 'add-citizen' ? 'active' : '' %>"
-                                        href="/addusers">Register Citizen</a></li>
-                                <li class="submenu-item"><a
-                                        class="submenu-link <%= _cp === 'add-responder' ? 'active' : '' %>"
-                                        href="/addresponder">Register Responder</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
-
-            <div class="app-sidepanel-footer">
-                <nav class="app-nav app-nav-footer">
-                    <ul class="app-menu footer-menu list-unstyled">
-                        <li class="nav-item">
-                            <a class="nav-link text-danger" href="/logout">
-                                <span class="nav-icon"><i class="fa fa-sign-out-alt"></i></span>
-                                <span class="nav-link-text">Sign Out</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
+<!-- Glassmorphic Admin Sidebar -->
+<div id="mobile-sidebar"
+    class="fixed inset-y-0 left-0 w-64 glass-panel z-40 transform -translate-x-full transition-transform duration-300 xl:translate-x-0 xl:static xl:block flex flex-col h-full overflow-y-auto">
+    <!-- Close Button for Mobile -->
+    <div class="flex justify-end p-4 xl:hidden">
+        <button
+            onclick="document.getElementById('mobile-sidebar').classList.add('-translate-x-full'); document.getElementById('sidebar-overlay').classList.add('hidden')"
+            class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+            <i class="fa fa-times text-xl"></i>
+        </button>
     </div>
+
+    <div class="p-6 text-center border-b border-gray-200 dark:border-gray-800">
+        <a href="/adminpage" class="flex items-center justify-center gap-2 text-indigo-600 dark:text-indigo-400">
+            <i class="fa fa-shield-alt text-3xl"></i>
+            <span class="font-bold text-2xl tracking-wider text-gray-900 dark:text-gray-100">CITYSAFE</span>
+        </a>
+    </div>
+
+    <% const _cp=(typeof currentPage !=='undefined' ) ? currentPage : (typeof locals !=='undefined' && typeof
+        locals.currentPage !=='undefined' ? locals.currentPage : '' ); %>
+
+        <div
+            class="p-4 border-b border-gray-200 dark:border-gray-800 mx-4 my-2 rounded-xl bg-gray-900 text-white dark:bg-gray-800 shadow-md">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                    <i class="fa fa-user-shield text-white"></i>
+                </div>
+                <div class="overflow-hidden">
+                    <h6 class="font-bold text-sm m-0 truncate">
+                        <%= typeof username !=='undefined' ? username : 'Admin' %>
+                    </h6>
+                    <span
+                        class="px-2 py-0.5 mt-1 rounded text-[10px] font-bold tracking-wider bg-red-500/80 text-white inline-block uppercase">SYSADMIN</span>
+                </div>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-4 py-4 space-y-1"
+            x-data="{ intelOpen: <%= ['sos', 'analytics', 'assessments'].includes(_cp) ? 'true' : 'false' %>, mgmtOpen: <%= ['users', 'add-citizen', 'add-responder'].includes(_cp) ? 'true' : 'false' %> }">
+
+            <div class="uppercase text-xs font-bold text-gray-400 dark:text-gray-500 px-4 py-2 mt-2 tracking-wider">
+                Dashboard</div>
+
+            <a href="/adminpage"
+                class="flex items-center gap-3 px-4 py-2.5 rounded-lg <%= _cp === 'dashboard' ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 font-semibold shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50' %> transition-all text-sm">
+                <i class="fa fa-tachometer-alt w-5 text-center"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="/status-overview"
+                class="flex items-center gap-3 px-4 py-2.5 rounded-lg <%= _cp === 'status' ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 font-semibold shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50' %> transition-all text-sm">
+                <i class="fa fa-th-large w-5 text-center"></i>
+                <span>Status Grid</span>
+            </a>
+
+            <div class="uppercase text-xs font-bold text-gray-400 dark:text-gray-500 px-4 py-2 mt-4 tracking-wider">
+                Intelligence</div>
+
+            <div>
+                <button @click="intelOpen = !intelOpen"
+                    class="w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all text-sm <%= ['sos', 'analytics', 'assessments'].includes(_cp) ? 'text-indigo-600 dark:text-indigo-400 font-medium' : '' %>">
+                    <div class="flex items-center gap-3">
+                        <i class="fa fa-brain w-5 text-center"></i>
+                        <span>Intelligence</span>
+                    </div>
+                    <i class="fa fa-chevron-down text-xs transition-transform"
+                        :class="intelOpen ? 'rotate-180' : ''"></i>
+                </button>
+                <div x-show="intelOpen" x-collapse class="pl-12 pr-4 py-1 space-y-1 mt-1">
+                    <a href="/disaster-reports"
+                        class="block py-2 text-sm <%= _cp === 'sos' ? 'text-indigo-600 dark:text-indigo-400 font-medium' : 'text-gray-500 dark:text-gray-400 hover:text-indigo-500' %>">SOS
+                        Reports</a>
+                    <a href="/reports"
+                        class="block py-2 text-sm <%= _cp === 'analytics' ? 'text-indigo-600 dark:text-indigo-400 font-medium' : 'text-gray-500 dark:text-gray-400 hover:text-indigo-500' %>">Analytics</a>
+                    <a href="/assessment-results"
+                        class="block py-2 text-sm <%= _cp === 'assessments' ? 'text-indigo-600 dark:text-indigo-400 font-medium' : 'text-gray-500 dark:text-gray-400 hover:text-indigo-500' %>">Assessments</a>
+                </div>
+            </div>
+
+            <div class="uppercase text-xs font-bold text-gray-400 dark:text-gray-500 px-4 py-2 mt-4 tracking-wider">
+                Management</div>
+
+            <div>
+                <button @click="mgmtOpen = !mgmtOpen"
+                    class="w-full flex items-center justify-between px-4 py-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all text-sm <%= ['users', 'add-citizen', 'add-responder'].includes(_cp) ? 'text-indigo-600 dark:text-indigo-400 font-medium' : '' %>">
+                    <div class="flex items-center gap-3">
+                        <i class="fa fa-users-cog w-5 text-center"></i>
+                        <span>Management</span>
+                    </div>
+                    <i class="fa fa-chevron-down text-xs transition-transform"
+                        :class="mgmtOpen ? 'rotate-180' : ''"></i>
+                </button>
+                <div x-show="mgmtOpen" x-collapse class="pl-12 pr-4 py-1 space-y-1 mt-1">
+                    <a href="/userslist"
+                        class="block py-2 text-sm <%= _cp === 'users' ? 'text-indigo-600 dark:text-indigo-400 font-medium' : 'text-gray-500 dark:text-gray-400 hover:text-indigo-500' %>">Directory</a>
+                    <a href="/addusers"
+                        class="block py-2 text-sm <%= _cp === 'add-citizen' ? 'text-indigo-600 dark:text-indigo-400 font-medium' : 'text-gray-500 dark:text-gray-400 hover:text-indigo-500' %>">Register
+                        Citizen</a>
+                    <a href="/addresponder"
+                        class="block py-2 text-sm <%= _cp === 'add-responder' ? 'text-indigo-600 dark:text-indigo-400 font-medium' : 'text-gray-500 dark:text-gray-400 hover:text-indigo-500' %>">Register
+                        Responder</a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="px-4 py-4 mt-auto border-t border-gray-200 dark:border-gray-800 bg-white/30 dark:bg-gray-900/30">
+            <a href="/logout"
+                class="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all text-sm font-bold w-full border border-red-200 dark:border-red-900/50">
+                <i class="fa fa-sign-out-alt"></i>
+                <span>Sign Out</span>
+            </a>
+        </div>
 </div>
+
+<!-- Overlay for mobile when sidebar is open -->
+<div id="sidebar-overlay"
+    onclick="document.getElementById('mobile-sidebar').classList.add('-translate-x-full'); this.classList.add('hidden')"
+    class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-30 hidden xl:hidden transition-opacity"></div>

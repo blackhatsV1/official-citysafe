@@ -5,152 +5,240 @@
     <%- include('../partials/head'); %>
 </head>
 
-<body class="app">
+<body
+    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
     <%- include('../partials/page-start'); %>
-        <header class="app-header fixed-top">
-            <%- include('../partials/visitor-navbar'); %>
-                <%- include('../partials/visitor-sidebar'); %>
+
+        <header class="sticky top-0 z-50">
+            <%- include('../partials/visitor-navbar', { currentPage: 'contact' }); %>
         </header>
 
-        <div class="app-wrapper">
-            <div class="app-content pt-3 p-md-3 p-lg-4">
-                <div class="container-xl">
-                    <h1 class="app-page-title">Contact Us</h1>
+        <div class="flex flex-1 overflow-hidden relative">
+            <aside class="z-40">
+                <%- include('../partials/visitor-sidebar', { currentPage: 'contact' }); %>
+            </aside>
 
-                    <div class="row g-4 overflow-hidden">
-                        <div class="col-12 col-lg-6">
-                            <div class="app-card app-card-settings shadow-sm p-4">
-                                <div class="app-card-header p-0 border-0 mb-3">
-                                    <h4 class="app-card-title">Send Us a Message</h4>
+            <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8 overflow-y-auto w-full relative">
+                <div class="max-w-6xl mx-auto space-y-8">
+
+                    <div class="text-center mb-10">
+                        <h1 class="text-4xl font-black text-gray-900 dark:text-white tracking-tight uppercase mb-2">
+                            Contact Us</h1>
+                        <p class="text-gray-600 dark:text-gray-400">Reach out for inquiries, urgent concerns, or
+                            systematic support.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <!-- Contact Form -->
+                        <div
+                            class="glass-panel overflow-hidden border-t-4 border-indigo-500 relative flex flex-col h-full shadow-xl">
+                            <div
+                                class="absolute -top-10 -right-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none">
+                            </div>
+                            <div
+                                class="px-8 py-6 border-b border-indigo-100 dark:border-indigo-900/30 bg-indigo-50/50 dark:bg-indigo-900/10 flex items-center gap-3 relative z-10">
+                                <div
+                                    class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/30">
+                                    <i class="fa fa-envelope border-0"></i>
                                 </div>
-                                <div class="app-card-body">
-                                    <form action="/send-message" method="POST" onsubmit="return showLoading()">
-                                        <div class="mb-3">
-                                            <label for="floatingEmail" class="form-label">Email address</label>
-                                            <input type="email" class="form-control" id="floatingEmail" name="email"
-                                                placeholder="name@example.com" required>
-                                            <div id="emailHelp" class="form-text">We'll never share your email with
-                                                anyone else.</div>
+                                <h4 class="text-xl font-bold text-gray-800 dark:text-gray-100 m-0">Send a Message</h4>
+                            </div>
+
+                            <div class="p-8 relative z-10 flex-1">
+                                <form action="/send-message" method="POST" onsubmit="return showLoading()"
+                                    class="space-y-6">
+                                    <div class="space-y-2">
+                                        <label for="floatingName"
+                                            class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Full
+                                            Name</label>
+                                        <input type="text" id="floatingName" name="name" placeholder="John Doe" required
+                                            class="w-full px-4 py-3 bg-white/40 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400">
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label for="floatingEmail"
+                                            class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Email
+                                            Address</label>
+                                        <input type="email" id="floatingEmail" name="email"
+                                            placeholder="john@example.com" required
+                                            class="w-full px-4 py-3 bg-white/40 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400">
+                                        <div
+                                            class="text-[10px] text-gray-500 dark:text-gray-400 ml-1 flex items-center gap-1">
+                                            <i class="fa fa-lock text-indigo-400"></i> We'll never share your email.
                                         </div>
-                                        <div class="mb-3">
-                                            <label for="floatingName" class="form-label">Name</label>
-                                            <input type="text" class="form-control" id="floatingName" name="name"
-                                                placeholder="Your Name" required>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="floatingTextarea" class="form-label">Message</label>
-                                            <textarea class="form-control" placeholder="Leave a comment here"
-                                                id="floatingTextarea" name="message" style="height: 150px;"
-                                                required></textarea>
-                                        </div>
-                                        <button type="submit" class="btn app-btn-primary w-100 py-3">SEND
-                                            MESSAGE</button>
-                                    </form>
-                                </div>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <label for="floatingTextarea"
+                                            class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Message
+                                            Content</label>
+                                        <textarea id="floatingTextarea" name="message"
+                                            placeholder="How can we help you?" required rows="5"
+                                            class="w-full px-4 py-3 bg-white/40 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400 resize-none"></textarea>
+                                    </div>
+                                    <button type="submit"
+                                        class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-black uppercase tracking-widest transition-all shadow-lg hover:shadow-indigo-500/30 flex items-center justify-center gap-2 transform hover:-translate-y-1">
+                                        <i class="fa fa-paper-plane"></i> TRANSMIT MESSAGE
+                                    </button>
+                                </form>
                             </div>
                         </div>
 
-                        <div class="col-12 col-lg-6">
-                            <div class="app-card app-card-notification shadow-sm mb-4 p-4">
-                                <div class="app-card-header p-0 border-0 mb-3">
-                                    <h4 class="app-card-title">Emergency Hotlines</h4>
+                        <!-- Side Info -->
+                        <div class="flex flex-col gap-6 h-full">
+
+                            <!-- Emergency Hotlines -->
+                            <div class="glass-panel overflow-hidden border-t-4 border-rose-500 relative flex-1">
+                                <div
+                                    class="absolute -top-10 -right-10 w-40 h-40 bg-rose-500/10 rounded-full blur-3xl pointer-events-none">
                                 </div>
-                                <div class="app-card-body">
-                                    <div class="d-flex flex-column gap-2">
-                                        <div
-                                            class="d-flex justify-content-between align-items-center p-2 bg-light rounded">
-                                            <span>National Emergency Hotline</span>
-                                            <span class="badge bg-danger">911</span>
-                                        </div>
-                                        <div
-                                            class="d-flex justify-content-between align-items-center p-2 bg-light rounded">
-                                            <span>Police (PNP)</span>
-                                            <span class="badge bg-primary">117</span>
-                                        </div>
-                                        <div
-                                            class="d-flex justify-content-between align-items-center p-2 bg-light rounded">
-                                            <span>Fire (BFP)</span>
-                                            <span class="badge bg-warning text-dark">(02) 8426-0219</span>
-                                        </div>
-                                        <div
-                                            class="d-flex justify-content-between align-items-center p-2 bg-light rounded">
-                                            <span>Red Cross</span>
-                                            <span class="badge bg-info">143</span>
-                                        </div>
+                                <div
+                                    class="px-6 py-5 border-b border-rose-100 dark:border-rose-900/30 bg-rose-50/50 dark:bg-rose-900/10 flex items-center gap-3 relative z-10">
+                                    <i class="fa fa-phone-volume text-rose-500 text-xl"></i>
+                                    <h4 class="text-lg font-bold text-gray-800 dark:text-gray-100 m-0">Emergency
+                                        Hotlines</h4>
+                                </div>
+                                <div class="p-6 relative z-10 space-y-3">
+                                    <div
+                                        class="flex justify-between items-center p-3 bg-white/40 dark:bg-gray-800/40 rounded-xl border border-gray-100 dark:border-gray-700">
+                                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">National
+                                            Emergency</span>
+                                        <span
+                                            class="px-3 py-1 bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 rounded-lg text-xs font-black tracking-widest">911</span>
+                                    </div>
+                                    <div
+                                        class="flex justify-between items-center p-3 bg-white/40 dark:bg-gray-800/40 rounded-xl border border-gray-100 dark:border-gray-700">
+                                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Police
+                                            (PNP)</span>
+                                        <span
+                                            class="px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 rounded-lg text-xs font-black tracking-widest">117</span>
+                                    </div>
+                                    <div
+                                        class="flex justify-between items-center p-3 bg-white/40 dark:bg-gray-800/40 rounded-xl border border-gray-100 dark:border-gray-700">
+                                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Fire
+                                            (BFP)</span>
+                                        <span
+                                            class="px-3 py-1 bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 rounded-lg text-xs font-black tracking-widest">(02)
+                                            8426-0219</span>
+                                    </div>
+                                    <div
+                                        class="flex justify-between items-center p-3 bg-white/40 dark:bg-gray-800/40 rounded-xl border border-gray-100 dark:border-gray-700">
+                                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Red
+                                            Cross</span>
+                                        <span
+                                            class="px-3 py-1 bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-400 rounded-lg text-xs font-black tracking-widest">143</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="app-card app-card-settings shadow-sm p-4">
-                                <div class="app-card-header p-0 border-0 mb-3">
-                                    <h4 class="app-card-title">Direct Contacts</h4>
+                            <!-- Direct Contacts -->
+                            <div class="glass-panel overflow-hidden border-t-4 border-cyan-500 relative flex-1">
+                                <div
+                                    class="absolute -top-10 -right-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none">
                                 </div>
-                                <div class="app-card-body">
-                                    <div class="list-group list-group-flush">
-                                        <div
-                                            class="list-group-item bg-transparent px-0 border-light d-flex justify-content-between">
-                                            <span class="text-muted">Jayrold Tabalina</span>
-                                            <span class="fw-bold">jayroldtabalina@gmail.com</span>
-                                        </div>
-                                        <div
-                                            class="list-group-item bg-transparent px-0 border-light d-flex justify-content-between">
-                                            <span class="text-muted">Yasmine Talaman</span>
-                                            <span class="fw-bold">yama.talaman.ui@phinmaed.com</span>
-                                        </div>
-                                        <div
-                                            class="list-group-item bg-transparent px-0 border-0 d-flex justify-content-between">
-                                            <span class="text-muted">Mark Vincent Jabao</span>
-                                            <span class="fw-bold">mark.jabao@gmail.com</span>
-                                        </div>
+                                <div
+                                    class="px-6 py-5 border-b border-cyan-100 dark:border-cyan-900/30 bg-cyan-50/50 dark:bg-cyan-900/10 flex items-center gap-3 relative z-10">
+                                    <i class="fa fa-address-book text-cyan-500 text-xl"></i>
+                                    <h4 class="text-lg font-bold text-gray-800 dark:text-gray-100 m-0">Direct Contacts
+                                    </h4>
+                                </div>
+                                <div class="p-6 relative z-10 space-y-3">
+                                    <div
+                                        class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 bg-white/40 dark:bg-gray-800/40 rounded-xl border border-gray-100 dark:border-gray-700 gap-2">
+                                        <span
+                                            class="text-xs font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">Jayrold
+                                            Tabalina</span>
+                                        <a href="mailto:jayroldtabalina@gmail.com"
+                                            class="text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline break-all">jayroldtabalina@gmail.com</a>
+                                    </div>
+                                    <div
+                                        class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 bg-white/40 dark:bg-gray-800/40 rounded-xl border border-gray-100 dark:border-gray-700 gap-2">
+                                        <span
+                                            class="text-xs font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">Yasmine
+                                            Talaman</span>
+                                        <a href="mailto:yama.talaman.ui@phinmaed.com"
+                                            class="text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline break-all">yama.talaman.ui@phinmaed.com</a>
+                                    </div>
+                                    <div
+                                        class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 bg-white/40 dark:bg-gray-800/40 rounded-xl border border-gray-100 dark:border-gray-700 gap-2">
+                                        <span
+                                            class="text-xs font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">Mark
+                                            Vincent Jabao</span>
+                                        <a href="mailto:mark.jabao@gmail.com"
+                                            class="text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline break-all">mark.jabao@gmail.com</a>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <footer class="app-footer">
-                <%- include('../partials/footer'); %>
-            </footer>
+                </div>
+            </main>
         </div>
 
-        <script src="/js/script.js"></script>
-        <script>
-            function showLoading() {
-                Swal.fire({
-                    title: 'Sending Message',
-                    html: '<div class="spinner-border text-primary" role="status"></div><p class="mt-2">Please wait...</p>',
-                    allowOutsideClick: false,
-                    showConfirmButton: false
+        <%- include('../partials/footer'); %>
+
+            <!-- Add SweetAlert2 -->
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                // Use glassmorphism theme for SweetAlert
+                const GlassSwal = Swal.mixin({
+                    customClass: {
+                        popup: 'glass-swal',
+                        confirmButton: 'rounded-lg px-6 py-2.5 font-black uppercase tracking-widest text-xs shadow-md mx-2',
+                    },
+                    background: document.documentElement.classList.contains('dark') ? 'rgba(17, 24, 39, 0.9)' : 'rgba(255, 255, 255, 0.9)',
+                    color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#111827'
                 });
-                return true;
-            }
 
-            document.addEventListener('DOMContentLoaded', function () {
-                const urlParams = new URLSearchParams(window.location.search);
-                const status = urlParams.get('status');
-
-                if (status === 'success') {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Message Sent!',
-                        text: 'We have received your message and will contact you shortly.',
-                        confirmButtonColor: '#15a362'
-                    }).then(() => {
-                        window.history.replaceState({}, document.title, window.location.pathname);
+                function showLoading() {
+                    GlassSwal.fire({
+                        title: '<span class="text-xl font-black uppercase tracking-tight text-indigo-500">Sending Data</span>',
+                        html: '<div class="py-4"><i class="fa fa-spinner fa-spin text-3xl text-indigo-500"></i></div><p class="text-sm text-gray-600 dark:text-gray-300">Establishing secure connection...</p>',
+                        allowOutsideClick: false,
+                        showConfirmButton: false
                     });
-                } else if (status === 'error') {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Sending Failed',
-                        text: 'Something went wrong. Please try again later.'
-                    }).then(() => {
-                        window.history.replaceState({}, document.title, window.location.pathname);
-                    });
+                    return true;
                 }
-            });
-        </script>
+
+                document.addEventListener('DOMContentLoaded', function () {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const status = urlParams.get('status');
+
+                    if (status === 'success') {
+                        GlassSwal.fire({
+                            icon: 'success',
+                            title: '<span class="font-black text-emerald-500">TRANSMISSION SUCCESSFUL</span>',
+                            html: '<span class="text-sm">We have received your message and will contact you shortly.</span>',
+                            confirmButtonColor: '#10b981',
+                            confirmButtonText: 'ACKNOWLEDGE'
+                        }).then(() => {
+                            window.history.replaceState({}, document.title, window.location.pathname);
+                        });
+                    } else if (status === 'error') {
+                        GlassSwal.fire({
+                            icon: 'error',
+                            title: '<span class="font-black text-rose-500">TRANSMISSION FAILED</span>',
+                            html: '<span class="text-sm">Network anomaly detected. Please try again.</span>',
+                            confirmButtonColor: '#f43f5e',
+                            confirmButtonText: 'RETRY'
+                        }).then(() => {
+                            window.history.replaceState({}, document.title, window.location.pathname);
+                        });
+                    }
+                });
+            </script>
+            <style>
+                .swal2-popup.glass-swal {
+                    backdrop-filter: blur(16px);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    border-radius: 1.5rem;
+                }
+
+                .dark .swal2-popup.glass-swal {
+                    border: 1px solid rgba(255, 255, 255, 0.05);
+                }
+            </style>
+            <%- include('../partials/page-end'); %>
 </body>
 
 </html>

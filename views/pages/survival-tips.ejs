@@ -4,185 +4,198 @@
 <head>
   <%- include('../partials/head'); %>
 </head>
-<!-- ========================================================================= -->
 
-<body class="app">
+<body
+  class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
   <%- include('../partials/page-start'); %>
 
-    <header class="app-header fixed-top">
-      <%- include('../partials/user-navbar'); %>
-        <%- include('../partials/user-sidebar'); %>
+    <header class="sticky top-0 z-50">
+      <%- include('../partials/user-navbar', { currentPage: 'survival-tips' }); %>
     </header>
 
-    <div class="app-wrapper">
-      <div class="app-content pt-3 p-md-3 p-lg-4">
-        <div class="container-xl">
-          <h1 class="app-page-title">Disaster Survival Tips</h1>
+    <div class="flex flex-1 overflow-hidden relative">
+      <aside class="z-40">
+        <%- include('../partials/user-sidebar', { currentPage: 'survival-tips' }); %>
+      </aside>
 
-          <div class="row g-4 mb-4">
-            <div class="col-12 col-lg-8">
-              <div class="app-card app-card-settings shadow-sm p-4 h-100">
-                <div class="app-card-body">
-                  <p class="text-muted mb-4">
-                    Here are some essential survival tips to help you stay safe during different types of disasters.
+      <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8 overflow-y-auto w-full relative">
+        <div class="max-w-7xl mx-auto space-y-6">
+
+          <div class="flex items-center gap-3 px-2 mb-2">
+            <div
+              class="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400 flex items-center justify-center">
+              <i class="fa fa-book-medical text-xl"></i>
+            </div>
+            <h1 class="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight uppercase">Survival Protocols
+            </h1>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- Tips Section -->
+            <div class="lg:col-span-2 space-y-6">
+              <div class="glass-panel overflow-hidden h-full flex flex-col border-t-4 border-orange-500 relative">
+                <!-- Background abstract shape -->
+                <div
+                  class="absolute -top-10 -right-10 w-40 h-40 bg-orange-500/10 rounded-full blur-3xl pointer-events-none">
+                </div>
+
+                <div class="p-6 md:p-8 flex-1 relative z-10">
+                  <p
+                    class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-8 max-w-2xl border-l-2 border-orange-400 pl-3">
+                    Adhere to the following tactical survival protocols to ensure maximum safety during critical
+                    incident scenarios.
                   </p>
 
-                  <div class="accordion accordion-flush" id="survivalTipsAccordion">
-                    <div class="accordion-item border-bottom">
-                      <h2 class="accordion-header">
-                        <button class="accordion-button collapsed fw-bold px-0 bg-transparent text-danger" type="button"
-                          data-bs-toggle="collapse" data-bs-target="#tip1">
-                          <i class="fa fa-fire me-2"></i> Fire Survival Tips
-                        </button>
-                      </h2>
-                      <div id="tip1" class="accordion-collapse collapse" data-bs-parent="#survivalTipsAccordion">
-                        <div class="accordion-body px-0 text-muted">
-                          <ul class="list-unstyled mb-0">
-                            <li class="mb-2"><i class="fa fa-check text-success me-2"></i> Stay low to the ground to
-                              avoid smoke inhalation.</li>
-                            <li class="mb-2"><i class="fa fa-check text-success me-2"></i> If trapped inside, close all
-                              doors and use a cloth to block smoke from entering.</li>
-                            <li class="mb-2"><i class="fa fa-check text-success me-2"></i> Don't use elevators during a
-                              fire.</li>
-                            <li class="mb-2"><i class="fa fa-check text-success me-2"></i> If possible, use a fire
-                              extinguisher for small fires, but don’t risk your safety.</li>
-                            <li><i class="fa fa-check text-success me-2"></i> Always have an emergency exit plan and
-                              stay calm.</li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
+                  <div class="space-y-4" x-data="{ activeAccordion: null }">
+                    <% const protocols=[ { icon: "fa-fire" , title: "Fire Survival Logistics" , colorTheme: "red" ,
+                      items: [ "Stay low to the ground to avoid toxic smoke inhalation."
+                      , "If trapped inside, seal doors and use wet cloth to block smoke ingress."
+                      , "Never utilize elevators during active fire operations."
+                      , "Deploy fire extinguishers only for minor flames; prioritize evacuation."
+                      , "Execute emergency exit plan immediately and remain calm." ] }, { icon: "fa-water" ,
+                      title: "Flood Evasion Tactics" , colorTheme: "blue" , items:
+                      [ "Relocate to maximum elevation immediately upon warning."
+                      , "If trapped, ascend to structural apex (roof) until extraction units arrive."
+                      , "Never attempt to traverse floodwaters on foot or by vehicle."
+                      , "Monitor comms for weather alerts and evacuation directives."
+                      , "Maintain critical payload: water, rations, first-aid kits." ] }, { icon: "fa-house-crack" ,
+                      title: "Seismic Activity Defense" , colorTheme: "yellow" , items:
+                      [ "If indoors: Drop, Cover, Hold On under sturdy furniture to protect cranium."
+                      , "If outdoors: Reposition to open sectors free from structural debris threats."
+                      , "Maintain distance from glass features and unsecured overhead objects."
+                      , "Conduct post-quake reconnaissance for secondary hazards (gas leaks, fires)." ] }, {
+                      icon: "fa-mountain" , title: "Landslide Evasion Strategy" , colorTheme: "stone" , items:
+                      [ "If near steep inclines, relocate to open, flat sectors immediately."
+                      , "If caught in flow, curl up to guard cranial region from debris impact."
+                      , "Monitor acoustic queues (rumbling) and evacuate prior to visual confirmation."
+                      , "Avoid historical flow paths like riverbeds and localized depressions." ] } ]; %>
 
-                    <div class="accordion-item border-bottom">
-                      <h2 class="accordion-header">
-                        <button class="accordion-button collapsed fw-bold px-0 bg-transparent text-info" type="button"
-                          data-bs-toggle="collapse" data-bs-target="#tip2">
-                          <i class="fa fa-tint me-2"></i> Flood Survival Tips
-                        </button>
-                      </h2>
-                      <div id="tip2" class="accordion-collapse collapse" data-bs-parent="#survivalTipsAccordion">
-                        <div class="accordion-body px-0 text-muted">
-                          <ul class="list-unstyled mb-0">
-                            <li class="mb-2"><i class="fa fa-check text-success me-2"></i> Move to higher ground
-                              immediately.</li>
-                            <li class="mb-2"><i class="fa fa-check text-success me-2"></i> If trapped, climb to a
-                              rooftop or stay in a safe location until help arrives.</li>
-                            <li class="mb-2"><i class="fa fa-check text-success me-2"></i> Do not walk or drive through
-                              floodwaters as they can be dangerous.</li>
-                            <li class="mb-2"><i class="fa fa-check text-success me-2"></i> Listen to weather alerts and
-                              evacuation orders.</li>
-                            <li><i class="fa fa-check text-success me-2"></i> Keep emergency supplies such as water,
-                              food, and first aid kits on hand.</li>
-                          </ul>
+                      <% protocols.forEach((proto, index)=> {
+                        let borderColor = "border-gray-200 dark:border-gray-700/50 hover:border-" + proto.colorTheme +
+                        "-300 dark:hover:border-" + proto.colorTheme + "-700";
+                        let activeBorderColor = "border-" + proto.colorTheme + "-300 dark:border-" + proto.colorTheme +
+                        "-700/50";
+                        let bgColor = "bg-white/40 dark:bg-gray-800/20";
+                        let activeBgColor = "bg-" + proto.colorTheme + "-50/50 dark:bg-" + proto.colorTheme + "-900/10";
+                        let iconColor = "text-" + proto.colorTheme + "-500 dark:text-" + proto.colorTheme + "-400";
+                        %>
+                        <div class="border rounded-xl overflow-hidden transition-all duration-300 transform origin-top"
+                          :class="activeAccordion === <%= index %> ? 'shadow-md scale-[1.01] <%= activeBorderColor %> <%= activeBgColor %>' : '<%= borderColor %> <%= bgColor %>'">
+                          <button @click="activeAccordion = activeAccordion === <%= index %> ? null : <%= index %>"
+                            class="w-full text-left px-5 py-4 flex items-center justify-between focus:outline-none group">
+                            <div class="flex items-center gap-3">
+                              <div
+                                class="w-8 h-8 rounded-lg bg-white dark:bg-gray-800 shadow-sm flex items-center justify-center <%= iconColor %>">
+                                <i class="fa <%= proto.icon %>"></i>
+                              </div>
+                              <h3
+                                class="font-black tracking-widest uppercase text-sm text-gray-900 dark:text-gray-100 group-hover:<%= iconColor %> transition-colors">
+                                <%= proto.title %>
+                              </h3>
+                            </div>
+                            <div
+                              class="w-6 h-6 rounded-full flex items-center justify-center text-gray-400 transition-transform duration-300 group-hover:bg-gray-100 dark:group-hover:bg-gray-800"
+                              :class="activeAccordion === <%= index %> ? 'rotate-180 <%= iconColor %>' : ''">
+                              <i class="fa fa-chevron-down text-xs"></i>
+                            </div>
+                          </button>
+                          <div x-show="activeAccordion === <%= index %>" x-collapse x-cloak>
+                            <div class="px-5 pb-5 pt-2">
+                              <ul
+                                class="space-y-3 mx-4 border-l-2 <%= activeBorderColor %> pl-4 text-sm text-gray-600 dark:text-gray-400">
+                                <% proto.items.forEach(item=> { %>
+                                  <li class="flex items-start gap-2">
+                                    <i class="fa fa-check-circle mt-1 <%= iconColor %> opacity-70"></i>
+                                    <span class="font-medium leading-relaxed">
+                                      <%= item %>
+                                    </span>
+                                  </li>
+                                  <% }) %>
+                              </ul>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-
-                    <div class="accordion-item border-bottom">
-                      <h2 class="accordion-header">
-                        <button class="accordion-button collapsed fw-bold px-0 bg-transparent text-warning"
-                          type="button" data-bs-toggle="collapse" data-bs-target="#tip3">
-                          <i class="fa fa-exclamation-triangle me-2"></i> Earthquake Survival Tips
-                        </button>
-                      </h2>
-                      <div id="tip3" class="accordion-collapse collapse" data-bs-parent="#survivalTipsAccordion">
-                        <div class="accordion-body px-0 text-muted">
-                          <ul class="list-unstyled mb-0">
-                            <li class="mb-2"><i class="fa fa-check text-success me-2"></i> If inside, take cover under a
-                              table or desk. Protect your head and neck.</li>
-                            <li class="mb-2"><i class="fa fa-check text-success me-2"></i> If outside, move to an open
-                              area away from buildings, trees, and power lines.</li>
-                            <li class="mb-2"><i class="fa fa-check text-success me-2"></i> Stay away from windows and
-                              anything that could fall during aftershocks.</li>
-                            <li><i class="fa fa-check text-success me-2"></i> Check for hazards such as gas leaks or
-                              fires after the shaking stops.</li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="accordion-item border-0">
-                      <h2 class="accordion-header">
-                        <button class="accordion-button collapsed fw-bold px-0 bg-transparent text-secondary"
-                          type="button" data-bs-toggle="collapse" data-bs-target="#tip4">
-                          <i class="fa fa-mountain me-2"></i> Landslide Survival Tips
-                        </button>
-                      </h2>
-                      <div id="tip4" class="accordion-collapse collapse" data-bs-parent="#survivalTipsAccordion">
-                        <div class="accordion-body px-0 text-muted">
-                          <ul class="list-unstyled mb-0">
-                            <li class="mb-2"><i class="fa fa-check text-success me-2"></i> If you are near a hill or
-                              mountain, move to an open space immediately.</li>
-                            <li class="mb-2"><i class="fa fa-check text-success me-2"></i> If trapped, create a barrier
-                              to protect yourself from debris.</li>
-                            <li class="mb-2"><i class="fa fa-check text-success me-2"></i> Listen for warnings and
-                              evacuate immediately if instructed.</li>
-                            <li><i class="fa fa-check text-success me-2"></i> Stay away from riverbeds and low-lying
-                              areas that might be affected.</li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
+                        <% }) %>
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="col-12 col-lg-4">
-              <div class="app-card app-card-notification shadow-sm p-4">
-                <h4 class="app-card-title mb-3">Emergency Hotlines</h4>
-                <div class="app-card-body">
-                  <p class="text-muted small">If you need immediate assistance, refer to these hotlines:</p>
-                  <div class="d-flex justify-content-between align-items-center border-bottom border-light py-2">
-                    <div class="d-flex flex-column">
-                      <span class="fw-bold">National Hotline</span>
-                    </div>
-                    <span class="badge bg-danger fs-6">911</span>
-                  </div>
-                  <div class="d-flex justify-content-between align-items-center border-bottom border-light py-2">
-                    <div class="d-flex flex-column">
-                      <span class="fw-bold">PNP (Police)</span>
-                      <small class="text-muted">(02) 8722-0650</small>
-                    </div>
-                    <span class="badge bg-primary fs-6">117</span>
-                  </div>
-                  <div class="d-flex justify-content-between align-items-center border-bottom border-light py-2">
-                    <div class="d-flex flex-column">
-                      <span class="fw-bold">BFP (Fire)</span>
-                    </div>
-                    <span class="badge bg-warning text-dark fs-6">(02) 8426</span>
-                  </div>
-                  <div class="d-flex justify-content-between align-items-center border-bottom border-light py-2">
-                    <div class="d-flex flex-column">
-                      <span class="fw-bold">Red Cross</span>
-                      <small class="text-muted">(02) 8790-2300</small>
-                    </div>
-                    <span class="badge bg-info text-white fs-6">143</span>
-                  </div>
-                  <div class="d-flex justify-content-between align-items-center border-bottom border-light py-2">
-                    <div class="d-flex flex-column">
-                      <span class="fw-bold">MMDA</span>
-                    </div>
-                    <span class="badge bg-success fs-6">136</span>
-                  </div>
-                  <div class="d-flex justify-content-between align-items-center py-2">
-                    <div class="d-flex flex-column">
-                      <span class="fw-bold">NDRRMC Opcen</span>
-                    </div>
-                    <span class="badge bg-secondary fs-6 text-dark">(02) 8911</span>
-                  </div>
+            <!-- Hotlines Section -->
+            <div class="lg:col-span-1 space-y-6">
+
+              <div class="glass-panel overflow-hidden border-t-4 border-red-500 shadow-lg shadow-red-500/5">
+                <div
+                  class="px-6 py-4 border-b border-red-100 dark:border-red-900/30 bg-red-50/50 dark:bg-red-900/10 flex items-center justify-between">
+                  <h4
+                    class="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                    <i class="fa fa-satellite-dish text-red-500 animate-pulse"></i> Critical Evac Comms
+                  </h4>
+                </div>
+                <div class="p-6">
+                  <p class="text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-4">Direct
+                    Action Lines</p>
+                  <ul class="space-y-2">
+                    <li class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                      <div class="flex flex-col">
+                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Command Center</span>
+                      </div>
+                      <span
+                        class="px-2 py-1 bg-red-500 text-white rounded text-xs font-black shadow-sm tracking-widest">911</span>
+                    </li>
+                    <li class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                      <div class="flex flex-col">
+                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Police Tactical</span>
+                        <span class="text-[10px] font-medium tracking-wide text-gray-400">(02) 8722-0650</span>
+                      </div>
+                      <span
+                        class="px-2 py-1 bg-blue-600 text-white rounded text-xs font-black shadow-sm tracking-widest">117</span>
+                    </li>
+                    <li class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                      <div class="flex flex-col">
+                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Fire Operations</span>
+                      </div>
+                      <span
+                        class="px-2 py-1 bg-yellow-500 text-gray-900 rounded text-xs font-black shadow-sm tracking-widest">(02)
+                        8426</span>
+                    </li>
+                    <li class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                      <div class="flex flex-col">
+                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Red Cross Medivac</span>
+                        <span class="text-[10px] font-medium tracking-wide text-gray-400">(02) 8790-2300</span>
+                      </div>
+                      <span
+                        class="px-2 py-1 bg-cyan-500 text-white rounded text-xs font-black shadow-sm tracking-widest">143</span>
+                    </li>
+                    <li class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
+                      <div class="flex flex-col">
+                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">MMDA Dispatch</span>
+                      </div>
+                      <span
+                        class="px-2 py-1 bg-green-500 text-white rounded text-xs font-black shadow-sm tracking-widest">136</span>
+                    </li>
+                    <li class="flex items-center justify-between py-2">
+                      <div class="flex flex-col">
+                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">NDRRMC Hub</span>
+                      </div>
+                      <span
+                        class="px-2 py-1 bg-gray-600 text-white rounded text-xs font-black shadow-sm tracking-widest">(02)
+                        8911</span>
+                    </li>
+                  </ul>
                 </div>
               </div>
+
             </div>
           </div>
-        </div>
-      </div>
 
-      <%- include('../partials/footer'); %>
+        </div>
+      </main>
     </div>
 
-    <%- include('../partials/page-end'); %>
-      <script src="/js/script.js"></script>
+    <%- include('../partials/footer'); %>
+      <%- include('../partials/page-end'); %>
 </body>
 
 </html>

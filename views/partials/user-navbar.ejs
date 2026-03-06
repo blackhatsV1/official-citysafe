@@ -1,49 +1,81 @@
-<div class="app-header-inner">
-    <div class="container-xl">
-        <div class="app-header-content">
-            <div class="row justify-content-between align-items-center">
-                <div class="col-auto">
-                    <a id="sidepanel-toggler" class="sidepanel-toggler d-inline-block d-xl-none" href="#">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" role="img">
-                            <title>Menu</title>
-                            <path stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2"
-                                d="M4 7h22M4 15h22M4 23h22"></path>
-                        </svg>
-                    </a>
-                </div>
-                <div class="search-mobile-trigger d-sm-none col">
-                    <i class="search-mobile-trigger-icon fa fa-search"></i>
+<!-- Glassmorphic User Navbar -->
+<nav class="glass-nav relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16 items-center">
+
+            <!-- Mobile Sidebar Toggle & Logo -->
+            <div class="flex items-center gap-3">
+                <button id="sidepanel-toggler"
+                    class="xl:hidden p-2 rounded-md text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors focus:outline-none">
+                    <i class="fa fa-bars text-xl"></i>
+                </button>
+                <a href="/"
+                    class="xl:hidden flex items-center gap-2 text-indigo-600 dark:text-indigo-400 hover:opacity-80 transition-opacity">
+                    <i class="fa fa-shield-alt text-2xl"></i>
+                    <span class="font-bold text-xl tracking-wider text-gray-900 dark:text-gray-100">CITYSAFE</span>
+                </a>
+            </div>
+
+            <!-- Utilities -->
+            <div class="flex items-center gap-4">
+
+                <!-- Theme Toggle -->
+                <button
+                    onclick="document.documentElement.classList.toggle('dark'); localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light'"
+                    class="p-2 rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors">
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:block"></i>
+                </button>
+
+                <!-- Notifications Dropdown (Alpine) -->
+                <div x-data="{ open: false }" class="relative">
+                    <button @click="open = !open" @click.outside="open = false"
+                        class="relative p-2 rounded-full text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors focus:outline-none">
+                        <i class="fa-solid fa-bell text-lg"></i>
+                        <span
+                            class="absolute top-0 right-0 inline-flex items-center justify-center w-4 h-4 text-xs font-bold leading-none text-white bg-red-500 rounded-full transform translate-x-1/4 -translate-y-1/4">2</span>
+                    </button>
+
+                    <div x-show="open" style="display: none;"
+                        class="absolute right-0 mt-2 w-64 glass-panel py-2 shadow-xl z-50">
+                        <div
+                            class="px-4 py-2 border-b border-gray-100 dark:border-gray-800 font-semibold text-gray-700 dark:text-gray-300">
+                            Notifications</div>
+                        <a href="#"
+                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">You
+                            have no new alerts.</a>
+                    </div>
                 </div>
 
-                <div class="app-utilities col-auto">
-                    <div class="app-utility-item app-notifications-dropdown dropdown">
-                        <a class="dropdown-toggle no-toggle-arrow" id="notifications-dropdown-toggle"
-                            data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"
-                            title="Notifications">
-                            <i class="fa-solid fa-bell icon"></i>
-                            <span class="icon-badge">2</span>
-                        </a><!--//dropdown-toggle-->
-                    </div><!--//app-utility-item-->
+                <!-- User Dropdown (Alpine) -->
+                <div x-data="{ open: false }" class="relative">
+                    <button @click="open = !open" @click.outside="open = false"
+                        class="flex items-center gap-2 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors focus:outline-none text-gray-700 dark:text-gray-300 font-medium">
+                        <div
+                            class="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                            <i class="fa fa-user"></i>
+                        </div>
+                        <span class="hidden md:block">
+                            <%= username %>
+                        </span>
+                        <i class="fa fa-chevron-down text-xs text-gray-400"></i>
+                    </button>
 
-                    <div class="app-utility-item app-user-dropdown dropdown">
-                        <a class="dropdown-toggle" id="user-dropdown-toggle" data-bs-toggle="dropdown" href="#"
-                            role="button" aria-expanded="false">
-                            <i class="fa fa-user me-1"></i>
-                            <span class="d-none d-md-inline-block">
-                                <%= username %>
-                            </span>
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="user-dropdown-toggle">
-                            <li><a class="dropdown-item" href="/editaccount">Settings</a></li>
-                            <li><a class="dropdown-item" href="/help-user">Support</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item text-danger" href="/logout">Logout</a></li>
-                        </ul>
-                    </div><!--//app-user-dropdown-->
-                </div><!--//app-utilities-->
-            </div><!--//row-->
-        </div><!--//app-header-content-->
-    </div><!--//container-fluid-->
-</div><!--//app-header-inner-->
+                    <div x-show="open" style="display: none;"
+                        class="absolute right-0 mt-2 w-48 glass-panel py-1 shadow-xl z-50">
+                        <a href="/editaccount"
+                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 border-b border-gray-100 dark:border-gray-800 transition-colors"><i
+                                class="fa fa-cog w-5"></i> Settings</a>
+                        <a href="/help-user"
+                            class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 border-b border-gray-100 dark:border-gray-800 transition-colors"><i
+                                class="fa fa-question-circle w-5"></i> Support</a>
+                        <a href="/logout"
+                            class="block px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"><i
+                                class="fa fa-sign-out-alt w-5"></i> Logout</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</nav>

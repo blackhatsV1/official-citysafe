@@ -5,128 +5,197 @@
     <%- include('../partials/head'); %>
 </head>
 
-<body class="app">
+<body
+    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
     <%- include('../partials/page-start'); %>
-        <header class="app-header fixed-top">
-            <%- include('../partials/user-navbar'); %>
-                <%- include('../partials/user-sidebar'); %>
+
+        <header class="sticky top-0 z-50">
+            <%- include('../partials/user-navbar', { currentPage: 'index' }); %>
         </header>
 
-        <div class="app-wrapper">
-            <div class="app-content pt-3 p-md-3 p-lg-4">
-                <div class="container-xl">
-                    <h1 class="app-page-title">Citizen Dashboard</h1>
+        <div class="flex flex-1 overflow-hidden relative">
+            <aside class="z-40">
+                <%- include('../partials/user-sidebar', { currentPage: 'index' }); %>
+            </aside>
 
-                    <div class="row g-4 mb-4">
-                        <div class="col-12 col-lg-7">
-                            <div class="app-card app-card-map shadow-sm h-100">
-                                <div
-                                    class="app-card-header p-3 border-0 d-flex align-items-center justify-content-between">
-                                    <h4 class="app-card-title">Local Operations Feed</h4>
-                                    <span class="badge bg-success">LIVE</span>
-                                </div>
-                                <div class="app-card-body p-0">
-                                    <%- include('../partials/selectloc'); %>
-                                </div>
+            <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8 overflow-y-auto w-full relative">
+                <div class="max-w-7xl mx-auto space-y-6">
+
+                    <h1 class="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight uppercase px-2 mb-2">
+                        CITIZEN DASHBOARD</h1>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                        <!-- Map Feed -->
+                        <div
+                            class="col-span-1 lg:col-span-7 xl:col-span-8 glass-panel flex flex-col overflow-hidden min-h-[500px]">
+                            <div
+                                class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-white/40 dark:bg-gray-900/40 flex items-center justify-between">
+                                <h2 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                                    Local Operations Feed</h2>
+                                <span
+                                    class="px-2.5 py-1 bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400 rounded text-[10px] font-black uppercase tracking-widest flex items-center gap-1.5 w-max">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                                    LIVE
+                                </span>
+                            </div>
+                            <div class="flex-1 w-full relative z-0 bg-gray-100 dark:bg-gray-800">
+                                <!-- Note: ensure selectloc partial uses absolute positioning correctly if needed -->
+                                <%- include('../partials/selectloc'); %>
                             </div>
                         </div>
 
-                        <div class="col-12 col-lg-5">
-                            <div class="app-card app-card-settings shadow-sm h-100 p-4">
-                                <div class="app-card-header p-0 border-0 mb-3">
-                                    <h4 class="app-card-title text-danger"><i class="fa fa-bullhorn me-2"></i>Emergency
-                                        SOS Dispatch</h4>
-                                </div>
-                                <div class="app-card-body">
-                                    <p class="text-muted small mb-4">Request emergency assistance. Our dispatch center
-                                        will receive your precise coordinates for immediate coordination.</p>
+                        <!-- SOS Dispatch -->
+                        <div
+                            class="col-span-1 lg:col-span-5 xl:col-span-4 glass-panel flex flex-col overflow-hidden relative">
+                            <!-- Alert Background styling -->
+                            <div class="absolute top-0 left-0 right-0 h-1 bg-red-500"></div>
 
-                                    <form action="/report" method="POST" id="dashboardSosForm">
-                                        <input type="hidden" name="type_of_disaster"
-                                            id="dashboard_selected_disaster_type">
+                            <div class="p-6 md:p-8 flex-1 flex flex-col">
+                                <h2
+                                    class="text-lg font-black uppercase tracking-wider text-red-600 dark:text-red-400 flex items-center gap-2 mb-3">
+                                    <i class="fa fa-bullhorn text-xl"></i> Emergency SOS Dispatch
+                                </h2>
+                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
+                                    Request emergency assistance. Our dispatch center will receive your precise
+                                    coordinates for immediate coordination.
+                                </p>
 
-                                        <div class="row g-3 mb-4">
-                                            <div class="col-6">
-                                                <button type="button" onclick="triggerDashboardSos('Fire')"
-                                                    class="btn btn-outline-danger w-100 py-3">
-                                                    <i class="fa fa-fire d-block mb-1"></i> FIRE
-                                                </button>
-                                            </div>
-                                            <div class="col-6">
-                                                <button type="button" onclick="triggerDashboardSos('Flood')"
-                                                    class="btn btn-outline-primary w-100 py-3">
-                                                    <i class="fa fa-water d-block mb-1"></i> FLOOD
-                                                </button>
-                                            </div>
-                                            <div class="col-6">
-                                                <button type="button" onclick="triggerDashboardSos('Earthquake')"
-                                                    class="btn btn-outline-secondary w-100 py-3">
-                                                    <i class="fa fa-globe-americas d-block mb-1"></i> EARTHQUAKE
-                                                </button>
-                                            </div>
-                                            <div class="col-6">
-                                                <button type="button" onclick="triggerDashboardSos('Landslide')"
-                                                    class="btn btn-outline-warning w-100 py-3">
-                                                    <i class="fa fa-mountain d-block mb-1"></i> LANDSLIDE
-                                                </button>
-                                            </div>
-                                        </div>
+                                <form action="/report" method="POST" id="dashboardSosForm"
+                                    class="flex flex-col flex-1 h-full">
+                                    <input type="hidden" name="type_of_disaster" id="dashboard_selected_disaster_type">
 
-                                        <div class="mb-4">
-                                            <label class="form-label small fw-bold text-uppercase muted">Dispatch
-                                                Location</label>
-                                            <textarea class="form-control" id="location" name="location" rows="2"
-                                                placeholder="Acquiring coordinates..." required readonly></textarea>
+                                    <!-- Grid Buttons -->
+                                    <div class="grid grid-cols-2 gap-4 mb-6">
+                                        <button type="button" onclick="triggerDashboardSos('Fire')"
+                                            class="group p-5 bg-white/50 dark:bg-gray-800/50 border border-red-200 dark:border-red-900/50 hover:bg-red-50 dark:hover:bg-red-900/20 hover:border-red-400 dark:hover:border-red-600 rounded-2xl flex flex-col items-center justify-center gap-3 transition-all duration-300 shadow-sm hover:shadow">
+                                            <div
+                                                class="w-14 h-14 rounded-full bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-inner">
+                                                <i class="fa fa-fire text-2xl"></i>
+                                            </div>
+                                            <span
+                                                class="text-xs font-black uppercase tracking-widest text-gray-800 dark:text-gray-200 group-hover:text-red-600 dark:group-hover:text-red-400">Fire</span>
+                                        </button>
+
+                                        <button type="button" onclick="triggerDashboardSos('Flood')"
+                                            class="group p-5 bg-white/50 dark:bg-gray-800/50 border border-blue-200 dark:border-blue-900/50 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:border-blue-400 dark:hover:border-blue-600 rounded-2xl flex flex-col items-center justify-center gap-3 transition-all duration-300 shadow-sm hover:shadow">
+                                            <div
+                                                class="w-14 h-14 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-inner">
+                                                <i class="fa fa-water text-2xl"></i>
+                                            </div>
+                                            <span
+                                                class="text-xs font-black uppercase tracking-widest text-gray-800 dark:text-gray-200 group-hover:text-blue-600 dark:group-hover:text-blue-400">Flood</span>
+                                        </button>
+
+                                        <button type="button" onclick="triggerDashboardSos('Earthquake')"
+                                            class="group p-5 bg-white/50 dark:bg-gray-800/50 border border-yellow-200 dark:border-yellow-900/50 hover:bg-yellow-50 dark:hover:bg-yellow-900/20 hover:border-yellow-400 dark:hover:border-yellow-600 rounded-2xl flex flex-col items-center justify-center gap-3 transition-all duration-300 shadow-sm hover:shadow">
+                                            <div
+                                                class="w-14 h-14 rounded-full bg-yellow-100 dark:bg-yellow-900/40 text-yellow-600 dark:text-yellow-400 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-inner">
+                                                <i class="fa fa-house-crack text-2xl"></i>
+                                            </div>
+                                            <span
+                                                class="text-xs font-black uppercase tracking-widest text-gray-800 dark:text-gray-200 group-hover:text-yellow-600 dark:group-hover:text-yellow-400">Quake</span>
+                                        </button>
+
+                                        <button type="button" onclick="triggerDashboardSos('Landslide')"
+                                            class="group p-5 bg-white/50 dark:bg-gray-800/50 border border-stone-200 dark:border-stone-800/50 hover:bg-stone-50 dark:hover:bg-stone-900/20 hover:border-stone-400 dark:hover:border-stone-600 rounded-2xl flex flex-col items-center justify-center gap-3 transition-all duration-300 shadow-sm hover:shadow">
+                                            <div
+                                                class="w-14 h-14 rounded-full bg-stone-200 dark:bg-stone-800/80 text-stone-700 dark:text-stone-300 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-inner">
+                                                <i class="fa fa-mountain text-2xl"></i>
+                                            </div>
+                                            <span
+                                                class="text-xs font-black uppercase tracking-widest text-gray-800 dark:text-gray-200 group-hover:text-stone-700 dark:group-hover:text-stone-400">Landslide</span>
+                                        </button>
+                                    </div>
+
+                                    <!-- Location & Dispatch -->
+                                    <div class="mt-auto flex flex-col gap-4">
+                                        <div class="space-y-1">
+                                            <label for="location"
+                                                class="block text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 pl-1">Dispatch
+                                                Coordinates</label>
+                                            <textarea id="location" name="location" rows="2"
+                                                class="input-glass font-mono text-xs p-3 cursor-not-allowed bg-gray-50/50 dark:bg-gray-800/30"
+                                                placeholder="Acquiring GPS coordinates..." required readonly></textarea>
                                             <input type="hidden" id="lat" name="lat">
                                             <input type="hidden" id="lon" name="lon">
                                         </div>
 
-                                        <button type="submit" class="btn btn-danger w-100 py-3 fw-bold">INITIATE
-                                            EMERGENCY PROTOCOL</button>
-                                    </form>
-                                </div>
+                                        <button type="submit"
+                                            class="w-full py-4 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 text-white font-black text-sm uppercase tracking-widest rounded-xl shadow-lg shadow-red-500/30 border border-red-500/50 transition-all hover:-translate-y-0.5 mt-2 flex items-center justify-center gap-2">
+                                            <i class="fa fa-satellite-dish animate-pulse"></i> INITIATE PROTOCOL
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <footer class="app-footer">
-                <%- include('../partials/footer'); %>
-            </footer>
+                </div>
+            </main>
         </div>
 
-        <script>
-            function triggerDashboardSos(type) {
-                const input = document.getElementById('dashboard_selected_disaster_type');
-                if (input) input.value = type;
+        <%- include('../partials/footer'); %>
 
-                const locField = document.getElementById('location');
-                if (!locField.value || locField.value.trim() === "" || locField.value.includes('Acquiring')) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Awaiting Location',
-                        text: 'We are still resolving your GPS coordinates. Please wait a moment.',
-                        confirmButtonColor: 'var(--accent)'
-                    });
-                    return;
-                }
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                function triggerDashboardSos(type) {
+                    const input = document.getElementById('dashboard_selected_disaster_type');
+                    if (input) input.value = type;
 
-                Swal.fire({
-                    title: 'CONFIRM SOS?',
-                    text: `Request immediate assistance for ${type} incident at your location?`,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'CONFIRM & DISPATCH'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        document.getElementById('dashboardSosForm').submit();
+                    const locField = document.getElementById('location');
+                    if (!locField.value || locField.value.trim() === "" || locField.value.includes('Acquiring') || locField.value.includes('Waiting for location')) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Awaiting Location',
+                            text: 'We are still resolving your precise GPS coordinates. Please wait a moment for satellite lock.',
+                            confirmButtonColor: '#6366f1',
+                            background: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff',
+                            color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#111827'
+                        });
+                        return;
                     }
-                });
-            }
-        </script>
+
+                    // Type icon/color mapping for SweetAlert
+                    let iconColor = '#ef4444'; // default red
+                    let iconHtml = '<i class="fa fa-exclamation-triangle" style="font-size:3rem;"></i>';
+                    if (type === 'Fire') { iconColor = '#ef4444'; iconHtml = '<i class="fa fa-fire text-red-500" style="font-size:3rem;"></i>'; }
+                    if (type === 'Flood') { iconColor = '#3b82f6'; iconHtml = '<i class="fa fa-water text-blue-500" style="font-size:3rem;"></i>'; }
+                    if (type === 'Earthquake') { iconColor = '#eab308'; iconHtml = '<i class="fa fa-house-crack text-yellow-500" style="font-size:3rem;"></i>'; }
+                    if (type === 'Landslide') { iconColor = '#78716c'; iconHtml = '<i class="fa fa-mountain text-stone-500" style="font-size:3rem;"></i>'; }
+
+                    Swal.fire({
+                        title: `<span style="font-weight:900;text-transform:uppercase;letter-spacing:1px;font-size:1.5rem">CONFIRM SOS?</span>`,
+                        html: `
+                    <div style="margin-bottom:15px">${iconHtml}</div>
+                    <p style="font-weight:500;color:inherit;font-size:1rem;">Request immediate responder assistance for a <strong>${type.toUpperCase()}</strong> incident at your current sector coordinates?</p>
+                `,
+                        showCancelButton: true,
+                        confirmButtonColor: '#ef4444',
+                        cancelButtonColor: '#64748b',
+                        confirmButtonText: '<span style="font-weight:bold;letter-spacing:1px">CONFIRM & DISPATCH</span>',
+                        cancelButtonText: '<span style="font-weight:bold;letter-spacing:1px">CANCEL</span>',
+                        reverseButtons: true,
+                        background: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff',
+                        color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#111827',
+                        customClass: {
+                            confirmButton: 'shadow-lg shadow-red-500/50'
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            Swal.fire({
+                                title: 'Transmitting Signal...',
+                                text: 'Dispatching your coordinates and incident details to Mission Control.',
+                                allowOutsideClick: false,
+                                background: document.documentElement.classList.contains('dark') ? '#1f2937' : '#ffffff',
+                                color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#111827',
+                                showConfirmButton: false,
+                                didOpen: () => { Swal.showLoading() }
+                            });
+                            document.getElementById('dashboardSosForm').submit();
+                        }
+                    });
+                }
+            </script>
 </body>
 
 </html>

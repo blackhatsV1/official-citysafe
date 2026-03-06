@@ -1,65 +1,124 @@
 /* Minimal app styles to complement Bootstrap 5 */
 :root {
-    --bg-card: #f8fafc;
-    --text-head: #0f172a;
-    --accent: #6366f1;
-    --border-light: rgba(255, 255, 255, 0.06);
-    --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.3);
-    --text-main: #f8fafc;
-    --danger-slate: #b91c1c;
-    --text-muted: #94a3b8;
-}
-
-body.bg-page {
-    background: #0b1220;
-    color: #f8fafc;
+    --accent: #15a362;
+    --border-light: rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 10px rgba(0, 0, 0, 0.1);
+    --danger-slate: #ef4444;
 }
 
 /* Bootstrap Overrides & Utilities */
-.bg-secondary { background: #111827 !important; }
-.bg-card { background: #0f172a; }
-.text-head { color: var(--text-head); }
-.text-muted { color: var(--text-muted) !important; }
+/* Background now handled by premium.css */
 
 /* Custom Backgrounds */
-.bg-primary-soft { background: rgba(99, 102, 241, 0.1); color: #6366f1; }
-.bg-success-soft { background: rgba(16, 185, 129, 0.1); color: #10b981; }
-.bg-danger-soft { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
-.bg-warning-soft { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
-.bg-info-soft { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
-.bg-indigo-soft { background: rgba(79, 70, 229, 0.1); color: #818cf8; }
+.bg-primary-soft {
+    background: rgba(21, 163, 98, 0.1);
+    color: #15a362;
+}
 
-.text-indigo { color: #818cf8 !important; }
-.text-success { color: #10b981 !important; }
-.text-danger { color: #ef4444 !important; }
-.text-info { color: #3b82f6 !important; }
+.bg-success-soft {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+}
 
-.sidebar { width: 250px; }
-.content { flex: 1; padding: 0; }
+.bg-danger-soft {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.bg-warning-soft {
+    background: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+}
+
+.bg-info-soft {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+}
+
+.bg-indigo-soft {
+    background: rgba(79, 70, 229, 0.1);
+    color: #818cf8;
+}
+
+.text-indigo {
+    color: #818cf8 !important;
+}
+
+.text-success {
+    color: #10b981 !important;
+}
+
+.text-danger {
+    color: #ef4444 !important;
+}
+
+.text-info {
+    color: #3b82f6 !important;
+}
+
+.sidebar {
+    width: 250px;
+}
+
+.content {
+    flex: 1;
+    padding: 0;
+}
 
 .btn-outline-sos {
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.1);
     background: transparent;
 }
 
-.card { background: #0b1220; }
-
 /* Typography */
-.fw-600 { font-weight: 600; }
-.fw-700 { font-weight: 700; }
-.fw-800 { font-weight: 800; }
-.letter-spacing-1 { letter-spacing: 0.1em; }
-.family-monospace { font-family: monospace; }
+.fw-600 {
+    font-weight: 600;
+}
+
+.fw-700 {
+    font-weight: 700;
+}
+
+.fw-800 {
+    font-weight: 800;
+}
+
+.letter-spacing-1 {
+    letter-spacing: 0.1em;
+}
+
+.family-monospace {
+    font-family: monospace;
+}
 
 /* Small Utilities */
-.opacity-05 { opacity: .05; }
-.shadow-inner { box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2); }
-.z-1 { z-index: 1; }
+.opacity-05 {
+    opacity: .05;
+}
 
-.avatar-xs { width: 28px; height: 28px; }
-.avatar-md { width: 56px; height: 56px; }
+.shadow-inner {
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+}
 
-.indicator-dot { width: 8px; height: 8px; display: inline-block; }
+.z-1 {
+    z-index: 1;
+}
+
+.avatar-xs {
+    width: 28px;
+    height: 28px;
+}
+
+.avatar-md {
+    width: 56px;
+    height: 56px;
+}
+
+.indicator-dot {
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+}
 
 .pattern-grid {
     background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
@@ -67,14 +126,17 @@ body.bg-page {
 
 /* Responsive */
 @media (max-width: 992px) {
-    .sidebar { display: none; }
+    .sidebar {
+        display: none;
+    }
 }
 
 /* Maps */
 #map,
 #weather-map,
 #admin-map {
-    height: 350px; /* Standardize visitor/weather maps */
+    height: 350px;
+    /* Standardize visitor/weather maps */
     width: 100%;
     border-radius: 0.5rem;
     border: 1px solid var(--border-light);
@@ -83,7 +145,9 @@ body.bg-page {
 }
 
 /* Page-scoped tweaks */
-.responder-page #map { height: 550px; }
+.responder-page #map {
+    height: 550px;
+}
 
 .leaflet-routing-container {
     background-color: var(--bg-card) !important;

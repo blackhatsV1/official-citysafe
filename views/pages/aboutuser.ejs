@@ -5,104 +5,145 @@
   <%- include('../partials/head'); %>
 </head>
 
-<body class="app">
+<body
+  class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
   <%- include('../partials/page-start'); %>
 
-    <header class="app-header fixed-top">
-      <%- include('../partials/user-navbar'); %>
-        <%- include('../partials/user-sidebar'); %>
+    <header class="sticky top-0 z-50">
+      <%- include('../partials/user-navbar', { currentPage: 'aboutuser' }); %>
     </header>
 
-    <div class="app-wrapper">
-      <div class="app-content pt-3 p-md-3 p-lg-4">
-        <div class="container-xl">
-          <div class="row g-4 mb-4">
-            <div class="col-12 col-lg-8">
-              <div class="app-card app-card-basic d-flex flex-column align-items-start shadow-sm h-100">
-                <div class="app-card-header p-3 border-bottom-0">
-                  <div class="row align-items-center gx-3">
-                    <div class="col-auto">
-                      <div class="app-icon-holder bg-primary text-white">
-                        <i class="fa fa-info-circle"></i>
-                      </div>
+    <div class="flex flex-1 overflow-hidden relative">
+      <aside class="z-40">
+        <%- include('../partials/user-sidebar', { currentPage: 'aboutuser' }); %>
+      </aside>
+
+      <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8 overflow-y-auto w-full relative">
+        <div class="max-w-7xl mx-auto space-y-6">
+
+          <div class="flex items-center gap-3 px-2 mb-2">
+            <div
+              class="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+              <i class="fa fa-circle-info text-xl"></i>
+            </div>
+            <h1 class="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight uppercase">About CitySafe
+            </h1>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- Mission Section -->
+            <div class="lg:col-span-2 space-y-6">
+              <div class="glass-panel overflow-hidden h-full flex flex-col border-t-4 border-indigo-500 relative">
+                <!-- Background abstract shape -->
+                <div
+                  class="absolute -top-10 -right-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none">
+                </div>
+
+                <div class="p-6 md:p-8 flex-1 relative z-10">
+                  <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6 flex items-center gap-3">
+                    <i class="fa fa-bullseye text-indigo-500"></i> Our Mission
+                  </h3>
+
+                  <div class="space-y-6 text-gray-600 dark:text-gray-300 leading-relaxed">
+                    <p class="text-sm md:text-base">
+                      CitySafe is a web-based disaster response app that provides
+                      real-time alerts, localized notifications, and reliable information
+                      during emergencies. It helps citizens stay informed, empowers them
+                      to send SOS requests for immediate assistance, and supports city officials and
+                      responders in coordinating relief efforts efficiently.
+                    </p>
+
+                    <p class="text-sm md:text-base">
+                      CitySafe was developed as a <span
+                        class="px-2 py-0.5 bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 rounded font-bold uppercase tracking-widest text-[10px] mx-1">Capstone
+                        Research Project</span> entitled “CitySafe: Urban Disaster Response App”, with the goal of
+                      creating a user-friendly, efficient, and compassionate system that strengthens disaster resilience
+                      in urban areas.
+                    </p>
+                  </div>
+
+                  <div
+                    class="mt-8 p-6 bg-gray-50/50 dark:bg-gray-800/50 rounded-2xl border border-gray-200 dark:border-gray-700 relative overflow-hidden group">
+                    <div
+                      class="absolute -right-4 -top-4 text-7xl text-gray-200 dark:text-gray-700 opacity-50 group-hover:scale-110 transition-transform">
+                      <i class="fa fa-quote-right"></i>
                     </div>
-                    <div class="col-auto">
-                      <h4 class="app-card-title">About CitySafe</h4>
+                    <div class="relative z-10">
+                      <p class="text-lg font-bold text-gray-800 dark:text-gray-200 mb-2 italic">
+                        "CitySafe: Urban Disaster Response App"
+                      </p>
+                      <p class="text-[10px] uppercase tracking-widest font-black text-gray-500 dark:text-gray-400">
+                        — Capstone Research Project
+                      </p>
                     </div>
                   </div>
-                </div>
-                <div class="app-card-body px-4 pb-4">
-                  <figure class="text-center p-3 mb-0">
-                    <blockquote class="blockquote">
-                      <p>CitySafe is a web-based disaster response app that provides
-                        real-time alerts, localized notifications, and reliable information
-                        during emergencies. It helps citizens stay informed, empowers them
-                        to send SOS requests for immediate assistance, and supports city officials and
-                        responders in coordinating relief efforts efficiently.</p>
-                      <p>
-                        CitySafe was developed as a <em>capstone research project</em> entitled
-                        “CitySafe: Urban Disaster Response App”, with the goal of creating a
-                        user-friendly, efficient, and compassionate system that strengthens
-                        disaster resilience in urban areas.
-                      </p>
-                    </blockquote>
-                    <figcaption class="blockquote-footer mt-2">
-                      Capstone Research Project <cite title="Source Title">“CitySafe: Urban Disaster Response
-                        App”</cite>
-                    </figcaption>
-                  </figure>
                 </div>
               </div>
             </div>
 
-            <div class="col-12 col-lg-4">
-              <div class="app-card app-card-settings shadow-sm p-4 h-100">
-                <div class="app-card-body">
-                  <h4 class="app-card-title mb-4">Team Members:</h4>
+            <!-- Development Team Section -->
+            <div class="lg:col-span-1 space-y-6">
+              <div class="glass-panel overflow-hidden border-t-4 border-emerald-500 h-full">
+                <div
+                  class="px-6 py-4 border-b border-emerald-100 dark:border-emerald-900/30 bg-emerald-50/50 dark:bg-emerald-900/10 flex items-center justify-between">
+                  <h4
+                    class="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 flex items-center gap-2">
+                    <i class="fa fa-users-gear text-emerald-500"></i> Development Team
+                  </h4>
+                </div>
+                <div class="p-6 space-y-4">
 
-                  <div class="border rounded p-3 mb-3 text-center bg-light">
-                    <figure class="mb-0">
-                      <blockquote class="blockquote fs-6">
-                        <p class="mb-1 fw-bold">Jayrold Tabalina</p>
-                      </blockquote>
-                      <figcaption class="blockquote-footer mb-0">
-                        Programmer <cite title="Source Title">PHINMA-University of Iloilo</cite>
-                      </figcaption>
-                    </figure>
+                  <div
+                    class="text-center p-4 rounded-xl bg-white/40 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors group">
+                    <div
+                      class="w-16 h-16 mx-auto rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center font-black text-2xl border-4 border-white dark:border-gray-800 shrink-0 shadow-md transform group-hover:-translate-y-1 transition-transform mb-3">
+                      JT
+                    </div>
+                    <h6 class="text-sm font-bold text-gray-900 dark:text-gray-100">Jayrold Tabalina</h6>
+                    <p
+                      class="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-1">
+                      Lead Programmer</p>
+                    <p class="text-[10px] font-medium text-gray-500 dark:text-gray-400">PHINMA-University of Iloilo</p>
                   </div>
 
-                  <div class="border rounded p-3 mb-3 text-center bg-light">
-                    <figure class="mb-0">
-                      <blockquote class="blockquote fs-6">
-                        <p class="mb-1 fw-bold">Yasmine M. Talaman</p>
-                      </blockquote>
-                      <figcaption class="blockquote-footer mb-0">
-                        Documenter <cite title="Source Title">PHINMA-University of Iloilo</cite>
-                      </figcaption>
-                    </figure>
+                  <div
+                    class="text-center p-4 rounded-xl bg-white/40 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors group">
+                    <div
+                      class="w-16 h-16 mx-auto rounded-full bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 flex items-center justify-center font-black text-2xl border-4 border-white dark:border-gray-800 shrink-0 shadow-md transform group-hover:-translate-y-1 transition-transform mb-3">
+                      YT
+                    </div>
+                    <h6 class="text-sm font-bold text-gray-900 dark:text-gray-100">Yasmine M. Talaman</h6>
+                    <p
+                      class="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-1">
+                      Documentation Lead</p>
+                    <p class="text-[10px] font-medium text-gray-500 dark:text-gray-400">PHINMA-University of Iloilo</p>
                   </div>
 
-                  <div class="border rounded p-3 text-center bg-light">
-                    <figure class="mb-0">
-                      <blockquote class="blockquote fs-6">
-                        <p class="mb-1 fw-bold">Mark Vincent Jabao</p>
-                      </blockquote>
-                      <figcaption class="blockquote-footer mb-0">
-                        UI/UX <cite title="Source Title">PHINMA-University of Iloilo</cite>
-                      </figcaption>
-                    </figure>
+                  <div
+                    class="text-center p-4 rounded-xl bg-white/40 dark:bg-gray-800/40 border border-gray-200 dark:border-gray-700 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors group">
+                    <div
+                      class="w-16 h-16 mx-auto rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 flex items-center justify-center font-black text-2xl border-4 border-white dark:border-gray-800 shrink-0 shadow-md transform group-hover:-translate-y-1 transition-transform mb-3">
+                      MJ
+                    </div>
+                    <h6 class="text-sm font-bold text-gray-900 dark:text-gray-100">Mark Vincent Jabao</h6>
+                    <p
+                      class="text-[10px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-1">
+                      UI/UX Designer</p>
+                    <p class="text-[10px] font-medium text-gray-500 dark:text-gray-400">PHINMA-University of Iloilo</p>
                   </div>
+
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <%- include('../partials/footer'); %>
+        </div>
+      </main>
     </div>
 
-    <%- include('../partials/page-end'); %>
+    <%- include('../partials/footer'); %>
+      <%- include('../partials/page-end'); %>
 </body>
 
 </html>
