@@ -5,99 +5,86 @@
     <%- include('../partials/head'); %>
 </head>
 
-<body
-    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
+<body>
     <%- include('../partials/page-start'); %>
 
-        <header class="sticky top-0 z-50">
+        <header>
             <%- include('../partials/user-navbar', { currentPage: 'riskassessment' }); %>
         </header>
 
-        <div class="flex flex-1 overflow-hidden relative">
-            <aside class="z-40">
+        <div>
+            <aside>
                 <%- include('../partials/user-sidebar', { currentPage: 'riskassessment' }); %>
             </aside>
 
-            <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8 overflow-y-auto w-full relative">
-                <div class="max-w-6xl mx-auto space-y-6">
+            <main>
+                <div>
 
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
-                        <div class="flex items-center gap-3">
-                            <div
-                                class="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shadow-inner">
-                                <i class="fa fa-clock-rotate-left text-xl"></i>
+                    <div>
+                        <div>
+                            <div>
+                                <i></i>
                             </div>
-                            <h1 class="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight uppercase">
+                            <h1>
                                 Assessment History</h1>
                         </div>
-                        <a href="/assess-risk"
-                            class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-md hover:shadow-indigo-500/25 flex items-center gap-2 w-fit transform hover:-translate-y-0.5">
-                            <i class="fa fa-plus"></i> NEW ASSESSMENT
+                        <a href="/assess-risk">
+                            <i></i> NEW ASSESSMENT
                         </a>
                     </div>
 
-                    <div class="glass-panel overflow-hidden border-t-4 border-indigo-500 shadow-lg">
-                        <div
-                            class="px-6 py-4 border-b border-indigo-100 dark:border-indigo-900/30 bg-indigo-50/50 dark:bg-indigo-900/10 flex items-center">
-                            <h2 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                    <div>
+                        <div>
+                            <h2>
                                 Historical Records</h2>
                         </div>
 
-                        <div class="overflow-x-auto w-full">
+                        <div>
                             <% if (assessments.length> 0) { %>
-                                <table class="w-full text-left border-collapse">
+                                <table>
                                     <thead>
-                                        <tr
-                                            class="bg-gray-50/50 dark:bg-gray-800/50 text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-bold border-b border-gray-100 dark:border-gray-800">
-                                            <th class="px-6 py-4">Date Assessed</th>
-                                            <th class="px-6 py-4">Calculated Score</th>
-                                            <th class="px-6 py-4">Threat Level</th>
-                                            <th class="px-6 py-4 text-right">Actions</th>
+                                        <tr>
+                                            <th>Date Assessed</th>
+                                            <th>Calculated Score</th>
+                                            <th>Threat Level</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="divide-y divide-gray-100 dark:divide-gray-800/60 text-sm">
+                                    <tbody>
                                         <% for (let i=0; i < assessments.length; i++) { %>
-                                            <tr
-                                                class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors group">
-                                                <td class="px-6 py-4 font-semibold text-gray-900 dark:text-gray-100">
+                                            <tr>
+                                                <td>
                                                     <%= assessments[i].assessed_at %>
                                                 </td>
-                                                <td
-                                                    class="px-6 py-4 font-mono font-bold text-gray-600 dark:text-gray-400">
-                                                    <span
-                                                        class="px-2.5 py-1 bg-gray-100 dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 shadow-inner">
+                                                <td>
+                                                    <span>
                                                         <%= assessments[i].risk_score %>%
                                                     </span>
                                                 </td>
-                                                <td class="px-6 py-4">
+                                                <td>
                                                     <% if(assessments[i].risk_level==='High' ) { %>
-                                                        <span
-                                                            class="px-3 py-1 bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400 rounded-lg text-xs font-black uppercase tracking-widest border border-red-200 dark:border-red-800/50 flex w-fit items-center gap-1.5 shadow-sm">
-                                                            <i class="fa fa-triangle-exclamation"></i>
+                                                        <span>
+                                                            <i></i>
                                                             <%= assessments[i].risk_level %>
                                                         </span>
                                                         <% } else if(assessments[i].risk_level==='Medium' ) { %>
-                                                            <span
-                                                                class="px-3 py-1 bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400 rounded-lg text-xs font-black uppercase tracking-widest border border-amber-200 dark:border-amber-800/50 flex w-fit items-center gap-1.5 shadow-sm">
-                                                                <i class="fa fa-circle-exclamation"></i>
+                                                            <span>
+                                                                <i></i>
                                                                 <%= assessments[i].risk_level %>
                                                             </span>
                                                             <% } else { %>
-                                                                <span
-                                                                    class="px-3 py-1 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400 rounded-lg text-xs font-black uppercase tracking-widest border border-emerald-200 dark:border-emerald-800/50 flex w-fit items-center gap-1.5 shadow-sm">
-                                                                    <i class="fa fa-shield-check"></i>
+                                                                <span>
+                                                                    <i></i>
                                                                     <%= assessments[i].risk_level %>
                                                                 </span>
                                                                 <% } %>
                                                 </td>
-                                                <td class="px-6 py-4 text-right">
+                                                <td>
                                                     <form action="/delete-result/<%= assessments[i].id %>" method="POST"
-                                                        class="inline-block"
                                                         onsubmit="return confirmDelete(event, this);">
                                                         <button type="submit"
-                                                            class="w-8 h-8 rounded-lg bg-gray-100 hover:bg-red-100 text-gray-500 hover:text-red-600 dark:bg-gray-800 dark:hover:bg-red-900/40 dark:text-gray-400 dark:hover:text-red-400 transition-colors flex items-center justify-center tooltip-trigger border border-transparent hover:border-red-200 dark:hover:border-red-800"
                                                             title="Delete Record">
-                                                            <i class="fa fa-trash-can"></i>
+                                                            <i></i>
                                                         </button>
                                                     </form>
                                                 </td>
@@ -106,20 +93,17 @@
                                     </tbody>
                                 </table>
                                 <% } else { %>
-                                    <div class="flex flex-col items-center justify-center py-16 text-center px-4">
-                                        <div
-                                            class="w-20 h-20 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-5 shadow-inner">
-                                            <i
-                                                class="fa fa-clipboard-list text-4xl text-gray-400 dark:text-gray-500"></i>
+                                    <div>
+                                        <div>
+                                            <i></i>
                                         </div>
-                                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">No Records
+                                        <h3>No Records
                                             Found</h3>
-                                        <p class="text-sm text-gray-500 dark:text-gray-400 max-w-sm mb-6">You haven't
+                                        <p>You haven't
                                             completed a risk assessment yet. Take one to understand your local
                                             vulnerabilities.</p>
-                                        <a href="/assess-risk"
-                                            class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-md hover:shadow-indigo-500/25 flex items-center gap-2">
-                                            START ASSESSMENT <i class="fa fa-arrow-right"></i>
+                                        <a href="/assess-risk">
+                                            START ASSESSMENT <i></i>
                                         </a>
                                     </div>
                                     <% } %>
@@ -153,7 +137,7 @@
                         text: "This assessment history will be permanently erased.",
                         icon: 'warning',
                         showCancelButton: true,
-                        confirmButtonText: '<i class="fa fa-trash-can mr-2"></i> CONFIRM',
+                        confirmButtonText: '<i></i> CONFIRM',
                         cancelButtonText: 'CANCEL',
                         reverseButtons: true
                     }).then((result) => {
@@ -164,17 +148,7 @@
                     return false;
                 }
             </script>
-            <style>
-                .swal2-popup.glass-swal {
-                    backdrop-filter: blur(16px);
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                    border-radius: 1.5rem;
-                }
-
-                .dark .swal2-popup.glass-swal {
-                    border: 1px solid rgba(255, 255, 255, 0.05);
-                }
-            </style>
+            
             <%- include('../partials/page-end'); %>
 </body>
 

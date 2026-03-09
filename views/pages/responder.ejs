@@ -3,161 +3,97 @@
 
 <head>
     <%- include('../partials/head'); %>
-        <link rel="stylesheet"
-            href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+        
         <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.min.js"></script>
-        <style>
-            #map {
-                z-index: 10;
-            }
-
-            /* Glassmorphic popup */
-            .leaflet-popup-content-wrapper {
-                background: rgba(255, 255, 255, 0.9);
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.4);
-                border-radius: 1rem;
-                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-                color: #1f2937;
-            }
-
-            .dark .leaflet-popup-content-wrapper {
-                background: rgba(17, 24, 39, 0.9);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                color: #f3f4f6;
-            }
-
-            .leaflet-popup-tip {
-                background: rgba(255, 255, 255, 0.9);
-            }
-
-            .dark .leaflet-popup-tip {
-                background: rgba(17, 24, 39, 0.9);
-            }
-
-            /* Glassmorphic SweetAlert */
-            .swal2-popup.glass-swal {
-                background: rgba(255, 255, 255, 0.9);
-                backdrop-filter: blur(16px);
-                border: 1px solid rgba(255, 255, 255, 0.4);
-                border-radius: 1.5rem;
-                color: #1f2937;
-            }
-
-            .dark .swal2-popup.glass-swal {
-                background: rgba(17, 24, 39, 0.85);
-                border: 1px solid rgba(255, 255, 255, 0.05);
-                color: #f3f4f6;
-            }
-        </style>
+        
 </head>
 
-<body
-    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
+<body>
     <%- include('../partials/page-start'); %>
 
-        <header class="sticky top-0 z-50">
+        <header>
             <%- include('../partials/responder-navbar', { currentPage: 'responder' }); %>
         </header>
 
-        <div class="flex flex-1 overflow-hidden relative">
-            <aside class="z-40">
+        <div>
+            <aside>
                 <%- include('../partials/responder-sidebar', { currentPage: 'responder' }); %>
             </aside>
 
-            <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8 overflow-y-auto w-full relative">
-                <div class="max-w-7xl mx-auto space-y-6">
+            <main>
+                <div>
 
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
-                        <h1
-                            class="text-3xl font-black text-gray-900 dark:text-white tracking-tight uppercase px-2 flex items-center gap-3">
-                            <div
-                                class="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shadow-inner">
-                                <i class="fa fa-shield-halved text-xl"></i>
+                    <div>
+                        <h1>
+                            <div>
+                                <i></i>
                             </div>
                             Field Operations
                         </h1>
-                        <div
-                            class="px-3 py-1.5 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 rounded-lg text-xs font-black uppercase tracking-widest flex items-center gap-2 shadow-sm animate-pulse w-fit">
-                            <div class="w-2 h-2 rounded-full bg-emerald-500"></div> LIVE SYSTEM ACTIVE
+                        <div>
+                            <div></div> LIVE SYSTEM ACTIVE
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 gap-6">
+                    <div>
 
                         <!-- Map Component -->
-                        <div
-                            class="glass-panel overflow-hidden border-t-4 border-indigo-500 shadow-lg relative min-h-[500px] flex flex-col">
-                            <div
-                                class="px-6 py-4 border-b border-indigo-100 dark:border-indigo-900/30 bg-indigo-50/50 dark:bg-indigo-900/10 flex items-center justify-between z-20">
-                                <h4
-                                    class="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 flex items-center gap-2">
-                                    <i class="fa fa-crosshairs text-indigo-500"></i> Operations Grid
+                        <div>
+                            <div>
+                                <h4>
+                                    <i></i> Operations Grid
                                 </h4>
                             </div>
-                            <div class="flex-1 relative bg-gray-100 dark:bg-gray-800 z-10 p-2">
-                                <div id="map"
-                                    class="w-full h-full rounded-xl shadow-inner border border-gray-200 dark:border-gray-700 min-h-[400px]">
+                            <div>
+                                <div id="map">
                                 </div>
 
                                 <!-- GPS Status Overlay -->
-                                <div
-                                    class="absolute bottom-6 left-6 z-[400] bg-white/80 dark:bg-gray-900/80 backdrop-blur-md px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 shadow-lg min-w-[200px]">
-                                    <div class="flex items-center gap-2 mb-2">
-                                        <i class="fa fa-location-arrow text-indigo-500 text-xs"></i>
-                                        <span id="locationStatus"
-                                            class="text-xs font-bold text-gray-800 dark:text-gray-200 uppercase tracking-widest">Initializing
+                                <div>
+                                    <div>
+                                        <i></i>
+                                        <span id="locationStatus">Initializing
                                             GPS...</span>
                                     </div>
-                                    <div class="w-full h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                                        <div class="h-full bg-indigo-500 w-full animate-pulse"></div>
+                                    <div>
+                                        <div></div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Local Deployments Table -->
-                        <div class="glass-panel overflow-hidden border-t-4 border-cyan-500 shadow-lg"
+                        <div
                             id="nearby-reports">
-                            <div
-                                class="px-6 py-4 border-b border-cyan-100 dark:border-cyan-900/30 bg-cyan-50/50 dark:bg-cyan-900/10 flex items-center justify-between">
-                                <h4
-                                    class="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 flex items-center gap-2">
-                                    <i class="fa fa-clipboard-list text-cyan-500"></i> Local Deployments
+                            <div>
+                                <h4>
+                                    <i></i> Local Deployments
                                 </h4>
-                                <div
-                                    class="text-[10px] font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest border border-gray-200 dark:border-gray-700 px-2 py-1 rounded bg-white/50 dark:bg-gray-800/50">
+                                <div>
                                     2KM Radius Active
                                 </div>
                             </div>
-                            <div class="p-0 overflow-x-auto">
-                                <table class="w-full text-left border-collapse">
+                            <div>
+                                <table>
                                     <thead>
-                                        <tr
-                                            class="bg-gray-50/50 dark:bg-gray-800/50 border-b border-gray-100 dark:border-gray-800">
-                                            <th
-                                                class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                        <tr>
+                                            <th>
                                                 Timestamp</th>
-                                            <th
-                                                class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                            <th>
                                                 Reported By</th>
-                                            <th
-                                                class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                            <th>
                                                 Classification</th>
-                                            <th
-                                                class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                            <th>
                                                 Operational Address</th>
-                                            <th
-                                                class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 text-right">
+                                            <th>
                                                 Action</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="reportsTableBody" class="divide-y divide-gray-100 dark:divide-gray-800">
+                                    <tbody id="reportsTableBody">
                                         <tr>
-                                            <td colspan="5"
-                                                class="px-6 py-12 text-center text-gray-500 dark:text-gray-400">
-                                                <i class="fa fa-spinner fa-spin text-indigo-500 mb-3 text-2xl"></i>
-                                                <p class="text-xs font-bold uppercase tracking-widest">Scanning
+                                            <td colspan="5">
+                                                <i></i>
+                                                <p>Scanning
                                                     operational sectors for reported incidents...</p>
                                             </td>
                                         </tr>
@@ -215,22 +151,22 @@
 
                 const date = new Date(report.reported_at).toLocaleString();
                 const popupContent = `
-                <div class="space-y-2 min-w-[200px]">
-                    <div class="px-2 py-1 bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 rounded text-[10px] font-black uppercase tracking-widest border border-red-200 dark:border-red-800 w-fit mb-2">
+                <div>
+                    <div>
                         ${report.disaster_type}
                     </div>
-                    <p class="text-[10px] font-bold text-gray-700 dark:text-gray-300 m-0 uppercase flex justify-between">
-                        <span>Status:</span> <span class="text-indigo-600 dark:text-indigo-400">${report.status.toUpperCase()}</span>
+                    <p>
+                        <span>Status:</span> <span>${report.status.toUpperCase()}</span>
                     </p>
-                    <p class="text-[10px] font-bold text-gray-500 dark:text-gray-400 m-0 uppercase flex justify-between pb-2 border-b border-gray-100 dark:border-gray-700">
+                    <p>
                         <span>Logged:</span> <span>${date}</span>
                     </p>
                     
-                    <div class="py-2 text-[10px] bg-gray-50 dark:bg-gray-800/50 rounded-lg p-2 font-medium text-gray-600 dark:text-gray-400" id="addr-${report.id}">
-                        <i class="fa fa-spinner fa-spin mr-1 opacity-50"></i> Resolving address...
+                    <div id="addr-${report.id}">
+                        <i></i> Resolving address...
                     </div>
                     
-                    <button class="w-full mt-2 px-3 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-[10px] font-black uppercase tracking-widest transition-colors shadow-sm" onclick="respondToReport(${report.id}, '${report.disaster_type}')">
+                    <button onclick="respondToReport(${report.id}, '${report.disaster_type}')">
                         DEPLOY NOW
                     </button>
                 </div>
@@ -268,8 +204,8 @@
 
             window.respondToReport = function (id, type) {
                 GlassSwal.fire({
-                    title: '<span class="text-xl font-black uppercase tracking-tight text-emerald-500">Deploy Mission?</span>',
-                    html: `<span class="text-sm font-medium text-gray-600 dark:text-gray-300">Confirm operational deployment to recorded <b class="text-red-500">${type}</b> incident?</span>`,
+                    title: '<span>Deploy Mission?</span>',
+                    html: `<span>Confirm operational deployment to recorded <b>${type}</b> incident?</span>`,
                     icon: 'warning',
                     iconColor: '#10b981',
                     showCancelButton: true,
@@ -288,7 +224,7 @@
                                 if (data.success) {
                                     GlassSwal.fire({
                                         icon: 'success',
-                                        title: '<span class="font-black">ACCEPTED</span>',
+                                        title: '<span>ACCEPTED</span>',
                                         showConfirmButton: false,
                                         timer: 1500
                                     }).then(() => window.location.href = '/responding');
@@ -334,28 +270,28 @@
                         const addr = addressCache[report.id] || "Pending Geocode...";
 
                         rows += `
-                    <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors group">
-                        <td class="px-6 py-4 text-[10px] font-bold text-gray-500 dark:text-gray-400 whitespace-nowrap">${dateStr}</td>
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-2">
-                                <div class="w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-[10px] text-gray-500">
-                                    <i class="fa fa-user"></i>
+                    <tr>
+                        <td>${dateStr}</td>
+                        <td>
+                            <div>
+                                <div>
+                                    <i></i>
                                 </div>
-                                <span class="text-xs font-bold text-gray-800 dark:text-gray-200">${reporterName}</span>
+                                <span>${reporterName}</span>
                             </div>
                         </td>
-                        <td class="px-6 py-4">
-                            <span class="px-2 py-1 bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 rounded text-[10px] font-bold uppercase tracking-widest border border-red-200 dark:border-red-800">
+                        <td>
+                            <span>
                                 ${report.disaster_type}
                             </span>
                         </td>
-                        <td class="px-6 py-4">
-                            <span class="text-xs text-gray-500 dark:text-gray-400 block truncate max-w-[200px]" id="table-addr-${report.id}">
+                        <td>
+                            <span id="table-addr-${report.id}">
                                 ${addr}
                             </span>
                         </td>
-                        <td class="px-6 py-4 text-right">
-                            <button class="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded text-[10px] font-black uppercase tracking-widest transition-colors shadow-sm" onclick="respondToReport(${report.id}, '${report.disaster_type}')">
+                        <td>
+                            <button onclick="respondToReport(${report.id}, '${report.disaster_type}')">
                                 DEPLOY
                             </button>
                         </td>
@@ -365,7 +301,7 @@
                 });
 
                 if (!hasNearby) {
-                    rows = '<tr><td colspan="5" class="px-6 py-12 text-center text-xs font-bold uppercase tracking-widest text-gray-400">No active incidents detected in your immediate sector.</td></tr>';
+                    rows = '<tr><td colspan="5">No active incidents detected in your immediate sector.</td></tr>';
                 }
                 tbody.innerHTML = rows;
             }
@@ -378,10 +314,10 @@
                     const responderIcon = L.divIcon({
                         className: 'bg-transparent',
                         html: `
-                        <div class="relative flex h-8 w-8">
-                            <span class="absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-20 animate-ping"></span>
-                            <span class="relative shadow-lg inline-flex rounded-full h-8 w-8 border-2 border-white dark:border-gray-800 bg-blue-600 flex items-center justify-center">
-                                <i class="fa fa-shield-halved shadow-sm" style="font-size: 14px; color: white;"></i>
+                        <div>
+                            <span></span>
+                            <span>
+                                <i></i>
                             </span>
                         </div>
                     `,
@@ -392,7 +328,7 @@
                         userMarker.setLatLng([userLocation.lat, userLocation.lon]);
                         userCircle.setLatLng([userLocation.lat, userLocation.lon]);
                     } else {
-                        userMarker = L.marker([userLocation.lat, userLocation.lon], { icon: responderIcon }).addTo(map).bindPopup("<b class='text-[10px] uppercase font-bold tracking-widest'>Your Unit Position</b>", { className: 'glass-popup' }).openPopup();
+                        userMarker = L.marker([userLocation.lat, userLocation.lon], { icon: responderIcon }).addTo(map).bindPopup("<b>Your Unit Position</b>", { className: 'glass-popup' }).openPopup();
                         userCircle = L.circle([userLocation.lat, userLocation.lon], {
                             color: '#3b82f6', weight: 1, fillColor: '#3b82f6', fillOpacity: 0.05, radius: 2000
                         }).addTo(map);

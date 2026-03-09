@@ -5,60 +5,52 @@
     <%- include('../partials/head'); %>
         <script
             src="https://cdnjs.cloudflare.com/ajax/libs/OverlappingMarkerSpiderfier-Leaflet/0.2.6/oms.min.js"></script>
-        <link rel="stylesheet"
-            href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+        
         <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.min.js"></script>
 </head>
 
-<body
-    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
+<body>
     <%- include('../partials/page-start'); %>
 
-        <header class="sticky top-0 z-50">
+        <header>
             <%- include('../partials/admin-navbar', { currentPage: 'dashboard' }); %>
         </header>
 
-        <div class="flex flex-1 overflow-hidden relative">
-            <aside class="z-40">
+        <div>
+            <aside>
                 <%- include('../partials/admin-sidebar', { currentPage: 'dashboard' }); %>
             </aside>
 
-            <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8 overflow-y-auto w-full">
-                <div class="max-w-7xl mx-auto space-y-6">
+            <main>
+                <div>
 
                     <!-- Operations Command Header -->
-                    <div
-                        class="glass-panel p-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div>
                         <div>
-                            <h1 class="text-2xl font-black text-gray-900 dark:text-gray-100 tracking-tight">OPERATIONS
+                            <h1>OPERATIONS
                                 COMMAND</h1>
-                            <div class="flex items-center gap-3 mt-2">
-                                <span
-                                    class="px-3 py-1 bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400 rounded-full text-xs font-bold tracking-wide flex items-center gap-1">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                            <div>
+                                <span>
+                                    <span></span>
                                     SYSTEM NOMINAL
                                 </span>
-                                <span
-                                    class="text-xs uppercase font-bold text-gray-500 dark:text-gray-400 tracking-wider">Regional
+                                <span>Regional
                                     Grid Status</span>
                             </div>
                         </div>
-                        <div class="flex gap-8">
-                            <div class="text-right">
-                                <span
-                                    class="text-[10px] uppercase font-bold text-gray-400 dark:text-gray-500 tracking-widest block mb-1">Operatives</span>
-                                <div class="text-3xl font-black text-indigo-600 dark:text-indigo-400"
+                        <div>
+                            <div>
+                                <span>Operatives</span>
+                                <div
                                     id="total-users-count">
                                     <%= totalUsers %>
                                 </div>
                             </div>
-                            <div class="w-px bg-gray-200 dark:bg-gray-700"></div>
-                            <div class="text-right">
-                                <span
-                                    class="text-[10px] uppercase font-bold text-gray-400 dark:text-gray-500 tracking-widest block mb-1">Active
+                            <div></div>
+                            <div>
+                                <span>Active
                                     Missions</span>
                                 <a href="/disaster-reports"
-                                    class="text-3xl font-black text-red-500 dark:text-red-400 hover:text-red-600 hover:scale-105 transition-all inline-block"
                                     id="total-requests-count">
                                     <%= totalRequests %>
                                 </a>
@@ -67,63 +59,54 @@
                     </div>
 
                     <!-- Intelligence Grid -->
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div>
                         <!-- Map -->
-                        <div class="lg:col-span-2 glass-panel flex flex-col overflow-hidden">
-                            <div
-                                class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-white/40 dark:bg-gray-900/40">
-                                <h2 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                        <div>
+                            <div>
+                                <h2>
                                     Geospatial Intelligence</h2>
-                                <button onclick="refreshMapData();"
-                                    class="btn-glass text-xs py-1.5 px-3 flex items-center gap-1">
-                                    <i class="fa fa-sync-alt"></i> SYNC
+                                <button onclick="refreshMapData();">
+                                    <i></i> SYNC
                                 </button>
                             </div>
-                            <div class="p-1 h-[520px] relative z-0">
-                                <div id="admin-map" class="w-full h-full rounded-xl z-0 shadow-inner"></div>
+                            <div>
+                                <div id="admin-map"></div>
                             </div>
                         </div>
 
                         <!-- Critical Alerts -->
-                        <div class="glass-panel flex flex-col overflow-hidden">
-                            <div
-                                class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-white/40 dark:bg-gray-900/40">
-                                <h2
-                                    class="text-sm font-bold uppercase tracking-wider text-red-600 dark:text-red-400 flex items-center gap-2">
-                                    <i class="fa fa-exclamation-triangle"></i> Critical Alerts
+                        <div>
+                            <div>
+                                <h2>
+                                    <i></i> Critical Alerts
                                 </h2>
-                                <a href="/assessment-results"
-                                    class="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline">EXPLORE</a>
+                                <a href="/assessment-results">EXPLORE</a>
                             </div>
-                            <div class="flex-1 overflow-y-auto">
+                            <div>
                                 <% if (riskTables['High'] && riskTables['High'].length> 0) { %>
-                                    <div class="divide-y divide-gray-100 dark:divide-gray-800/60">
+                                    <div>
                                         <% riskTables['High'].slice(0, 8).forEach(user=> { %>
-                                            <div
-                                                class="px-6 py-4 flex items-center justify-between hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
-                                                <div class="flex items-center gap-3">
-                                                    <div
-                                                        class="w-8 h-8 rounded-full bg-gray-900 text-white dark:bg-gray-800 flex items-center justify-center shadow-sm">
-                                                        <i class="fa fa-user text-xs"></i>
+                                            <div>
+                                                <div>
+                                                    <div>
+                                                        <i></i>
                                                     </div>
-                                                    <span class="text-sm font-bold text-gray-800 dark:text-gray-200">
+                                                    <span>
                                                         <%= user.username %>
                                                     </span>
                                                 </div>
-                                                <span
-                                                    class="px-2.5 py-1 bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400 rounded text-xs font-black tracking-widest uppercase border border-red-200 dark:border-red-800">
+                                                <span>
                                                     Risk: <%= user.risk_score %>
                                                 </span>
                                             </div>
                                             <% }) %>
                                     </div>
                                     <% } else { %>
-                                        <div class="flex flex-col items-center justify-center h-full p-8 text-center">
-                                            <div
-                                                class="w-16 h-16 rounded-full bg-green-50 dark:bg-green-900/20 flex items-center justify-center mb-4">
-                                                <i class="fa fa-check text-2xl text-green-500"></i>
+                                        <div>
+                                            <div>
+                                                <i></i>
                                             </div>
-                                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">No critical
+                                            <p>No critical
                                                 alerts detected in sector.</p>
                                         </div>
                                         <% } %>
@@ -132,44 +115,36 @@
                     </div>
 
                     <!-- Analytics Row -->
-                    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                        <div class="glass-panel p-6">
-                            <h2
-                                class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-6">
+                    <div>
+                        <div>
+                            <h2>
                                 Incident Trends</h2>
-                            <div class="relative h-[280px] w-full">
+                            <div>
                                 <canvas id="userChart"></canvas>
                             </div>
                         </div>
 
-                        <div class="glass-panel p-6">
-                            <h2
-                                class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-6">
+                        <div>
+                            <h2>
                                 Risk Stratification</h2>
-                            <div class="flex flex-col sm:flex-row items-center justify-between gap-8 h-full pb-6">
-                                <div class="relative h-[220px] w-[220px] flex-shrink-0">
+                            <div>
+                                <div>
                                     <canvas id="riskLevelChart"></canvas>
                                 </div>
-                                <div class="flex flex-col gap-4 flex-1">
-                                    <div
-                                        class="flex items-center gap-3 p-3 rounded-lg bg-gray-50/50 dark:bg-gray-800/30">
-                                        <span
-                                            class="w-3 h-3 rounded-full bg-gray-900 dark:bg-gray-100 shadow-sm"></span>
-                                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Critical
+                                <div>
+                                    <div>
+                                        <span></span>
+                                        <span>Critical
                                             High</span>
                                     </div>
-                                    <div
-                                        class="flex items-center gap-3 p-3 rounded-lg bg-gray-50/50 dark:bg-gray-800/30">
-                                        <span
-                                            class="w-3 h-3 rounded-full bg-gray-600 dark:bg-gray-400 shadow-sm"></span>
-                                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Elevated
+                                    <div>
+                                        <span></span>
+                                        <span>Elevated
                                             Risk</span>
                                     </div>
-                                    <div
-                                        class="flex items-center gap-3 p-3 rounded-lg bg-gray-50/50 dark:bg-gray-800/30">
-                                        <span
-                                            class="w-3 h-3 rounded-full bg-gray-400 dark:bg-gray-600 shadow-sm"></span>
-                                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Standard
+                                    <div>
+                                        <span></span>
+                                        <span>Standard
                                             Risk</span>
                                     </div>
                                 </div>
@@ -178,19 +153,18 @@
                     </div>
 
                     <!-- Performance Snapshots -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
                         <% [ { id: 'checklistChart' , icon: 'fa-tasks' , title: 'Operational Compliance' ,
                             color: 'text-blue-500' }, { id: 'trendChart' , icon: 'fa-history' ,
                             title: 'Risk Accumulation' , color: 'text-indigo-500' }, { id: 'hazardsChart' ,
                             icon: 'fa-biohazard' , title: 'Environmental Hazards' , color: 'text-red-500' }
                             ].forEach(widget=> { %>
-                            <div class="glass-panel p-6">
-                                <h2
-                                    class="text-xs font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-4 flex items-center gap-2">
-                                    <i class="fa <%= widget.icon %> <%= widget.color %>"></i>
+                            <div>
+                                <h2>
+                                    <i></i>
                                     <%= widget.title %>
                                 </h2>
-                                <div class="relative h-[160px] w-full">
+                                <div>
                                     <canvas id="<%= widget.id %>"></canvas>
                                 </div>
                             </div>
@@ -341,11 +315,11 @@
                             const color = r.status === 'active' ? '#10b981' : (r.status === 'deployed' ? '#f59e0b' : '#64748b');
                             const icon = L.divIcon({
                                 className: 'responder-dot',
-                                html: `<div style="background:${color}; width:16px; height:16px; border-radius:50%; border:3px solid #fff; box-shadow:0 0 10px rgba(0,0,0,0.3);"></div>`,
+                                html: `<div></div>`,
                                 iconSize: [16, 16]
                             });
                             L.marker([r.latitude, r.longitude], { icon }).addTo(adminMarkersLayer)
-                                .bindPopup(`<div class="p-2"><strong class="block mb-1 text-gray-800">${r.firstname} ${r.lastname}</strong><span class="text-xs uppercase font-bold px-2 py-0.5 rounded bg-gray-100">${r.status.toUpperCase()}</span></div>`);
+                                .bindPopup(`<div><strong>${r.firstname} ${r.lastname}</strong><span>${r.status.toUpperCase()}</span></div>`);
                         }
                     });
 
@@ -354,11 +328,11 @@
                             const color = incident.disaster_type === 'Fire' ? '#ef4444' : (incident.disaster_type === 'Flood' ? '#3b82f6' : '#f97316');
                             const icon = L.divIcon({
                                 className: 'incident-icon',
-                                html: `<div style="background:${color}; width:32px; height:32px; border-radius:50%; border:3px solid #fff; display:flex; align-items:center; justify-content:center; color:#fff; box-shadow:0 0 15px ${color};"><i class="fa fa-triangle-exclamation" style="font-size:12px;"></i></div>`,
+                                html: `<div><i></i></div>`,
                                 iconSize: [32, 32]
                             });
                             const marker = L.marker([incident.latitude, incident.longitude], { icon }).addTo(adminMarkersLayer);
-                            marker.bindPopup(`<div class="p-2"><strong class="block mb-2 text-red-600">${incident.disaster_type} Incident</strong><div class="text-xs text-gray-500 mb-3">Reported: ${new Date(incident.reported_at).toLocaleString()}</div><button class="btn-glass-primary w-full py-1 text-xs" onclick="openDeployModal('${incident.id}', '${incident.disaster_type}', ${incident.latitude}, ${incident.longitude})">DEPLOY UNITS</button></div>`);
+                            marker.bindPopup(`<div><strong>${incident.disaster_type} Incident</strong><div>Reported: ${new Date(incident.reported_at).toLocaleString()}</div><button onclick="openDeployModal('${incident.id}', '${incident.disaster_type}', ${incident.latitude}, ${incident.longitude})">DEPLOY UNITS</button></div>`);
                             if (oms) oms.addMarker(marker);
                         }
                     });

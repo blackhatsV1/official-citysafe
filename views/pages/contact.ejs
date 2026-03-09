@@ -5,165 +5,130 @@
     <%- include('../partials/head'); %>
 </head>
 
-<body
-    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
+<body>
     <%- include('../partials/page-start'); %>
 
-        <header class="sticky top-0 z-50">
+        <header>
             <%- include('../partials/visitor-navbar', { currentPage: 'contact' }); %>
         </header>
 
-        <div class="flex flex-1 overflow-hidden relative">
-            <aside class="z-40">
+        <div>
+            <aside>
                 <%- include('../partials/visitor-sidebar', { currentPage: 'contact' }); %>
             </aside>
 
-            <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8 overflow-y-auto w-full relative">
-                <div class="max-w-6xl mx-auto space-y-8">
+            <main>
+                <div>
 
-                    <div class="text-center mb-10">
-                        <h1 class="text-4xl font-black text-gray-900 dark:text-white tracking-tight uppercase mb-2">
+                    <div>
+                        <h1>
                             Contact Us</h1>
-                        <p class="text-gray-600 dark:text-gray-400">Reach out for inquiries, urgent concerns, or
+                        <p>Reach out for inquiries, urgent concerns, or
                             systematic support.</p>
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div>
                         <!-- Contact Form -->
-                        <div
-                            class="glass-panel overflow-hidden border-t-4 border-indigo-500 relative flex flex-col h-full shadow-xl">
-                            <div
-                                class="absolute -top-10 -right-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none">
+                        <div>
+                            <div>
                             </div>
-                            <div
-                                class="px-8 py-6 border-b border-indigo-100 dark:border-indigo-900/30 bg-indigo-50/50 dark:bg-indigo-900/10 flex items-center gap-3 relative z-10">
-                                <div
-                                    class="w-10 h-10 rounded-xl bg-indigo-600 text-white flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                                    <i class="fa fa-envelope border-0"></i>
+                            <div>
+                                <div>
+                                    <i></i>
                                 </div>
-                                <h4 class="text-xl font-bold text-gray-800 dark:text-gray-100 m-0">Send a Message</h4>
+                                <h4>Send a Message</h4>
                             </div>
 
-                            <div class="p-8 relative z-10 flex-1">
-                                <form action="/send-message" method="POST" onsubmit="return showLoading()"
-                                    class="space-y-6">
-                                    <div class="space-y-2">
-                                        <label for="floatingName"
-                                            class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Full
+                            <div>
+                                <form action="/send-message" method="POST" onsubmit="return showLoading()">
+                                    <div>
+                                        <label for="floatingName">Full
                                             Name</label>
-                                        <input type="text" id="floatingName" name="name" placeholder="John Doe" required
-                                            class="w-full px-4 py-3 bg-white/40 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400">
+                                        <input type="text" id="floatingName" name="name" placeholder="John Doe" required>
                                     </div>
-                                    <div class="space-y-2">
-                                        <label for="floatingEmail"
-                                            class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Email
+                                    <div>
+                                        <label for="floatingEmail">Email
                                             Address</label>
                                         <input type="email" id="floatingEmail" name="email"
-                                            placeholder="john@example.com" required
-                                            class="w-full px-4 py-3 bg-white/40 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400">
-                                        <div
-                                            class="text-[10px] text-gray-500 dark:text-gray-400 ml-1 flex items-center gap-1">
-                                            <i class="fa fa-lock text-indigo-400"></i> We'll never share your email.
+                                            placeholder="john@example.com" required>
+                                        <div>
+                                            <i></i> We'll never share your email.
                                         </div>
                                     </div>
-                                    <div class="space-y-2">
-                                        <label for="floatingTextarea"
-                                            class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Message
+                                    <div>
+                                        <label for="floatingTextarea">Message
                                             Content</label>
                                         <textarea id="floatingTextarea" name="message"
-                                            placeholder="How can we help you?" required rows="5"
-                                            class="w-full px-4 py-3 bg-white/40 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400 resize-none"></textarea>
+                                            placeholder="How can we help you?" required rows="5"></textarea>
                                     </div>
-                                    <button type="submit"
-                                        class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-black uppercase tracking-widest transition-all shadow-lg hover:shadow-indigo-500/30 flex items-center justify-center gap-2 transform hover:-translate-y-1">
-                                        <i class="fa fa-paper-plane"></i> TRANSMIT MESSAGE
+                                    <button type="submit">
+                                        <i></i> TRANSMIT MESSAGE
                                     </button>
                                 </form>
                             </div>
                         </div>
 
                         <!-- Side Info -->
-                        <div class="flex flex-col gap-6 h-full">
+                        <div>
 
                             <!-- Emergency Hotlines -->
-                            <div class="glass-panel overflow-hidden border-t-4 border-rose-500 relative flex-1">
-                                <div
-                                    class="absolute -top-10 -right-10 w-40 h-40 bg-rose-500/10 rounded-full blur-3xl pointer-events-none">
+                            <div>
+                                <div>
                                 </div>
-                                <div
-                                    class="px-6 py-5 border-b border-rose-100 dark:border-rose-900/30 bg-rose-50/50 dark:bg-rose-900/10 flex items-center gap-3 relative z-10">
-                                    <i class="fa fa-phone-volume text-rose-500 text-xl"></i>
-                                    <h4 class="text-lg font-bold text-gray-800 dark:text-gray-100 m-0">Emergency
+                                <div>
+                                    <i></i>
+                                    <h4>Emergency
                                         Hotlines</h4>
                                 </div>
-                                <div class="p-6 relative z-10 space-y-3">
-                                    <div
-                                        class="flex justify-between items-center p-3 bg-white/40 dark:bg-gray-800/40 rounded-xl border border-gray-100 dark:border-gray-700">
-                                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">National
+                                <div>
+                                    <div>
+                                        <span>National
                                             Emergency</span>
-                                        <span
-                                            class="px-3 py-1 bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 rounded-lg text-xs font-black tracking-widest">911</span>
+                                        <span>911</span>
                                     </div>
-                                    <div
-                                        class="flex justify-between items-center p-3 bg-white/40 dark:bg-gray-800/40 rounded-xl border border-gray-100 dark:border-gray-700">
-                                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Police
+                                    <div>
+                                        <span>Police
                                             (PNP)</span>
-                                        <span
-                                            class="px-3 py-1 bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 rounded-lg text-xs font-black tracking-widest">117</span>
+                                        <span>117</span>
                                     </div>
-                                    <div
-                                        class="flex justify-between items-center p-3 bg-white/40 dark:bg-gray-800/40 rounded-xl border border-gray-100 dark:border-gray-700">
-                                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Fire
+                                    <div>
+                                        <span>Fire
                                             (BFP)</span>
-                                        <span
-                                            class="px-3 py-1 bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 rounded-lg text-xs font-black tracking-widest">(02)
+                                        <span>(02)
                                             8426-0219</span>
                                     </div>
-                                    <div
-                                        class="flex justify-between items-center p-3 bg-white/40 dark:bg-gray-800/40 rounded-xl border border-gray-100 dark:border-gray-700">
-                                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Red
+                                    <div>
+                                        <span>Red
                                             Cross</span>
-                                        <span
-                                            class="px-3 py-1 bg-rose-100 dark:bg-rose-900/40 text-rose-700 dark:text-rose-400 rounded-lg text-xs font-black tracking-widest">143</span>
+                                        <span>143</span>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Direct Contacts -->
-                            <div class="glass-panel overflow-hidden border-t-4 border-cyan-500 relative flex-1">
-                                <div
-                                    class="absolute -top-10 -right-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none">
+                            <div>
+                                <div>
                                 </div>
-                                <div
-                                    class="px-6 py-5 border-b border-cyan-100 dark:border-cyan-900/30 bg-cyan-50/50 dark:bg-cyan-900/10 flex items-center gap-3 relative z-10">
-                                    <i class="fa fa-address-book text-cyan-500 text-xl"></i>
-                                    <h4 class="text-lg font-bold text-gray-800 dark:text-gray-100 m-0">Direct Contacts
+                                <div>
+                                    <i></i>
+                                    <h4>Direct Contacts
                                     </h4>
                                 </div>
-                                <div class="p-6 relative z-10 space-y-3">
-                                    <div
-                                        class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 bg-white/40 dark:bg-gray-800/40 rounded-xl border border-gray-100 dark:border-gray-700 gap-2">
-                                        <span
-                                            class="text-xs font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">Jayrold
+                                <div>
+                                    <div>
+                                        <span>Jayrold
                                             Tabalina</span>
-                                        <a href="mailto:jayroldtabalina@gmail.com"
-                                            class="text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline break-all">jayroldtabalina@gmail.com</a>
+                                        <a href="mailto:jayroldtabalina@gmail.com">jayroldtabalina@gmail.com</a>
                                     </div>
-                                    <div
-                                        class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 bg-white/40 dark:bg-gray-800/40 rounded-xl border border-gray-100 dark:border-gray-700 gap-2">
-                                        <span
-                                            class="text-xs font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">Yasmine
+                                    <div>
+                                        <span>Yasmine
                                             Talaman</span>
-                                        <a href="mailto:yama.talaman.ui@phinmaed.com"
-                                            class="text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline break-all">yama.talaman.ui@phinmaed.com</a>
+                                        <a href="mailto:yama.talaman.ui@phinmaed.com">yama.talaman.ui@phinmaed.com</a>
                                     </div>
-                                    <div
-                                        class="flex flex-col sm:flex-row sm:justify-between sm:items-center p-3 bg-white/40 dark:bg-gray-800/40 rounded-xl border border-gray-100 dark:border-gray-700 gap-2">
-                                        <span
-                                            class="text-xs font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">Mark
+                                    <div>
+                                        <span>Mark
                                             Vincent Jabao</span>
-                                        <a href="mailto:mark.jabao@gmail.com"
-                                            class="text-sm font-bold text-indigo-600 dark:text-indigo-400 hover:underline break-all">mark.jabao@gmail.com</a>
+                                        <a href="mailto:mark.jabao@gmail.com">mark.jabao@gmail.com</a>
                                     </div>
                                 </div>
                             </div>
@@ -192,8 +157,8 @@
 
                 function showLoading() {
                     GlassSwal.fire({
-                        title: '<span class="text-xl font-black uppercase tracking-tight text-indigo-500">Sending Data</span>',
-                        html: '<div class="py-4"><i class="fa fa-spinner fa-spin text-3xl text-indigo-500"></i></div><p class="text-sm text-gray-600 dark:text-gray-300">Establishing secure connection...</p>',
+                        title: '<span>Sending Data</span>',
+                        html: '<div><i></i></div><p>Establishing secure connection...</p>',
                         allowOutsideClick: false,
                         showConfirmButton: false
                     });
@@ -207,8 +172,8 @@
                     if (status === 'success') {
                         GlassSwal.fire({
                             icon: 'success',
-                            title: '<span class="font-black text-emerald-500">TRANSMISSION SUCCESSFUL</span>',
-                            html: '<span class="text-sm">We have received your message and will contact you shortly.</span>',
+                            title: '<span>TRANSMISSION SUCCESSFUL</span>',
+                            html: '<span>We have received your message and will contact you shortly.</span>',
                             confirmButtonColor: '#10b981',
                             confirmButtonText: 'ACKNOWLEDGE'
                         }).then(() => {
@@ -217,8 +182,8 @@
                     } else if (status === 'error') {
                         GlassSwal.fire({
                             icon: 'error',
-                            title: '<span class="font-black text-rose-500">TRANSMISSION FAILED</span>',
-                            html: '<span class="text-sm">Network anomaly detected. Please try again.</span>',
+                            title: '<span>TRANSMISSION FAILED</span>',
+                            html: '<span>Network anomaly detected. Please try again.</span>',
                             confirmButtonColor: '#f43f5e',
                             confirmButtonText: 'RETRY'
                         }).then(() => {
@@ -227,17 +192,7 @@
                     }
                 });
             </script>
-            <style>
-                .swal2-popup.glass-swal {
-                    backdrop-filter: blur(16px);
-                    border: 1px solid rgba(255, 255, 255, 0.2);
-                    border-radius: 1.5rem;
-                }
-
-                .dark .swal2-popup.glass-swal {
-                    border: 1px solid rgba(255, 255, 255, 0.05);
-                }
-            </style>
+            
             <%- include('../partials/page-end'); %>
 </body>
 

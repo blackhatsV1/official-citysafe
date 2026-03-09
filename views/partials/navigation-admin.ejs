@@ -1,5 +1,5 @@
 
-<div class="side-nav">
+<div>
     
     <ul>
         <li><a href="/adminpage">Home Dashboard</a></li>
@@ -13,17 +13,14 @@
     </ul>
 </div>
 
-
- 
-<div class="top-nav bg-light">
-    <div class="hamburger" onclick="toggleSidebar()">&#9776;</div>
-    <div class="nav-title">Admin Dashboard</div>
-    <ul class="top-links">
-        <div class="nav-title">Welcome, Admin <%= username %></div>
-        <li><a href="/logout" class="btn btn-danger text-light">Logout</a></li>
+<div>
+    <div onclick="toggleSidebar()">&#9776;</div>
+    <div>Admin Dashboard</div>
+    <ul>
+        <div>Welcome, Admin <%= username %></div>
+        <li><a href="/logout">Logout</a></li>
     </ul>
 </div>
 
-
-<div class="overlay" onclick="toggleSidebar()"></div>
+<div onclick="toggleSidebar()"></div>
 

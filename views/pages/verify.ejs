@@ -6,76 +6,67 @@
         <title>Verify Account | CitySafe</title>
 </head>
 
-<body
-    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex text-sm">
+<body>
     <%- include('../partials/page-start'); %>
 
-        <div class="flex flex-1 w-full justify-center">
+        <div>
             <!-- Auth Form Column (Centered for Verify) -->
-            <div class="w-full flex flex-col justify-center items-center px-4 sm:px-8 py-12 relative z-10">
+            <div>
                 <!-- Decorative blur background -->
-                <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none flex justify-center items-center">
-                    <div
-                        class="w-[400px] h-[400px] bg-indigo-500/10 dark:bg-indigo-500/20 rounded-full blur-[80px] animate-pulse">
+                <div>
+                    <div>
                     </div>
                 </div>
 
-                <div
-                    class="max-w-md w-full space-y-8 glass-panel p-8 sm:p-10 relative z-10 shadow-2xl border-t-4 border-indigo-500">
+                <div>
                     <!-- Branding -->
-                    <div class="text-center">
-                        <a href="/" class="inline-flex items-center justify-center gap-2 group mb-6">
-                            <div
-                                class="w-12 h-12 rounded-xl bg-indigo-600 dark:bg-indigo-500 text-white flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform">
-                                <i class="fa fa-shield-alt text-2xl"></i>
+                    <div>
+                        <a href="/">
+                            <div>
+                                <i></i>
                             </div>
                         </a>
-                        <h2 class="text-3xl font-black text-gray-900 dark:text-white tracking-tight mb-2">Verification
+                        <h2>Verification
                         </h2>
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                        <p>
                             We sent a 6-digit transmission code to your <br>
-                            <strong class="text-indigo-600 dark:text-indigo-400">
+                            <strong>
                                 <%= method || 'contact info' %>
                             </strong>.
                         </p>
                     </div>
 
                     <% if (typeof error !=='undefined' && error) { %>
-                        <div
-                            class="p-4 bg-red-50/80 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-xl flex items-center gap-3 text-red-600 dark:text-red-400 text-sm font-bold shadow-sm">
-                            <i class="fa fa-circle-exclamation text-lg"></i>
+                        <div>
+                            <i></i>
                             <%= error %>
                         </div>
                         <% } %>
 
                             <!-- Form -->
-                            <form class="space-y-6" method="POST" action="/verify-code">
+                            <form method="POST" action="/verify-code">
                                 <input type="hidden" name="email" value="<%= email %>">
 
-                                <div class="space-y-1">
-                                    <label for="code"
-                                        class="block text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-400 pl-1 text-center">Auth
+                                <div>
+                                    <label for="code">Auth
                                         Code</label>
-                                    <div class="relative">
+                                    <div>
                                         <input type="text" id="code" name="code"
-                                            class="input-glass text-center text-3xl tracking-[0.5em] font-mono py-4 font-black text-gray-900 dark:text-white"
                                             placeholder="••••••" maxlength="6" required autofocus>
                                     </div>
                                 </div>
 
-                                <button type="submit"
-                                    class="w-full py-4 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-black text-sm uppercase tracking-widest rounded-xl shadow-lg shadow-indigo-500/30 border border-indigo-500/50 transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2 mt-4">
-                                    <i class="fa fa-fingerprint text-lg"></i> VERIFY IDENTITY
+                                <button type="submit">
+                                    <i></i> VERIFY IDENTITY
                                 </button>
                             </form>
 
                             <!-- Footer text -->
-                            <div class="text-center pt-6 border-t border-gray-100 dark:border-gray-800 mt-8">
-                                <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                            <div>
+                                <p>
                                     Didn't receive the transmission? <br>
-                                    <a href="/resend-code?email=<%= email %>"
-                                        class="font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 inline-flex items-center gap-1 transition-colors mt-2">
-                                        <i class="fa fa-rotate-right"></i> Resend Code
+                                    <a href="/resend-code?email=<%= email %>">
+                                        <i></i> Resend Code
                                     </a>
                                 </p>
                             </div>

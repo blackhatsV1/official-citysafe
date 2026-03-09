@@ -5,197 +5,155 @@
     <%- include('../partials/head'); %>
 </head>
 
-<body
-    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
+<body>
     <%- include('../partials/page-start'); %>
 
-        <header class="sticky top-0 z-50">
+        <header>
             <%- include('../partials/user-navbar', { currentPage: 'editprofile' }); %>
         </header>
-        <div class="flex flex-1 overflow-hidden relative">
-            <aside class="z-40">
+        <div>
+            <aside>
                 <%- include('../partials/user-sidebar', { currentPage: 'editprofile' }); %>
             </aside>
-            <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8 overflow-y-auto w-full relative">
-                <div class="max-w-4xl mx-auto space-y-6">
+            <main>
+                <div>
 
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2 px-2">
-                        <h1
-                            class="text-3xl font-black text-gray-900 dark:text-white tracking-tight uppercase flex items-center gap-3">
-                            <div
-                                class="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-inner">
-                                <i class="fa fa-user-pen text-xl"></i>
+                    <div>
+                        <h1>
+                            <div>
+                                <i></i>
                             </div>
                             Profile Settings
                         </h1>
                     </div>
-                    <div class="glass-panel overflow-hidden border-t-4 border-blue-500 shadow-lg relative">
-                        <div
-                            class="absolute -top-10 -right-10 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl pointer-events-none">
+                    <div>
+                        <div>
                         </div>
-                        <div
-                            class="px-6 py-4 border-b border-blue-100 dark:border-blue-900/30 bg-blue-50/50 dark:bg-blue-900/10 flex items-center justify-between z-20 relative">
-                            <h4
-                                class="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 flex items-center gap-2">
-                                <i class="fa fa-address-card text-blue-500"></i> Account Data
+                        <div>
+                            <h4>
+                                <i></i> Account Data
                             </h4>
                         </div>
 
-                        <div class="p-6 md:p-8 relative z-10">
-                            <form action="/update-account" method="POST" class="space-y-8">
-                                <div class="space-y-6">
-                                    <h5
-                                        class="text-xs font-black uppercase tracking-widest text-blue-600 dark:text-blue-400 border-b border-gray-200 dark:border-gray-700/50 pb-2 mb-4 flex items-center gap-2">
-                                        <i class="fa fa-circle-user"></i> Personal Identification
+                        <div>
+                            <form action="/update-account" method="POST">
+                                <div>
+                                    <h5>
+                                        <i></i> Personal Identification
                                     </h5>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div class="space-y-2">
-                                            <label for="firstname"
-                                                class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">First
+                                    <div>
+                                        <div>
+                                            <label for="firstname">First
                                                 Name</label>
                                             <input type="text" id="firstname" name="firstname"
-                                                value="<%= user.firstname %>" required
-                                                class="w-full px-4 py-2.5 bg-white/40 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400">
+                                                value="<%= user.firstname %>" required>
                                         </div>
-                                        <div class="space-y-2">
-                                            <label for="lastname"
-                                                class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Last
+                                        <div>
+                                            <label for="lastname">Last
                                                 Name</label>
                                             <input type="text" id="lastname" name="lastname"
-                                                value="<%= user.lastname %>" required
-                                                class="w-full px-4 py-2.5 bg-white/40 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400">
+                                                value="<%= user.lastname %>" required>
                                         </div>
-                                        <div class="space-y-2">
-                                            <label for="email"
-                                                class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Email
+                                        <div>
+                                            <label for="email">Email
                                                 Address</label>
                                             <input type="email" id="email" name="email" value="<%= user.email %>"
-                                                required
-                                                class="w-full px-4 py-2.5 bg-white/40 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400">
+                                                required>
                                         </div>
-                                        <div class="space-y-2">
-                                            <label for="contact_number"
-                                                class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Contact
+                                        <div>
+                                            <label for="contact_number">Contact
                                                 Number</label>
                                             <input type="number" id="contact_number" name="contact_number"
-                                                value="<%= user.contact_number %>" required
-                                                class="w-full px-4 py-2.5 bg-white/40 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400">
+                                                value="<%= user.contact_number %>" required>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="space-y-6">
-                                    <h5
-                                        class="text-xs font-black uppercase tracking-widest text-blue-600 dark:text-blue-400 border-b border-gray-200 dark:border-gray-700/50 pb-2 mb-4 flex items-center gap-2">
-                                        <i class="fa fa-map-location-dot"></i> Geographical Data
+                                <div>
+                                    <h5>
+                                        <i></i> Geographical Data
                                     </h5>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                        <div class="space-y-2 md:col-span-2">
-                                            <label for="street_address"
-                                                class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Street
+                                    <div>
+                                        <div>
+                                            <label for="street_address">Street
                                                 Address</label>
                                             <input type="text" id="street_address" name="street_address"
-                                                value="<%= user.street_address %>" required
-                                                class="w-full px-4 py-2.5 bg-white/40 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm font-bold text-gray-900 dark:text-white">
+                                                value="<%= user.street_address %>" required>
                                         </div>
-                                        <div class="space-y-2">
-                                            <label for="barangay"
-                                                class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Barangay</label>
+                                        <div>
+                                            <label for="barangay">Barangay</label>
                                             <input type="text" id="barangay" name="barangay"
-                                                value="<%= user.barangay %>" required
-                                                class="w-full px-4 py-2.5 bg-white/40 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm font-bold text-gray-900 dark:text-white">
+                                                value="<%= user.barangay %>" required>
                                         </div>
-                                        <div class="space-y-2">
-                                            <label for="city"
-                                                class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">City
+                                        <div>
+                                            <label for="city">City
                                                 / Municipality</label>
-                                            <input type="text" id="city" name="city" value="<%= user.city %>" required
-                                                class="w-full px-4 py-2.5 bg-white/40 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm font-bold text-gray-900 dark:text-white">
+                                            <input type="text" id="city" name="city" value="<%= user.city %>" required>
                                         </div>
-                                        <div class="space-y-2">
-                                            <label for="province"
-                                                class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Province</label>
+                                        <div>
+                                            <label for="province">Province</label>
                                             <input type="text" id="province" name="province"
-                                                value="<%= user.province %>" required
-                                                class="w-full px-4 py-2.5 bg-white/40 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm font-bold text-gray-900 dark:text-white">
+                                                value="<%= user.province %>" required>
                                         </div>
-                                        <div class="space-y-2">
-                                            <label for="postal_code"
-                                                class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Postal
+                                        <div>
+                                            <label for="postal_code">Postal
                                                 Code</label>
                                             <input type="text" id="postal_code" name="postal_code"
-                                                value="<%= user.postal_code %>" required
-                                                class="w-full px-4 py-2.5 bg-white/40 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm font-bold text-gray-900 dark:text-white">
+                                                value="<%= user.postal_code %>" required>
                                         </div>
-                                        <div class="space-y-2">
-                                            <label for="country"
-                                                class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Country</label>
+                                        <div>
+                                            <label for="country">Country</label>
                                             <input type="text" id="country" name="country" value="<%= user.country %>"
-                                                required
-                                                class="w-full px-4 py-2.5 bg-white/40 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm font-bold text-gray-900 dark:text-white">
+                                                required>
                                         </div>
-                                        <div class="space-y-2">
-                                            <label for="landmark"
-                                                class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Landmark</label>
+                                        <div>
+                                            <label for="landmark">Landmark</label>
                                             <input type="text" id="landmark" name="landmark"
-                                                value="<%= user.landmark %>" required
-                                                class="w-full px-4 py-2.5 bg-white/40 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm font-bold text-gray-900 dark:text-white">
+                                                value="<%= user.landmark %>" required>
                                         </div>
-                                        <div class="space-y-2">
-                                            <label for="address_type"
-                                                class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Address
+                                        <div>
+                                            <label for="address_type">Address
                                                 Type</label>
                                             <input type="text" id="address_type" name="address_type"
                                                 value="<%= user.address_type %>" placeholder="e.g. Home, Office"
-                                                required
-                                                class="w-full px-4 py-2.5 bg-white/40 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm font-bold text-gray-900 dark:text-white">
+                                                required>
                                         </div>
-                                        <div class="space-y-2 md:col-span-2 lg:col-span-3">
-                                            <label for="additional_instructions"
-                                                class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Additional
+                                        <div>
+                                            <label for="additional_instructions">Additional
                                                 Guidance / Instructions</label>
                                             <textarea id="additional_instructions" name="additional_instructions"
-                                                rows="2" required
-                                                class="w-full px-4 py-2.5 bg-white/40 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm font-bold text-gray-900 dark:text-white"><%= user.additional_instructions %></textarea>
+                                                rows="2" required><%= user.additional_instructions %></textarea>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="space-y-4">
-                                    <h5
-                                        class="text-xs font-black uppercase tracking-widest text-gray-600 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700/50 pb-2 mb-4 flex items-center gap-2">
-                                        <i class="fa fa-shield-halved"></i> Authentication Setting
+                                <div>
+                                    <h5>
+                                        <i></i> Authentication Setting
                                     </h5>
-                                    <div class="space-y-2 w-full md:w-1/2">
-                                        <label for="password"
-                                            class="block text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 ml-1">Override
+                                    <div>
+                                        <label for="password">Override
                                             Password (Optional)</label>
-                                        <div class="relative group">
-                                            <div
-                                                class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors">
-                                                <i class="fa fa-key"></i>
+                                        <div>
+                                            <div>
+                                                <i></i>
                                             </div>
                                             <input type="password" id="password" name="password"
                                                 placeholder="Leave empty to retain current password"
-                                                autocomplete="new-password"
-                                                class="w-full pl-10 pr-12 py-2.5 bg-white/40 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all text-sm font-bold text-gray-900 dark:text-white placeholder-gray-400">
+                                                autocomplete="new-password">
 
-                                            <button type="button" id="togglePassword"
-                                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-blue-500 focus:outline-none transition-colors">
-                                                <i class="fa fa-eye-slash w-5 text-center"></i>
+                                            <button type="button" id="togglePassword">
+                                                <i></i>
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-                                <div
-                                    class="pt-6 mt-6 border-t border-gray-200 dark:border-gray-700/50 flex flex-col-reverse sm:flex-row gap-4 justify-between items-center relative z-20">
-                                    <a href="/weather"
-                                        class="w-full sm:w-auto px-6 py-2.5 rounded-xl border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-bold uppercase tracking-widest text-xs hover:bg-gray-100 dark:hover:bg-gray-800 transition-all flex items-center justify-center gap-2 shadow-sm">
-                                        <i class="fa fa-xmark"></i> Cancel
+                                <div>
+                                    <a href="/weather">
+                                        <i></i> Cancel
                                     </a>
-                                    <button type="submit"
-                                        class="w-full sm:w-auto px-8 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-black uppercase tracking-widest text-xs transition-all shadow-md hover:shadow-blue-500/25 flex items-center justify-center gap-2 transform hover:-translate-y-0.5">
-                                        <i class="fa fa-floppy-disk"></i> COMMIT CHANGES
+                                    <button type="submit">
+                                        <i></i> COMMIT CHANGES
                                     </button>
                                 </div>
                             </form>

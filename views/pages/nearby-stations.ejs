@@ -4,121 +4,77 @@
 <head>
     <%- include('../partials/head'); %>
         <!-- Leaflet & Routing Machine -->
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-        <link rel="stylesheet"
-            href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+        
         <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.min.js"></script>
-        <style>
-            #map {
-                height: 450px;
-                width: 100%;
-                z-index: 10;
-            }
-
-            /* Custom map popup styles for glassmorphism */
-            .leaflet-popup-content-wrapper {
-                background: rgba(255, 255, 255, 0.9);
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.4);
-                border-radius: 1rem;
-                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-                color: #1f2937;
-            }
-
-            .dark .leaflet-popup-content-wrapper {
-                background: rgba(17, 24, 39, 0.9);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                color: #f3f4f6;
-            }
-
-            .leaflet-popup-tip {
-                background: rgba(255, 255, 255, 0.9);
-            }
-
-            .dark .leaflet-popup-tip {
-                background: rgba(17, 24, 39, 0.9);
-            }
-        </style>
+        
 </head>
 
-<body
-    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
+<body>
     <%- include('../partials/page-start'); %>
 
-        <header class="sticky top-0 z-50">
+        <header>
             <%- include('../partials/user-navbar', { currentPage: 'nearby-stations' }); %>
         </header>
 
-        <div class="flex flex-1 overflow-hidden relative">
-            <aside class="z-40">
+        <div>
+            <aside>
                 <%- include('../partials/user-sidebar', { currentPage: 'nearby-stations' }); %>
             </aside>
 
-            <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8 overflow-y-auto w-full relative">
-                <div class="max-w-7xl mx-auto space-y-6">
+            <main>
+                <div>
 
-                    <h1
-                        class="text-3xl font-black text-gray-900 dark:text-white tracking-tight uppercase px-2 mb-2 flex items-center gap-3">
-                        <div
-                            class="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center shadow-inner">
-                            <i class="fa fa-map-location-dot text-xl"></i>
+                    <h1>
+                        <div>
+                            <i></i>
                         </div>
                         Safe Zones Mapping
                     </h1>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div>
 
                         <!-- Map Section -->
-                        <div class="lg:col-span-2 space-y-6">
-                            <div
-                                class="glass-panel overflow-hidden border-t-4 border-blue-500 shadow-lg relative h-full flex flex-col min-h-[500px]">
-                                <div
-                                    class="px-6 py-4 border-b border-blue-100 dark:border-blue-900/30 bg-blue-50/50 dark:bg-blue-900/10 flex items-center justify-between z-20">
-                                    <h4
-                                        class="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 flex items-center gap-2">
-                                        <i class="fa fa-satellite text-blue-500 animate-pulse"></i> Tactical Overlay
+                        <div>
+                            <div>
+                                <div>
+                                    <h4>
+                                        <i></i> Tactical Overlay
                                     </h4>
-                                    <div
-                                        class="px-3 py-1 bg-white dark:bg-gray-800 rounded-full text-[10px] font-bold tracking-widest uppercase border border-gray-200 dark:border-gray-700 text-gray-500 flex items-center gap-2 shadow-sm">
-                                        <div class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div> Live Scan
+                                    <div>
+                                        <div></div> Live Scan
                                         Active
                                     </div>
                                 </div>
-                                <div class="flex-1 relative bg-gray-100 dark:bg-gray-800 z-10 w-full h-full">
-                                    <div id="map" class="absolute inset-0"></div>
+                                <div>
+                                    <div id="map"></div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Sidebar Info Section -->
-                        <div class="lg:col-span-1 space-y-6">
+                        <div>
 
                             <!-- Location Info -->
-                            <div class="glass-panel overflow-hidden border-t-4 border-emerald-500">
-                                <div
-                                    class="px-6 py-4 border-b border-emerald-100 dark:border-emerald-900/30 bg-emerald-50/50 dark:bg-emerald-900/10">
-                                    <h4
-                                        class="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 flex items-center gap-2">
-                                        <i class="fa fa-crosshairs text-emerald-500"></i> Current Coordinates
+                            <div>
+                                <div>
+                                    <h4>
+                                        <i></i> Current Coordinates
                                     </h4>
                                 </div>
-                                <div class="p-6">
-                                    <div class="space-y-4">
+                                <div>
+                                    <div>
                                         <div>
-                                            <div
-                                                class="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-1">
+                                            <div>
                                                 Detected Location</div>
-                                            <div id="address"
-                                                class="text-sm font-bold text-gray-800 dark:text-gray-200 flex items-start gap-2 h-10 overflow-hidden text-ellipsis">
-                                                <i class="fa fa-spinner fa-spin text-emerald-500 mt-0.5"></i> Acquiring
+                                            <div id="address">
+                                                <i></i> Acquiring
                                                 satellite fix...
                                             </div>
                                         </div>
-                                        <div
-                                            class="px-4 py-3 bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700/50 rounded-lg text-center">
-                                            <div id="coords"
-                                                class="text-xs font-mono font-medium text-gray-600 dark:text-gray-400">
+                                        <div>
+                                            <div id="coords">
                                                 Awaiting GPS signal
                                             </div>
                                         </div>
@@ -127,65 +83,49 @@
                             </div>
 
                             <!-- Nearest Station Result -->
-                            <div class="glass-panel overflow-hidden border-t-4 border-indigo-500 shadow-lg relative">
+                            <div>
                                 <!-- Glow -->
-                                <div
-                                    class="absolute -top-10 -right-10 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none">
+                                <div>
                                 </div>
 
-                                <div
-                                    class="px-6 py-4 border-b border-indigo-100 dark:border-indigo-900/30 bg-indigo-50/50 dark:bg-indigo-900/10">
-                                    <h4
-                                        class="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 flex items-center gap-2">
-                                        <i class="fa fa-shield-halved text-indigo-500"></i> Optimal Safe Zone
+                                <div>
+                                    <h4>
+                                        <i></i> Optimal Safe Zone
                                     </h4>
                                 </div>
-                                <div class="p-6">
-                                    <div class="space-y-4 relative z-10">
-                                        <div
-                                            class="flex items-start gap-4 p-4 rounded-xl bg-white/60 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/50 shadow-sm">
-                                            <div
-                                                class="w-10 h-10 rounded-lg bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
-                                                <i class="fa fa-building-shield"></i>
+                                <div>
+                                    <div>
+                                        <div>
+                                            <div>
+                                                <i></i>
                                             </div>
                                             <div>
-                                                <div
-                                                    class="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-0.5">
+                                                <div>
                                                     Designation</div>
-                                                <div id="stationName1"
-                                                    class="text-sm font-bold text-gray-900 dark:text-gray-100">Scanning
+                                                <div id="stationName1">Scanning
                                                     sector...</div>
                                             </div>
                                         </div>
 
-                                        <div class="grid grid-cols-2 gap-4">
-                                            <div
-                                                class="p-3 rounded-xl bg-white/60 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/50 text-center">
-                                                <div
-                                                    class="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-1">
+                                        <div>
+                                            <div>
+                                                <div>
                                                     Distance</div>
-                                                <div id="stationDistance1"
-                                                    class="text-sm font-bold text-gray-900 dark:text-gray-100">--</div>
+                                                <div id="stationDistance1">--</div>
                                             </div>
-                                            <div
-                                                class="p-3 rounded-xl bg-white/60 dark:bg-gray-800/60 border border-gray-200 dark:border-gray-700/50 text-center">
-                                                <div
-                                                    class="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-1">
+                                            <div>
+                                                <div>
                                                     Status</div>
-                                                <div
-                                                    class="text-sm font-bold text-emerald-600 dark:text-emerald-400 flex items-center justify-center gap-1">
-                                                    <i class="fa fa-circle text-[8px]"></i> Active
+                                                <div>
+                                                    <i></i> Active
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <div
-                                            class="p-4 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700/50">
-                                            <div
-                                                class="text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-1">
+                                        <div>
+                                            <div>
                                                 Address</div>
-                                            <div id="stationAddress1"
-                                                class="text-xs font-medium text-gray-700 dark:text-gray-300">--</div>
+                                            <div id="stationAddress1">--</div>
                                         </div>
                                     </div>
                                 </div>
@@ -230,17 +170,17 @@
 
                 // Custom user icon
                 const userIconHtml = `
-                <div class="relative flex h-6 w-6">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-6 w-6 border-2 border-white bg-emerald-500 flex items-center justify-center">
-                        <i class="fa fa-street-view" style="font-size: 10px; color: white;"></i>
+                <div>
+                    <span></span>
+                    <span>
+                        <i></i>
                     </span>
                 </div>
             `;
                 const uIcon = L.divIcon({ className: 'bg-transparent', html: userIconHtml, iconSize: [24, 24], iconAnchor: [12, 12] });
 
                 L.marker([lat, lng], { icon: uIcon }).addTo(map)
-                    .bindPopup(`<div class="font-bold text-xs uppercase tracking-widest text-gray-800 dark:text-gray-200">Current Position</div>`).openPopup();
+                    .bindPopup(`<div>Current Position</div>`).openPopup();
 
                 L.circle([lat, lng], { radius: e.accuracy, color: '#10b981', fillColor: '#10b981', fillOpacity: 0.1, weight: 1 }).addTo(map);
 
@@ -249,7 +189,7 @@
                 fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
                     .then(res => res.json())
                     .then(data => {
-                        document.getElementById("address").innerHTML = `<i class="fa fa-map-pin text-emerald-500 mr-1 mt-0.5 shrink-0"></i> <span>${data.display_name}</span>`;
+                        document.getElementById("address").innerHTML = `<i></i> <span>${data.display_name}</span>`;
                     });
 
                 if (!hasScanned) {
@@ -259,7 +199,7 @@
             }
 
             function onLocationError(e) {
-                document.getElementById("address").innerHTML = `<span class="text-red-500">Failed to acquire satellite fix. Check permissions.</span>`;
+                document.getElementById("address").innerHTML = `<span>Failed to acquire satellite fix. Check permissions.</span>`;
                 document.getElementById("coords").innerHTML = `--`;
             }
 
@@ -288,20 +228,20 @@
                         data.forEach(station => {
                             let typeBadge = '';
                             if (station.type.toLowerCase().includes('police')) {
-                                typeBadge = '<span class="px-2 py-0.5 bg-blue-100 text-blue-700 rounded text-[10px] font-bold uppercase ml-2 border border-blue-200">PNP</span>';
+                                typeBadge = '<span>PNP</span>';
                             } else if (station.type.toLowerCase().includes('fire')) {
-                                typeBadge = '<span class="px-2 py-0.5 bg-red-100 text-red-700 rounded text-[10px] font-bold uppercase ml-2 border border-red-200">BFP</span>';
+                                typeBadge = '<span>BFP</span>';
                             }
 
                             const popupContent = `
-                        <div class="space-y-2 min-w-[150px]">
-                            <div class="font-bold text-xs text-gray-900 dark:text-white border-b border-gray-100 dark:border-gray-700 pb-1 flex justify-between items-center">
+                        <div>
+                            <div>
                                 ${station.name}
                                 ${typeBadge}
                             </div>
-                            <div class="text-[10px] text-gray-500 dark:text-gray-400 flex flex-col gap-1">
-                                <div><i class="fa fa-route w-3 text-center"></i> ${station.distance.toFixed(2)} km</div>
-                                <div><i class="fa fa-location-dot w-3 text-center"></i> ${station.address}</div>
+                            <div>
+                                <div><i></i> ${station.distance.toFixed(2)} km</div>
+                                <div><i></i> ${station.address}</div>
                             </div>
                         </div>
                     `;
@@ -340,7 +280,7 @@
                     })
                     .catch(err => {
                         console.error(err);
-                        document.getElementById("stationName1").innerHTML = `<span class="text-red-500">Error loading data</span>`;
+                        document.getElementById("stationName1").innerHTML = `<span>Error loading data</span>`;
                     });
             }
         </script>

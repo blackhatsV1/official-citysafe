@@ -4,14 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <title>Nearby PNP/BFP</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <style>
-    #map {
-      height: 400px;
-      width: 100%;
-    }
-  </style>
+  
 </head>
 
 <body>
@@ -44,7 +39,6 @@
         .then(data => {
           document.getElementById("address").innerHTML = `<b>${data.display_name}</b>`;
         });
-
 
       fetch(`/nearby-stations?lat=${lat}&lng=${lng}`)
         .then(res => res.json())

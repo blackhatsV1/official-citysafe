@@ -3,181 +3,145 @@
 
 <head>
     <%- include('../partials/head'); %>
-        <style>
-            /* OTP Modal styles matching glassmorphism */
-            .swal2-popup.glass-swal {
-                background: rgba(255, 255, 255, 0.9);
-                backdrop-filter: blur(16px);
-                border: 1px solid rgba(255, 255, 255, 0.4);
-                border-radius: 1.5rem;
-                color: #1f2937;
-            }
-
-            .dark .swal2-popup.glass-swal {
-                background: rgba(17, 24, 39, 0.85);
-                border: 1px solid rgba(255, 255, 255, 0.05);
-                color: #f3f4f6;
-            }
-        </style>
+        
 </head>
 
-<body
-    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex text-sm">
-    <div class="flex flex-1 w-full flex-row-reverse">
+<body>
+    <div>
         <!-- Auth Form Column -->
-        <div
-            class="w-full lg:w-1/2 flex flex-col justify-center px-8 sm:px-16 py-8 bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl relative z-10 border-l border-gray-200 dark:border-gray-800 overflow-y-auto max-h-screen">
-            <div class="max-w-md w-full mx-auto space-y-6">
+        <div>
+            <div>
                 <!-- Branding -->
-                <div class="text-center sm:text-left pt-4">
-                    <a href="/visitor" class="inline-flex items-center gap-2 group">
-                        <div
-                            class="w-10 h-10 rounded-lg bg-indigo-600 dark:bg-indigo-500 text-white flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform">
-                            <i class="fa fa-shield-alt text-xl"></i>
+                <div>
+                    <a href="/visitor">
+                        <div>
+                            <i></i>
                         </div>
-                        <span
-                            class="text-2xl font-black tracking-tight text-gray-900 dark:text-white uppercase">CitySafe</span>
+                        <span>CitySafe</span>
                     </a>
                 </div>
 
                 <!-- Intro -->
-                <div class="text-center sm:text-left">
-                    <h2 class="text-3xl font-black text-gray-900 dark:text-white tracking-tight mb-2">Create Identity
+                <div>
+                    <h2>Create Identity
                     </h2>
-                    <p class="text-gray-500 dark:text-gray-400 font-medium text-xs">Join the network to receive early
+                    <p>Join the network to receive early
                         warning alerts and manage localized safety operations.</p>
                 </div>
 
                 <!-- Form -->
-                <form class="space-y-4" method="POST" action="/register">
+                <form method="POST" action="/register">
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="space-y-1">
-                            <label for="signup-first"
-                                class="block text-[10px] font-bold uppercase tracking-widest text-gray-600 dark:text-gray-400 pl-1">First
+                    <div>
+                        <div>
+                            <label for="signup-first">First
                                 Name</label>
-                            <input id="signup-first" name="firstname" type="text" class="input-glass" placeholder="John"
+                            <input id="signup-first" name="firstname" type="text" placeholder="John"
                                 required>
                         </div>
-                        <div class="space-y-1">
-                            <label for="signup-last"
-                                class="block text-[10px] font-bold uppercase tracking-widest text-gray-600 dark:text-gray-400 pl-1">Last
+                        <div>
+                            <label for="signup-last">Last
                                 Name</label>
-                            <input id="signup-last" name="lastname" type="text" class="input-glass" placeholder="Doe"
+                            <input id="signup-last" name="lastname" type="text" placeholder="Doe"
                                 required>
                         </div>
                     </div>
 
-                    <div class="space-y-1">
-                        <label for="signup-email"
-                            class="block text-[10px] font-bold uppercase tracking-widest text-gray-600 dark:text-gray-400 pl-1">Email
+                    <div>
+                        <label for="signup-email">Email
                             Terminal</label>
-                        <div class="relative">
-                            <i class="fa fa-envelope absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <input id="signup-email" name="email" type="email" class="input-glass pl-11"
+                        <div>
+                            <i></i>
+                            <input id="signup-email" name="email" type="email"
                                 placeholder="john.doe@example.com" required>
                         </div>
                     </div>
 
-                    <div class="space-y-1">
-                        <label for="signup-contact"
-                            class="block text-[10px] font-bold uppercase tracking-widest text-gray-600 dark:text-gray-400 pl-1">Comms
+                    <div>
+                        <label for="signup-contact">Comms
                             Frequency</label>
-                        <div class="relative">
-                            <i class="fa fa-phone absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <input id="signup-contact" name="contact_number" type="text" class="input-glass pl-11"
+                        <div>
+                            <i></i>
+                            <input id="signup-contact" name="contact_number" type="text"
                                 placeholder="+63 912 345 6789" required>
                         </div>
                     </div>
 
-                    <div class="space-y-1">
-                        <label for="signup-password"
-                            class="block text-[10px] font-bold uppercase tracking-widest text-gray-600 dark:text-gray-400 pl-1">Security
+                    <div>
+                        <label for="signup-password">Security
                             Passcode</label>
-                        <div class="relative">
-                            <i class="fa fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <input id="signup-password" name="password" type="password" class="input-glass pl-11 pr-12"
+                        <div>
+                            <i></i>
+                            <input id="signup-password" name="password" type="password"
                                 placeholder="••••••••" required>
                             <button type="button"
-                                class="toggle-pass absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-indigo-500 dark:hover:text-indigo-400 focus:outline-none transition-colors"
                                 data-target="signup-password">
-                                <i class="fa fa-eye-slash"></i>
+                                <i></i>
                             </button>
                         </div>
                     </div>
 
-                    <div class="space-y-1">
-                        <label for="confirm-password"
-                            class="block text-[10px] font-bold uppercase tracking-widest text-gray-600 dark:text-gray-400 pl-1">Confirm
+                    <div>
+                        <label for="confirm-password">Confirm
                             Passcode</label>
-                        <div class="relative">
-                            <i class="fa fa-shield-check absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <input id="confirm-password" name="confirm_password" type="password"
-                                class="input-glass pl-11 pr-12" placeholder="••••••••" required>
+                        <div>
+                            <i></i>
+                            <input id="confirm-password" name="confirm_password" type="password" placeholder="••••••••" required>
                             <button type="button"
-                                class="toggle-pass absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-indigo-500 dark:hover:text-indigo-400 focus:outline-none transition-colors"
                                 data-target="confirm-password">
-                                <i class="fa fa-eye-slash"></i>
+                                <i></i>
                             </button>
                         </div>
                     </div>
 
-                    <div id="passError"
-                        class="hidden text-[10px] font-bold uppercase tracking-widest text-red-500 bg-red-50 dark:bg-red-900/20 py-2 border border-red-200 dark:border-red-900/50 rounded-lg text-center mt-2 flex items-center justify-center gap-1.5">
-                        <i class="fa fa-exclamation-triangle"></i> Security passcodes do not align.
+                    <div id="passError">
+                        <i></i> Security passcodes do not align.
                     </div>
 
-                    <button type="button" onclick="validateSignup()"
-                        class="w-full py-3.5 mt-6 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-black text-sm uppercase tracking-widest rounded-xl shadow-lg shadow-indigo-500/30 border border-indigo-500/50 transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2">
-                        INITIALIZE CLEARANCE <i class="fa fa-arrow-right ml-1"></i>
+                    <button type="button" onclick="validateSignup()">
+                        INITIALIZE CLEARANCE <i></i>
                     </button>
                 </form>
 
                 <!-- Footer text -->
-                <div class="text-center pt-4 border-t border-gray-100 dark:border-gray-800">
-                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400">
-                        Already posess operational clearance? <br><a href="/login"
-                            class="font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 transition-colors mt-1 inline-block">Execute
+                <div>
+                    <p>
+                        Already posess operational clearance? <br><a href="/login">Execute
                             Login Sequence</a>
                     </p>
                 </div>
 
-                <div class="text-center mt-auto pb-4">
-                    <p class="text-[10px] font-medium text-gray-400 dark:text-gray-500 uppercase tracking-widest">
-                        Designed with <i class="fa fa-heart text-red-500 mx-0.5"></i> by CitySafe
+                <div>
+                    <p>
+                        Designed with <i></i> by CitySafe
                     </p>
                 </div>
             </div>
         </div>
 
         <!-- Visual Hero Column -->
-        <div class="hidden lg:flex w-1/2 relative flex-col justify-center p-12 overflow-hidden bg-indigo-900/10">
+        <div>
             <!-- Huge abstract graphic background -->
-            <div class="absolute inset-0 z-0">
-                <div class="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] bg-indigo-500/20 rounded-full blur-[100px] animate-pulse"
-                    style="animation-duration: 6s;"></div>
-                <div class="absolute top-1/4 right-1/4 w-[600px] h-[600px] bg-blue-500/20 rounded-full blur-[120px] animate-pulse"
-                    style="animation-duration: 5s;"></div>
+            <div>
+                <div></div>
+                <div></div>
 
                 <!-- Grid pattern overlay -->
-                <div class="absolute inset-0 bg-[#00000005] dark:bg-[#ffffff02]"
-                    style="background-image: radial-gradient(var(--tw-gradient-stops) 1px, transparent 1px); background-size: 32px 32px;">
+                <div>
                 </div>
             </div>
 
             <!-- Content -->
-            <div class="relative z-10 max-w-lg mb-10 ml-auto mr-12 text-right">
-                <div
-                    class="p-8 rounded-3xl bg-white/10 dark:bg-gray-900/30 backdrop-blur-md border border-white/20 dark:border-gray-700/50 shadow-2xl">
-                    <div class="flex justify-end mb-4">
-                        <div
-                            class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500/30 to-blue-500/30 border border-white/20 dark:border-gray-600/50 flex items-center justify-center">
-                            <i class="fa fa-users text-3xl text-indigo-600 dark:text-indigo-300 drop-shadow-md"></i>
+            <div>
+                <div>
+                    <div>
+                        <div>
+                            <i></i>
                         </div>
                     </div>
-                    <h2 class="text-4xl font-black text-gray-900 dark:text-white tracking-tight mb-4">Join
-                        CitySafe<br><span class="text-indigo-600 dark:text-indigo-400">Node Array</span></h2>
-                    <p class="text-lg text-gray-700 dark:text-gray-300 font-medium leading-relaxed">
+                    <h2>Join
+                        CitySafe<br><span>Node Array</span></h2>
+                    <p>
                         Protecting your sector starts with information. Get verified operational access to real-time
                         safety telemetry.
                     </p>
@@ -187,7 +151,7 @@
     </div>
 
     <!-- Hidden element to store email for OTP -->
-    <div id="otpEmailDisplay" class="hidden"></div>
+    <div id="otpEmailDisplay"></div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -285,18 +249,18 @@
 
         function showOtpModal(email) {
             Swal.fire({
-                title: '<span class="font-black uppercase tracking-widest text-lg">Verify Clearance</span>',
+                title: '<span>Verify Clearance</span>',
                 html: `
-                    <div class="mb-4 text-sm font-medium text-gray-500">
+                    <div>
                         Authentication packet dispatched to:<br>
-                        <strong class="text-indigo-600 dark:text-indigo-400 mt-1 block">${email}</strong>
+                        <strong>${email}</strong>
                     </div>
-                    <input type="text" id="otpInput" class="swal2-input font-mono text-center tracking-[0.5em] text-2xl w-3/4 mx-auto !bg-transparent !border-gray-300 dark:!border-gray-600 focus:!border-indigo-500 !text-gray-900 dark:!text-white rounded-xl placeholder-gray-400/50" maxlength="4" placeholder="0000" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
-                    <div id="otpError" class="hidden text-xs font-bold text-red-500 uppercase tracking-widest mt-3">Invalid authorization code</div>
+                    <input type="text" id="otpInput" maxlength="4" placeholder="0000" onkeypress="return event.charCode >= 48 && event.charCode <= 57">
+                    <div id="otpError">Invalid authorization code</div>
                 `,
                 showCancelButton: true,
-                confirmButtonText: '<span class="font-bold tracking-widest uppercase text-xs">Authorize</span>',
-                cancelButtonText: '<span class="font-bold tracking-widest uppercase text-xs">Abort</span>',
+                confirmButtonText: '<span>Authorize</span>',
+                cancelButtonText: '<span>Abort</span>',
                 confirmButtonColor: '#4f46e5',
                 cancelButtonColor: '#6b7280',
                 customClass: {

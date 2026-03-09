@@ -5,59 +5,59 @@
   <%- include('../partials/head'); %>
 </head>
 
-<body class="app">
+<body>
   <%- include('../partials/page-start'); %>
 
-    <header class="app-header fixed-top">
+    <header>
       <%- include('../partials/admin-navbar'); %>
         <%- include('../partials/admin-sidebar'); %>
     </header>
 
-    <div class="app-wrapper">
-      <div class="app-content pt-3 p-md-3 p-lg-4">
-        <div class="container-xl">
-          <h1 class="app-page-title">Status Overview</h1>
+    <div>
+      <div>
+        <div>
+          <h1>Status Overview</h1>
 
-          <div class="row g-4 mb-4">
+          <div>
             <!-- Responders Status Table -->
-            <div class="col-12 col-xl-6">
-              <div class="app-card app-card-orders-table shadow-sm mb-5 h-100">
-                <div class="app-card-header p-3 border-bottom-0">
-                  <h4 class="app-card-title">Responders Status</h4>
+            <div>
+              <div>
+                <div>
+                  <h4>Responders Status</h4>
                 </div>
-                <div class="app-card-body p-3 pt-0">
-                  <div class="table-responsive">
-                    <table class="table app-table-hover mb-0 text-left">
+                <div>
+                  <div>
+                    <table>
                       <thead>
                         <tr>
-                          <th class="cell">Responder</th>
-                          <th class="cell">Station</th>
-                          <th class="cell">Session</th>
-                          <th class="cell">Duty Status</th>
-                          <th class="cell">Contact</th>
+                          <th>Responder</th>
+                          <th>Station</th>
+                          <th>Session</th>
+                          <th>Duty Status</th>
+                          <th>Contact</th>
                         </tr>
                       </thead>
                       <tbody id="responders-tbody">
                         <% responders.forEach(r=> { %>
                           <tr data-id="<%= r.id %>" data-role="responder">
-                            <td class="cell">
+                            <td>
                               <%= r.firstname %>
                                 <%= r.lastname %>
                             </td>
-                            <td class="cell">
+                            <td>
                               <%= r.station_name || 'Unassigned' %>
                             </td>
-                            <td class="cell">
-                              <span class="badge <%= r.status !== 'offline' ? 'bg-success' : 'bg-secondary' %>">
+                            <td>
+                              <span>
                                 <%= r.status !=='offline' ? 'logged in' : 'logged out' %>
                               </span>
                             </td>
-                            <td class="cell">
-                              <span class="badge <%= r.status === 'deployed' ? 'bg-warning' : 'bg-primary' %>">
+                            <td>
+                              <span>
                                 <%= r.status==='deployed' ? 'deployed' : 'active' %>
                               </span>
                             </td>
-                            <td class="cell">
+                            <td>
                               <%= r.contact_number %>
                             </td>
                           </tr>
@@ -70,38 +70,38 @@
             </div>
 
             <!-- Users Status Table -->
-            <div class="col-12 col-xl-6">
-              <div class="app-card app-card-orders-table shadow-sm mb-5 h-100">
-                <div class="app-card-header p-3 border-bottom-0">
-                  <h4 class="app-card-title">Users Status</h4>
+            <div>
+              <div>
+                <div>
+                  <h4>Users Status</h4>
                 </div>
-                <div class="app-card-body p-3 pt-0">
-                  <div class="table-responsive">
-                    <table class="table app-table-hover mb-0 text-left">
+                <div>
+                  <div>
+                    <table>
                       <thead>
                         <tr>
-                          <th class="cell">User</th>
-                          <th class="cell">Location</th>
-                          <th class="cell">Status</th>
-                          <th class="cell">Contact</th>
+                          <th>User</th>
+                          <th>Location</th>
+                          <th>Status</th>
+                          <th>Contact</th>
                         </tr>
                       </thead>
                       <tbody id="users-tbody">
                         <% users.forEach(u=> { %>
                           <tr data-id="<%= u.id %>" data-role="user">
-                            <td class="cell">
+                            <td>
                               <%= u.firstname %>
                                 <%= u.lastname %>
                             </td>
-                            <td class="cell">
+                            <td>
                               <%= u.barangay %>, <%= u.city %>
                             </td>
-                            <td class="cell">
-                              <span class="badge <%= u.status !== 'offline' ? 'bg-success' : 'bg-secondary' %>">
+                            <td>
+                              <span>
                                 <%= u.status !=='offline' ? 'logged in' : 'logged out' %>
                               </span>
                             </td>
-                            <td class="cell">
+                            <td>
                               <%= u.contact_number %>
                             </td>
                           </tr>
@@ -139,11 +139,11 @@
 
               respHtml += `
                         <tr data-id="${r.id}" data-role="responder">
-                            <td class="cell">${r.firstname} ${r.lastname}</td>
-                            <td class="cell">${r.station_name || 'Unassigned'}</td>
-                            <td class="cell"><span class="badge ${sessionClass}">${sessionText}</span></td>
-                            <td class="cell"><span class="badge ${dutyClass}">${dutyText}</span></td>
-                            <td class="cell">${r.contact_number}</td>
+                            <td>${r.firstname} ${r.lastname}</td>
+                            <td>${r.station_name || 'Unassigned'}</td>
+                            <td><span>${sessionText}</span></td>
+                            <td><span>${dutyText}</span></td>
+                            <td>${r.contact_number}</td>
                         </tr>
                     `;
             });
@@ -158,10 +158,10 @@
 
               userHtml += `
                         <tr data-id="${u.id}" data-role="user">
-                            <td class="cell">${u.firstname} ${u.lastname}</td>
-                            <td class="cell">${u.barangay}, ${u.city}</td>
-                            <td class="cell"><span class="badge ${statusClass}">${statusText}</span></td>
-                            <td class="cell">${u.contact_number}</td>
+                            <td>${u.firstname} ${u.lastname}</td>
+                            <td>${u.barangay}, ${u.city}</td>
+                            <td><span>${statusText}</span></td>
+                            <td>${u.contact_number}</td>
                         </tr>
                     `;
             });

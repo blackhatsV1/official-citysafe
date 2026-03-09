@@ -1,78 +1,65 @@
 <!-- Glassmorphic User Sidebar -->
-<div id="mobile-sidebar"
-  class="fixed inset-y-0 left-0 w-64 glass-panel z-40 transform -translate-x-full transition-transform duration-300 xl:translate-x-0 xl:static xl:block flex flex-col h-full overflow-y-auto">
+<div id="mobile-sidebar">
   <!-- Close Button for Mobile -->
-  <div class="flex justify-end p-4 xl:hidden">
+  <div>
     <button
-      onclick="document.getElementById('mobile-sidebar').classList.add('-translate-x-full'); document.getElementById('sidebar-overlay').classList.add('hidden')"
-      class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-      <i class="fa fa-times text-xl"></i>
+      onclick="document.getElementById('mobile-sidebar').classList.add('-translate-x-full'); document.getElementById('sidebar-overlay').classList.add('hidden')">
+      <i></i>
     </button>
   </div>
 
-  <div class="p-6 text-center border-b border-gray-200 dark:border-gray-800">
-    <a href="/" class="flex items-center justify-center gap-2 text-indigo-600 dark:text-indigo-400">
-      <i class="fa fa-shield-alt text-3xl"></i>
-      <span class="font-bold text-2xl tracking-wider text-gray-900 dark:text-gray-100">CITYSAFE</span>
+  <div>
+    <a href="/">
+      <i></i>
+      <span>CITYSAFE</span>
     </a>
   </div>
 
-  <div
-    class="p-4 border-b border-gray-200 dark:border-gray-800 mx-4 my-2 rounded-xl bg-gray-50/50 dark:bg-gray-800/50 backdrop-blur-sm">
-    <div class="flex items-center gap-3">
-      <div
-        class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
-        <i class="fa fa-user"></i>
+  <div>
+    <div>
+      <div>
+        <i></i>
       </div>
-      <div class="overflow-hidden">
-        <h6 class="font-bold text-sm text-gray-900 dark:text-gray-100 m-0 truncate">
+      <div>
+        <h6>
           <%= username %>
         </h6>
-        <span
-          class="px-2 py-0.5 mt-1 rounded text-[10px] font-bold tracking-wider bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400 inline-block uppercase">CITIZEN
+        <span>CITIZEN
           UNIT</span>
       </div>
     </div>
   </div>
 
-  <nav class="flex-1 px-4 py-4 space-y-1">
-    <a href="/"
-      class="flex items-center gap-3 px-4 py-3 rounded-lg <%= (typeof page !== 'undefined' && page === 'dashboard') ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 font-semibold shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50' %> transition-all">
-      <i class="fa fa-tachometer-alt w-5 text-center"></i>
+  <nav>
+    <a href="/">
+      <i></i>
       <span>Control Center</span>
     </a>
-    <a href="/send-sos"
-      class="flex items-center gap-3 px-4 py-3 rounded-lg <%= (typeof page !== 'undefined' && page === 'send-sos') ? 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-semibold shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50' %> transition-all mt-2">
-      <i class="fa fa-bullhorn w-5 text-center text-red-500"></i>
-      <span class="font-bold">Emergency SOS</span>
+    <a href="/send-sos">
+      <i></i>
+      <span>Emergency SOS</span>
     </a>
-    <a href="/my-reports"
-      class="flex items-center gap-3 px-4 py-3 rounded-lg <%= (typeof page !== 'undefined' && page === 'my-reports') ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 font-semibold shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50' %> transition-all">
-      <i class="fa fa-history w-5 text-center"></i>
+    <a href="/my-reports">
+      <i></i>
       <span>Incident Logs</span>
     </a>
-    <a href="/nearby-stations"
-      class="flex items-center gap-3 px-4 py-3 rounded-lg <%= (typeof page !== 'undefined' && page === 'stations') ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 font-semibold shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50' %> transition-all">
-      <i class="fa fa-map-marked-alt w-5 text-center"></i>
+    <a href="/nearby-stations">
+      <i></i>
       <span>Stations & Maps</span>
     </a>
-    <a href="/assess-risk"
-      class="flex items-center gap-3 px-4 py-3 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all">
-      <i class="fa fa-file-contract w-5 text-center"></i>
+    <a href="/assess-risk">
+      <i></i>
       <span>Risk Audit</span>
     </a>
   </nav>
 
-  <div
-    class="px-4 py-4 mt-auto border-t border-gray-200 dark:border-gray-800 space-y-1 bg-white/30 dark:bg-gray-900/30">
-    <a href="/editaccount"
-      class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-all text-sm">
-      <i class="fa fa-cog w-5 text-center"></i>
+  <div>
+    <a href="/editaccount">
+      <i></i>
       <span>Account Settings</span>
     </a>
-    <a href="/logout"
-      class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all text-sm font-medium">
-      <i class="fa fa-sign-out-alt w-5 text-center"></i>
+    <a href="/logout">
+      <i></i>
       <span>Sign Out</span>
     </a>
   </div>
@@ -80,5 +67,4 @@
 
 <!-- Overlay for mobile when sidebar is open -->
 <div id="sidebar-overlay"
-  onclick="document.getElementById('mobile-sidebar').classList.add('-translate-x-full'); this.classList.add('hidden')"
-  class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-30 hidden xl:hidden transition-opacity"></div>
+  onclick="document.getElementById('mobile-sidebar').classList.add('-translate-x-full'); this.classList.add('hidden')"></div>

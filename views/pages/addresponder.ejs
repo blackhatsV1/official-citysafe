@@ -5,101 +5,89 @@
     <%- include('../partials/head'); %>
 </head>
 
-<body
-    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
+<body>
     <%- include('../partials/page-start'); %>
 
-        <header class="sticky top-0 z-50">
+        <header>
             <%- include('../partials/admin-navbar', { currentPage: 'add-responder' }); %>
         </header>
 
-        <div class="flex flex-1 overflow-hidden relative">
-            <aside class="z-40">
+        <div>
+            <aside>
                 <%- include('../partials/admin-sidebar', { currentPage: 'add-responder' }); %>
             </aside>
 
-            <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8 overflow-y-auto w-full">
-                <div class="max-w-4xl mx-auto space-y-6">
+            <main>
+                <div>
 
-                    <div class="flex items-center gap-3">
-                        <a href="/userslist" class="text-gray-500 hover:text-indigo-600 transition-colors"><i
-                                class="fa fa-arrow-left"></i></a>
-                        <h1 class="text-2xl font-black text-gray-900 dark:text-gray-100 tracking-tight">ENLIST RESPONDER
+                    <div>
+                        <a href="/userslist"><i></i></a>
+                        <h1>ENLIST RESPONDER
                         </h1>
                     </div>
 
-                    <div class="glass-panel overflow-hidden">
-                        <div
-                            class="px-8 py-5 border-b border-gray-100 dark:border-gray-800 bg-white/40 dark:bg-gray-900/40">
-                            <h2 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">
+                    <div>
+                        <div>
+                            <h2>
                                 Personnel Enlistment Form</h2>
                         </div>
 
-                        <div class="p-8">
-                            <form action="/addresponder" method="POST" id="addResponderForm" class="space-y-8">
+                        <div>
+                            <form action="/addresponder" method="POST" id="addResponderForm">
 
                                 <div>
-                                    <h3
-                                        class="text-xs font-black uppercase text-indigo-600 dark:text-indigo-400 tracking-widest mb-4">
+                                    <h3>
                                         Operative Identity</h3>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div class="space-y-1">
-                                            <label for="firstname"
-                                                class="block text-sm font-bold text-gray-700 dark:text-gray-300">First
+                                    <div>
+                                        <div>
+                                            <label for="firstname">First
                                                 Name</label>
-                                            <input type="text" name="firstname" id="firstname" class="input-glass"
+                                            <input type="text" name="firstname" id="firstname"
                                                 placeholder="Enter first name" required>
                                         </div>
-                                        <div class="space-y-1">
-                                            <label for="lastname"
-                                                class="block text-sm font-bold text-gray-700 dark:text-gray-300">Last
+                                        <div>
+                                            <label for="lastname">Last
                                                 Name</label>
-                                            <input type="text" name="lastname" id="lastname" class="input-glass"
+                                            <input type="text" name="lastname" id="lastname"
                                                 placeholder="Enter last name" required>
                                         </div>
-                                        <div class="space-y-1">
-                                            <label for="email"
-                                                class="block text-sm font-bold text-gray-700 dark:text-gray-300">Official
+                                        <div>
+                                            <label for="email">Official
                                                 Email</label>
-                                            <input type="email" name="email" id="email" class="input-glass"
+                                            <input type="email" name="email" id="email"
                                                 placeholder="operative.name@citysafe.gov" required>
                                         </div>
-                                        <div class="space-y-1">
-                                            <label for="contact_number"
-                                                class="block text-sm font-bold text-gray-700 dark:text-gray-300">Contact
+                                        <div>
+                                            <label for="contact_number">Contact
                                                 Number</label>
-                                            <input type="number" name="contact_number" id="contact" class="input-glass"
+                                            <input type="number" name="contact_number" id="contact"
                                                 placeholder="09XXXXXXXXX" required>
                                         </div>
                                     </div>
                                 </div>
 
-                                <hr class="border-gray-200 dark:border-gray-800">
+                                <hr>
 
                                 <div>
-                                    <h3
-                                        class="text-xs font-black uppercase text-indigo-600 dark:text-indigo-400 tracking-widest mb-4">
+                                    <h3>
                                         Security & Assignment</h3>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                        <div class="space-y-1" x-data="{ show: false }">
-                                            <label for="password"
-                                                class="block text-sm font-bold text-gray-700 dark:text-gray-300">Access
+                                    <div>
+                                        <div x-data="{ show: false }">
+                                            <label for="password">Access
                                                 Credentials</label>
-                                            <div class="relative">
+                                            <div>
                                                 <input :type="show ? 'text' : 'password'" name="password" id="password"
-                                                    placeholder="Secure passphrase" class="input-glass pr-12" required>
-                                                <button type="button" @click="show = !show"
-                                                    class="absolute inset-y-0 right-0 px-4 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none flex items-center">
-                                                    <i class="fa fa-eye-slash" x-show="!show"></i>
-                                                    <i class="fa fa-eye" x-show="show" style="display: none;"></i>
+                                                    placeholder="Secure passphrase" required>
+                                                <button type="button" @click="show = !show">
+                                                    <i x-show="!show"></i>
+                                                    <i x-show="show"></i>
                                                 </button>
                                             </div>
                                         </div>
-                                        <div class="space-y-1">
-                                            <label for="station"
-                                                class="block text-sm font-bold text-gray-700 dark:text-gray-300">Station
+                                        <div>
+                                            <label for="station">Station
                                                 Assignment</label>
-                                            <select id="station" name="station_id" class="input-glass" required>
+                                            <select id="station" name="station_id" required>
                                                 <option value="" disabled selected>Identify assigned operational base...
                                                 </option>
                                                 <% stations.forEach(station=> { %>
@@ -124,9 +112,8 @@
                                 <input type="hidden" name="address_type" value="Work">
                                 <input type="hidden" name="additional_instructions" value="N/A">
 
-                                <div class="pt-6">
-                                    <button type="submit"
-                                        class="btn-glass-primary w-full py-3 text-lg font-bold shadow-lg shadow-indigo-500/30">
+                                <div>
+                                    <button type="submit">
                                         FINALIZE ENLISTMENT
                                     </button>
                                 </div>

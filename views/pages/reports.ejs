@@ -5,52 +5,50 @@
   <%- include('../partials/head'); %>
 </head>
 
-<body
-  class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
+<body>
   <%- include('../partials/page-start'); %>
 
-    <header class="sticky top-0 z-50">
+    <header>
       <%- include('../partials/admin-navbar'); %>
     </header>
 
-    <div class="flex flex-1 overflow-hidden relative">
-      <aside class="z-40">
+    <div>
+      <aside>
         <%- include('../partials/admin-sidebar'); %>
       </aside>
 
-      <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8 overflow-y-auto w-full">
-        <div class="max-w-7xl mx-auto space-y-8">
+      <main>
+        <div>
 
-          <h1 class="text-2xl font-black text-gray-900 dark:text-gray-100 tracking-tight">ANALYTICS & REPORTING</h1>
+          <h1>ANALYTICS & REPORTING</h1>
 
           <!-- Risk Tables -->
-          <div class="space-y-6">
+          <div>
             <!-- High Risk -->
-            <div class="glass-panel overflow-hidden border-t-4 border-red-500">
-              <div class="px-6 py-4 bg-white/40 dark:bg-gray-900/40 border-b border-gray-100 dark:border-gray-800">
-                <h2 class="text-sm font-bold uppercase tracking-wider text-red-600 dark:text-red-400">High Risk Profiles
+            <div>
+              <div>
+                <h2>High Risk Profiles
                 </h2>
               </div>
-              <div class="overflow-x-auto w-full p-4">
-                <table class="w-full text-left border-collapse">
+              <div>
+                <table>
                   <thead>
-                    <tr
-                      class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-bold border-b border-gray-100 dark:border-gray-800">
-                      <th class="px-4 py-3">Fullname</th>
-                      <th class="px-4 py-3">Risk Score</th>
-                      <th class="px-4 py-3">Assessed At</th>
+                    <tr>
+                      <th>Fullname</th>
+                      <th>Risk Score</th>
+                      <th>Assessed At</th>
                     </tr>
                   </thead>
-                  <tbody class="divide-y divide-gray-100 dark:divide-gray-800/60 text-sm">
+                  <tbody>
                     <% riskTables['High'].forEach(user=> { %>
-                      <tr class="hover:bg-red-50/50 dark:hover:bg-red-900/10 transition-colors">
-                        <td class="px-4 py-3 font-semibold text-gray-900 dark:text-gray-100">
+                      <tr>
+                        <td>
                           <%= user.username %>
                         </td>
-                        <td class="px-4 py-3 font-mono font-bold text-red-600 dark:text-red-400">
+                        <td>
                           <%= user.risk_score %>
                         </td>
-                        <td class="px-4 py-3 text-gray-600 dark:text-gray-400">
+                        <td>
                           <%= user.assessed_at.toLocaleString() %>
                         </td>
                       </tr>
@@ -61,31 +59,30 @@
             </div>
 
             <!-- Moderate Risk -->
-            <div class="glass-panel overflow-hidden border-t-4 border-yellow-500">
-              <div class="px-6 py-4 bg-white/40 dark:bg-gray-900/40 border-b border-gray-100 dark:border-gray-800">
-                <h2 class="text-sm font-bold uppercase tracking-wider text-yellow-600 dark:text-yellow-400">Moderate
+            <div>
+              <div>
+                <h2>Moderate
                   Risk Profiles</h2>
               </div>
-              <div class="overflow-x-auto w-full p-4">
-                <table class="w-full text-left border-collapse">
+              <div>
+                <table>
                   <thead>
-                    <tr
-                      class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-bold border-b border-gray-100 dark:border-gray-800">
-                      <th class="px-4 py-3">Fullname</th>
-                      <th class="px-4 py-3">Risk Score</th>
-                      <th class="px-4 py-3">Assessed At</th>
+                    <tr>
+                      <th>Fullname</th>
+                      <th>Risk Score</th>
+                      <th>Assessed At</th>
                     </tr>
                   </thead>
-                  <tbody class="divide-y divide-gray-100 dark:divide-gray-800/60 text-sm">
+                  <tbody>
                     <% riskTables['Moderate'].forEach(user=> { %>
-                      <tr class="hover:bg-yellow-50/50 dark:hover:bg-yellow-900/10 transition-colors">
-                        <td class="px-4 py-3 font-semibold text-gray-900 dark:text-gray-100">
+                      <tr>
+                        <td>
                           <%= user.username %>
                         </td>
-                        <td class="px-4 py-3 font-mono font-bold text-yellow-600 dark:text-yellow-400">
+                        <td>
                           <%= user.risk_score %>
                         </td>
-                        <td class="px-4 py-3 text-gray-600 dark:text-gray-400">
+                        <td>
                           <%= user.assessed_at.toLocaleString() %>
                         </td>
                       </tr>
@@ -96,31 +93,30 @@
             </div>
 
             <!-- Low Risk -->
-            <div class="glass-panel overflow-hidden border-t-4 border-green-500">
-              <div class="px-6 py-4 bg-white/40 dark:bg-gray-900/40 border-b border-gray-100 dark:border-gray-800">
-                <h2 class="text-sm font-bold uppercase tracking-wider text-green-600 dark:text-green-400">Low Risk
+            <div>
+              <div>
+                <h2>Low Risk
                   Profiles</h2>
               </div>
-              <div class="overflow-x-auto w-full p-4">
-                <table class="w-full text-left border-collapse">
+              <div>
+                <table>
                   <thead>
-                    <tr
-                      class="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-bold border-b border-gray-100 dark:border-gray-800">
-                      <th class="px-4 py-3">Fullname</th>
-                      <th class="px-4 py-3">Risk Score</th>
-                      <th class="px-4 py-3">Assessed At</th>
+                    <tr>
+                      <th>Fullname</th>
+                      <th>Risk Score</th>
+                      <th>Assessed At</th>
                     </tr>
                   </thead>
-                  <tbody class="divide-y divide-gray-100 dark:divide-gray-800/60 text-sm">
+                  <tbody>
                     <% riskTables['Low'].forEach(user=> { %>
-                      <tr class="hover:bg-green-50/50 dark:hover:bg-green-900/10 transition-colors">
-                        <td class="px-4 py-3 font-semibold text-gray-900 dark:text-gray-100">
+                      <tr>
+                        <td>
                           <%= user.username %>
                         </td>
-                        <td class="px-4 py-3 font-mono font-bold text-green-600 dark:text-green-400">
+                        <td>
                           <%= user.risk_score %>
                         </td>
-                        <td class="px-4 py-3 text-gray-600 dark:text-gray-400">
+                        <td>
                           <%= user.assessed_at.toLocaleString() %>
                         </td>
                       </tr>
@@ -132,39 +128,39 @@
           </div>
 
           <!-- Charts Array -->
-          <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
-            <div class="glass-panel p-6">
-              <h2 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-6">Checklist
+          <div>
+            <div>
+              <h2>Checklist
                 Completion</h2>
-              <div class="relative h-[280px] w-full">
+              <div>
                 <canvas id="checklistChart"></canvas>
               </div>
             </div>
-            <div class="glass-panel p-6">
-              <h2 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-6">System
+            <div>
+              <h2>System
                 Engagement (Posts)</h2>
-              <div class="relative h-[280px] w-full">
+              <div>
                 <canvas id="userChart"></canvas>
               </div>
             </div>
-            <div class="glass-panel p-6">
-              <h2 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-6">Risk
+            <div>
+              <h2>Risk
                 Stratification</h2>
-              <div class="relative h-[280px] w-full">
+              <div>
                 <canvas id="riskLevelChart"></canvas>
               </div>
             </div>
-            <div class="glass-panel p-6">
-              <h2 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-6">Risk Velocity
+            <div>
+              <h2>Risk Velocity
                 Trend</h2>
-              <div class="relative h-[280px] w-full">
+              <div>
                 <canvas id="trendChart"></canvas>
               </div>
             </div>
-            <div class="glass-panel p-6 xl:col-span-2">
-              <h2 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300 mb-6">Environmental
+            <div>
+              <h2>Environmental
                 Hazards</h2>
-              <div class="relative h-[280px] w-full">
+              <div>
                 <canvas id="hazardsChart"></canvas>
               </div>
             </div>

@@ -5,121 +5,110 @@
   <%- include('../partials/head'); %>
 </head>
 
-<body
-  class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
+<body>
   <%- include('../partials/page-start'); %>
 
-    <header class="sticky top-0 z-50">
+    <header>
       <%- include('../partials/admin-navbar', { currentPage: 'users' }); %>
     </header>
 
-    <div class="flex flex-1 overflow-hidden relative">
-      <aside class="z-40">
+    <div>
+      <aside>
         <%- include('../partials/admin-sidebar', { currentPage: 'users' }); %>
       </aside>
 
-      <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8 overflow-y-auto w-full">
-        <div class="max-w-7xl mx-auto space-y-6">
+      <main>
+        <div>
 
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h1 class="text-2xl font-black text-gray-900 dark:text-gray-100 tracking-tight">USER DIRECTORY</h1>
-            <a href="/addusers" class="btn-glass-primary whitespace-nowrap"><i class="fa fa-user-plus mr-2"></i>New
+          <div>
+            <h1>USER DIRECTORY</h1>
+            <a href="/addusers"><i></i>New
               Citizen</a>
-            <a href="/addresponder" class="btn-glass whitespace-nowrap text-red-600 dark:text-red-400"><i
-                class="fa fa-user-md mr-2"></i>New Responder</a>
+            <a href="/addresponder"><i></i>New Responder</a>
           </div>
 
-          <div class="glass-panel overflow-hidden">
-            <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-white/40 dark:bg-gray-900/40">
-              <h2 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">Registered
+          <div>
+            <div>
+              <h2>Registered
                 Accounts</h2>
             </div>
 
-            <div class="overflow-x-auto w-full">
-              <table class="w-full text-left border-collapse">
+            <div>
+              <table>
                 <thead>
-                  <tr
-                    class="bg-gray-50/50 dark:bg-gray-800/50 text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-bold border-b border-gray-100 dark:border-gray-800">
-                    <th class="px-6 py-4">Actions</th>
-                    <th class="px-6 py-4">Type</th>
-                    <th class="px-6 py-4">ID</th>
-                    <th class="px-6 py-4">Name</th>
-                    <th class="px-6 py-4">Location (Bgy/City)</th>
-                    <th class="px-6 py-4">Email</th>
-                    <th class="px-6 py-4">Contact</th>
-                    <th class="px-6 py-4">Role</th>
+                  <tr>
+                    <th>Actions</th>
+                    <th>Type</th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Location (Bgy/City)</th>
+                    <th>Email</th>
+                    <th>Contact</th>
+                    <th>Role</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100 dark:divide-gray-800/60 text-sm">
+                <tbody>
                   <% responders.forEach(res=> { %>
-                    <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
-                      <td class="px-6 py-3 whitespace-nowrap">
-                        <div class="flex items-center gap-2">
-                          <a href="/edit-responder/<%= res.id %>"
-                            class="px-3 py-1 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded font-bold text-xs transition-colors">Edit</a>
-                          <button onclick="deleteResponder(<%= res.id %>)"
-                            class="px-3 py-1 bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50 text-red-700 dark:text-red-400 rounded font-bold text-xs transition-colors">Delete</button>
+                    <tr>
+                      <td>
+                        <div>
+                          <a href="/edit-responder/<%= res.id %>">Edit</a>
+                          <button onclick="deleteResponder(<%= res.id %>)">Delete</button>
                         </div>
                       </td>
-                      <td class="px-6 py-3 whitespace-nowrap">
-                        <span
-                          class="px-2 py-1 bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400 rounded text-xs font-bold uppercase tracking-wider">Responder</span>
+                      <td>
+                        <span>Responder</span>
                       </td>
-                      <td class="px-6 py-3 text-gray-500 dark:text-gray-400 font-mono">
+                      <td>
                         <%= res.id %>
                       </td>
-                      <td class="px-6 py-3 font-semibold text-gray-900 dark:text-gray-100">
+                      <td>
                         <%= res.firstname %>
                           <%= res.lastname %>
                       </td>
-                      <td class="px-6 py-3 text-gray-600 dark:text-gray-300">
+                      <td>
                         <%= res.station_name || 'N/A' %>
                       </td>
-                      <td class="px-6 py-3 text-gray-600 dark:text-gray-300">
+                      <td>
                         <%= res.email %>
                       </td>
-                      <td class="px-6 py-3 text-gray-600 dark:text-gray-300">
+                      <td>
                         <%= res.contact_number %>
                       </td>
-                      <td class="px-6 py-3 whitespace-nowrap">
-                        <span
-                          class="px-2 py-1 bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400 rounded text-xs font-bold uppercase tracking-wider">responder</span>
+                      <td>
+                        <span>responder</span>
                       </td>
                     </tr>
                     <% }) %>
                       <% users.forEach(user=> { %>
-                        <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
-                          <td class="px-6 py-3 whitespace-nowrap">
-                            <div class="flex items-center gap-2">
-                              <a href="/edit/<%= user.id %>"
-                                class="px-3 py-1 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded font-bold text-xs transition-colors">Edit</a>
-                              <button onclick="deleteUser(<%= user.id %>)"
-                                class="px-3 py-1 bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50 text-red-700 dark:text-red-400 rounded font-bold text-xs transition-colors">Delete</button>
+                        <tr>
+                          <td>
+                            <div>
+                              <a href="/edit/<%= user.id %>">Edit</a>
+                              <button onclick="deleteUser(<%= user.id %>)">Delete</button>
                             </div>
                           </td>
-                          <td class="px-6 py-3 whitespace-nowrap">
-                            <span
-                              class="px-2 py-1 bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300 rounded text-xs font-bold uppercase tracking-wider">Citizen</span>
+                          <td>
+                            <span>Citizen</span>
                           </td>
-                          <td class="px-6 py-3 text-gray-500 dark:text-gray-400 font-mono">
+                          <td>
                             <%= user.id %>
                           </td>
-                          <td class="px-6 py-3 font-semibold text-gray-900 dark:text-gray-100">
+                          <td>
                             <%= user.firstname %>
                               <%= user.lastname %>
                           </td>
-                          <td class="px-6 py-3 text-gray-600 dark:text-gray-300">
+                          <td>
                             <%= user.barangay %>, <%= user.city %>
                           </td>
-                          <td class="px-6 py-3 text-gray-600 dark:text-gray-300">
+                          <td>
                             <%= user.email %>
                           </td>
-                          <td class="px-6 py-3 text-gray-600 dark:text-gray-300">
+                          <td>
                             <%= user.contact_number %>
                           </td>
-                          <td class="px-6 py-3 whitespace-nowrap">
-                            <span
-                              class="px-2 py-1 bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-400 rounded text-xs font-bold uppercase tracking-wider">
+                          <td>
+                            <span>
                               <%= user.role %>
                             </span>
                           </td>

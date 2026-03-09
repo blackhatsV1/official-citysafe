@@ -5,115 +5,104 @@
   <%- include('../partials/head'); %>
 </head>
 
-<body
-  class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
+<body>
   <%- include('../partials/page-start'); %>
 
-    <header class="sticky top-0 z-50">
+    <header>
       <%- include('../partials/admin-navbar', { currentPage: 'view-users-posts' }); %>
     </header>
 
-    <div class="flex flex-1 overflow-hidden relative">
-      <aside class="z-40">
+    <div>
+      <aside>
         <%- include('../partials/admin-sidebar', { currentPage: 'view-users-posts' }); %>
       </aside>
 
-      <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8 overflow-y-auto w-full">
-        <div class="max-w-7xl mx-auto space-y-6">
+      <main>
+        <div>
 
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h1 class="text-2xl font-black text-gray-900 dark:text-gray-100 tracking-tight">RECENT POSTS</h1>
-            <div class="glass-panel px-4 py-2 flex items-center gap-3">
-              <span class="text-xs text-gray-500 dark:text-gray-400 font-medium">To see advanced metrics, explore
+          <div>
+            <h1>RECENT POSTS</h1>
+            <div>
+              <span>To see advanced metrics, explore
                 the</span>
-              <a href="/reports" class="btn-glass-primary py-1 px-3 text-xs flex items-center gap-1">
-                <i class="fa fa-chart-bar"></i> Analytics
+              <a href="/reports">
+                <i></i> Analytics
               </a>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div>
             <% for (let i=0; i < users.length; i++) { %>
-              <div class="glass-panel overflow-hidden flex flex-col hover:shadow-lg transition-shadow">
-                <div
-                  class="p-6 border-b border-gray-100 dark:border-gray-800 bg-white/40 dark:bg-gray-900/40 flex items-center gap-4">
-                  <div
-                    class="w-12 h-12 rounded-full bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shadow-sm flex-shrink-0">
-                    <i class="fa fa-user text-xl"></i>
+              <div>
+                <div>
+                  <div>
+                    <i></i>
                   </div>
                   <div>
-                    <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">
+                    <h3>
                       <%= users[i].name %>
                     </h3>
-                    <span class="text-xs text-gray-500 dark:text-gray-400 font-medium font-mono">Posted: <%=
+                    <span>Posted: <%=
                         users[i].created_at %></span>
                   </div>
                 </div>
 
-                <div class="p-6 flex-1 flex flex-col gap-4">
-                  <div
-                    class="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-xl border border-gray-100 dark:border-gray-800 space-y-3">
+                <div>
+                  <div>
                     <div>
-                      <span
-                        class="text-xs font-black uppercase text-indigo-600 dark:text-indigo-400 tracking-widest block mb-1">Location</span>
-                      <p class="text-sm font-medium text-gray-800 dark:text-gray-200">
+                      <span>Location</span>
+                      <p>
                         <%= users[i].location %>
                       </p>
                     </div>
-                    <div class="w-full h-px bg-gray-200 dark:bg-gray-700"></div>
+                    <div></div>
                     <div>
-                      <span
-                        class="text-xs font-black uppercase text-red-600 dark:text-red-400 tracking-widest block mb-1">Requesting
+                      <span>Requesting
                         For</span>
-                      <p class="text-sm font-medium text-gray-800 dark:text-gray-200">
+                      <p>
                         <%= users[i].needs %>
                       </p>
                     </div>
                   </div>
 
-                  <div class="mt-auto">
-                    <span
-                      class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 text-xs font-bold border border-blue-100 dark:border-blue-800/50 mb-4">
-                      <i class="fa fa-hands-helping"></i> Local Helpers: <%= users[i].help_count %>
+                  <div>
+                    <span>
+                      <i></i> Local Helpers: <%= users[i].help_count %>
                     </span>
 
-                    <div class="flex flex-wrap gap-2">
+                    <div>
                       <!-- Note: Resolve button logic was href='#' in old design -->
-                      <button type="button" class="btn-glass-primary w-full py-2 shadow-sm mb-1"
+                      <button type="button"
                         onclick="window.location.href='#'">
                         MARK AS RESOLVED
                       </button>
 
-                      <div class="flex gap-2 w-full">
+                      <div>
                         <button form="holdForm_<%= users[i].id %>" type="submit"
-                          onclick="return confirm('Suspend this request?')"
-                          class="flex-1 btn-glass py-2 bg-yellow-100/50 hover:bg-yellow-200/50 dark:bg-yellow-900/20 dark:hover:bg-yellow-900/40 text-yellow-700 dark:text-yellow-500 border-yellow-200 dark:border-yellow-800 text-xs shadow-sm">
-                          <i class="fa fa-pause-circle mr-1"></i> SUSPEND
+                          onclick="return confirm('Suspend this request?')">
+                          <i></i> SUSPEND
                         </button>
                         <button form="deleteForm_<%= users[i].id %>" type="submit"
-                          onclick="return confirm('Permanently remove this post?')"
-                          class="flex-1 btn-glass py-2 bg-red-100/50 hover:bg-red-200/50 dark:bg-red-900/20 dark:hover:bg-red-900/40 text-red-700 dark:text-red-500 border-red-200 dark:border-red-800 text-xs shadow-sm">
-                          <i class="fa fa-trash-alt mr-1"></i> REMOVE
+                          onclick="return confirm('Permanently remove this post?')">
+                          <i></i> REMOVE
                         </button>
                       </div>
                     </div>
 
-                    <form id="holdForm_<%= users[i].id %>" action="#" method="POST" class="hidden"></form>
-                    <form id="deleteForm_<%= users[i].id %>" action="#" method="POST" class="hidden"></form>
+                    <form id="holdForm_<%= users[i].id %>" action="#" method="POST"></form>
+                    <form id="deleteForm_<%= users[i].id %>" action="#" method="POST"></form>
                   </div>
                 </div>
               </div>
               <% } %>
 
                 <% if (users.length===0) { %>
-                  <div
-                    class="col-span-1 lg:col-span-2 glass-panel py-20 flex flex-col items-center justify-center text-center">
-                    <div
-                      class="w-20 h-20 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-6">
-                      <i class="fa fa-inbox text-4xl text-gray-400"></i>
+                  <div>
+                    <div>
+                      <i></i>
                     </div>
-                    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-200">No Recent Broadcasts</h3>
-                    <p class="text-gray-500 dark:text-gray-400 max-w-sm mt-2">There are currently no active requests for
+                    <h3>No Recent Broadcasts</h3>
+                    <p>There are currently no active requests for
                       assistance in the operations sector.</p>
                   </div>
                   <% } %>

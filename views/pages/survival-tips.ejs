@@ -5,49 +5,45 @@
   <%- include('../partials/head'); %>
 </head>
 
-<body
-  class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
+<body>
   <%- include('../partials/page-start'); %>
 
-    <header class="sticky top-0 z-50">
+    <header>
       <%- include('../partials/user-navbar', { currentPage: 'survival-tips' }); %>
     </header>
 
-    <div class="flex flex-1 overflow-hidden relative">
-      <aside class="z-40">
+    <div>
+      <aside>
         <%- include('../partials/user-sidebar', { currentPage: 'survival-tips' }); %>
       </aside>
 
-      <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8 overflow-y-auto w-full relative">
-        <div class="max-w-7xl mx-auto space-y-6">
+      <main>
+        <div>
 
-          <div class="flex items-center gap-3 px-2 mb-2">
-            <div
-              class="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400 flex items-center justify-center">
-              <i class="fa fa-book-medical text-xl"></i>
+          <div>
+            <div>
+              <i></i>
             </div>
-            <h1 class="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight uppercase">Survival Protocols
+            <h1>Survival Protocols
             </h1>
           </div>
 
-          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div>
 
             <!-- Tips Section -->
-            <div class="lg:col-span-2 space-y-6">
-              <div class="glass-panel overflow-hidden h-full flex flex-col border-t-4 border-orange-500 relative">
+            <div>
+              <div>
                 <!-- Background abstract shape -->
-                <div
-                  class="absolute -top-10 -right-10 w-40 h-40 bg-orange-500/10 rounded-full blur-3xl pointer-events-none">
+                <div>
                 </div>
 
-                <div class="p-6 md:p-8 flex-1 relative z-10">
-                  <p
-                    class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-8 max-w-2xl border-l-2 border-orange-400 pl-3">
+                <div>
+                  <p>
                     Adhere to the following tactical survival protocols to ensure maximum safety during critical
                     incident scenarios.
                   </p>
 
-                  <div class="space-y-4" x-data="{ activeAccordion: null }">
+                  <div x-data="{ activeAccordion: null }">
                     <% const protocols=[ { icon: "fa-fire" , title: "Fire Survival Logistics" , colorTheme: "red" ,
                       items: [ "Stay low to the ground to avoid toxic smoke inhalation."
                       , "If trapped inside, seal doors and use wet cloth to block smoke ingress."
@@ -80,34 +76,29 @@
                         let activeBgColor = "bg-" + proto.colorTheme + "-50/50 dark:bg-" + proto.colorTheme + "-900/10";
                         let iconColor = "text-" + proto.colorTheme + "-500 dark:text-" + proto.colorTheme + "-400";
                         %>
-                        <div class="border rounded-xl overflow-hidden transition-all duration-300 transform origin-top"
-                          :class="activeAccordion === <%= index %> ? 'shadow-md scale-[1.01] <%= activeBorderColor %> <%= activeBgColor %>' : '<%= borderColor %> <%= bgColor %>'">
-                          <button @click="activeAccordion = activeAccordion === <%= index %> ? null : <%= index %>"
-                            class="w-full text-left px-5 py-4 flex items-center justify-between focus:outline-none group">
-                            <div class="flex items-center gap-3">
-                              <div
-                                class="w-8 h-8 rounded-lg bg-white dark:bg-gray-800 shadow-sm flex items-center justify-center <%= iconColor %>">
-                                <i class="fa <%= proto.icon %>"></i>
+                        <div
+                          :>
+                          <button @click="activeAccordion = activeAccordion === <%= index %> ? null : <%= index %>">
+                            <div>
+                              <div>
+                                <i></i>
                               </div>
-                              <h3
-                                class="font-black tracking-widest uppercase text-sm text-gray-900 dark:text-gray-100 group-hover:<%= iconColor %> transition-colors">
+                              <h3>
                                 <%= proto.title %>
                               </h3>
                             </div>
                             <div
-                              class="w-6 h-6 rounded-full flex items-center justify-center text-gray-400 transition-transform duration-300 group-hover:bg-gray-100 dark:group-hover:bg-gray-800"
-                              :class="activeAccordion === <%= index %> ? 'rotate-180 <%= iconColor %>' : ''">
-                              <i class="fa fa-chevron-down text-xs"></i>
+                              :>
+                              <i></i>
                             </div>
                           </button>
                           <div x-show="activeAccordion === <%= index %>" x-collapse x-cloak>
-                            <div class="px-5 pb-5 pt-2">
-                              <ul
-                                class="space-y-3 mx-4 border-l-2 <%= activeBorderColor %> pl-4 text-sm text-gray-600 dark:text-gray-400">
+                            <div>
+                              <ul>
                                 <% proto.items.forEach(item=> { %>
-                                  <li class="flex items-start gap-2">
-                                    <i class="fa fa-check-circle mt-1 <%= iconColor %> opacity-70"></i>
-                                    <span class="font-medium leading-relaxed">
+                                  <li>
+                                    <i></i>
+                                    <span>
                                       <%= item %>
                                     </span>
                                   </li>
@@ -123,64 +114,56 @@
             </div>
 
             <!-- Hotlines Section -->
-            <div class="lg:col-span-1 space-y-6">
+            <div>
 
-              <div class="glass-panel overflow-hidden border-t-4 border-red-500 shadow-lg shadow-red-500/5">
-                <div
-                  class="px-6 py-4 border-b border-red-100 dark:border-red-900/30 bg-red-50/50 dark:bg-red-900/10 flex items-center justify-between">
-                  <h4
-                    class="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 flex items-center gap-2">
-                    <i class="fa fa-satellite-dish text-red-500 animate-pulse"></i> Critical Evac Comms
+              <div>
+                <div>
+                  <h4>
+                    <i></i> Critical Evac Comms
                   </h4>
                 </div>
-                <div class="p-6">
-                  <p class="text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400 mb-4">Direct
+                <div>
+                  <p>Direct
                     Action Lines</p>
-                  <ul class="space-y-2">
-                    <li class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
-                      <div class="flex flex-col">
-                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Command Center</span>
+                  <ul>
+                    <li>
+                      <div>
+                        <span>Command Center</span>
                       </div>
-                      <span
-                        class="px-2 py-1 bg-red-500 text-white rounded text-xs font-black shadow-sm tracking-widest">911</span>
+                      <span>911</span>
                     </li>
-                    <li class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
-                      <div class="flex flex-col">
-                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Police Tactical</span>
-                        <span class="text-[10px] font-medium tracking-wide text-gray-400">(02) 8722-0650</span>
+                    <li>
+                      <div>
+                        <span>Police Tactical</span>
+                        <span>(02) 8722-0650</span>
                       </div>
-                      <span
-                        class="px-2 py-1 bg-blue-600 text-white rounded text-xs font-black shadow-sm tracking-widest">117</span>
+                      <span>117</span>
                     </li>
-                    <li class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
-                      <div class="flex flex-col">
-                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Fire Operations</span>
+                    <li>
+                      <div>
+                        <span>Fire Operations</span>
                       </div>
-                      <span
-                        class="px-2 py-1 bg-yellow-500 text-gray-900 rounded text-xs font-black shadow-sm tracking-widest">(02)
+                      <span>(02)
                         8426</span>
                     </li>
-                    <li class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
-                      <div class="flex flex-col">
-                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Red Cross Medivac</span>
-                        <span class="text-[10px] font-medium tracking-wide text-gray-400">(02) 8790-2300</span>
+                    <li>
+                      <div>
+                        <span>Red Cross Medivac</span>
+                        <span>(02) 8790-2300</span>
                       </div>
-                      <span
-                        class="px-2 py-1 bg-cyan-500 text-white rounded text-xs font-black shadow-sm tracking-widest">143</span>
+                      <span>143</span>
                     </li>
-                    <li class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-800">
-                      <div class="flex flex-col">
-                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">MMDA Dispatch</span>
+                    <li>
+                      <div>
+                        <span>MMDA Dispatch</span>
                       </div>
-                      <span
-                        class="px-2 py-1 bg-green-500 text-white rounded text-xs font-black shadow-sm tracking-widest">136</span>
+                      <span>136</span>
                     </li>
-                    <li class="flex items-center justify-between py-2">
-                      <div class="flex flex-col">
-                        <span class="text-sm font-bold text-gray-700 dark:text-gray-300">NDRRMC Hub</span>
+                    <li>
+                      <div>
+                        <span>NDRRMC Hub</span>
                       </div>
-                      <span
-                        class="px-2 py-1 bg-gray-600 text-white rounded text-xs font-black shadow-sm tracking-widest">(02)
+                      <span>(02)
                         8911</span>
                     </li>
                   </ul>

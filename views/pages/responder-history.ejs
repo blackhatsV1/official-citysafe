@@ -5,105 +5,86 @@
     <%- include('../partials/head'); %>
 </head>
 
-<body
-    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
+<body>
     <%- include('../partials/page-start'); %>
 
-        <header class="sticky top-0 z-50">
+        <header>
             <%- include('../partials/responder-navbar', { currentPage: 'responder-history' }); %>
         </header>
 
-        <div class="flex flex-1 overflow-hidden relative">
-            <aside class="z-40">
+        <div>
+            <aside>
                 <%- include('../partials/responder-sidebar', { currentPage: 'responder-history' }); %>
             </aside>
 
-            <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8 overflow-y-auto w-full relative">
-                <div class="max-w-7xl mx-auto space-y-6">
+            <main>
+                <div>
 
-                    <h1
-                        class="text-3xl font-black text-gray-900 dark:text-white tracking-tight uppercase px-2 mb-2 flex items-center gap-3">
-                        <div
-                            class="w-10 h-10 rounded-xl bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 flex items-center justify-center shadow-inner border border-gray-200 dark:border-gray-700">
-                            <i class="fa fa-clock-rotate-left text-xl"></i>
+                    <h1>
+                        <div>
+                            <i></i>
                         </div>
                         Reaction History
                     </h1>
 
-                    <div class="glass-panel overflow-hidden border-t-4 border-gray-500 shadow-lg">
-                        <div
-                            class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-white/40 dark:bg-gray-900/40 flex items-center justify-between">
-                            <h4
-                                class="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 flex items-center gap-2">
-                                <i class="fa fa-folder-open text-gray-500"></i> Operation Logs
+                    <div>
+                        <div>
+                            <h4>
+                                <i></i> Operation Logs
                             </h4>
                         </div>
 
-                        <div class="p-0 overflow-x-auto">
-                            <table class="w-full text-left border-collapse">
+                        <div>
+                            <table>
                                 <thead>
-                                    <tr
-                                        class="bg-gray-50/50 dark:bg-gray-800/50 border-b border-gray-100 dark:border-gray-800">
-                                        <th
-                                            class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                    <tr>
+                                        <th>
                                             Date/Time</th>
-                                        <th
-                                            class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                        <th>
                                             Resolved Time</th>
-                                        <th
-                                            class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                        <th>
                                             Type</th>
-                                        <th
-                                            class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                        <th>
                                             Location</th>
-                                        <th
-                                            class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                        <th>
                                             Resolved By</th>
-                                        <th
-                                            class="px-6 py-3 text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                                        <th>
                                             Intelligence / Remarks</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-gray-100 dark:divide-gray-800">
+                                <tbody>
                                     <% if (reports.length> 0) { %>
                                         <% reports.forEach(function(report) { %>
-                                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
-                                                <td
-                                                    class="px-6 py-4 text-xs font-bold text-gray-700 dark:text-gray-300 whitespace-nowrap">
+                                            <tr>
+                                                <td>
                                                     <%= new Date(report.reported_at).toLocaleString() %>
                                                 </td>
-                                                <td
-                                                    class="px-6 py-4 text-xs font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                                                <td>
                                                     <%= report.resolved_at ? new
                                                         Date(report.resolved_at).toLocaleString() : '-' %>
                                                 </td>
-                                                <td class="px-6 py-4">
-                                                    <span
-                                                        class="px-2 py-1 bg-red-100 dark:bg-red-900/40 text-red-700 dark:text-red-400 rounded text-[10px] font-bold uppercase tracking-widest border border-red-200 dark:border-red-800">
+                                                <td>
+                                                    <span>
                                                         <%= report.disaster_type %>
                                                     </span>
                                                 </td>
-                                                <td class="px-6 py-4 text-xs text-gray-600 dark:text-gray-400 max-w-[200px] truncate"
+                                                <td
                                                     title="<%= report.location || 'Unknown Coordinates' %>">
-                                                    <i class="fa fa-map-pin text-gray-400 mr-1"></i>
+                                                    <i></i>
                                                     <%= report.location || 'Unknown Coordinates' %>
                                                 </td>
-                                                <td class="px-6 py-4">
-                                                    <span
-                                                        class="px-2 py-1 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 rounded text-[10px] font-bold uppercase tracking-widest border border-emerald-200 dark:border-emerald-800">
+                                                <td>
+                                                    <span>
                                                         <%= report.resolved_by || 'Unknown' %>
                                                     </span>
                                                 </td>
-                                                <td
-                                                    class="px-6 py-4 text-[10px] text-gray-500 dark:text-gray-400 max-w-[200px]">
-                                                    <div class="truncate"
+                                                <td>
+                                                    <div
                                                         title="Unit: <%= report.responder_message || '-' %> | HQ: <%= report.user_message || '-' %>">
-                                                        <div class="truncate mb-0.5"><span
-                                                                class="font-bold text-indigo-500 dark:text-indigo-400">OP:</span>
+                                                        <div><span>OP:</span>
                                                             <%= report.responder_message || '-' %>
                                                         </div>
-                                                        <div class="truncate"><span
-                                                                class="font-bold text-gray-700 dark:text-gray-300">HQ:</span>
+                                                        <div><span>HQ:</span>
                                                             <%= report.user_message || '-' %>
                                                         </div>
                                                     </div>
@@ -112,11 +93,9 @@
                                             <% }); %>
                                                 <% } else { %>
                                                     <tr>
-                                                        <td colspan="6" class="px-6 py-12 text-center">
-                                                            <div class="text-gray-300 dark:text-gray-600 mb-3"><i
-                                                                    class="fa fa-folder-open text-4xl"></i></div>
-                                                            <span
-                                                                class="text-sm font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">No
+                                                        <td colspan="6">
+                                                            <div><i></i></div>
+                                                            <span>No
                                                                 historical deployments found.</span>
                                                         </td>
                                                     </tr>

@@ -5,85 +5,75 @@
     <%- include('../partials/head'); %>
 </head>
 
-<body
-    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
+<body>
     <%- include('../partials/page-start'); %>
 
-        <header class="sticky top-0 z-50">
+        <header>
             <%- include('../partials/admin-navbar', { currentPage: 'assessments' }); %>
         </header>
 
-        <div class="flex flex-1 overflow-hidden relative">
-            <aside class="z-40">
+        <div>
+            <aside>
                 <%- include('../partials/admin-sidebar', { currentPage: 'assessments' }); %>
             </aside>
 
-            <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8 overflow-y-auto w-full">
-                <div class="max-w-7xl mx-auto space-y-6">
+            <main>
+                <div>
 
-                    <h1 class="text-2xl font-black text-gray-900 dark:text-gray-100 tracking-tight">ASSESSMENT RECORDS
+                    <h1>ASSESSMENT RECORDS
                     </h1>
 
-                    <div class="glass-panel overflow-hidden">
-                        <div
-                            class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-white/40 dark:bg-gray-900/40">
-                            <h2 class="text-sm font-bold uppercase tracking-wider text-gray-700 dark:text-gray-300">Risk
+                    <div>
+                        <div>
+                            <h2>Risk
                                 Audit Database</h2>
                         </div>
 
-                        <div class="overflow-x-auto w-full">
+                        <div>
                             <% if (assessments.length> 0) { %>
-                                <table class="w-full text-left border-collapse">
+                                <table>
                                     <thead>
-                                        <tr
-                                            class="bg-gray-50/50 dark:bg-gray-800/50 text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-bold border-b border-gray-100 dark:border-gray-800">
-                                            <th class="px-6 py-4">Citizen Name</th>
-                                            <th class="px-6 py-4">Date Assessed</th>
-                                            <th class="px-6 py-4">Risk Score</th>
-                                            <th class="px-6 py-4">Risk Level</th>
-                                            <th class="px-6 py-4 text-right">Actions</th>
+                                        <tr>
+                                            <th>Citizen Name</th>
+                                            <th>Date Assessed</th>
+                                            <th>Risk Score</th>
+                                            <th>Risk Level</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody class="divide-y divide-gray-100 dark:divide-gray-800/60 text-sm">
+                                    <tbody>
                                         <% for (let i=0; i < assessments.length; i++) { %>
-                                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-colors">
-                                                <td class="px-6 py-4 font-semibold text-gray-900 dark:text-gray-100">
+                                            <tr>
+                                                <td>
                                                     <%= assessments[i].firstname %>
                                                         <%= assessments[i].lastname %>
                                                 </td>
-                                                <td class="px-6 py-4 text-gray-600 dark:text-gray-400">
+                                                <td>
                                                     <%= assessments[i].assessed_at %>
                                                 </td>
-                                                <td
-                                                    class="px-6 py-4 font-mono font-bold text-gray-700 dark:text-gray-300">
+                                                <td>
                                                     <%= assessments[i].risk_score %>
                                                 </td>
-                                                <td class="px-6 py-4">
+                                                <td>
                                                     <% if(assessments[i].risk_level==='High' ) { %>
-                                                        <span
-                                                            class="px-2.5 py-1 bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400 rounded text-xs font-bold uppercase tracking-wider">
+                                                        <span>
                                                             <%= assessments[i].risk_level %>
                                                         </span>
                                                         <% } else if(assessments[i].risk_level==='Medium' ) { %>
-                                                            <span
-                                                                class="px-2.5 py-1 bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-400 rounded text-xs font-bold uppercase tracking-wider">
+                                                            <span>
                                                                 <%= assessments[i].risk_level %>
                                                             </span>
                                                             <% } else { %>
-                                                                <span
-                                                                    class="px-2.5 py-1 bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400 rounded text-xs font-bold uppercase tracking-wider">
+                                                                <span>
                                                                     <%= assessments[i].risk_level %>
                                                                 </span>
                                                                 <% } %>
                                                 </td>
-                                                <td class="px-6 py-4 text-right">
+                                                <td>
                                                     <form action="/delete-result/<%= assessments[i].id %>" method="POST"
-                                                        class="inline-block"
                                                         onsubmit="return confirm('WARNING: Are you sure you want to delete this assessment record?');">
-                                                        <button type="submit"
-                                                            class="px-3 py-1.5 bg-red-100 hover:bg-red-200 dark:bg-red-900/30 dark:hover:bg-red-900/50 text-red-700 dark:text-red-400 rounded font-bold text-xs transition-colors flex items-center justify-center gap-1">
-                                                            <i class="fa fa-trash"></i> <span
-                                                                class="hidden sm:inline">Delete</span>
+                                                        <button type="submit">
+                                                            <i></i> <span>Delete</span>
                                                         </button>
                                                     </form>
                                                 </td>
@@ -92,14 +82,13 @@
                                     </tbody>
                                 </table>
                                 <% } else { %>
-                                    <div class="flex flex-col items-center justify-center py-16 text-center">
-                                        <div
-                                            class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-4">
-                                            <i class="fa fa-folder-open text-3xl text-gray-400"></i>
+                                    <div>
+                                        <div>
+                                            <i></i>
                                         </div>
-                                        <h3 class="text-lg font-bold text-gray-700 dark:text-gray-300">No Records Found
+                                        <h3>No Records Found
                                         </h3>
-                                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">There are no risk
+                                        <p>There are no risk
                                             assessment records in the current operational sector.</p>
                                     </div>
                                     <% } %>

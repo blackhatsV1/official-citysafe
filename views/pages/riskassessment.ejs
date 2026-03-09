@@ -5,76 +5,66 @@
   <%- include('../partials/head'); %>
 </head>
 
-<body
-  class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex flex-col">
+<body>
   <%- include('../partials/page-start'); %>
 
-    <header class="sticky top-0 z-50">
+    <header>
       <%- include('../partials/user-navbar', { currentPage: 'riskassessment' }); %>
     </header>
 
-    <div class="flex flex-1 overflow-hidden relative">
-      <aside class="z-40">
+    <div>
+      <aside>
         <%- include('../partials/user-sidebar', { currentPage: 'riskassessment' }); %>
       </aside>
 
-      <main class="flex-1 px-4 py-8 sm:px-6 lg:px-8 overflow-y-auto w-full relative">
-        <div class="max-w-4xl mx-auto space-y-6">
+      <main>
+        <div>
 
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
-            <div class="flex items-center gap-3">
-              <div
-                class="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shadow-inner">
-                <i class="fa fa-clipboard-question text-xl"></i>
+          <div>
+            <div>
+              <div>
+                <i></i>
               </div>
-              <h1 class="text-3xl font-black text-gray-900 dark:text-gray-100 tracking-tight uppercase">Risk Assessment
+              <h1>Risk Assessment
               </h1>
             </div>
-            <a href="/risk-results"
-              class="px-4 py-2 bg-white/40 dark:bg-gray-800/40 hover:bg-white/60 dark:hover:bg-gray-800/60 border border-gray-200 dark:border-gray-700 rounded-xl text-xs font-black uppercase tracking-widest text-indigo-600 dark:text-indigo-400 transition-all shadow-sm flex items-center gap-2 w-fit">
-              <i class="fa fa-clock-rotate-left"></i> Assessment History
+            <a href="/risk-results">
+              <i></i> Assessment History
             </a>
           </div>
 
-          <div class="glass-panel overflow-hidden border-t-4 border-indigo-500 shadow-xl relative">
+          <div>
             <!-- Glow effect -->
-            <div
-              class="absolute -top-10 -right-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none">
+            <div>
             </div>
 
-            <div
-              class="px-6 py-5 border-b border-indigo-100 dark:border-indigo-900/30 bg-indigo-50/50 dark:bg-indigo-900/10 flex items-center z-20 relative">
-              <h4 class="text-sm font-bold uppercase tracking-wider text-gray-800 dark:text-gray-200 m-0">
+            <div>
+              <h4>
                 Vulnerability Questionnaire
               </h4>
             </div>
 
-            <div class="p-6 sm:p-8 relative z-10">
-              <form action="/assess-risk" method="POST" class="space-y-6">
+            <div>
+              <form action="/assess-risk" method="POST">
 
                 <!-- Question 1 -->
-                <div
-                  class="p-5 bg-white/40 dark:bg-gray-800/40 border border-gray-100 dark:border-gray-700/50 rounded-2xl hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors shadow-sm">
-                  <label
-                    class="flex items-center gap-3 text-sm font-bold text-gray-800 dark:text-gray-200 mb-4 tracking-wide cursor-pointer">
-                    <div
-                      class="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-500 flex items-center justify-center shrink-0">
-                      <i class="fa fa-water"></i>
+                <div>
+                  <label>
+                    <div>
+                      <i></i>
                     </div>
                     Are you situated near a river or major waterway?
                   </label>
-                  <div class="flex gap-4 ml-11">
-                    <label class="flex-1 cursor-pointer group relative">
-                      <input type="radio" name="nearRiver" value="true" class="peer sr-only" required>
-                      <div
-                        class="px-4 py-2.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-center font-bold text-gray-500 dark:text-gray-400 peer-checked:border-indigo-500 peer-checked:bg-indigo-50 dark:peer-checked:bg-indigo-900/20 peer-checked:text-indigo-600 dark:peer-checked:text-indigo-400 transition-all group-hover:border-indigo-300 dark:group-hover:border-indigo-600 shadow-sm">
+                  <div>
+                    <label>
+                      <input type="radio" name="nearRiver" value="true" required>
+                      <div>
                         YES
                       </div>
                     </label>
-                    <label class="flex-1 cursor-pointer group relative">
-                      <input type="radio" name="nearRiver" value="false" class="peer sr-only">
-                      <div
-                        class="px-4 py-2.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-center font-bold text-gray-500 dark:text-gray-400 peer-checked:border-gray-500 peer-checked:bg-gray-100 dark:peer-checked:bg-gray-800 peer-checked:text-gray-700 dark:peer-checked:text-gray-300 transition-all group-hover:border-gray-300 dark:group-hover:border-gray-600 shadow-sm">
+                    <label>
+                      <input type="radio" name="nearRiver" value="false">
+                      <div>
                         NO
                       </div>
                     </label>
@@ -82,28 +72,23 @@
                 </div>
 
                 <!-- Question 2 -->
-                <div
-                  class="p-5 bg-white/40 dark:bg-gray-800/40 border border-gray-100 dark:border-gray-700/50 rounded-2xl hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors shadow-sm">
-                  <label
-                    class="flex items-center gap-3 text-sm font-bold text-gray-800 dark:text-gray-200 mb-4 tracking-wide cursor-pointer">
-                    <div
-                      class="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-500 flex items-center justify-center shrink-0">
-                      <i class="fa fa-mountain"></i>
+                <div>
+                  <label>
+                    <div>
+                      <i></i>
                     </div>
                     Are you located near a known geological fault line?
                   </label>
-                  <div class="flex gap-4 ml-11">
-                    <label class="flex-1 cursor-pointer group relative">
-                      <input type="radio" name="nearFault" value="true" class="peer sr-only" required>
-                      <div
-                        class="px-4 py-2.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-center font-bold text-gray-500 dark:text-gray-400 peer-checked:border-indigo-500 peer-checked:bg-indigo-50 dark:peer-checked:bg-indigo-900/20 peer-checked:text-indigo-600 dark:peer-checked:text-indigo-400 transition-all group-hover:border-indigo-300 dark:group-hover:border-indigo-600 shadow-sm">
+                  <div>
+                    <label>
+                      <input type="radio" name="nearFault" value="true" required>
+                      <div>
                         YES
                       </div>
                     </label>
-                    <label class="flex-1 cursor-pointer group relative">
-                      <input type="radio" name="nearFault" value="false" class="peer sr-only">
-                      <div
-                        class="px-4 py-2.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-center font-bold text-gray-500 dark:text-gray-400 peer-checked:border-gray-500 peer-checked:bg-gray-100 dark:peer-checked:bg-gray-800 peer-checked:text-gray-700 dark:peer-checked:text-gray-300 transition-all group-hover:border-gray-300 dark:group-hover:border-gray-600 shadow-sm">
+                    <label>
+                      <input type="radio" name="nearFault" value="false">
+                      <div>
                         NO
                       </div>
                     </label>
@@ -111,28 +96,23 @@
                 </div>
 
                 <!-- Question 3 -->
-                <div
-                  class="p-5 bg-white/40 dark:bg-gray-800/40 border border-gray-100 dark:border-gray-700/50 rounded-2xl hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors shadow-sm">
-                  <label
-                    class="flex items-center gap-3 text-sm font-bold text-gray-800 dark:text-gray-200 mb-4 tracking-wide cursor-pointer">
-                    <div
-                      class="w-8 h-8 rounded-full bg-rose-100 dark:bg-rose-900/40 text-rose-500 flex items-center justify-center shrink-0">
-                      <i class="fa fa-medkit"></i>
+                <div>
+                  <label>
+                    <div>
+                      <i></i>
                     </div>
                     Do you possess a fully stocked emergency survival kit?
                   </label>
-                  <div class="flex gap-4 ml-11">
-                    <label class="flex-1 cursor-pointer group relative">
-                      <input type="radio" name="hasKit" value="true" class="peer sr-only" required>
-                      <div
-                        class="px-4 py-2.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-center font-bold text-gray-500 dark:text-gray-400 peer-checked:border-indigo-500 peer-checked:bg-indigo-50 dark:peer-checked:bg-indigo-900/20 peer-checked:text-indigo-600 dark:peer-checked:text-indigo-400 transition-all group-hover:border-indigo-300 dark:group-hover:border-indigo-600 shadow-sm">
+                  <div>
+                    <label>
+                      <input type="radio" name="hasKit" value="true" required>
+                      <div>
                         YES
                       </div>
                     </label>
-                    <label class="flex-1 cursor-pointer group relative">
-                      <input type="radio" name="hasKit" value="false" class="peer sr-only">
-                      <div
-                        class="px-4 py-2.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-center font-bold text-gray-500 dark:text-gray-400 peer-checked:border-gray-500 peer-checked:bg-gray-100 dark:peer-checked:bg-gray-800 peer-checked:text-gray-700 dark:peer-checked:text-gray-300 transition-all group-hover:border-gray-300 dark:group-hover:border-gray-600 shadow-sm">
+                    <label>
+                      <input type="radio" name="hasKit" value="false">
+                      <div>
                         NO
                       </div>
                     </label>
@@ -140,38 +120,32 @@
                 </div>
 
                 <!-- Question 4 -->
-                <div
-                  class="p-5 bg-white/40 dark:bg-gray-800/40 border border-gray-100 dark:border-gray-700/50 rounded-2xl hover:border-indigo-300 dark:hover:border-indigo-700 transition-colors shadow-sm">
-                  <label
-                    class="flex items-center gap-3 text-sm font-bold text-gray-800 dark:text-gray-200 mb-4 tracking-wide cursor-pointer">
-                    <div
-                      class="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-500 flex items-center justify-center shrink-0">
-                      <i class="fa fa-person-running"></i>
+                <div>
+                  <label>
+                    <div>
+                      <i></i>
                     </div>
                     Have you established a clear evacuation route and plan?
                   </label>
-                  <div class="flex gap-4 ml-11">
-                    <label class="flex-1 cursor-pointer group relative">
-                      <input type="radio" name="hasPlan" value="true" class="peer sr-only" required>
-                      <div
-                        class="px-4 py-2.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-center font-bold text-gray-500 dark:text-gray-400 peer-checked:border-indigo-500 peer-checked:bg-indigo-50 dark:peer-checked:bg-indigo-900/20 peer-checked:text-indigo-600 dark:peer-checked:text-indigo-400 transition-all group-hover:border-indigo-300 dark:group-hover:border-indigo-600 shadow-sm">
+                  <div>
+                    <label>
+                      <input type="radio" name="hasPlan" value="true" required>
+                      <div>
                         YES
                       </div>
                     </label>
-                    <label class="flex-1 cursor-pointer group relative">
-                      <input type="radio" name="hasPlan" value="false" class="peer sr-only">
-                      <div
-                        class="px-4 py-2.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 text-center font-bold text-gray-500 dark:text-gray-400 peer-checked:border-gray-500 peer-checked:bg-gray-100 dark:peer-checked:bg-gray-800 peer-checked:text-gray-700 dark:peer-checked:text-gray-300 transition-all group-hover:border-gray-300 dark:group-hover:border-gray-600 shadow-sm">
+                    <label>
+                      <input type="radio" name="hasPlan" value="false">
+                      <div>
                         NO
                       </div>
                     </label>
                   </div>
                 </div>
 
-                <div class="pt-6 mt-6 border-t border-gray-200 dark:border-gray-700/50">
-                  <button type="submit"
-                    class="w-full py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-black uppercase tracking-widest transition-all shadow-lg hover:shadow-indigo-500/30 flex items-center justify-center gap-2 transform hover:-translate-y-1">
-                    <i class="fa fa-calculator"></i> COMPUTE RISK PROFILE
+                <div>
+                  <button type="submit">
+                    <i></i> COMPUTE RISK PROFILE
                   </button>
                 </div>
               </form>

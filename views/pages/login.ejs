@@ -5,124 +5,106 @@
     <%- include('../partials/head'); %>
 </head>
 
-<body
-    class="bg-gradient-glass-light dark:bg-gradient-glass-dark text-gray-800 dark:text-gray-100 min-h-screen flex text-sm">
-    <div class="flex flex-1 w-full">
+<body>
+    <div>
         <!-- Auth Form Column -->
-        <div
-            class="w-full lg:w-1/2 flex flex-col justify-center px-8 sm:px-16 lg:px-24 xl:px-32 py-12 bg-white/60 dark:bg-gray-900/60 backdrop-blur-xl relative z-10 border-r border-gray-200 dark:border-gray-800">
-            <div class="max-w-md w-full mx-auto space-y-8">
+        <div>
+            <div>
                 <!-- Branding -->
-                <div class="text-center sm:text-left">
-                    <a href="/visitor" class="inline-flex items-center gap-2 group">
-                        <div
-                            class="w-10 h-10 rounded-lg bg-indigo-600 dark:bg-indigo-500 text-white flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform">
-                            <i class="fa fa-shield-alt text-xl"></i>
+                <div>
+                    <a href="/visitor">
+                        <div>
+                            <i></i>
                         </div>
-                        <span
-                            class="text-2xl font-black tracking-tight text-gray-900 dark:text-white uppercase">CitySafe</span>
+                        <span>CitySafe</span>
                     </a>
                 </div>
 
                 <!-- Intro -->
-                <div class="text-center sm:text-left">
-                    <h2 class="text-3xl font-black text-gray-900 dark:text-white tracking-tight mb-2">Welcome Back</h2>
-                    <p class="text-gray-500 dark:text-gray-400 font-medium">Enter your secure credentials to access the
+                <div>
+                    <h2>Welcome Back</h2>
+                    <p>Enter your secure credentials to access the
                         command center operations.</p>
                 </div>
 
                 <!-- Form -->
-                <form class="space-y-5" method="POST" action="/login">
-                    <div class="space-y-1">
-                        <label for="signin-email"
-                            class="block text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-400 pl-1">Identifier</label>
-                        <div class="relative">
-                            <i class="fa fa-user-circle absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <input id="signin-email" name="identifier" type="text" class="input-glass pl-11"
+                <form method="POST" action="/login">
+                    <div>
+                        <label for="signin-email">Identifier</label>
+                        <div>
+                            <i></i>
+                            <input id="signin-email" name="identifier" type="text"
                                 placeholder="Email or Username" required>
                         </div>
                     </div>
 
-                    <div class="space-y-1">
-                        <label for="signin-password"
-                            class="block text-xs font-bold uppercase tracking-widest text-gray-600 dark:text-gray-400 pl-1">Passcode</label>
-                        <div class="relative">
-                            <i class="fa fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                            <input id="signin-password" name="password" type="password" class="input-glass pl-11 pr-12"
+                    <div>
+                        <label for="signin-password">Passcode</label>
+                        <div>
+                            <i></i>
+                            <input id="signin-password" name="password" type="password"
                                 placeholder="••••••••" required>
-                            <button type="button" id="toggleLoginPass"
-                                class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-indigo-500 dark:hover:text-indigo-400 focus:outline-none transition-colors">
-                                <i class="fa fa-eye-slash"></i>
+                            <button type="button" id="toggleLoginPass">
+                                <i></i>
                             </button>
                         </div>
                     </div>
 
-                    <div class="flex items-center justify-between pb-2">
-                        <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox"
-                                class="w-4 h-4 rounded border-gray-300 dark:border-gray-600 text-indigo-600 focus:ring-indigo-500 dark:bg-gray-800">
-                            <span class="text-xs font-medium text-gray-600 dark:text-gray-400">Remember me</span>
+                    <div>
+                        <label>
+                            <input type="checkbox">
+                            <span>Remember me</span>
                         </label>
-                        <a href="#"
-                            class="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 transition-colors">Forgot
+                        <a href="#">Forgot
                             passcode?</a>
                     </div>
 
-                    <button type="submit"
-                        class="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-black text-sm uppercase tracking-widest rounded-xl shadow-lg shadow-indigo-500/30 border border-indigo-500/50 transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2">
-                        SIGN IN TO TERMINAL <i class="fa fa-arrow-right ml-1"></i>
+                    <button type="submit">
+                        SIGN IN TO TERMINAL <i></i>
                     </button>
                 </form>
 
                 <!-- Footer text -->
-                <div class="text-center pt-6 border-t border-gray-100 dark:border-gray-800">
-                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                        Awaiting access credentials? <a href="/register"
-                            class="font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 transition-colors">Request
+                <div>
+                    <p>
+                        Awaiting access credentials? <a href="/register">Request
                             Authorization</a>
                     </p>
                 </div>
 
-                <div class="text-center mt-auto pt-10">
-                    <p class="text-xs font-medium text-gray-400 dark:text-gray-500">
-                        Designed with <i class="fa fa-heart text-red-500 mx-0.5"></i> by tracking project CitySafe
+                <div>
+                    <p>
+                        Designed with <i></i> by tracking project CitySafe
                     </p>
                 </div>
             </div>
         </div>
 
         <!-- Visual Hero Column -->
-        <div class="hidden lg:flex w-1/2 relative flex-col justify-end p-12 overflow-hidden bg-indigo-900/10">
+        <div>
             <!-- Huge abstract graphic background -->
-            <div class="absolute inset-0 z-0">
-                <div class="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-indigo-500/20 rounded-full blur-[100px] animate-pulse"
-                    style="animation-duration: 4s;"></div>
-                <div class="absolute bottom-1/4 right-1/4 w-[600px] h-[600px] bg-purple-500/20 rounded-full blur-[120px] animate-pulse"
-                    style="animation-duration: 7s;"></div>
+            <div>
+                <div></div>
+                <div></div>
 
                 <!-- Grid pattern overlay -->
-                <div class="absolute inset-0 bg-[#00000005] dark:bg-[#ffffff02]"
-                    style="background-image: radial-gradient(var(--tw-gradient-stops) 1px, transparent 1px); background-size: 32px 32px;">
+                <div>
                 </div>
             </div>
 
             <!-- Content -->
-            <div class="relative z-10 max-w-lg mb-10">
-                <div
-                    class="p-8 rounded-3xl bg-white/10 dark:bg-gray-900/30 backdrop-blur-md border border-white/20 dark:border-gray-700/50 shadow-2xl">
-                    <h2 class="text-4xl font-black text-gray-900 dark:text-white tracking-tight mb-4">
-                        Redefining<br><span class="text-indigo-600 dark:text-indigo-400">Urban Safety</span></h2>
-                    <p class="text-lg text-gray-700 dark:text-gray-300 font-medium leading-relaxed">
+            <div>
+                <div>
+                    <h2>
+                        Redefining<br><span>Urban Safety</span></h2>
+                    <p>
                         CitySafe provides real-time atmospheric command, operational deployment mapping, and emergency
                         response coordination for modern urban environments.
                     </p>
-                    <div class="mt-8 flex gap-3">
-                        <span
-                            class="px-3 py-1 bg-white/20 dark:bg-gray-800/50 rounded-lg text-xs font-black uppercase tracking-widest text-gray-800 dark:text-gray-200 border border-white/30 dark:border-gray-600/50">Reliable</span>
-                        <span
-                            class="px-3 py-1 bg-white/20 dark:bg-gray-800/50 rounded-lg text-xs font-black uppercase tracking-widest text-gray-800 dark:text-gray-200 border border-white/30 dark:border-gray-600/50">Resilient</span>
-                        <span
-                            class="px-3 py-1 bg-white/20 dark:bg-gray-800/50 rounded-lg text-xs font-black uppercase tracking-widest text-gray-800 dark:text-gray-200 border border-white/30 dark:border-gray-600/50">Responsive</span>
+                    <div>
+                        <span>Reliable</span>
+                        <span>Resilient</span>
+                        <span>Responsive</span>
                     </div>
                 </div>
             </div>
