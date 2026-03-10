@@ -1,0 +1,11 @@
+[dotenv@17.2.1] injecting env (12) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+Server started on http://localhost:9000
+CRITICAL ERROR (Unhandled Rejection): Error: connect ETIMEDOUT
+    at Connection._handleTimeoutError (/home/jayrold-lenovo-thinkpadx240/Documents/Projects/official-citysafe/node_modules/mysql2/lib/base/connection.js:200:17)
+    at listOnTimeout (node:internal/timers:605:17)
+    at process.processTimers (node:internal/timers:541:7) {
+  errorno: 'ETIMEDOUT',
+  code: 'ETIMEDOUT',
+  syscall: 'connect',
+  fatal: true
+}

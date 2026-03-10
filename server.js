@@ -1,3 +1,4 @@
+require("dotenv").config();
 const axios = require("axios");
 const express = require('express');
 const app = express();
@@ -7,7 +8,6 @@ const { ConnectSessionKnexStore: KnexSessionStore } = require('connect-session-k
 const bodyparser = require('body-parser');
 const db = require('./db');
 const path = require("path");
-require("dotenv").config();
 
 const PORT = process.env.PORT || 9000;
 
