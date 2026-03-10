@@ -8,160 +8,223 @@
 <body>
     <%- include('../partials/page-start'); %>
 
-        <header>
-            <%- include('../partials/user-navbar', { currentPage: 'editprofile' }); %>
-        </header>
-        <div>
+        <div class="cs-layout-container">
             <aside>
                 <%- include('../partials/user-sidebar', { currentPage: 'editprofile' }); %>
             </aside>
-            <main>
-                <div>
 
-                    <div>
-                        <h1>
-                            <div>
-                                <i></i>
+            <main class="cs-main-content">
+                <div class="cs-container" style="max-width: 900px;">
+
+                    <!-- Profile Header -->
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1rem;">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                                <span class="cs-badge"
+                                    style="background: var(--primary-glow); color: var(--primary); font-size: 0.7rem; font-weight: 900;">SECURE
+                                    ACCESS</span>
+                                <h1 class="cs-section-header" style="margin: 0; font-size: 2rem;">PROFILE <span
+                                        style="background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">SETTINGS</span>
+                                </h1>
                             </div>
-                            Profile Settings
-                        </h1>
+                            <p
+                                style="color: var(--text-dim); margin: 0; font-size: 0.85rem; font-weight: 600; text-transform: uppercase;">
+                                Manage your personal identity and G-Grid synchronization</p>
+                        </div>
                     </div>
-                    <div>
-                        <div>
+
+                    <form action="/update-account" method="POST" class="cs-form-stack">
+
+                        <!-- Personal Data Section -->
+                        <div class="cs-card" style="margin-bottom: 2rem;">
+                            <div
+                                style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-glass);">
+                                <div class="cs-badge" style="background: var(--primary-glow); color: var(--primary);"><i
+                                        class="fa-solid fa-user-vcard"></i></div>
+                                <h3 style="margin: 0; font-size: 1rem; font-weight: 800; color: var(--text-bright);">
+                                    PERSONAL IDENTIFICATION</h3>
+                            </div>
+
+                            <div
+                                style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                                <div class="cs-form-group">
+                                    <label for="firstname" class="cs-label">GIVEN NAME</label>
+                                    <div class="cs-input-wrapper">
+                                        <span class="cs-input-icon"><i class="fa-solid fa-signature"></i></span>
+                                        <input type="text" id="firstname" name="firstname" class="cs-input"
+                                            value="<%= user.firstname %>" required>
+                                    </div>
+                                </div>
+                                <div class="cs-form-group">
+                                    <label for="lastname" class="cs-label">SURNAME</label>
+                                    <div class="cs-input-wrapper">
+                                        <span class="cs-input-icon"><i class="fa-solid fa-signature"></i></span>
+                                        <input type="text" id="lastname" name="lastname" class="cs-input"
+                                            value="<%= user.lastname %>" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                                <div class="cs-form-group">
+                                    <label for="email" class="cs-label">EMAIL VECTOR</label>
+                                    <div class="cs-input-wrapper">
+                                        <span class="cs-input-icon"><i class="fa-solid fa-envelope"></i></span>
+                                        <input type="email" id="email" name="email" class="cs-input"
+                                            value="<%= user.email %>" required>
+                                    </div>
+                                </div>
+                                <div class="cs-form-group">
+                                    <label for="contact_number" class="cs-label">RELIANCE PHONE</label>
+                                    <div class="cs-input-wrapper">
+                                        <span class="cs-input-icon"><i class="fa-solid fa-phone"></i></span>
+                                        <input type="number" id="contact_number" name="contact_number" class="cs-input"
+                                            value="<%= user.contact_number %>" required>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <h4>
-                                <i></i> Account Data
-                            </h4>
+
+                        <!-- Geographical Section -->
+                        <div class="cs-card" style="margin-bottom: 2rem;">
+                            <div
+                                style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-glass);">
+                                <div class="cs-badge"
+                                    style="background: var(--secondary-glow); color: var(--secondary);"><i
+                                        class="fa-solid fa-map-location-dot"></i></div>
+                                <h3 style="margin: 0; font-size: 1rem; font-weight: 800; color: var(--text-bright);">
+                                    GEOGRAPHICAL RESIDENCE DATA</h3>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                                <div class="cs-form-group">
+                                    <label for="street_address" class="cs-label">STREET ADDRESS</label>
+                                    <div class="cs-input-wrapper">
+                                        <span class="cs-input-icon"><i class="fa-solid fa-road"></i></span>
+                                        <input type="text" id="street_address" name="street_address" class="cs-input"
+                                            value="<%= user.street_address %>" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div
+                                style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                                <div class="cs-form-group">
+                                    <label for="barangay" class="cs-label">BARANGAY / SECTOR</label>
+                                    <div class="cs-input-wrapper">
+                                        <span class="cs-input-icon"><i class="fa-solid fa-city"></i></span>
+                                        <input type="text" id="barangay" name="barangay" class="cs-input"
+                                            value="<%= user.barangay %>" required>
+                                    </div>
+                                </div>
+                                <div class="cs-form-group">
+                                    <label for="city" class="cs-label">CITY / MUNICIPALITY</label>
+                                    <div class="cs-input-wrapper">
+                                        <span class="cs-input-icon"><i class="fa-solid fa-building-user"></i></span>
+                                        <input type="text" id="city" name="city" class="cs-input"
+                                            value="<%= user.city %>" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div
+                                style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                                <div class="cs-form-group">
+                                    <label for="province" class="cs-label">PROVINCE</label>
+                                    <input type="text" id="province" name="province" class="cs-input"
+                                        value="<%= user.province %>" required>
+                                </div>
+                                <div class="cs-form-group">
+                                    <label for="postal_code" class="cs-label">POSTAL CODE</label>
+                                    <input type="text" id="postal_code" name="postal_code" class="cs-input"
+                                        value="<%= user.postal_code %>" required>
+                                </div>
+                                <div class="cs-form-group">
+                                    <label for="country" class="cs-label">COUNTRY</label>
+                                    <input type="text" id="country" name="country" class="cs-input"
+                                        value="<%= user.country %>" required>
+                                </div>
+                            </div>
+
+                            <div
+                                style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                                <div class="cs-form-group">
+                                    <label for="landmark" class="cs-label">NOTABLE LANDMARK</label>
+                                    <div class="cs-input-wrapper">
+                                        <span class="cs-input-icon"><i class="fa-solid fa-monument"></i></span>
+                                        <input type="text" id="landmark" name="landmark" class="cs-input"
+                                            value="<%= user.landmark %>" required>
+                                    </div>
+                                </div>
+                                <div class="cs-form-group">
+                                    <label for="address_type" class="cs-label">RESIDENCE CLASSIFICATION</label>
+                                    <div class="cs-input-wrapper">
+                                        <span class="cs-input-icon"><i class="fa-solid fa-house-user"></i></span>
+                                        <input type="text" id="address_type" name="address_type" class="cs-input"
+                                            value="<%= user.address_type %>" placeholder="e.g. Primary Home, Workplace"
+                                            required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="cs-form-group">
+                                <label for="additional_instructions" class="cs-label">RESPONSE ACCESS GUIDANCE</label>
+                                <div class="cs-input-wrapper">
+                                    <span class="cs-input-icon" style="top: 1.25rem;"><i
+                                            class="fa-solid fa-comment-medical"></i></span>
+                                    <textarea id="additional_instructions" name="additional_instructions"
+                                        class="cs-input" rows="3" style="padding-top: 0.85rem;"
+                                        required><%= user.additional_instructions %></textarea>
+                                </div>
+                                <p
+                                    style="font-size: 0.65rem; color: var(--text-dim); margin-top: 0.5rem; font-style: italic;">
+                                    Provide specific entry details or gate codes for rapid emergency unit access.</p>
+                            </div>
                         </div>
 
-                        <div>
-                            <form action="/update-account" method="POST">
-                                <div>
-                                    <h5>
-                                        <i></i> Personal Identification
-                                    </h5>
-                                    <div>
-                                        <div>
-                                            <label for="firstname">First
-                                                Name</label>
-                                            <input type="text" id="firstname" name="firstname"
-                                                value="<%= user.firstname %>" required>
-                                        </div>
-                                        <div>
-                                            <label for="lastname">Last
-                                                Name</label>
-                                            <input type="text" id="lastname" name="lastname"
-                                                value="<%= user.lastname %>" required>
-                                        </div>
-                                        <div>
-                                            <label for="email">Email
-                                                Address</label>
-                                            <input type="email" id="email" name="email" value="<%= user.email %>"
-                                                required>
-                                        </div>
-                                        <div>
-                                            <label for="contact_number">Contact
-                                                Number</label>
-                                            <input type="number" id="contact_number" name="contact_number"
-                                                value="<%= user.contact_number %>" required>
-                                        </div>
-                                    </div>
-                                </div>
+                        <!-- Authentication Section -->
+                        <div class="cs-card" style="margin-bottom: 3rem; border-left: 3px solid var(--accent);">
+                            <div
+                                style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-glass);">
+                                <div class="cs-badge" style="background: var(--accent-glow); color: var(--accent);"><i
+                                        class="fa-solid fa-shield-halved"></i></div>
+                                <h3 style="margin: 0; font-size: 1rem; font-weight: 800; color: var(--text-bright);">
+                                    SECURITY PROTOCOL</h3>
+                            </div>
 
-                                <div>
-                                    <h5>
-                                        <i></i> Geographical Data
-                                    </h5>
-                                    <div>
-                                        <div>
-                                            <label for="street_address">Street
-                                                Address</label>
-                                            <input type="text" id="street_address" name="street_address"
-                                                value="<%= user.street_address %>" required>
-                                        </div>
-                                        <div>
-                                            <label for="barangay">Barangay</label>
-                                            <input type="text" id="barangay" name="barangay"
-                                                value="<%= user.barangay %>" required>
-                                        </div>
-                                        <div>
-                                            <label for="city">City
-                                                / Municipality</label>
-                                            <input type="text" id="city" name="city" value="<%= user.city %>" required>
-                                        </div>
-                                        <div>
-                                            <label for="province">Province</label>
-                                            <input type="text" id="province" name="province"
-                                                value="<%= user.province %>" required>
-                                        </div>
-                                        <div>
-                                            <label for="postal_code">Postal
-                                                Code</label>
-                                            <input type="text" id="postal_code" name="postal_code"
-                                                value="<%= user.postal_code %>" required>
-                                        </div>
-                                        <div>
-                                            <label for="country">Country</label>
-                                            <input type="text" id="country" name="country" value="<%= user.country %>"
-                                                required>
-                                        </div>
-                                        <div>
-                                            <label for="landmark">Landmark</label>
-                                            <input type="text" id="landmark" name="landmark"
-                                                value="<%= user.landmark %>" required>
-                                        </div>
-                                        <div>
-                                            <label for="address_type">Address
-                                                Type</label>
-                                            <input type="text" id="address_type" name="address_type"
-                                                value="<%= user.address_type %>" placeholder="e.g. Home, Office"
-                                                required>
-                                        </div>
-                                        <div>
-                                            <label for="additional_instructions">Additional
-                                                Guidance / Instructions</label>
-                                            <textarea id="additional_instructions" name="additional_instructions"
-                                                rows="2" required><%= user.additional_instructions %></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h5>
-                                        <i></i> Authentication Setting
-                                    </h5>
-                                    <div>
-                                        <label for="password">Override
-                                            Password (Optional)</label>
-                                        <div>
-                                            <div>
-                                                <i></i>
-                                            </div>
-                                            <input type="password" id="password" name="password"
-                                                placeholder="Leave empty to retain current password"
-                                                autocomplete="new-password">
-
-                                            <button type="button" id="togglePassword">
-                                                <i></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <a href="/weather">
-                                        <i></i> Cancel
-                                    </a>
-                                    <button type="submit">
-                                        <i></i> COMMIT CHANGES
+                            <div class="cs-form-group">
+                                <label for="password" class="cs-label">RE-INITIALIZE PASSWORD (OPTIONAL)</label>
+                                <div class="cs-input-wrapper">
+                                    <span class="cs-input-icon"><i class="fa-solid fa-key"></i></span>
+                                    <input type="password" id="password" name="password" class="cs-input"
+                                        placeholder="Leave empty to maintain existing credentials"
+                                        autocomplete="new-password">
+                                    <button type="button" id="togglePassword"
+                                        style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-dim); cursor: pointer; transition: color 0.2s;">
+                                        <i class="fa-solid fa-eye-slash"></i>
                                     </button>
                                 </div>
-                            </form>
+                            </div>
                         </div>
-                    </div>
+
+                        <!-- Action Buttons -->
+                        <div style="display: flex; justify-content: flex-end; gap: 1.25rem; margin-top: 2rem;">
+                            <a href="/weather" class="cs-btn cs-btn-secondary"
+                                style="display: flex; align-items: center; gap: 0.65rem;">
+                                <i class="fa-solid fa-arrow-left"></i> RETURN TO TERMINAL
+                            </a>
+                            <button type="submit" class="cs-btn cs-btn-accent"
+                                style="display: flex; align-items: center; gap: 0.65rem;">
+                                <i class="fa-solid fa-floppy-disk"></i> COMMIT SYNCHRONIZATION
+                            </button>
+                        </div>
+
+                    </form>
                 </div>
             </main>
         </div>
+
         <%- include('../partials/footer'); %>
             <script>
                 const togglePassword = document.querySelector("#togglePassword");

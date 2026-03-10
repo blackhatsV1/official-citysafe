@@ -12,149 +12,103 @@
             <%- include('../partials/visitor-navbar', { currentPage: 'services' }); %>
         </header>
 
-        <div>
+        <div class="cs-layout-container">
             <aside>
                 <%- include('../partials/visitor-sidebar', { currentPage: 'services' }); %>
             </aside>
 
-            <main>
-                <div>
+            <main class="cs-main-content">
+                <div class="cs-container">
 
-                    <div>
-                        <h1>
-                            Platform Capabilities</h1>
-                        <p>Discover the comprehensive suite of features
-                            designed to ensure your safety and readiness.</p>
+                    <div style="margin-bottom: 3rem;">
+                        <h1 class="cs-section-header">
+                            PLATFORM <span
+                                style="background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">CAPABILITIES</span>
+                        </h1>
+                        <p style="font-size: 1.1rem; color: var(--text-dim); line-height: 1.6; max-width: 600px;">
+                            Explore our comprehensive mission-critical infrastructure designed for urban resilience and
+                            rapid emergency response.
+                        </p>
                     </div>
 
-                    <div>
-                        <!-- Features List -->
-                        <div>
-                            <div>
+                    <div style="margin-bottom: 4rem;">
+                        <div
+                            style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 1rem;">
+                            <div class="cs-badge" style="background: var(--primary-glow); color: var(--primary);">
+                                <i class="fa-solid fa-layer-group"></i>
                             </div>
-                            <div>
-                                <div>
-                                    <i></i>
-                                </div>
-                                <h4>Core Services</h4>
-                            </div>
-
-                            <div>
-
-                                <!-- Feature Item -->
-                                <div>
-                                    <div>
-                                        <i></i>
-                                    </div>
-                                    <div>
-                                        <h5>
-                                            Real-time Information</h5>
-                                        <p>
-                                            Disaster-related updates through specific weather tracking and real-time
-                                            status.</p>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div>
-                                        <i></i>
-                                    </div>
-                                    <div>
-                                        <h5>
-                                            Localized Notifications</h5>
-                                        <p>Relevant
-                                            alerts and updates based on the user's active report location.</p>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div>
-                                        <i></i>
-                                    </div>
-                                    <div>
-                                        <h5>
-                                            Emergency Alert</h5>
-                                        <p>Quickly send
-                                            SOS requests with precise GPS location to nearby responders.</p>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div>
-                                        <i></i>
-                                    </div>
-                                    <div>
-                                        <h5>
-                                            Relief Coordination</h5>
-                                        <p>Connects
-                                            responders with active incidents to efficiently manage relief operations.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div>
-                                        <i></i>
-                                    </div>
-                                    <div>
-                                        <h5>
-                                            Mapping Service</h5>
-                                        <p>Visualizes
-                                            incidents, nearby stations, and responders for critical situational
-                                            awareness.</p>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div>
-                                        <i></i>
-                                    </div>
-                                    <div>
-                                        <h5>
-                                            Survival Guidelines</h5>
-                                        <p>Essential
-                                            survival information and practical guides for various disaster scenarios.
-                                        </p>
-                                    </div>
-                                </div>
-
-                            </div>
+                            <h4 style="margin: 0; font-size: 1.25rem; font-weight: 700;">CORE SERVICES</h4>
                         </div>
 
-                        <!-- Development Team -->
-                        <div>
-                            <div>
-                                <i></i>
-                                <h4>
-                                    Development Team
-                                </h4>
+                        <div class="cs-grid cs-grid-3">
+                            <% [ { icon: 'fa-tower-broadcast' , title: 'Real-time Information' ,
+                                desc: 'Disaster-related updates through specific weather tracking and real-time atmospheric status.'
+                                , color: 'var(--primary)' }, { icon: 'fa-location-crosshairs' ,
+                                title: 'Localized Notifications' ,
+                                desc: 'Relevant alerts and updates broadcast based on active operational sectors and report locations.'
+                                , color: 'var(--secondary)' }, { icon: 'fa-circle-exclamation' ,
+                                title: 'Emergency Alert' ,
+                                desc: 'High-priority SOS requests with decimeter-accurate GPS telemetry for rapid responder dispatch.'
+                                , color: 'var(--danger)' }, { icon: 'fa-solid-people-group' ,
+                                title: 'Relief Coordination' ,
+                                desc: 'Advanced command logic connecting responders with active incidents to optimize field operations.'
+                                , color: 'var(--accent)' }, { icon: 'fa-map-location-dot' , title: 'Mapping Service' ,
+                                desc: 'High-fidelity visualization of incidents, station nodes, and responder units for situational awareness.'
+                                , color: 'var(--info)' }, { icon: 'fa-book-medical' , title: 'Survival Guidelines' ,
+                                desc: 'Algorithmic survival scripts and practical guidelines curated for diverse urban disaster scenarios.'
+                                , color: 'var(--warning)' } ].forEach(service=> { %>
+                                <div class="cs-card"
+                                    style="padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; transition: transform 0.3s ease;"
+                                    onmouseover="this.style.transform='translateY(-5px)'"
+                                    onmouseout="this.style.transform='translateY(0)'">
+                                    <div class="cs-badge"
+                                        style="width: 48px; height: 48px; font-size: 1.25rem; background: <%= service.color %>15; color: <%= service.color %>; border: 1px solid <%= service.color %>30;">
+                                        <i class="fa-solid <%= service.icon %>"></i>
+                                    </div>
+                                    <div>
+                                        <h5
+                                            style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text-bright);">
+                                            <%= service.title %>
+                                        </h5>
+                                        <p style="font-size: 0.9rem; color: var(--text-dim); line-height: 1.6;">
+                                            <%= service.desc %>
+                                        </p>
+                                    </div>
+                                </div>
+                                <% }) %>
+                        </div>
+                    </div>
+
+                    <!-- Footer Team -->
+                    <div class="cs-card"
+                        style="padding: 2rem; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem;">
+                            <div style="display: flex; align-items: center; gap: 1.5rem;">
+                                <div class="cs-badge" style="width: 48px; height: 48px; font-size: 1.25rem;"><i
+                                        class="fa-solid fa-code"></i></div>
+                                <div>
+                                    <div
+                                        style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-dim); letter-spacing: 0.05rem; margin-bottom: 0.25rem;">
+                                        Development Team</div>
+                                    <div style="font-size: 1rem; font-weight: 800; color: var(--text-bright);">PHINMA
+                                        University of Iloilo</div>
+                                </div>
                             </div>
-                            <div>
-
-                                <div>
-                                    <h6>
-                                        Jayrold Tabalina</h6>
-                                    <span>Lead
-                                        Programmer</span>
-                                </div>
-
-                                <div>
-                                    <h6>
-                                        Yasmine M. Talaman</h6>
-                                    <span>Documentation</span>
-                                </div>
-
-                                <div>
-                                    <h6>
-                                        Mark Vincent Jabao</h6>
-                                    <span>UI/UX
-                                        Designer</span>
-                                </div>
-
-                                <div>
-                                    <span>PHINMA
-                                        University of Iloilo</span>
-                                </div>
+                            <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+                                <% [ { name: 'Jayrold Tabalina' , role: 'Lead' }, { name: 'Yasmine M. Talaman' ,
+                                    role: 'Docs' }, { name: 'Mark Vincent Jabao' , role: 'UI/UX' } ].forEach(member=> {
+                                    %>
+                                    <div>
+                                        <div style="font-size: 0.9rem; font-weight: 700; color: var(--text-bright);">
+                                            <%= member.name %>
+                                        </div>
+                                        <div
+                                            style="font-size: 0.75rem; color: var(--primary); text-transform: uppercase;">
+                                            <%= member.role %>
+                                        </div>
+                                    </div>
+                                    <% }) %>
                             </div>
                         </div>
                     </div>

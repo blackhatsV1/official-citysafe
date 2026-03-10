@@ -12,213 +12,239 @@
             <%- include('../partials/admin-navbar', { currentPage: 'userslist' }); %>
         </header>
 
-        <div>
+        <div class="cs-layout-container">
             <aside>
                 <%- include('../partials/admin-sidebar', { currentPage: 'userslist' }); %>
             </aside>
 
-            <main>
-                <div>
+            <main class="cs-main-content">
+                <div class="cs-container" style="max-width: 900px;">
 
-                    <div>
-                        <div>
-                            <i></i>
+                    <!-- Header -->
+                    <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 3rem;">
+                        <div class="cs-badge"
+                            style="width: 60px; height: 60px; font-size: 1.5rem; background: var(--primary-glow); color: var(--primary); border: 1px solid var(--primary-glow); box-shadow: 0 0 20px var(--primary-glow);">
+                            <i class="fa-solid fa-user-gear"></i>
                         </div>
-                        <h1>Modify
-                            User Profile</h1>
+                        <div>
+                            <span class="cs-badge"
+                                style="background: var(--primary-glow); color: var(--primary); font-size: 0.7rem; font-weight: 900; margin-bottom: 0.5rem;">ADMINISTRATIVE
+                                OVERRIDE</span>
+                            <h1 class="cs-section-header" style="margin: 0; font-size: 2.2rem;">MODIFY <span
+                                    style="background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">USER
+                                    PROFILE</span></h1>
+                        </div>
                     </div>
 
-                    <div>
-                        <!-- Glow effect -->
-                        <div>
-                        </div>
-
-                        <div>
-                            <h4>
-                                <i></i> Account Data
-                            </h4>
+                    <!-- User Identification Card -->
+                    <div class="cs-card"
+                        style="margin-bottom: 2.5rem; padding: 1.5rem 2rem; display: flex; align-items: center; justify-content: space-between; border: 1px solid var(--border-glass); background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, transparent 100%);">
+                        <div style="display: flex; align-items: center; gap: 1.25rem;">
+                            <div class="cs-badge" style="width: 45px; height: 45px; background: rgba(0,0,0,0.3);"><i
+                                    class="fa-solid fa-fingerprint"></i></div>
                             <div>
-                                User ID: <%= user.id %>
+                                <p
+                                    style="font-size: 0.65rem; color: var(--text-dim); font-weight: 800; text-transform: uppercase; letter-spacing: 0.05rem; margin: 0;">
+                                    Unique Identifier</p>
+                                <p
+                                    style="font-size: 1.1rem; font-weight: 900; color: var(--primary); font-family: 'JetBrains Mono', monospace; margin: 0;">
+                                    #<%= user.id %>
+                                </p>
                             </div>
                         </div>
-
-                        <div>
-                            <form action="/update/<%= user.id %>" method="POST">
-
-                                <!-- Personal Info Section -->
-                                <div>
-                                    <h5>
-                                        <i></i> Personal Identification
-                                    </h5>
-                                    <div>
-                                        <div>
-                                            <label for="firstname">First
-                                                Name</label>
-                                            <input type="text" id="firstname" name="firstname"
-                                                value="<%= user.firstname %>" required>
-                                        </div>
-                                        <div>
-                                            <label for="lastname">Last
-                                                Name</label>
-                                            <input type="text" id="lastname" name="lastname"
-                                                value="<%= user.lastname %>" required>
-                                        </div>
-                                        <div>
-                                            <label for="email">Email
-                                                Address</label>
-                                            <input type="email" id="email" name="email" value="<%= user.email %>"
-                                                required>
-                                        </div>
-                                        <div>
-                                            <label for="contact_number">Contact
-                                                Number</label>
-                                            <input type="number" id="contact_number" name="contact_number"
-                                                value="<%= user.contact_number %>" required>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Address Info Section -->
-                                <div>
-                                    <h5>
-                                        <i></i> Geographical Data
-                                    </h5>
-                                    <div>
-                                        <div>
-                                            <label for="street_address">Street
-                                                Address</label>
-                                            <input type="text" id="street_address" name="street_address"
-                                                value="<%= user.street_address %>" required>
-                                        </div>
-                                        <div>
-                                            <label for="barangay">Barangay</label>
-                                            <input type="text" id="barangay" name="barangay"
-                                                value="<%= user.barangay %>" required>
-                                        </div>
-                                        <div>
-                                            <label for="city">City
-                                                / Municipality</label>
-                                            <input type="text" id="city" name="city" value="<%= user.city %>" required>
-                                        </div>
-                                        <div>
-                                            <label for="province">Province</label>
-                                            <input type="text" id="province" name="province"
-                                                value="<%= user.province %>" required>
-                                        </div>
-                                        <div>
-                                            <label for="postal_code">Postal
-                                                Code</label>
-                                            <input type="text" id="postal_code" name="postal_code"
-                                                value="<%= user.postal_code %>" required>
-                                        </div>
-                                        <div>
-                                            <label for="country">Country</label>
-                                            <input type="text" id="country" name="country" value="<%= user.country %>"
-                                                required>
-                                        </div>
-                                        <div>
-                                            <label for="landmark">Landmark</label>
-                                            <input type="text" id="landmark" name="landmark"
-                                                value="<%= user.landmark %>" required>
-                                        </div>
-                                        <div>
-                                            <label for="address_type">Address
-                                                Type</label>
-                                            <input type="text" id="address_type" name="address_type"
-                                                value="<%= user.address_type %>" placeholder="e.g. Home, Office"
-                                                required>
-                                        </div>
-                                        <div>
-                                            <label for="additional_instructions">Additional
-                                                Guidance / Instructions</label>
-                                            <textarea id="additional_instructions" name="additional_instructions"
-                                                rows="2" required><%= user.additional_instructions %></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Security Section -->
-                                <div>
-                                    <h5>
-                                        <i></i> Permissions & Authentication
-                                    </h5>
-                                    <div>
-                                        <div>
-                                            <label for="role">User
-                                                Role Priority</label>
-                                            <div>
-                                                <div>
-                                                    <i></i>
-                                                </div>
-                                                <select id="role" name="role" required>
-                                                    <option value="user" <%=user.role==='user' ? 'selected' : '' %>>User</option>
-                                                    <option value="admin" <%=user.role==='admin' ? 'selected' : '' %>>Administrator</option>
-                                                </select>
-                                                <div>
-                                                    <i></i>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label for="password">Override
-                                                Password (Optional)</label>
-                                            <div>
-                                                <div>
-                                                    <i></i>
-                                                </div>
-                                                <input type="password" id="password" name="password"
-                                                    placeholder="Leave empty to retain current password"
-                                                    autocomplete="new-password">
-
-                                                <button type="button" id="togglePassword">
-                                                    <i></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Actions -->
-                                <div>
-                                    <a href="/userslist">
-                                        <i></i> Cancel Edit
-                                    </a>
-                                    <button type="submit">
-                                        <i></i> COMMIT CHANGES
-                                    </button>
-                                </div>
-
-                            </form>
+                        <div class="cs-badge"
+                            style="background: var(--accent-glow); color: var(--accent); font-weight: 800; font-size: 0.75rem;">
+                            SYSTEM ACCOUNT
                         </div>
                     </div>
+
+                    <form action="/update/<%= user.id %>" method="POST">
+                        <div style="display: flex; flex-direction: column; gap: 3rem;">
+
+                            <!-- Personal Info -->
+                            <div class="cs-card" style="padding: 2.5rem; border: 1px solid var(--border-glass);">
+                                <div
+                                    style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2.25rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 1.25rem;">
+                                    <div class="cs-badge"
+                                        style="background: var(--secondary-glow); color: var(--secondary);"><i
+                                            class="fa-solid fa-id-card"></i></div>
+                                    <h4
+                                        style="margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--text-bright); text-transform: uppercase;">
+                                        Personal Identification</h4>
+                                </div>
+
+                                <div class="cs-grid cs-grid-2" style="gap: 2rem;">
+                                    <div class="cs-form-group">
+                                        <label class="cs-label">First Name</label>
+                                        <input type="text" name="firstname" value="<%= user.firstname %>"
+                                            class="cs-input" required>
+                                    </div>
+                                    <div class="cs-form-group">
+                                        <label class="cs-label">Last Name</label>
+                                        <input type="text" name="lastname" value="<%= user.lastname %>" class="cs-input"
+                                            required>
+                                    </div>
+                                    <div class="cs-form-group">
+                                        <label class="cs-label">Email Address</label>
+                                        <input type="email" name="email" value="<%= user.email %>" class="cs-input"
+                                            required>
+                                    </div>
+                                    <div class="cs-form-group">
+                                        <label class="cs-label">Contact Number</label>
+                                        <div style="position: relative;">
+                                            <span
+                                                style="position: absolute; left: 1.25rem; top: 50%; transform: translateY(-50%); color: var(--text-dim); font-size: 0.8rem; font-weight: 700;">+63</span>
+                                            <input type="number" name="contact_number"
+                                                value="<%= user.contact_number %>" class="cs-input"
+                                                style="padding-left: 3.5rem;" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Geographical Data -->
+                            <div class="cs-card" style="padding: 2.5rem; border: 1px solid var(--border-glass);">
+                                <div
+                                    style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2.25rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 1.25rem;">
+                                    <div class="cs-badge" style="background: var(--accent-glow); color: var(--accent);">
+                                        <i class="fa-solid fa-map-location-dot"></i></div>
+                                    <h4
+                                        style="margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--text-bright); text-transform: uppercase;">
+                                        Geographical Data</h4>
+                                </div>
+
+                                <div class="cs-grid cs-grid-2" style="gap: 2rem;">
+                                    <div class="cs-form-group" style="grid-column: span 2;">
+                                        <label class="cs-label">Street Address</label>
+                                        <input type="text" name="street_address" value="<%= user.street_address %>"
+                                            class="cs-input" required>
+                                    </div>
+                                    <div class="cs-form-group">
+                                        <label class="cs-label">Barangay</label>
+                                        <input type="text" name="barangay" value="<%= user.barangay %>" class="cs-input"
+                                            required>
+                                    </div>
+                                    <div class="cs-form-group">
+                                        <label class="cs-label">City / Municipality</label>
+                                        <input type="text" name="city" value="<%= user.city %>" class="cs-input"
+                                            required>
+                                    </div>
+                                    <div class="cs-form-group">
+                                        <label class="cs-label">Province</label>
+                                        <input type="text" name="province" value="<%= user.province %>" class="cs-input"
+                                            required>
+                                    </div>
+                                    <div class="cs-form-group">
+                                        <label class="cs-label">Postal Code</label>
+                                        <input type="text" name="postal_code" value="<%= user.postal_code %>"
+                                            class="cs-input" required>
+                                    </div>
+                                    <div class="cs-form-group">
+                                        <label class="cs-label">Country</label>
+                                        <input type="text" name="country" value="<%= user.country %>" class="cs-input"
+                                            required>
+                                    </div>
+                                    <div class="cs-form-group">
+                                        <label class="cs-label">Address Type</label>
+                                        <select name="address_type" class="cs-input" required
+                                            style="appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236366f1%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1rem;">
+                                            <option value="Home" <%=user.address_type==='Home' ? 'selected' : '' %>>Home
+                                            </option>
+                                            <option value="Office" <%=user.address_type==='Office' ? 'selected' : '' %>
+                                                >Office</option>
+                                            <option value="Other" <%=user.address_type==='Other' ? 'selected' : '' %>
+                                                >Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="cs-form-group" style="grid-column: span 2;">
+                                        <label class="cs-label">Additional Guidance / Landmarks</label>
+                                        <textarea name="additional_instructions" rows="2" class="cs-input"
+                                            style="padding: 1.25rem;"
+                                            required><%= user.additional_instructions %></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Authentication & Permissions -->
+                            <div class="cs-card" style="padding: 2.5rem; border: 1px solid var(--border-glass);">
+                                <div
+                                    style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2.25rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 1.25rem;">
+                                    <div class="cs-badge"
+                                        style="background: var(--primary-glow); color: var(--primary);"><i
+                                            class="fa-solid fa-shield-halved"></i></div>
+                                    <h4
+                                        style="margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--text-bright); text-transform: uppercase;">
+                                        Permissions & Authentication</h4>
+                                </div>
+
+                                <div class="cs-grid cs-grid-2" style="gap: 2rem;">
+                                    <div class="cs-form-group">
+                                        <label class="cs-label">User Role Priority</label>
+                                        <select name="role" class="cs-input" required
+                                            style="appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%236366f1%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1rem;">
+                                            <option value="user" <%=user.role==='user' ? 'selected' : '' %>>Citizen
+                                                (Standard)</option>
+                                            <option value="admin" <%=user.role==='admin' ? 'selected' : '' %>
+                                                >Administrator (All Access)</option>
+                                        </select>
+                                    </div>
+                                    <div class="cs-form-group">
+                                        <label class="cs-label">Override Password (Optional)</label>
+                                        <div style="position: relative;">
+                                            <input type="password" id="password" name="password" class="cs-input"
+                                                placeholder="••••••••••••" autocomplete="new-password">
+                                            <button type="button" id="togglePassword"
+                                                style="position: absolute; right: 1.25rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-dim); transition: all 0.3s ease;">
+                                                <i class="fa-solid fa-eye-slash"></i>
+                                            </button>
+                                        </div>
+                                        <p
+                                            style="font-size: 0.7rem; color: var(--text-dim); margin-top: 0.5rem; font-style: italic;">
+                                            Leave empty to retain current encryption.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Bottom Bar -->
+                            <div
+                                style="display: flex; justify-content: flex-end; align-items: center; gap: 1.5rem; margin-top: 1rem;">
+                                <a href="/userslist" class="cs-btn cs-btn-secondary"
+                                    style="border: 1px solid var(--border-glass); background: rgba(255,255,255,0.03);">
+                                    <i class="fa-solid fa-xmark"></i> CANCEL OVERRIDE
+                                </a>
+                                <button type="submit" class="cs-btn cs-btn-primary"
+                                    style="padding: 1rem 3rem; background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); box-shadow: 0 10px 30px var(--primary-glow);">
+                                    <i class="fa-solid fa-check"></i> COMMIT CHANGES
+                                </button>
+                            </div>
+
+                        </div>
+                    </form>
 
                 </div>
             </main>
         </div>
 
-        <%- include('../partials/footer'); %>
+        <script>
+            const togglePassword = document.querySelector("#togglePassword");
+            const passwordInput = document.querySelector("#password");
+            const icon = togglePassword.querySelector("i");
 
-            <script>
-                const togglePassword = document.querySelector("#togglePassword");
-                const passwordInput = document.querySelector("#password");
-                const icon = togglePassword.querySelector("i");
+            togglePassword.addEventListener("click", function () {
+                const isPassword = passwordInput.getAttribute("type") === "password";
+                passwordInput.setAttribute("type", isPassword ? "text" : "password");
 
-                togglePassword.addEventListener("click", function () {
-                    const isPassword = passwordInput.getAttribute("type") === "password";
-                    passwordInput.setAttribute("type", isPassword ? "text" : "password");
+                icon.classList.toggle("fa-eye-slash");
+                icon.classList.toggle("fa-eye");
 
-                    if (isPassword) {
-                        icon.classList.remove("fa-eye-slash");
-                        icon.classList.add("fa-eye");
-                        icon.classList.add("text-indigo-500");
-                    } else {
-                        icon.classList.remove("fa-eye");
-                        icon.classList.add("fa-eye-slash");
-                        icon.classList.remove("text-indigo-500");
-                    }
-                });
-            </script>
-            <%- include('../partials/page-end'); %>
+                if (!isPassword) {
+                    togglePassword.style.color = 'var(--text-dim)';
+                } else {
+                    togglePassword.style.color = 'var(--primary)';
+                }
+            });
+        </script>
+        <%- include('../partials/page-end'); %>
 </body>
 
 </html>

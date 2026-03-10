@@ -3,145 +3,139 @@
 
 <head>
     <%- include('../partials/head'); %>
-        
+
 </head>
 
 <body>
-    <div>
+    <div class="cs-auth-wrapper">
         <!-- Auth Form Column -->
-        <div>
-            <div>
+        <div class="cs-auth-form-column">
+            <div class="cs-auth-card" style="width: 100%; max-width: 500px; padding: 2.5rem;">
                 <!-- Branding -->
-                <div>
-                    <a href="/visitor">
-                        <div>
-                            <i></i>
-                        </div>
-                        <span>CitySafe</span>
+                <div style="margin-bottom: 2rem; text-align: center;">
+                    <a href="/visitor" class="cs-navbar-brand justify-center" style="font-size: 1.5rem;">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>CITYSAFE</span>
                     </a>
                 </div>
 
                 <!-- Intro -->
-                <div>
-                    <h2>Create Identity
-                    </h2>
-                    <p>Join the network to receive early
-                        warning alerts and manage localized safety operations.</p>
+                <div style="margin-bottom: 2rem;">
+                    <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-bright);">
+                        Create Identity</h2>
+                    <p style="color: var(--text-dim); font-size: 0.95rem;">Join the network to receive early warning
+                        alerts and manage localized safety operations.</p>
                 </div>
 
                 <!-- Form -->
-                <form method="POST" action="/register">
+                <form method="POST" action="/register" style="display: flex; flex-direction: column; gap: 1.15rem;">
 
-                    <div>
-                        <div>
-                            <label for="signup-first">First
-                                Name</label>
-                            <input id="signup-first" name="firstname" type="text" placeholder="John"
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="cs-form-group">
+                            <label for="signup-first" class="cs-label">First Name</label>
+                            <input id="signup-first" name="firstname" type="text" class="cs-input" placeholder="John"
                                 required>
                         </div>
-                        <div>
-                            <label for="signup-last">Last
-                                Name</label>
-                            <input id="signup-last" name="lastname" type="text" placeholder="Doe"
+                        <div class="cs-form-group">
+                            <label for="signup-last" class="cs-label">Last Name</label>
+                            <input id="signup-last" name="lastname" type="text" class="cs-input" placeholder="Doe"
                                 required>
                         </div>
                     </div>
 
-                    <div>
-                        <label for="signup-email">Email
-                            Terminal</label>
-                        <div>
-                            <i></i>
-                            <input id="signup-email" name="email" type="email"
+                    <div class="cs-form-group">
+                        <label for="signup-email" class="cs-label">Email Terminal</label>
+                        <div class="cs-input-wrapper">
+                            <i class="fa-solid fa-at cs-input-icon"></i>
+                            <input id="signup-email" name="email" type="email" class="cs-input"
                                 placeholder="john.doe@example.com" required>
                         </div>
                     </div>
 
-                    <div>
-                        <label for="signup-contact">Comms
-                            Frequency</label>
-                        <div>
-                            <i></i>
-                            <input id="signup-contact" name="contact_number" type="text"
+                    <div class="cs-form-group">
+                        <label for="signup-contact" class="cs-label">Comms Frequency</label>
+                        <div class="cs-input-wrapper">
+                            <i class="fa-solid fa-satellite-dish cs-input-icon"></i>
+                            <input id="signup-contact" name="contact_number" type="text" class="cs-input"
                                 placeholder="+63 912 345 6789" required>
                         </div>
                     </div>
 
-                    <div>
-                        <label for="signup-password">Security
-                            Passcode</label>
-                        <div>
-                            <i></i>
-                            <input id="signup-password" name="password" type="password"
+                    <div class="cs-form-group">
+                        <label for="signup-password" class="cs-label">Security Passcode</label>
+                        <div class="cs-input-wrapper">
+                            <i class="fa-solid fa-lock cs-input-icon"></i>
+                            <input id="signup-password" name="password" type="password" class="cs-input"
                                 placeholder="••••••••" required>
-                            <button type="button"
-                                data-target="signup-password">
-                                <i></i>
+                            <button type="button" class="toggle-pass" data-target="signup-password"
+                                style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-dim); cursor: pointer; transition: color 0.2s;">
+                                <i class="fa-solid fa-eye-slash"></i>
                             </button>
                         </div>
                     </div>
 
-                    <div>
-                        <label for="confirm-password">Confirm
-                            Passcode</label>
-                        <div>
-                            <i></i>
-                            <input id="confirm-password" name="confirm_password" type="password" placeholder="••••••••" required>
-                            <button type="button"
-                                data-target="confirm-password">
-                                <i></i>
+                    <div class="cs-form-group">
+                        <label for="confirm-password" class="cs-label">Confirm Passcode</label>
+                        <div class="cs-input-wrapper">
+                            <i class="fa-solid fa-shield-halved cs-input-icon"></i>
+                            <input id="confirm-password" name="confirm_password" type="password" class="cs-input"
+                                placeholder="••••••••" required>
+                            <button type="button" class="toggle-pass" data-target="confirm-password"
+                                style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-dim); cursor: pointer; transition: color 0.2s;">
+                                <i class="fa-solid fa-eye-slash"></i>
                             </button>
                         </div>
                     </div>
 
-                    <div id="passError">
-                        <i></i> Security passcodes do not align.
+                    <div id="passError" class="hidden"
+                        style="color: var(--danger); font-size: 0.8rem; display: flex; align-items: center; gap: 0.5rem; margin-top: -0.5rem;">
+                        <i class="fa-solid fa-circle-exclamation"></i> Security passcodes do not align.
                     </div>
 
-                    <button type="button" onclick="validateSignup()">
-                        INITIALIZE CLEARANCE <i></i>
+                    <button type="button" class="cs-btn cs-btn-primary cs-auth-btn" onclick="validateSignup()">
+                        INITIALIZE CLEARANCE <i class="fa-solid fa-fingerprint" style="margin-left: 0.5rem;"></i>
                     </button>
                 </form>
 
                 <!-- Footer text -->
-                <div>
-                    <p>
-                        Already posess operational clearance? <br><a href="/login">Execute
-                            Login Sequence</a>
+                <div style="margin-top: 1.5rem; text-align: center;">
+                    <p style="color: var(--text-dim); font-size: 0.9rem;">
+                        Already possess operational clearance? <br><a href="/login" class="cs-text-link">Execute Login
+                            Sequence</a>
                     </p>
                 </div>
 
-                <div>
+                <div
+                    style="margin-top: 2rem; text-align: center; font-size: 0.75rem; color: var(--text-dim); opacity: 0.6;">
                     <p>
-                        Designed with <i></i> by CitySafe
+                        Designed with <i class="fa-solid fa-heart" style="color: var(--danger);"></i> by CitySafe
+                        Project
                     </p>
                 </div>
             </div>
         </div>
 
         <!-- Visual Hero Column -->
-        <div>
-            <!-- Huge abstract graphic background -->
-            <div>
-                <div></div>
-                <div></div>
-
-                <!-- Grid pattern overlay -->
-                <div>
-                </div>
+        <div class="cs-auth-hero-column">
+            <!-- Grid pattern overlay -->
+            <div
+                style="position: absolute; inset: 0; background-image: radial-gradient(var(--border-glass) 1px, transparent 1px); background-size: 30px 30px; opacity: 0.3;">
             </div>
 
             <!-- Content -->
-            <div>
+            <div class="cs-auth-hero-content">
                 <div>
-                    <div>
-                        <div>
-                            <i></i>
-                        </div>
+                    <div
+                        style="margin-bottom: 2rem; display: inline-flex; padding: 1rem; border-radius: 1.25rem; background: var(--primary-glow); color: white; box-shadow: 0 0 30px var(--primary-glow);">
+                        <i class="fa-solid fa-tower-broadcast fa-2x"></i>
                     </div>
-                    <h2>Join
-                        CitySafe<br><span>Node Array</span></h2>
-                    <p>
+                    <h2
+                        style="font-size: 3.5rem; line-height: 1.1; margin-bottom: 1.5rem; font-weight: 800; color: white;">
+                        Join CitySafe<br><span
+                            style="background: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Node
+                            Array</span></h2>
+                    <p
+                        style="font-size: 1.1rem; line-height: 1.6; color: rgba(255,255,255,0.8); margin-bottom: 2rem; max-width: 500px;">
                         Protecting your sector starts with information. Get verified operational access to real-time
                         safety telemetry.
                     </p>

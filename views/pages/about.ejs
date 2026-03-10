@@ -12,64 +12,82 @@
       <%- include('../partials/visitor-navbar', { currentPage: 'about' }); %>
     </header>
 
-    <div>
+    <div class="cs-layout-container">
       <aside>
         <%- include('../partials/visitor-sidebar', { currentPage: 'about' }); %>
       </aside>
 
-      <main>
-        <div>
+      <main class="cs-main-content">
+        <div class="cs-container">
 
-          <div>
-            <div>
-              <i></i>
+          <!-- Header -->
+          <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 4rem;">
+            <div class="cs-badge"
+              style="width: 64px; height: 64px; font-size: 1.5rem; background: var(--primary-glow); color: var(--primary); border: 2px solid var(--primary); box-shadow: 0 0 20px var(--primary-glow);">
+              <i class="fa-solid fa-circle-info"></i>
             </div>
-            <h1>About CitySafe
-            </h1>
+            <div>
+              <span class="cs-badge"
+                style="background: var(--primary-glow); color: var(--primary); font-size: 0.7rem; font-weight: 900; margin-bottom: 0.5rem;">SATELLITE
+                INTEL</span>
+              <h1 class="cs-section-header" style="margin: 0; font-size: 2.5rem;">
+                ABOUT <span
+                  style="background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">CITYSAFE</span>
+              </h1>
+            </div>
           </div>
 
-          <div>
+          <div style="display: flex; flex-direction: column; gap: 3rem;">
 
             <!-- Mission Section -->
-            <div>
-              <div>
-                <!-- Background abstract shape -->
-                <div>
+            <div class="cs-card"
+              style="padding: 3rem; position: relative; overflow: hidden; border: 1px solid var(--border-glass);">
+              <!-- Decorative background effect -->
+              <div
+                style="position: absolute; top: -100px; right: -100px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%); border-radius: 50%; pointer-events: none;">
+              </div>
+
+              <div style="max-width: 850px; position: relative; z-index: 1;">
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2.5rem;">
+                  <div class="cs-badge" style="background: var(--primary-glow); color: var(--primary);"><i
+                      class="fa-solid fa-flag-checkered"></i></div>
+                  <h3
+                    style="margin: 0; font-size: 1.25rem; font-weight: 800; color: var(--text-bright); text-transform: uppercase; letter-spacing: 0.1rem;">
+                    Operational Mission</h3>
                 </div>
 
-                <div>
-                  <h3>
-                    <i></i> Our Mission
-                  </h3>
+                <div
+                  style="font-size: 1.1rem; color: var(--text-dim); line-height: 1.8; display: flex; flex-direction: column; gap: 1.5rem;">
+                  <p>
+                    CitySafe is an advanced disaster intelligence platform engineered to bridge the critical gap between
+                    citizens and emergency responders. By integrating real-time environmental telemetry with localized
+                    coordination strategies, we provide a unified command center for urban resilience.
+                  </p>
 
-                  <div>
-                    <p>
-                      CitySafe is a web-based disaster response app that provides
-                      real-time alerts, localized notifications, and reliable information
-                      during emergencies. It helps citizens stay informed, empowers them
-                      to send SOS requests for immediate assistance, and supports city officials and
-                      responders in coordinating relief efforts efficiently.
-                    </p>
+                  <p>
+                    Developed as a <span
+                      style="color: var(--accent); font-weight: 800; border-bottom: 2px solid var(--accent-glow);">Capstone
+                      Research Project</span>,
+                    CitySafe leverages modern cloud architecture to ensure uptime during critical infrastructure stress,
+                    empowering every node in the urban network with high-fidelity geospatial intelligence.
+                  </p>
+                </div>
 
-                    <p>
-                      Developed as a <span>Capstone
-                        Research Project</span>, CitySafe aims to
-                      strengthen disaster resilience in urban areas through a user-friendly and efficient system.
-                    </p>
+                <!-- Strategic Quote -->
+                <div class="cs-card"
+                  style="margin-top: 3.5rem; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); display: flex; align-items: center; gap: 1.5rem; padding: 1.75rem;">
+                  <div style="font-size: 2.25rem; color: var(--primary); opacity: 0.5;">
+                    <i class="fa-solid fa-quote-left"></i>
                   </div>
-
                   <div>
-                    <div>
-                      <i></i>
-                    </div>
-                    <div>
-                      <p>
-                        "CitySafe: Urban Disaster Response App"
-                      </p>
-                      <p>
-                        — Capstone Research Project
-                      </p>
-                    </div>
+                    <p
+                      style="font-size: 1.1rem; font-weight: 700; font-style: italic; color: var(--text-bright); margin-bottom: 0.4rem; letter-spacing: 0.02rem;">
+                      "CitySafe: Urban Disaster Response System"
+                    </p>
+                    <p
+                      style="font-size: 0.75rem; text-transform: uppercase; color: var(--primary); font-weight: 800; letter-spacing: 0.1rem;">
+                      — CAPSTONE RESEARCH COMMAND • 2024
+                    </p>
                   </div>
                 </div>
               </div>
@@ -77,50 +95,44 @@
 
             <!-- Development Team Section -->
             <div>
-              <div>
-                <div>
-                  <h4>
-                    <i></i> Development Team
-                  </h4>
-                </div>
-                <div>
+              <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; padding-left: 0.5rem;">
+                <div class="cs-badge" style="background: var(--secondary-glow); color: var(--secondary);"><i
+                    class="fa-solid fa-microchip"></i></div>
+                <h4
+                  style="margin: 0; font-size: 1.1rem; font-weight: 800; color: var(--text-bright); text-transform: uppercase; letter-spacing: 0.1rem;">
+                  Development Core</h4>
+              </div>
 
-                  <div>
-                    <div>
-                      JT
+              <div class="cs-grid cs-grid-3">
+                <% const members=[ { initials: 'JT' , name: 'Jayrold Tabalina' , role: 'Lead Architect' ,
+                  bg: 'var(--primary)' , icon: 'fa-code-branch' }, { initials: 'YT' , name: 'Yasmine M. Talaman' ,
+                  role: 'Intelligence Lead' , bg: 'var(--secondary)' , icon: 'fa-file-shield' }, { initials: 'MJ' ,
+                  name: 'Mark Vincent Jabao' , role: 'Interface Designer' , bg: 'var(--accent)' , icon: 'fa-palette' }
+                  ]; %>
+                  <% members.forEach(member=> { %>
+                    <div class="cs-card"
+                      style="text-align: center; padding: 3rem 2rem; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: default; border: 1px solid var(--border-glass);">
+                      <div class="cs-user-avatar"
+                        style="--avatar-bg: <%= member.bg %>; width: 90px; height: 90px; font-size: 2rem; margin: 0 auto 1.75rem; background: var(--avatar-bg); box-shadow: 0 10px 30px var(--primary-glow); border: 3px solid rgba(255,255,255,0.1);">
+                        <%= member.initials %>
+                      </div>
+                      <div class="cs-badge"
+                        style="background: rgba(255,255,255,0.05); color: var(--text-dim); font-size: 0.6rem; font-weight: 900; margin-bottom: 1rem;">
+                        <i class="fa-solid <%= member.icon %>" style="margin-right: 0.4rem;"></i>UNIT OPS
+                      </div>
+                      <h6
+                        style="font-size: 1.2rem; font-weight: 800; color: var(--text-bright); margin-bottom: 0.5rem; letter-spacing: 0.02rem;">
+                        <%= member.name %>
+                      </h6>
+                      <p
+                        style="font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; letter-spacing: 0.08rem;">
+                        <%= member.role %>
+                      </p>
                     </div>
-                    <div>
-                      <h6>Jayrold Tabalina</h6>
-                      <p>
-                        Lead Programmer</p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div>
-                      YT
-                    </div>
-                    <div>
-                      <h6>Yasmine M. Talaman</h6>
-                      <p>
-                        Documentation Lead</p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <div>
-                      MJ
-                    </div>
-                    <div>
-                      <h6>Mark Vincent Jabao</h6>
-                      <p>
-                        UI/UX Designer</p>
-                    </div>
-                  </div>
-
-                </div>
+                    <% }) %>
               </div>
             </div>
+
           </div>
 
         </div>

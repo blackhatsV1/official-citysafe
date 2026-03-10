@@ -1,16 +1,16 @@
 <!-- Glassmorphic Admin Sidebar -->
-<div id="mobile-sidebar">
+<div id="mobile-sidebar" class="cs-sidebar">
     <!-- Close Button for Mobile -->
-    <div>
-        <button
+    <div class="cs-sidebar-header lg:hidden">
+        <button class="cs-nav-btn"
             onclick="document.getElementById('mobile-sidebar').classList.add('-translate-x-full'); document.getElementById('sidebar-overlay').classList.add('hidden')">
-            <i></i>
+            <i class="fa-solid fa-xmark"></i>
         </button>
     </div>
 
-    <div>
-        <a href="/adminpage">
-            <i></i>
+    <div class="cs-sidebar-header">
+        <a href="/adminpage" class="cs-navbar-brand">
+            <i class="fa-solid fa-shield-halved"></i>
             <span>CITYSAFE</span>
         </a>
     </div>
@@ -18,86 +18,95 @@
     <% const _cp=(typeof currentPage !=='undefined' ) ? currentPage : (typeof locals !=='undefined' && typeof
         locals.currentPage !=='undefined' ? locals.currentPage : '' ); %>
 
-        <div>
-            <div>
-                <div>
-                    <i></i>
-                </div>
-                <div>
-                    <h6>
-                        <%= typeof username !=='undefined' ? username : 'Admin' %>
-                    </h6>
-                    <span>SYSADMIN</span>
-                </div>
+        <div class="cs-sidebar-user">
+            <div class="cs-user-avatar" style="background: var(--primary-glow); color: white;">
+                <i class="fa-solid fa-user-tie"></i>
+            </div>
+            <div class="cs-user-info">
+                <h6>
+                    <%= typeof username !=='undefined' ? username : 'Admin' %>
+                </h6>
+                <span>SYSADMIN UNIT</span>
             </div>
         </div>
 
-        <nav
+        <nav class="cs-sidebar-nav"
             x-data="{ intelOpen: <%= ['sos', 'analytics', 'assessments'].includes(_cp) ? 'true' : 'false' %>, mgmtOpen: <%= ['users', 'add-citizen', 'add-responder'].includes(_cp) ? 'true' : 'false' %> }">
 
-            <div>
-                Dashboard</div>
+            <div class="cs-sidebar-label">Dashboard</div>
 
-            <a href="/adminpage">
-                <i></i>
-                <span>Dashboard</span>
+            <a href="/adminpage" class="cs-sidebar-link <%= _cp === 'dashboard' ? 'active' : '' %>">
+                <i class="fa-solid fa-gauge-high"></i>
+                <span>Operations Center</span>
             </a>
 
-            <a href="/status-overview">
-                <i></i>
+            <a href="/status-overview" class="cs-sidebar-link <%= _cp === 'status' ? 'active' : '' %>">
+                <i class="fa-solid fa-network-wired"></i>
                 <span>Status Grid</span>
             </a>
 
-            <div>
-                Intelligence</div>
+            <div class="cs-sidebar-label">Intelligence</div>
 
-            <div>
-                <button @click="intelOpen = !intelOpen">
-                    <div>
-                        <i></i>
-                        <span>Intelligence</span>
+            <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                <button @click="intelOpen = !intelOpen" class="cs-sidebar-link w-full"
+                    style="justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 0.875rem;">
+                        <i class="fa-solid fa-vault"></i>
+                        <span>Intelligence Hub</span>
                     </div>
-                    <i
-                        :></i>
+                    <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem; transition: transform 0.3s;"
+                        :style="intelOpen ? 'transform: rotate(180deg)' : ''"></i>
                 </button>
-                <div x-show="intelOpen" x-collapse>
-                    <a href="/disaster-reports">SOS
-                        Reports</a>
-                    <a href="/reports">Analytics</a>
-                    <a href="/assessment-results">Assessments</a>
+                <div x-show="intelOpen" x-collapse
+                    style="padding-left: 1rem; display: flex; flex-direction: column; gap: 0.25rem; margin-top: 0.25rem;">
+                    <a href="/disaster-reports" class="cs-sidebar-link <%= _cp === 'sos' ? 'active' : '' %>"
+                        style="font-size: 0.85rem;">
+                        <i class="fa-solid fa-file-waveform"></i> SOS Reports</a>
+                    <a href="/reports" class="cs-sidebar-link <%= _cp === 'analytics' ? 'active' : '' %>"
+                        style="font-size: 0.85rem;">
+                        <i class="fa-solid fa-chart-line"></i> Analytics</a>
+                    <a href="/assessment-results" class="cs-sidebar-link <%= _cp === 'assessments' ? 'active' : '' %>"
+                        style="font-size: 0.85rem;">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i> Assessments</a>
                 </div>
             </div>
 
-            <div>
-                Management</div>
+            <div class="cs-sidebar-label">Management</div>
 
-            <div>
-                <button @click="mgmtOpen = !mgmtOpen">
-                    <div>
-                        <i></i>
-                        <span>Management</span>
+            <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                <button @click="mgmtOpen = !mgmtOpen" class="cs-sidebar-link w-full"
+                    style="justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 0.875rem;">
+                        <i class="fa-solid fa-users-gear"></i>
+                        <span>Sector Management</span>
                     </div>
-                    <i
-                        :></i>
+                    <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem; transition: transform 0.3s;"
+                        :style="mgmtOpen ? 'transform: rotate(180deg)' : ''"></i>
                 </button>
-                <div x-show="mgmtOpen" x-collapse>
-                    <a href="/userslist">Directory</a>
-                    <a href="/addusers">Register
-                        Citizen</a>
-                    <a href="/addresponder">Register
-                        Responder</a>
+                <div x-show="mgmtOpen" x-collapse
+                    style="padding-left: 1rem; display: flex; flex-direction: column; gap: 0.25rem; margin-top: 0.25rem;">
+                    <a href="/userslist" class="cs-sidebar-link <%= _cp === 'users' ? 'active' : '' %>"
+                        style="font-size: 0.85rem;">
+                        <i class="fa-solid fa-address-book"></i> User Directory</a>
+                    <a href="/addusers" class="cs-sidebar-link <%= _cp === 'add-citizen' ? 'active' : '' %>"
+                        style="font-size: 0.85rem;">
+                        <i class="fa-solid fa-user-plus"></i> Register Citizen</a>
+                    <a href="/addresponder" class="cs-sidebar-link <%= _cp === 'add-responder' ? 'active' : '' %>"
+                        style="font-size: 0.85rem;">
+                        <i class="fa-solid fa-user-shield"></i> Register Responder</a>
                 </div>
             </div>
         </nav>
 
-        <div>
-            <a href="/logout">
-                <i></i>
-                <span>Sign Out</span>
+        <div style="margin-top: auto; padding: 1rem;">
+            <a href="/logout" class="cs-sidebar-link" style="color: var(--danger);">
+                <i class="fa-solid fa-power-off"></i>
+                <span>Terminate Session</span>
             </a>
         </div>
 </div>
 
 <!-- Overlay for mobile when sidebar is open -->
-<div id="sidebar-overlay"
-    onclick="document.getElementById('mobile-sidebar').classList.add('-translate-x-full'); this.classList.add('hidden')"></div>
+<div id="sidebar-overlay" class="cs-sidebar-overlay"
+    onclick="document.getElementById('mobile-sidebar').classList.add('-translate-x-full'); this.classList.remove('show')">
+</div>

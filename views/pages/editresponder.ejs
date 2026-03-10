@@ -8,148 +8,143 @@
 <body>
   <%- include('../partials/page-start'); %>
 
-    <header>
-      <%- include('../partials/admin-navbar', { currentPage: 'userslist' }); %>
-    </header>
-
-    <div>
+    <div class="cs-layout-container">
       <aside>
         <%- include('../partials/admin-sidebar', { currentPage: 'userslist' }); %>
       </aside>
 
-      <main>
-        <div>
+      <main class="cs-main-content">
+        <div class="cs-container" style="max-width: 800px;">
 
-          <div>
+          <!-- Profile Header -->
+          <div
+            style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1rem;">
             <div>
-              <i></i>
+              <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                <span class="cs-badge"
+                  style="background: var(--accent-glow); color: var(--accent); font-size: 0.7rem; font-weight: 900;">ADMIN
+                  OVERRIDE</span>
+                <h1 class="cs-section-header" style="margin: 0; font-size: 2rem;">EDIT UNIT <span
+                    style="background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">PROFILE</span>
+                </h1>
+              </div>
+              <p
+                style="color: var(--text-dim); margin: 0; font-size: 0.85rem; font-weight: 600; text-transform: uppercase;">
+                Modifying operative credentials for Unit ID: <span style="color: var(--text-bright);">
+                  <%= responder.id %>
+                </span></p>
             </div>
-            <h1>Edit Unit Profile
-            </h1>
           </div>
 
-          <div>
-            <!-- Glow effect -->
-            <div>
+          <!-- Edit Form Card -->
+          <div class="cs-card">
+            <div
+              style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-glass);">
+              <div class="cs-badge" style="background: var(--primary-glow); color: var(--primary);"><i
+                  class="fa-solid fa-user-gear"></i></div>
+              <h3 style="margin: 0; font-size: 1rem; font-weight: 800; color: var(--text-bright);">UNIT IDENTITY DATA
+              </h3>
             </div>
 
-            <div>
-              <h4>
-                <i></i> Unit Data
-              </h4>
-              <div>
-                Unit ID: <%= responder.id %>
+            <form action="/update-responder/<%= responder.id %>" method="POST" class="cs-form-stack">
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                <!-- First Name -->
+                <div class="cs-form-group">
+                  <label for="firstname" class="cs-label">OPERATIVE GIVEN NAME</label>
+                  <div class="cs-input-wrapper">
+                    <span class="cs-input-icon"><i class="fa-solid fa-signature"></i></span>
+                    <input type="text" id="firstname" name="firstname" class="cs-input"
+                      value="<%= responder.firstname %>" required>
+                  </div>
+                </div>
+
+                <!-- Last Name -->
+                <div class="cs-form-group">
+                  <label for="lastname" class="cs-label">OPERATIVE SURNAME</label>
+                  <div class="cs-input-wrapper">
+                    <span class="cs-input-icon"><i class="fa-solid fa-signature"></i></span>
+                    <input type="text" id="lastname" name="lastname" class="cs-input" value="<%= responder.lastname %>"
+                      required>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div>
-              <form action="/update-responder/<%= responder.id %>" method="POST">
-
-                <div>
-                  <!-- First Name -->
-                  <div>
-                    <label for="firstname">First
-                      Name</label>
-                    <div>
-                      <div>
-                        <i></i>
-                      </div>
-                      <input type="text" id="firstname" name="firstname" value="<%= responder.firstname %>" required>
-                    </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                <!-- Email -->
+                <div class="cs-form-group">
+                  <label for="email" class="cs-label">SECURE EMAIL VECTOR</label>
+                  <div class="cs-input-wrapper">
+                    <span class="cs-input-icon"><i class="fa-solid fa-envelope"></i></span>
+                    <input type="email" id="email" name="email" class="cs-input" value="<%= responder.email %>"
+                      required>
                   </div>
-
-                  <!-- Last Name -->
-                  <div>
-                    <label for="lastname">Last
-                      Name</label>
-                    <div>
-                      <div>
-                        <i></i>
-                      </div>
-                      <input type="text" id="lastname" name="lastname" value="<%= responder.lastname %>" required>
-                    </div>
-                  </div>
-
-                  <!-- Email Address -->
-                  <div>
-                    <label for="email">Email
-                      Address</label>
-                    <div>
-                      <div>
-                        <i></i>
-                      </div>
-                      <input type="email" id="email" name="email" value="<%= responder.email %>" required>
-                    </div>
-                  </div>
-
-                  <!-- Contact Number -->
-                  <div>
-                    <label for="contact_number">Contact
-                      Phone</label>
-                    <div>
-                      <div>
-                        <i></i>
-                      </div>
-                      <input type="tel" id="contact_number" name="contact_number"
-                        value="<%= responder.contact_number %>" required>
-                    </div>
-                  </div>
-
-                  <!-- Station Assignment -->
-                  <div>
-                    <label for="station_id">Assignment
-                      Directive (Station)</label>
-                    <div>
-                      <div>
-                        <i></i>
-                      </div>
-                      <!-- Custom select styling using appearance-none -->
-                      <select id="station_id" name="station_id" required>
-                        <% stations.forEach(station=> { %>
-                          <option value="<%= station.id %>" <%=responder.station_id==station.id ? 'selected' : '' %>>
-                            <%= station.name %> (<%= station.type %>)
-                          </option>
-                          <% }) %>
-                      </select>
-                      <div>
-                        <i></i>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Password Update -->
-                  <div>
-                    <h6>
-                      <i></i> Authentication Override
-                    </h6>
-                    <label for="password">New
-                      Password (Optional)</label>
-                    <div>
-                      <div>
-                        <i></i>
-                      </div>
-                      <input type="password" id="password" name="password"
-                        placeholder="Leave empty to retain current protocol" autocomplete="new-password">
-
-                      <button type="button" id="togglePassword">
-                        <i></i>
-                      </button>
-                    </div>
-                  </div>
-
                 </div>
 
-                <div>
-                  <a href="/userslist">
-                    <i></i> Cancel Update
-                  </a>
-                  <button type="submit">
-                    <i></i> COMMIT CHANGES
-                  </button>
+                <!-- Contact -->
+                <div class="cs-form-group">
+                  <label for="contact_number" class="cs-label">RELIANCE PHONE LINK</label>
+                  <div class="cs-input-wrapper">
+                    <span class="cs-input-icon"><i class="fa-solid fa-phone"></i></span>
+                    <input type="tel" id="contact_number" name="contact_number" class="cs-input"
+                      value="<%= responder.contact_number %>" required>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Station -->
+              <div class="cs-form-group" style="margin-bottom: 2.5rem;">
+                <label for="station_id" class="cs-label">STATION ASSIGNMENT DIRECTIVE</label>
+                <div class="cs-input-wrapper">
+                  <span class="cs-input-icon"><i class="fa-solid fa-building-shield"></i></span>
+                  <select id="station_id" name="station_id" class="cs-input" required>
+                    <% stations.forEach(station=> { %>
+                      <option value="<%= station.id %>" <%=responder.station_id==station.id ? 'selected' : '' %>>
+                        <%= station.name %> — [<%= station.type.toUpperCase() %>]
+                      </option>
+                      <% }) %>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Authentication Override Section -->
+              <div style="margin-top: 3rem; padding-top: 2rem; border-top: 1px dashed var(--border-glass);">
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+                  <div class="cs-badge" style="background: rgba(239, 68, 68, 0.1); color: #f87171;"><i
+                      class="fa-solid fa-key"></i></div>
+                  <h3 style="margin: 0; font-size: 0.9rem; font-weight: 800; color: var(--text-bright);">SECURITY
+                    PROTOCOL OVERRIDE</h3>
                 </div>
 
-              </form>
-            </div>
+                <div class="cs-form-group">
+                  <label for="password" class="cs-label">RE-INITIALIZE PASSWORD (OPTIONAL)</label>
+                  <div class="cs-input-wrapper">
+                    <span class="cs-input-icon"><i class="fa-solid fa-lock"></i></span>
+                    <input type="password" id="password" name="password" class="cs-input"
+                      placeholder="Leave empty to maintain current credentials" autocomplete="new-password">
+                    <button type="button" id="togglePassword"
+                      style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-dim); cursor: pointer; transition: color 0.2s;">
+                      <i class="fa-solid fa-eye-slash"></i>
+                    </button>
+                  </div>
+                  <p style="font-size: 0.65rem; color: var(--text-dim); margin-top: 0.5rem; font-style: italic;">Note:
+                    Changes will propagate across the G-Grid immediately upon commitment.</p>
+                </div>
+              </div>
+
+              <!-- Buttons -->
+              <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 3rem;">
+                <a href="/userslist" class="cs-btn cs-btn-secondary"
+                  style="display: flex; align-items: center; gap: 0.6rem;">
+                  <i class="fa-solid fa-xmark"></i> ABORT CHANGES
+                </a>
+                <button type="submit" class="cs-btn cs-btn-accent"
+                  style="display: flex; align-items: center; gap: 0.6rem;">
+                  <i class="fa-solid fa-cloud-arrow-up"></i> COMMIT OVERRIDE
+                </button>
+              </div>
+
+            </form>
           </div>
 
         </div>
@@ -170,11 +165,11 @@
           if (isPassword) {
             icon.classList.remove("fa-eye-slash");
             icon.classList.add("fa-eye");
-            icon.classList.add("text-indigo-500");
+            icon.style.color = "var(--accent)";
           } else {
             icon.classList.remove("fa-eye");
             icon.classList.add("fa-eye-slash");
-            icon.classList.remove("text-indigo-500");
+            icon.style.color = "var(--text-dim)";
           }
         });
       </script>

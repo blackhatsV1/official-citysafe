@@ -1,40 +1,39 @@
 <!-- Glassmorphic Visitor Navbar -->
-<nav>
-    <div>
-        <div>
+<nav class="cs-navbar">
+    <div class="cs-navbar-container">
+        <div class="cs-navbar-utils" style="width: 100%; justify-content: space-between;">
 
             <!-- Logo -->
             <div>
-                <a href="/visitor">
-                    <i></i>
+                <a href="/visitor" class="cs-navbar-brand">
+                    <i class="fa-solid fa-shield-halved"></i>
                     <span>CITYSAFE</span>
                 </a>
             </div>
 
             <!-- Mobile Menu Button -->
-            <div>
-                <button type="button"
-                    aria-controls="mobile-menu" aria-expanded="false"
+            <div class="lg:hidden">
+                <button type="button" class="cs-nav-btn" aria-controls="mobile-menu" aria-expanded="false"
                     onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
-                    <span>Open main menu</span>
-                    <i></i>
+                    <span class="sr-only">Open main menu</span>
+                    <i class="fa-solid fa-bars"></i>
                 </button>
             </div>
 
             <!-- Desktop Nav & Actions -->
-            <div>
-                <a href="/help">
+            <div class="hidden lg:flex items-center gap-4">
+                <a href="/help" class="cs-btn cs-btn-ghost">
                     Help Center
                 </a>
 
                 <!-- Theme Toggle -->
-                <button
+                <button class="cs-nav-btn"
                     onclick="document.documentElement.classList.toggle('dark'); localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light'">
-                    <i></i>
-                    <i></i>
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:block"></i>
                 </button>
 
-                <a href="/login">
+                <a href="/login" class="cs-btn cs-btn-primary">
                     SIGN IN
                 </a>
             </div>
@@ -42,20 +41,17 @@
     </div>
 
     <!-- Mobile Menu -->
-    <div
-        id="mobile-menu">
-        <div>
-            <a href="/help">Help
-                Center</a>
-            <div>
-                <button
+    <div id="mobile-menu" class="cs-mobile-menu hidden">
+        <div class="flex flex-col p-4 gap-2">
+            <a href="/help" class="cs-sidebar-link">Help Center</a>
+            <div class="px-3 py-2">
+                <button class="flex items-center gap-3" style="color: var(--text-muted)"
                     onclick="document.documentElement.classList.toggle('dark'); localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light'">
-                    <i></i>
-                    <i></i>
+                    <i class="fa-solid fa-circle-half-stroke"></i>
                     <span>Toggle Theme</span>
                 </button>
             </div>
-            <a href="/login">SIGN IN</a>
+            <a href="/login" class="cs-btn cs-btn-primary">SIGN IN</a>
         </div>
     </div>
 </nav>

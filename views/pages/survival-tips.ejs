@@ -12,165 +12,147 @@
       <%- include('../partials/user-navbar', { currentPage: 'survival-tips' }); %>
     </header>
 
-    <div>
+    <div class="cs-layout-container">
       <aside>
         <%- include('../partials/user-sidebar', { currentPage: 'survival-tips' }); %>
       </aside>
 
-      <main>
-        <div>
+      <main class="cs-main-content">
+        <div class="cs-container">
 
-          <div>
-            <div>
-              <i></i>
+          <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 3rem;">
+            <div class="cs-badge"
+              style="width: 64px; height: 64px; font-size: 1.5rem; background: var(--accent-glow); color: var(--accent); border: 2px solid var(--accent);">
+              <i class="fa-solid fa-book-medical"></i>
             </div>
-            <h1>Survival Protocols
+            <h1 class="cs-section-header" style="margin: 0;">
+              SURVIVAL <span
+                style="background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">PROTOCOLS</span>
             </h1>
           </div>
 
-          <div>
+          <div class="cs-grid cs-grid-2" style="align-items: flex-start;">
 
             <!-- Tips Section -->
-            <div>
-              <div>
-                <!-- Background abstract shape -->
-                <div>
-                </div>
+            <div class="cs-card" style="padding: 2.5rem; position: relative; overflow: hidden;">
+              <div
+                style="position: absolute; top: -50px; left: -50px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, transparent 70%); border-radius: 50%; pointer-events: none;">
+              </div>
 
-                <div>
-                  <p>
-                    Adhere to the following tactical survival protocols to ensure maximum safety during critical
-                    incident scenarios.
-                  </p>
+              <div style="position: relative; z-index: 1;">
+                <p style="font-size: 1rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 2.5rem;">
+                  Adhere to the following tactical survival protocols to ensure maximum safety during critical incident
+                  scenarios. Readiness is your primary defense.
+                </p>
 
-                  <div x-data="{ activeAccordion: null }">
-                    <% const protocols=[ { icon: "fa-fire" , title: "Fire Survival Logistics" , colorTheme: "red" ,
-                      items: [ "Stay low to the ground to avoid toxic smoke inhalation."
-                      , "If trapped inside, seal doors and use wet cloth to block smoke ingress."
-                      , "Never utilize elevators during active fire operations."
-                      , "Deploy fire extinguishers only for minor flames; prioritize evacuation."
-                      , "Execute emergency exit plan immediately and remain calm." ] }, { icon: "fa-water" ,
-                      title: "Flood Evasion Tactics" , colorTheme: "blue" , items:
-                      [ "Relocate to maximum elevation immediately upon warning."
-                      , "If trapped, ascend to structural apex (roof) until extraction units arrive."
-                      , "Never attempt to traverse floodwaters on foot or by vehicle."
-                      , "Monitor comms for weather alerts and evacuation directives."
-                      , "Maintain critical payload: water, rations, first-aid kits." ] }, { icon: "fa-house-crack" ,
-                      title: "Seismic Activity Defense" , colorTheme: "yellow" , items:
-                      [ "If indoors: Drop, Cover, Hold On under sturdy furniture to protect cranium."
-                      , "If outdoors: Reposition to open sectors free from structural debris threats."
-                      , "Maintain distance from glass features and unsecured overhead objects."
-                      , "Conduct post-quake reconnaissance for secondary hazards (gas leaks, fires)." ] }, {
-                      icon: "fa-mountain" , title: "Landslide Evasion Strategy" , colorTheme: "stone" , items:
-                      [ "If near steep inclines, relocate to open, flat sectors immediately."
-                      , "If caught in flow, curl up to guard cranial region from debris impact."
-                      , "Monitor acoustic queues (rumbling) and evacuate prior to visual confirmation."
-                      , "Avoid historical flow paths like riverbeds and localized depressions." ] } ]; %>
+                <div x-data="{ activeAccordion: null }" style="display: flex; flex-direction: column; gap: 1rem;">
+                  <% const protocols=[ { icon: "fa-fire" , title: "Fire Survival Logistics" , color: "var(--danger)" ,
+                    items: [ "Stay low to the ground to avoid toxic smoke inhalation."
+                    , "If trapped inside, seal doors and use wet cloth to block smoke ingress."
+                    , "Never utilize elevators during active fire operations."
+                    , "Deploy fire extinguishers only for minor flames; prioritize evacuation."
+                    , "Execute emergency exit plan immediately and remain calm." ] }, { icon: "fa-droplet" ,
+                    title: "Flood Evasion Tactics" , color: "var(--info)" , items:
+                    [ "Relocate to maximum elevation immediately upon warning."
+                    , "If trapped, ascend to structural apex (roof) until extraction units arrive."
+                    , "Never attempt to traverse floodwaters on foot or by vehicle."
+                    , "Monitor comms for weather alerts and evacuation directives."
+                    , "Maintain critical payload: water, rations, first-aid kits." ] }, { icon: "fa-house-crack" ,
+                    title: "Seismic Activity Defense" , color: "var(--warning)" , items:
+                    [ "If indoors: Drop, Cover, Hold On under sturdy furniture to protect cranium."
+                    , "If outdoors: Reposition to open sectors free from structural debris threats."
+                    , "Maintain distance from glass features and unsecured overhead objects."
+                    , "Conduct post-quake reconnaissance for secondary hazards (gas leaks, fires)." ] }, {
+                    icon: "fa-mountain" , title: "Landslide Evasion Strategy" , color: "var(--accent)" , items:
+                    [ "If near steep inclines, relocate to open, flat sectors immediately."
+                    , "If caught in flow, curl up to guard cranial region from debris impact."
+                    , "Monitor acoustic queues (rumbling) and evacuate prior to visual confirmation."
+                    , "Avoid historical flow paths like riverbeds and localized depressions." ] } ]; %>
 
-                      <% protocols.forEach((proto, index)=> {
-                        let borderColor = "border-gray-200 dark:border-gray-700/50 hover:border-" + proto.colorTheme +
-                        "-300 dark:hover:border-" + proto.colorTheme + "-700";
-                        let activeBorderColor = "border-" + proto.colorTheme + "-300 dark:border-" + proto.colorTheme +
-                        "-700/50";
-                        let bgColor = "bg-white/40 dark:bg-gray-800/20";
-                        let activeBgColor = "bg-" + proto.colorTheme + "-50/50 dark:bg-" + proto.colorTheme + "-900/10";
-                        let iconColor = "text-" + proto.colorTheme + "-500 dark:text-" + proto.colorTheme + "-400";
-                        %>
-                        <div
-                          :>
-                          <button @click="activeAccordion = activeAccordion === <%= index %> ? null : <%= index %>">
-                            <div>
-                              <div>
-                                <i></i>
-                              </div>
-                              <h3>
-                                <%= proto.title %>
-                              </h3>
+                    <% protocols.forEach((proto, index)=> { %>
+                      <div class="cs-card"
+                        :style="activeAccordion === <%= index %> ? 'border-color: ' + '<%= proto.color %>' + '50; background: rgba(255,255,255,0.05);' : 'background: rgba(255,255,255,0.02);'"
+                        style="padding: 0; overflow: hidden; transition: all 0.3s ease;">
+
+                        <button @click="activeAccordion = activeAccordion === <%= index %> ? null : <%= index %>"
+                          style="width: 100%; padding: 1.5rem; display: flex; align-items: center; justify-content: space-between; background: none; border: none; cursor: pointer; color: var(--text-bright);">
+                          <div style="display: flex; align-items: center; gap: 1.25rem;">
+                            <div class="cs-badge"
+                              style="background: <%= proto.color %>15; color: <%= proto.color %>; border: 1px solid <%= proto.color %>30;">
+                              <i class="fa-solid <%= proto.icon %>"></i>
                             </div>
-                            <div
-                              :>
-                              <i></i>
-                            </div>
-                          </button>
-                          <div x-show="activeAccordion === <%= index %>" x-collapse x-cloak>
-                            <div>
-                              <ul>
-                                <% proto.items.forEach(item=> { %>
-                                  <li>
-                                    <i></i>
-                                    <span>
-                                      <%= item %>
-                                    </span>
-                                  </li>
-                                  <% }) %>
-                              </ul>
-                            </div>
+                            <h3 style="margin: 0; font-size: 1rem; font-weight: 700;">
+                              <%= proto.title %>
+                            </h3>
+                          </div>
+                          <div style="color: var(--text-dim); transition: transform 0.3s ease;"
+                            :style="activeAccordion === <%= index %> ? 'transform: rotate(180deg)' : ''">
+                            <i class="fa-solid fa-chevron-down"></i>
+                          </div>
+                        </button>
+
+                        <div x-show="activeAccordion === <%= index %>" x-collapse x-cloak>
+                          <div style="padding: 0 1.5rem 2rem 4.5rem;">
+                            <ul
+                              style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 1rem;">
+                              <% proto.items.forEach(item=> { %>
+                                <li
+                                  style="display: flex; align-items: flex-start; gap: 1rem; font-size: 0.9rem; color: var(--text-dim); line-height: 1.5;">
+                                  <i class="fa-solid fa-circle-check"
+                                    style="color: <%= proto.color %>; font-size: 0.75rem; margin-top: 0.25rem;"></i>
+                                  <span>
+                                    <%= item %>
+                                  </span>
+                                </li>
+                                <% }) %>
+                            </ul>
                           </div>
                         </div>
-                        <% }) %>
-                  </div>
+                      </div>
+                      <% }) %>
                 </div>
               </div>
             </div>
 
             <!-- Hotlines Section -->
-            <div>
-
-              <div>
-                <div>
-                  <h4>
-                    <i></i> Critical Evac Comms
-                  </h4>
-                </div>
-                <div>
-                  <p>Direct
-                    Action Lines</p>
-                  <ul>
-                    <li>
-                      <div>
-                        <span>Command Center</span>
-                      </div>
-                      <span>911</span>
-                    </li>
-                    <li>
-                      <div>
-                        <span>Police Tactical</span>
-                        <span>(02) 8722-0650</span>
-                      </div>
-                      <span>117</span>
-                    </li>
-                    <li>
-                      <div>
-                        <span>Fire Operations</span>
-                      </div>
-                      <span>(02)
-                        8426</span>
-                    </li>
-                    <li>
-                      <div>
-                        <span>Red Cross Medivac</span>
-                        <span>(02) 8790-2300</span>
-                      </div>
-                      <span>143</span>
-                    </li>
-                    <li>
-                      <div>
-                        <span>MMDA Dispatch</span>
-                      </div>
-                      <span>136</span>
-                    </li>
-                    <li>
-                      <div>
-                        <span>NDRRMC Hub</span>
-                      </div>
-                      <span>(02)
-                        8911</span>
-                    </li>
-                  </ul>
-                </div>
+            <div class="cs-card" style="padding: 2.5rem;">
+              <div
+                style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 1.5rem;">
+                <div class="cs-badge" style="background: var(--danger-glow); color: var(--danger);"><i
+                    class="fa-solid fa-tower-broadcast"></i></div>
+                <h4 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--text-bright);">CRITICAL EVAC
+                  COMMS</h4>
               </div>
 
+              <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                <p style="font-size: 0.95rem; color: var(--text-dim); margin-bottom: 0.5rem;">Direct Action Lines</p>
+
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                  <% [ { label: 'Command Center' , num: '911' }, { label: 'Police Tactical' , num: '117' ,
+                    sub: '(02) 8722-0650' }, { label: 'Fire Operations' , num: '160' , sub: '(02) 8426-0219' }, {
+                    label: 'Red Cross Medivac' , num: '143' , sub: '(02) 8790-2300' }, { label: 'MMDA Dispatch' ,
+                    num: '136' }, { label: 'NDRRMC Hub' , num: '911-5061' } ].forEach(hotline=> { %>
+                    <div
+                      style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass); border-radius: 0.75rem; padding: 1rem 1.25rem; display: flex; justify-content: space-between; align-items: center;">
+                      <div>
+                        <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-bright);">
+                          <%= hotline.label %>
+                        </div>
+                        <% if(hotline.sub) { %>
+                          <div style="font-size: 0.7rem; color: var(--text-dim);">
+                            <%= hotline.sub %>
+                          </div>
+                          <% } %>
+                      </div>
+                      <div style="font-family: 'JetBrains Mono', monospace; font-weight: 800; color: var(--primary);">
+                        <%= hotline.num %>
+                      </div>
+                    </div>
+                    <% }) %>
+                </div>
+              </div>
             </div>
+
           </div>
 
         </div>

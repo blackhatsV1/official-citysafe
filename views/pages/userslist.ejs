@@ -12,103 +12,188 @@
       <%- include('../partials/admin-navbar', { currentPage: 'users' }); %>
     </header>
 
-    <div>
+    <div class="cs-layout-container">
       <aside>
         <%- include('../partials/admin-sidebar', { currentPage: 'users' }); %>
       </aside>
 
-      <main>
-        <div>
+      <main class="cs-main-content">
+        <div class="cs-container">
 
-          <div>
-            <h1>USER DIRECTORY</h1>
-            <a href="/addusers"><i></i>New
-              Citizen</a>
-            <a href="/addresponder"><i></i>New Responder</a>
+          <!-- Directory Header -->
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; flex-wrap: wrap; gap: 2rem;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                <div class="cs-badge" style="background: var(--primary-glow); color: var(--primary);"><i
+                    class="fa-solid fa-address-book"></i></div>
+                <h1 class="cs-section-header" style="margin: 0;">USER <span
+                    style="background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">DIRECTORY</span>
+                </h1>
+              </div>
+              <p style="color: var(--text-dim); font-size: 0.9rem; font-weight: 500;">Managing and monitoring regional
+                operational personnel and citizens.</p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+              <a href="/addusers" class="cs-btn cs-btn-primary" style="text-decoration: none;">
+                <i class="fa-solid fa-user-plus" style="margin-right: 0.5rem;"></i> NEW CITIZEN
+              </a>
+              <a href="/addresponder" class="cs-btn cs-btn-accent" style="text-decoration: none;">
+                <i class="fa-solid fa-user-shield" style="margin-right: 0.5rem;"></i> NEW RESPONDER
+              </a>
+            </div>
           </div>
 
-          <div>
-            <div>
-              <h2>Registered
-                Accounts</h2>
+          <div class="cs-card" style="padding: 0; overflow: hidden; border: 1px solid var(--border-glass);">
+            <div
+              style="padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-glass); background: rgba(255,255,255,0.02); display: flex; align-items: center; justify-content: space-between;">
+              <h2 style="margin: 0; font-size: 1.1rem; font-weight: 800; color: var(--text-bright);">REGISTERED ACCOUNTS
+              </h2>
+              <div class="cs-badge"
+                style="background: rgba(255,255,255,0.05); color: var(--text-dim); font-size: 0.7rem; font-weight: 800;">
+                <i class="fa-solid fa-database" style="margin-right: 0.4rem;"></i>
+                <%= responders.length + users.length %> NODES
+              </div>
             </div>
 
-            <div>
-              <table>
+            <div style="overflow-x: auto;" class="cs-custom-scrollbar">
+              <table style="width: 100%; border-collapse: collapse; min-width: 1000px;">
                 <thead>
-                  <tr>
-                    <th>Actions</th>
-                    <th>Type</th>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Location (Bgy/City)</th>
-                    <th>Email</th>
-                    <th>Contact</th>
-                    <th>Role</th>
+                  <tr style="background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border-glass);">
+                    <th
+                      style="padding: 1.25rem 2rem; text-align: left; font-size: 0.7rem; font-weight: 900; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1rem;">
+                      Ops</th>
+                    <th
+                      style="padding: 1.25rem 2rem; text-align: left; font-size: 0.7rem; font-weight: 900; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1rem;">
+                      Type</th>
+                    <th
+                      style="padding: 1.25rem 2rem; text-align: left; font-size: 0.7rem; font-weight: 900; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1rem;">
+                      Identity</th>
+                    <th
+                      style="padding: 1.25rem 2rem; text-align: left; font-size: 0.7rem; font-weight: 900; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1rem;">
+                      Sector / Barangay</th>
+                    <th
+                      style="padding: 1.25rem 2rem; text-align: left; font-size: 0.7rem; font-weight: 900; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1rem;">
+                      Comms</th>
+                    <th
+                      style="padding: 1.25rem 2rem; text-align: left; font-size: 0.7rem; font-weight: 900; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1rem;">
+                      Privilege</th>
                   </tr>
                 </thead>
                 <tbody>
                   <% responders.forEach(res=> { %>
-                    <tr>
-                      <td>
-                        <div>
-                          <a href="/edit-responder/<%= res.id %>">Edit</a>
-                          <button onclick="deleteResponder(<%= res.id %>)">Delete</button>
+                    <tr
+                      style="border-bottom: 1px solid var(--border-glass); background: rgba(139, 92, 246, 0.02); transition: all 0.2s ease;"
+                      onmouseover="this.style.background='rgba(139, 92, 246, 0.05)'"
+                      onmouseout="this.style.background='rgba(139, 92, 246, 0.02)'">
+                      <td style="padding: 1.25rem 2rem;">
+                        <div style="display: flex; gap: 0.75rem;">
+                          <a href="/edit-responder/<%= res.id %>" class="cs-badge"
+                            style="background: var(--primary-glow); color: var(--primary); text-decoration: none; padding: 0.4rem 0.8rem; border-color: var(--primary);">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                          </a>
+                          <button onclick="deleteResponder(<%= res.id %>)" class="cs-badge"
+                            style="background: var(--danger-glow); color: var(--danger); border-color: var(--danger); cursor: pointer; padding: 0.4rem 0.8rem;">
+                            <i class="fa-solid fa-trash-can"></i>
+                          </button>
                         </div>
                       </td>
-                      <td>
-                        <span>Responder</span>
+                      <td style="padding: 1.25rem 2rem;">
+                        <span class="cs-badge"
+                          style="background: var(--accent-glow); color: var(--accent); font-size: 0.65rem; font-weight: 900; border-color: var(--accent);">RESPONDER</span>
                       </td>
-                      <td>
-                        <%= res.id %>
+                      <td style="padding: 1.25rem 2rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                          <div class="cs-user-avatar"
+                            style="width: 32px; height: 32px; font-size: 0.75rem; background: var(--accent); color: white; border: none;">
+                            <%= res.firstname[0] %>
+                              <%= res.lastname[0] %>
+                          </div>
+                          <div>
+                            <div style="font-weight: 700; color: var(--text-bright); line-height: 1.2;">
+                              <%= res.firstname %>
+                                <%= res.lastname %>
+                            </div>
+                            <div
+                              style="font-size: 0.7rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">
+                              #<%= res.id %>
+                            </div>
+                          </div>
+                        </div>
                       </td>
-                      <td>
-                        <%= res.firstname %>
-                          <%= res.lastname %>
+                      <td style="padding: 1.25rem 2rem; color: var(--text-dim); font-size: 0.85rem; font-weight: 600;">
+                        <i class="fa-solid fa-building-shield" style="margin-right: 0.5rem; opacity: 0.5;"></i>
+                        <%= res.station_name || 'PENDING ASSIGNMENT' %>
                       </td>
-                      <td>
-                        <%= res.station_name || 'N/A' %>
+                      <td style="padding: 1.25rem 2rem;">
+                        <div style="font-size: 0.85rem; color: var(--text-bright); font-weight: 600;">
+                          <%= res.email %>
+                        </div>
+                        <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.25rem;">
+                          <%= res.contact_number %>
+                        </div>
                       </td>
-                      <td>
-                        <%= res.email %>
-                      </td>
-                      <td>
-                        <%= res.contact_number %>
-                      </td>
-                      <td>
-                        <span>responder</span>
+                      <td style="padding: 1.25rem 2rem;">
+                        <span class="cs-badge"
+                          style="background: rgba(255,255,255,0.05); color: var(--text-bright); font-size: 0.65rem; font-weight: 900; text-transform: uppercase;">RESPONDER</span>
                       </td>
                     </tr>
                     <% }) %>
                       <% users.forEach(user=> { %>
-                        <tr>
-                          <td>
-                            <div>
-                              <a href="/edit/<%= user.id %>">Edit</a>
-                              <button onclick="deleteUser(<%= user.id %>)">Delete</button>
+                        <tr style="border-bottom: 1px solid var(--border-glass); transition: all 0.2s ease;"
+                          onmouseover="this.style.background='rgba(255, 255, 255, 0.02)'"
+                          onmouseout="this.style.background='transparent'">
+                          <td style="padding: 1.25rem 2rem;">
+                            <div style="display: flex; gap: 0.75rem;">
+                              <a href="/edit/<%= user.id %>" class="cs-badge"
+                                style="background: var(--primary-glow); color: var(--primary); text-decoration: none; padding: 0.4rem 0.8rem; border-color: var(--primary);">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                              </a>
+                              <button onclick="deleteUser(<%= user.id %>)" class="cs-badge"
+                                style="background: var(--danger-glow); color: var(--danger); border-color: var(--danger); cursor: pointer; padding: 0.4rem 0.8rem;">
+                                <i class="fa-solid fa-trash-can"></i>
+                              </button>
                             </div>
                           </td>
-                          <td>
-                            <span>Citizen</span>
+                          <td style="padding: 1.25rem 2rem;">
+                            <span class="cs-badge"
+                              style="background: var(--primary-glow); color: var(--primary); font-size: 0.65rem; font-weight: 900; border-color: var(--primary);">CITIZEN</span>
                           </td>
-                          <td>
-                            <%= user.id %>
+                          <td style="padding: 1.25rem 2rem;">
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                              <div class="cs-user-avatar"
+                                style="width: 32px; height: 32px; font-size: 0.75rem; background: var(--primary); color: white; border: none;">
+                                <%= user.firstname[0] %>
+                                  <%= user.lastname[0] %>
+                              </div>
+                              <div>
+                                <div style="font-weight: 700; color: var(--text-bright); line-height: 1.2;">
+                                  <%= user.firstname %>
+                                    <%= user.lastname %>
+                                </div>
+                                <div
+                                  style="font-size: 0.7rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">
+                                  #<%= user.id %>
+                                </div>
+                              </div>
+                            </div>
                           </td>
-                          <td>
-                            <%= user.firstname %>
-                              <%= user.lastname %>
-                          </td>
-                          <td>
+                          <td
+                            style="padding: 1.25rem 2rem; color: var(--text-dim); font-size: 0.85rem; font-weight: 600;">
+                            <i class="fa-solid fa-location-dot" style="margin-right: 0.5rem; opacity: 0.5;"></i>
                             <%= user.barangay %>, <%= user.city %>
                           </td>
-                          <td>
-                            <%= user.email %>
+                          <td style="padding: 1.25rem 2rem;">
+                            <div style="font-size: 0.85rem; color: var(--text-bright); font-weight: 600;">
+                              <%= user.email %>
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.25rem;">
+                              <%= user.contact_number %>
+                            </div>
                           </td>
-                          <td>
-                            <%= user.contact_number %>
-                          </td>
-                          <td>
-                            <span>
+                          <td style="padding: 1.25rem 2rem;">
+                            <span class="cs-badge"
+                              style="background: rgba(255,255,255,0.1); color: var(--text-bright); font-size: 0.65rem; font-weight: 900; text-transform: uppercase;">
                               <%= user.role %>
                             </span>
                           </td>

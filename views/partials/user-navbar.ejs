@@ -1,60 +1,68 @@
 <!-- Glassmorphic User Navbar -->
-<nav>
-    <div>
-        <div>
+<nav class="cs-navbar">
+    <div class="cs-navbar-container">
+        <div class="cs-navbar-utils" style="width: 100%; justify-content: space-between;">
 
             <!-- Mobile Sidebar Toggle & Logo -->
-            <div>
-                <button id="sidepanel-toggler">
-                    <i></i>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button id="sidepanel-toggler" class="cs-nav-btn lg:hidden">
+                    <i class="fa-solid fa-bars-staggered"></i>
                 </button>
-                <a href="/">
-                    <i></i>
+                <a href="/" class="cs-navbar-brand">
+                    <i class="fa-solid fa-shield-halved"></i>
                     <span>CITYSAFE</span>
                 </a>
             </div>
 
             <!-- Utilities -->
-            <div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
 
                 <!-- Theme Toggle -->
-                <button
+                <button class="cs-nav-btn"
                     onclick="document.documentElement.classList.toggle('dark'); localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light'">
-                    <i></i>
-                    <i></i>
+                    <i class="fa-solid fa-moon dark:hidden"></i>
+                    <i class="fa-solid fa-sun hidden dark:block"></i>
                 </button>
 
                 <!-- Notifications Dropdown (Alpine) -->
-                <div x-data="{ open: false }">
-                    <button @click="open = !open" @click.outside="open = false">
-                        <i></i>
-                        <span>2</span>
+                <div x-data="{ open: false }" style="position: relative;">
+                    <button @click="open = !open" @click.outside="open = false" class="cs-nav-btn">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="cs-badge">2</span>
                     </button>
 
-                    <div x-show="open">
-                        <div>
+                    <div x-show="open" x-transition class="cs-card"
+                        style="position: absolute; top: calc(100% + 10px); right: 0; min-width: 250px; z-index: 100;">
+                        <div
+                            style="font-weight: 600; margin-bottom: 0.5rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 0.5rem;">
                             Notifications</div>
-                        <a href="#">You
+                        <a href="#" class="cs-sidebar-link" style="font-size: 0.8rem;">You
                             have no new alerts.</a>
                     </div>
                 </div>
 
                 <!-- User Dropdown (Alpine) -->
-                <div x-data="{ open: false }">
-                    <button @click="open = !open" @click.outside="open = false">
-                        <div>
-                            <i></i>
+                <div x-data="{ open: false }" style="position: relative;">
+                    <button @click="open = !open" @click.outside="open = false" class="cs-btn cs-btn-ghost"
+                        style="padding: 0.25rem 0.75rem;">
+                        <div class="cs-user-avatar" style="width: 32px; height: 32px; font-size: 0.9rem;">
+                            <i class="fa-solid fa-user"></i>
                         </div>
-                        <span>
+                        <span style="margin: 0 0.5rem;">
                             <%= username %>
                         </span>
-                        <i></i>
+                        <i class="fa-solid fa-chevron-down" style="font-size: 0.7rem;"></i>
                     </button>
 
-                    <div x-show="open">
-                        <a href="/editaccount"><i></i> Settings</a>
-                        <a href="/help-user"><i></i> Support</a>
-                        <a href="/logout"><i></i> Logout</a>
+                    <div x-show="open" x-transition class="cs-card"
+                        style="position: absolute; top: calc(100% + 10px); right: 0; min-width: 200px; z-index: 100; padding: 0.5rem;">
+                        <a href="/editaccount" class="cs-sidebar-link"><i class="fa-solid fa-user-gear"></i>
+                            Settings</a>
+                        <a href="/help-user" class="cs-sidebar-link"><i class="fa-solid fa-circle-question"></i>
+                            Support</a>
+                        <div style="height: 1px; background: var(--border-glass); margin: 0.5rem 0;"></div>
+                        <a href="/logout" class="cs-sidebar-link" style="color: var(--danger);"><i
+                                class="fa-solid fa-power-off"></i> Logout</a>
                     </div>
                 </div>
 

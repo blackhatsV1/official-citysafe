@@ -3,11 +3,11 @@
 
 <head>
     <%- include('../partials/head'); %>
-        
+
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-        
+
         <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.min.js"></script>
-        
+
 </head>
 
 <body>
@@ -17,112 +17,95 @@
             <%- include('../partials/user-navbar', { currentPage: 'sos-otw' }); %>
         </header>
 
-        <div>
+        <div class="cs-layout-container">
             <aside>
                 <%- include('../partials/user-sidebar', { currentPage: 'sos-otw' }); %>
             </aside>
 
-            <main>
-                <div>
+            <main class="cs-main-content">
+                <div class="cs-container">
 
-                    <div>
-                        <div>
-                            <div>
-                                <i></i>
-                            </div>
-                            <h1>
-                                Emergency Resources</h1>
+                    <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 3rem;">
+                        <div class="cs-badge"
+                            style="width: 64px; height: 64px; font-size: 1.5rem; background: var(--warning-glow); color: var(--warning); border: 2px solid var(--warning);">
+                            <i class="fa-solid fa-truck-fast"></i>
                         </div>
+                        <h1 class="cs-section-header" style="margin: 0;">
+                            EMERGENCY <span
+                                style="background: linear-gradient(135deg, var(--warning) 0%, var(--primary) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">RESOURCES</span>
+                        </h1>
                     </div>
 
-                    <div>
+                    <div class="cs-grid cs-grid-2">
                         <!-- Left Column (Map) -->
-                        <div>
-                            <div>
-                                <div>
-                                    <h4>
-                                        Nearby Safe Zones & Extraction Points
-                                    </h4>
-                                </div>
+                        <div class="cs-card"
+                            style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
+                            <div
+                                style="display: flex; align-items: center; gap: 1rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 1rem;">
+                                <div class="cs-badge" style="background: var(--primary-glow); color: var(--primary);"><i
+                                        class="fa-solid fa-shield-halved"></i></div>
+                                <h4 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--text-bright);">
+                                    SAFE ZONES & EXTRACTION</h4>
+                            </div>
 
+                            <div
+                                style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-glass); border-radius: 1rem; padding: 1.25rem; display: flex; align-items: flex-start; gap: 1rem;">
+                                <div class="cs-badge" style="width: 32px; height: 32px; font-size: 0.9rem;"><i
+                                        class="fa-solid fa-location-dot"></i></div>
                                 <div>
-                                    <div>
-                                        <i></i>
-                                        <div>
-                                            <p id="address">
-                                                Acquiring satellite lock...</p>
-                                            <p id="coords">
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div id="map"></div>
+                                    <p id="address"
+                                        style="font-size: 0.9rem; color: var(--text-bright); margin-bottom: 0.25rem; font-weight: 600;">
+                                        Acquiring satellite lock...</p>
+                                    <p id="coords"
+                                        style="font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--primary); margin: 0;">
+                                    </p>
                                 </div>
                             </div>
+
+                            <div class="cs-map-container" id="map" style="height: 400px; border-radius: 1rem;"></div>
                         </div>
 
                         <!-- Right Column (Hotlines) -->
-                        <div>
-                            <div>
-                                <div>
-                                    <h4>
-                                        <i></i> Critical Hotlines
-                                    </h4>
-                                </div>
-                                <div>
-                                    <p>
-                                        If you require immediate tactical assistance or extraction, utilize these direct
-                                        action lines.
-                                    </p>
+                        <div class="cs-card" style="padding: 2.5rem;">
+                            <div
+                                style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 1.5rem;">
+                                <div class="cs-badge" style="background: var(--danger-glow); color: var(--danger);"><i
+                                        class="fa-solid fa-phone-volume"></i></div>
+                                <h4 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--text-bright);">
+                                    CRITICAL HOTLINES</h4>
+                            </div>
 
-                                    <ul>
-                                        <li>
-                                            <div>
-                                                National Emergency</div>
-                                            <span>911</span>
-                                        </li>
-                                        <li>
-                                            <div>
-                                                <span>PNP
-                                                    (Police)</span>
-                                                <span>(02)
-                                                    8722-0650</span>
+                            <p
+                                style="font-size: 0.95rem; color: var(--text-dim); line-height: 1.6; margin-bottom: 2rem;">
+                                If you require immediate tactical assistance or extraction, utilize these direct action
+                                lines for priority response.
+                            </p>
+
+                            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                <% [ { label: 'National Emergency' , num: '911' , sub: 'Unified Command' }, {
+                                    label: 'PNP (Police)' , num: '117' , sub: '(02) 8722-0650' }, { label: 'BFP (Fire)'
+                                    , num: '160' , sub: '(02) 8426-0219' }, { label: 'Red Cross Medivac' , num: '143' ,
+                                    sub: '(02) 8790-2300' }, { label: 'MMDA Dispatch' , num: '136' ,
+                                    sub: 'Metro Operations' }, { label: 'NDRRMC Hub' , num: '911-5061' ,
+                                    sub: 'Disaster Risk Council' } ].forEach(hotline=> { %>
+                                    <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass); border-radius: 1rem; padding: 1.25rem; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s ease;"
+                                        onmouseover="this.style.background='rgba(255,255,255,0.06)'; this.style.borderColor='var(--primary-glow)'"
+                                        onmouseout="this.style.background='rgba(255,255,255,0.03)'; this.style.borderColor='var(--border-glass)'">
+                                        <div>
+                                            <div
+                                                style="font-size: 0.9rem; font-weight: 700; color: var(--text-bright); margin-bottom: 0.25rem;">
+                                                <%= hotline.label %>
                                             </div>
-                                            <span>117</span>
-                                        </li>
-                                        <li>
-                                            <div>
-                                                <span>BFP
-                                                    (Fire)</span>
-                                                <span>(02)
-                                                    8426-0219</span>
+                                            <div style="font-size: 0.75rem; color: var(--text-dim);">
+                                                <%= hotline.sub %>
                                             </div>
-                                            <span><i></i></span>
-                                        </li>
-                                        <li>
-                                            <div>
-                                                <span>Red
-                                                    Cross Medivac</span>
-                                                <span>(02)
-                                                    8790-2300</span>
-                                            </div>
-                                            <span>143</span>
-                                        </li>
-                                        <li>
-                                            <div>
-                                                MMDA Dispatch</div>
-                                            <span>136</span>
-                                        </li>
-                                        <li>
-                                            <div>
-                                                NDRRMC Hub</div>
-                                            <span>(02)
-                                                8911-5061</span>
-                                        </li>
-                                    </ul>
-                                </div>
+                                        </div>
+                                        <div
+                                            style="font-family: 'JetBrains Mono', monospace; font-size: 1.25rem; font-weight: 800; color: var(--primary); text-shadow: 0 0 10px var(--primary-glow);">
+                                            <%= hotline.num %>
+                                        </div>
+                                    </div>
+                                    <% }) %>
                             </div>
                         </div>
                     </div>
@@ -205,16 +188,16 @@
                             data.forEach(station => {
                                 const marker = L.marker([station.latitude, station.longitude], { icon: redIcon }).addTo(map);
 
-                                let iconStr = '<i></i>';
-                                if (station.type.toLowerCase().includes('police')) iconStr = '<i></i>';
-                                if (station.type.toLowerCase().includes('fire')) iconStr = '<i></i>';
-                                if (station.type.toLowerCase().includes('hospital')) iconStr = '<i></i>';
+                                let iconStr = '<i class="fa-solid fa-building-shield"></i>';
+                                if (station.type.toLowerCase().includes('police')) iconStr = '<i class="fa-solid fa-building-shield"></i>';
+                                if (station.type.toLowerCase().includes('fire')) iconStr = '<i class="fa-solid fa-fire-extinguisher"></i>';
+                                if (station.type.toLowerCase().includes('hospital')) iconStr = '<i class="fa-solid fa-hospital"></i>';
 
                                 marker.bindPopup(`
-                            <div>
-                                <div>${iconStr} ${station.name}</div>
-                                <div>${station.type}</div>
-                                <div>DIST: ${station.distance.toFixed(2)} KM</div>
+                            <div style="font-family: 'Inter', sans-serif;">
+                                <div style="font-weight: 700; color: var(--primary); margin-bottom: 0.25rem;">${iconStr} ${station.name}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">${station.type}</div>
+                                <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-bright); margin-top: 0.5rem;">DIST: ${station.distance.toFixed(2)} KM</div>
                             </div>
                         `);
                             });

@@ -4,11 +4,11 @@
 <head>
     <%- include('../partials/head'); %>
         <!-- Leaflet & Routing Machine -->
-        
+
         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-        
+
         <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.min.js"></script>
-        
+
 </head>
 
 <body>
@@ -18,114 +18,140 @@
             <%- include('../partials/user-navbar', { currentPage: 'nearby-stations' }); %>
         </header>
 
-        <div>
+        <div class="cs-layout-container">
             <aside>
                 <%- include('../partials/user-sidebar', { currentPage: 'nearby-stations' }); %>
             </aside>
 
-            <main>
-                <div>
+            <main class="cs-main-content">
+                <div class="cs-container">
 
-                    <h1>
-                        <div>
-                            <i></i>
+                    <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 3rem;">
+                        <div class="cs-badge"
+                            style="width: 64px; height: 64px; font-size: 1.5rem; background: var(--primary-glow); color: var(--primary); border: 2px solid var(--primary);">
+                            <i class="fa-solid fa-map-location-dot"></i>
                         </div>
-                        Safe Zones Mapping
-                    </h1>
+                        <h1 class="cs-section-header" style="margin: 0;">
+                            SAFE ZONES <span
+                                style="background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">MAPPING</span>
+                        </h1>
+                    </div>
 
-                    <div>
+                    <div class="cs-grid cs-grid-2">
 
                         <!-- Map Section -->
-                        <div>
-                            <div>
-                                <div>
-                                    <h4>
-                                        <i></i> Tactical Overlay
-                                    </h4>
-                                    <div>
-                                        <div></div> Live Scan
-                                        Active
-                                    </div>
+                        <div class="cs-card"
+                            style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-glass); padding-bottom: 1rem;">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div class="cs-badge" style="background: var(--info-glow); color: var(--info);"><i
+                                            class="fa-solid fa-radar"></i></div>
+                                    <h4
+                                        style="margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--text-bright);">
+                                        TACTICAL OVERLAY</h4>
                                 </div>
-                                <div>
-                                    <div id="map"></div>
+                                <div
+                                    style="font-size: 0.65rem; font-weight: 900; color: #10b981; border: 1px solid #10b981; padding: 0.3rem 0.6rem; border-radius: 2rem; display: flex; align-items: center; gap: 0.4rem; background: rgba(16, 185, 129, 0.1);">
+                                    <div
+                                        style="width: 6px; height: 6px; background: #10b981; border-radius: 50%; box-shadow: 0 0 5px #10b981; animation: pulse 2s infinite;">
+                                    </div> LIVE SCAN ACTIVE
                                 </div>
                             </div>
+                            <div class="cs-map-container" id="map" style="height: 480px; border-radius: 1rem;"></div>
                         </div>
 
                         <!-- Sidebar Info Section -->
-                        <div>
+                        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
 
                             <!-- Location Info -->
-                            <div>
-                                <div>
-                                    <h4>
-                                        <i></i> Current Coordinates
-                                    </h4>
+                            <div class="cs-card" style="padding: 2rem;">
+                                <div
+                                    style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 1rem;">
+                                    <div class="cs-badge"
+                                        style="background: var(--primary-glow); color: var(--primary);"><i
+                                            class="fa-solid fa-location-crosshairs"></i></div>
+                                    <h4
+                                        style="margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--text-bright);">
+                                        POSITIONAL TELEMETRY</h4>
                                 </div>
-                                <div>
-                                    <div>
-                                        <div>
-                                            <div>
-                                                Detected Location</div>
-                                            <div id="address">
-                                                <i></i> Acquiring
-                                                satellite fix...
-                                            </div>
+                                <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                                    <div
+                                        style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-glass); padding: 1.25rem; border-radius: 1rem;">
+                                        <div
+                                            style="font-size: 0.75rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05rem; margin-bottom: 0.5rem;">
+                                            Detected Location</div>
+                                        <div id="address"
+                                            style="font-size: 0.95rem; color: var(--text-bright); line-height: 1.5; font-weight: 600;">
+                                            <i class="fa-solid fa-spinner fa-spin"></i> Acquiring satellite fix...
                                         </div>
-                                        <div>
-                                            <div id="coords">
-                                                Awaiting GPS signal
-                                            </div>
-                                        </div>
+                                    </div>
+                                    <div id="coords"
+                                        style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--primary); background: var(--primary-glow); align-self: flex-start; padding: 0.4rem 0.8rem; border-radius: 0.5rem; border: 1px solid var(--primary);">
+                                        0.00000 | 0.00000
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Nearest Station Result -->
-                            <div>
-                                <!-- Glow -->
-                                <div>
+                            <div class="cs-card" style="padding: 2rem; position: relative; overflow: hidden;">
+                                <div
+                                    style="position: absolute; top: -50px; right: -50px; width: 150px; height: 150px; background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%); border-radius: 50%; pointer-events: none;">
                                 </div>
 
-                                <div>
-                                    <h4>
-                                        <i></i> Optimal Safe Zone
-                                    </h4>
+                                <div
+                                    style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 1rem;">
+                                    <div class="cs-badge" style="background: var(--accent-glow); color: var(--accent);">
+                                        <i class="fa-solid fa-shield-heart"></i></div>
+                                    <h4
+                                        style="margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--text-bright);">
+                                        OPTIMAL SAFE ZONE</h4>
                                 </div>
-                                <div>
-                                    <div>
+
+                                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                                    <div style="display: flex; gap: 1.25rem; align-items: flex-start;">
+                                        <div class="cs-badge"
+                                            style="width: 48px; height: 48px; font-size: 1.25rem; background: rgba(255,255,255,0.05); color: var(--text-bright);">
+                                            <i class="fa-solid fa-building-shield"></i></div>
                                         <div>
-                                            <div>
-                                                <i></i>
-                                            </div>
-                                            <div>
-                                                <div>
-                                                    Designation</div>
-                                                <div id="stationName1">Scanning
-                                                    sector...</div>
+                                            <div
+                                                style="font-size: 0.75rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem; margin-bottom: 0.25rem;">
+                                                Designation</div>
+                                            <div id="stationName1"
+                                                style="font-size: 1.1rem; font-weight: 800; color: var(--text-bright);">
+                                                Scanning sector...</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="cs-grid cs-grid-2" style="gap: 1rem;">
+                                        <div
+                                            style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-glass); padding: 1rem; border-radius: 0.75rem;">
+                                            <div
+                                                style="font-size: 0.65rem; font-weight: 800; color: var(--primary); margin-bottom: 0.25rem;">
+                                                DISTANCE</div>
+                                            <div id="stationDistance1"
+                                                style="font-size: 1rem; font-weight: 800; color: var(--text-bright); font-family: 'JetBrains Mono', monospace;">
+                                                --</div>
+                                        </div>
+                                        <div
+                                            style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-glass); padding: 1rem; border-radius: 0.75rem;">
+                                            <div
+                                                style="font-size: 0.65rem; font-weight: 800; color: #10b981; margin-bottom: 0.25rem;">
+                                                STATUS</div>
+                                            <div
+                                                style="font-size: 0.85rem; font-weight: 800; color: var(--text-bright); display: flex; align-items: center; gap: 0.4rem;">
+                                                <i class="fa-solid fa-circle-check" style="color: #10b981;"></i> ACTIVE
                                             </div>
                                         </div>
+                                    </div>
 
-                                        <div>
-                                            <div>
-                                                <div>
-                                                    Distance</div>
-                                                <div id="stationDistance1">--</div>
-                                            </div>
-                                            <div>
-                                                <div>
-                                                    Status</div>
-                                                <div>
-                                                    <i></i> Active
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <div>
-                                                Address</div>
-                                            <div id="stationAddress1">--</div>
+                                    <div
+                                        style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); padding: 1rem; border-radius: 0.75rem;">
+                                        <div
+                                            style="font-size: 0.65rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; margin-bottom: 0.5rem;">
+                                            Sector Address</div>
+                                        <div id="stationAddress1"
+                                            style="font-size: 0.85rem; color: var(--text-dim); line-height: 1.4;">--
                                         </div>
                                     </div>
                                 </div>

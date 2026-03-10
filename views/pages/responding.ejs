@@ -3,195 +3,267 @@
 
 <head>
     <%- include('../partials/head'); %>
-        
+
         <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.min.js"></script>
-        
+
 </head>
 
 <body>
     <%- include('../partials/page-start'); %>
 
-        <header>
-            <%- include('../partials/responder-navbar', { currentPage: 'responding' }); %>
-        </header>
-
-        <div>
+        <div class="cs-layout-container">
             <aside>
                 <%- include('../partials/responder-sidebar', { currentPage: 'responding' }); %>
             </aside>
 
-            <main>
-                <div>
+            <main class="cs-main-content">
+                <div class="cs-container">
 
-                    <h1>
+                    <!-- Operational Header -->
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 1.5rem;">
                         <div>
-                            <i></i>
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                                <span class="cs-badge"
+                                    style="background: rgba(239, 68, 68, 0.1); color: #f87171; font-weight: 900; font-size: 0.7rem;">OP-SIGNAL:
+                                    ENGAGED</span>
+                                <h1 class="cs-section-header" style="margin: 0; font-size: 2rem;">ACTIVE <span
+                                        style="background: linear-gradient(135deg, #f87171 0%, #ef4444 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">MISSION</span>
+                                </h1>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <span class="cs-badge"
+                                    style="background: rgba(16, 185, 129, 0.1); color: #34d399; font-weight: 800; display: flex; align-items: center; gap: 0.5rem;">
+                                    <span style="width: 8px; height: 8px; background: #34d399; border-radius: 50%;"
+                                        class="fa-fade"></span>
+                                    G-GRID SYNC ACTIVE
+                                </span>
+                                <span
+                                    style="color: var(--text-dim); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05rem;">Tactical
+                                    Deployment Vector</span>
+                            </div>
                         </div>
-                        Active Mission
-                    </h1>
 
-                    <div>
+                        <div id="resolve-btn-container">
+                            <% if (!mission.user_confirmed_at) { %>
+                                <button class="cs-btn cs-btn-secondary"
+                                    style="opacity: 0.6; cursor: not-allowed; display: flex; align-items: center; gap: 0.75rem;"
+                                    disabled>
+                                    <i class="fa-solid fa-hourglass-half fa-spin"></i> AWAITING HQ CLEARANCE
+                                </button>
+                                <% } else { %>
+                                    <button onclick="resolveMission(<%= mission.incident_id %>)"
+                                        class="cs-btn cs-btn-primary"
+                                        style="background: var(--success); box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); display: flex; align-items: center; gap: 0.75rem;">
+                                        <i class="fa-solid fa-check-double"></i> FINALIZE RESOLUTION
+                                    </button>
+                                    <% } %>
+                        </div>
+                    </div>
 
-                        <!-- Mission Status Card -->
-                        <div>
-                            <!-- Glow -->
-                            <div>
-                            </div>
+                    <!-- Mission Intelligence Core -->
+                    <div style="display: grid; grid-template-columns: 1fr 1.3fr; gap: 2rem; margin-bottom: 3rem;">
 
-                            <div>
-                                <h4>
-                                    <i></i>
-                                    Objective: <span>
-                                        <%= mission.disaster_type.toUpperCase() %>
-                                    </span>
-                                </h4>
-                                <div>
-                                    <div></div> STATUS: RESPONDING
+                        <!-- Tactical Data Panel -->
+                        <div style="display: flex; flex-direction: column; gap: 2rem;">
+
+                            <!-- Objective Card -->
+                            <div class="cs-card"
+                                style="position: relative; border-left: 4px solid #ef4444; overflow: hidden;">
+                                <div style="position: absolute; top: 0; right: 0; padding: 1.5rem;">
+                                    <div style="width: 12px; height: 12px; background: #ef4444; border-radius: 50%; box-shadow: 0 0 15px #ef4444;"
+                                        class="fa-beat"></div>
+                                </div>
+                                <div style="margin-bottom: 1.5rem;">
+                                    <h4
+                                        style="margin: 0 0 0.5rem 0; font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1rem; font-weight: 800;">
+                                        Target Objective</h4>
+                                    <h2
+                                        style="margin: 0; font-size: 1.8rem; font-weight: 900; color: var(--text-bright); text-transform: uppercase;">
+                                        <%= mission.disaster_type %>
+                                    </h2>
+                                </div>
+                                <div class="cs-card"
+                                    style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.1); padding: 1rem;">
+                                    <h6
+                                        style="margin: 0 0 0.5rem 0; font-size: 0.7rem; color: #f87171; font-weight: 800; text-transform: uppercase;">
+                                        Operational Directive</h6>
+                                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-dim); line-height: 1.6;">
+                                        Establish containment at indicated coordinates. Once neutrality is confirmed,
+                                        execute resolution protocol to synchronize data with Command.</p>
                                 </div>
                             </div>
 
-                            <div>
-
-                                <!-- Directive Alert -->
-                                <div>
-                                    <div>
-                                        <h6>
-                                            Operational Directive</h6>
-                                        <p>
-                                            Navigate to the incident coordinates. Once the situation is neutralized and
-                                            secured, finalize the operational report.
-                                        </p>
-                                    </div>
-                                    <div id="resolve-btn-container">
-                                        <% if (!mission.user_confirmed_at) { %>
-                                            <button
-                                                disabled>
-                                                <i></i> Waiting for HQ / User
-                                                Conf.
-                                            </button>
-                                            <% } else { %>
-                                                <button onclick="resolveMission(<%= mission.incident_id %>)">
-                                                    <i></i> MARK AS RESOLVED
-                                                </button>
-                                                <% } %>
-                                    </div>
+                            <!-- Intelligence Data -->
+                            <div class="cs-card">
+                                <div
+                                    style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-glass);">
+                                    <div class="cs-badge"
+                                        style="background: var(--primary-glow); color: var(--primary);"><i
+                                            class="fa-solid fa-user-shield"></i></div>
+                                    <h3
+                                        style="margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--text-bright); letter-spacing: 0.05rem;">
+                                        FIELD DATA FEED</h3>
                                 </div>
 
-                                <div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                                    <div style="grid-column: span 1;">
+                                        <div
+                                            style="font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; font-weight: 800; margin-bottom: 0.25rem;">
+                                            Reporting Citizen</div>
+                                        <div
+                                            style="font-size: 1rem; font-weight: 700; color: var(--text-bright); display: flex; align-items: center; gap: 0.5rem;">
+                                            <i class="fa-solid fa-user"
+                                                style="color: var(--primary); font-size: 0.8rem;"></i>
+                                            <%= mission.firstname %>
+                                                <%= mission.lastname %>
+                                        </div>
+                                    </div>
+                                    <div style="grid-column: span 1;">
+                                        <div
+                                            style="font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; font-weight: 800; margin-bottom: 0.25rem;">
+                                            Comm Frequency</div>
+                                        <div
+                                            style="font-size: 1rem; font-weight: 700; color: var(--text-bright); display: flex; align-items: center; gap: 0.5rem;">
+                                            <i class="fa-solid fa-phone"
+                                                style="color: var(--primary); font-size: 0.8rem;"></i>
+                                            <%= mission.contact_number %>
+                                        </div>
+                                    </div>
+                                    <div style="grid-column: span 2;">
+                                        <div
+                                            style="font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; font-weight: 800; margin-bottom: 0.25rem;">
+                                            Geographical Sector</div>
+                                        <div id="incident-addr"
+                                            style="font-size: 0.95rem; font-weight: 700; color: var(--text-bright); display: flex; align-items: flex-start; gap: 0.5rem; line-height: 1.4;">
+                                            <i class="fa-solid fa-location-crosshairs"
+                                                style="color: #ef4444; margin-top: 0.25rem;"></i> Decrypting Sat-Data...
+                                        </div>
+                                    </div>
+                                    <div style="grid-column: span 2; margin-top: 0.5rem;">
+                                        <div
+                                            style="font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; font-weight: 800; margin-bottom: 0.5rem;">
+                                            Navigational Coordinates</div>
+                                        <div
+                                            style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-glass); border-radius: 12px; padding: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--secondary); display: flex; align-items: center; gap: 1rem;">
+                                            <i class="fa-solid fa-compass fa-spin" style="opacity: 0.5;"></i>
+                                            <span>
+                                                <%= mission.incident_lat %>, <%= mission.incident_lng %>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                                    <div>
-                                        <div>
-                                            <h6>
-                                                <i></i> Unit Intelligence
-                                            </h6>
+                        <!-- Tactical Navigation Panel -->
+                        <div class="cs-card"
+                            style="padding: 0; overflow: hidden; border: 1px solid var(--border-glass); display: flex; flex-direction: column;">
+                            <div
+                                style="padding: 1.25rem 1.5rem; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border-glass); display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <div class="cs-badge" style="background: var(--accent-glow); color: var(--accent);">
+                                        <i class="fa-solid fa-route"></i></div>
+                                    <h2
+                                        style="margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--text-bright); letter-spacing: 0.05rem;">
+                                        NAV-SYNC HUD</h2>
+                                </div>
+                                <div id="eta-display"
+                                    style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--accent); font-weight: 900; background: var(--accent-glow); padding: 0.4rem 1rem; border-radius: 20px;">
+                                    CALCULATING ETA...</div>
+                            </div>
+                            <div style="flex: 1; position: relative; min-height: 400px; max-height: 600px;">
+                                <div id="missionMap" style="height: 100%; width: 100%; z-index: 1;"></div>
 
-                                            <div>
-                                                <div>
-                                                    <small>Reporter
-                                                        Target</small>
-                                                    <span>
-                                                        <i></i>
-                                                        <%= mission.firstname %>
-                                                            <%= mission.lastname %>
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <small>Contact
-                                                        Vector</small>
-                                                    <span>
-                                                        <i></i>
-                                                        <%= mission.contact_number %>
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <small>Physical
-                                                        Address</small>
-                                                    <div
-                                                        id="incident-addr">
-                                                        <i></i>
-                                                        Decrypting address...
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <small>Raw
-                                                        Coordinates</small>
-                                                    <code>
-                                                    <%= mission.incident_lat %>, <%= mission.incident_lng %>
-                                                </code>
-                                                </div>
+                                <!-- GPS Map Overlay -->
+                                <div
+                                    style="position: absolute; bottom: 20px; left: 20px; z-index: 1000; pointer-events: none;">
+                                    <div class="cs-card"
+                                        style="padding: 0.75rem 1.25rem; background: rgba(13, 17, 23, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-left: 3px solid var(--secondary); display: flex; align-items: center; gap: 1rem;">
+                                        <div style="position: relative; width: 14px; height: 14px;">
+                                            <div style="position: absolute; width:100%; height:100%; background: var(--secondary); border-radius:50%;"
+                                                class="fa-ping"></div>
+                                            <div
+                                                style="position: absolute; width:100%; height:100%; background: var(--secondary); border-radius:50%; box-shadow: 0 0 10px var(--secondary);">
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div>
-                                        <div>
-                                            <div id="missionMap"></div>
-                                        </div>
+                                        <span
+                                            style="font-size: 0.7rem; font-weight: 800; color: var(--text-bright); text-transform: uppercase; letter-spacing: 0.05rem;">Unit
+                                            Telemetry Link</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Nearby Disasters -->
-                        <div>
-                            <div>
-                                <h4>
-                                    <i></i> Nearby Incident Awareness
-                                </h4>
+                    </div>
+
+                    <!-- Auxiliary Tactical Awareness -->
+                    <div class="cs-card" style="padding: 0; overflow: hidden; border: 1px solid var(--border-glass);">
+                        <div
+                            style="padding: 1.25rem 1.5rem; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border-glass); display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <div class="cs-badge" style="background: rgba(251, 191, 36, 0.1); color: #fbbf24;"><i
+                                        class="fa-solid fa-circle-nodes"></i></div>
+                                <h3 style="margin: 0; font-size: 1rem; font-weight: 800; color: var(--text-bright);">
+                                    AUXILIARY SECTOR INCIDENTS</h3>
                             </div>
-                            <div>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>
-                                                Date & Time</th>
-                                            <th>
-                                                Type</th>
-                                            <th>
-                                                Address</th>
-                                            <th>
-                                                Status</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <% if (reports.length> 0) { %>
-                                            <% reports.forEach(function(report) { %>
-                                                <tr>
-                                                    <td>
-                                                        <%= new Date(report.reported_at).toLocaleString() %>
-                                                    </td>
-                                                    <td>
-                                                        <span>
-                                                            <%= report.disaster_type %>
-                                                        </span>
-                                                    </td>
-                                                    <td
-                                                        data-lat="<%= report.latitude %>"
-                                                        data-lon="<%= report.longitude %>" title="Loading data...">
-                                                        <i></i> Loading geographical
-                                                        data...
-                                                    </td>
-                                                    <td>
-                                                        <span>
-                                                            <%= report.status %>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                                <% }); %>
-                                                    <% } else { %>
-                                                        <tr>
-                                                            <td colspan="4">
-                                                                <span>No
-                                                                    other active reports in your immediate
-                                                                    sector.</span>
-                                                            </td>
-                                                        </tr>
-                                                        <% } %>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <span class="cs-badge"
+                                style="background: rgba(255, 255, 255, 0.05); color: var(--text-dim); font-size: 0.65rem;">G-GRID
+                                PERIPHERAL VIEW</span>
                         </div>
 
+                        <div class="cs-table-container">
+                            <table class="cs-table">
+                                <thead>
+                                    <tr>
+                                        <th style="font-size: 0.65rem; padding: 1rem 1.5rem;">INCIDENT LOGGED</th>
+                                        <th style="font-size: 0.65rem; padding: 1rem 1.5rem;">CLASSIFICATION</th>
+                                        <th style="font-size: 0.65rem; padding: 1rem 1.5rem;">GEOGRAPHICAL SECTOR</th>
+                                        <th style="font-size: 0.65rem; padding: 1rem 1.5rem; text-align: right;">
+                                            OPERATIONAL STATUS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if (reports.length> 0) { %>
+                                        <% reports.forEach(function(report) { %>
+                                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.03);">
+                                                <td
+                                                    style="padding: 1.25rem 1.5rem; font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-bright);">
+                                                    <%= new Date(report.reported_at).toLocaleString() %>
+                                                </td>
+                                                <td style="padding: 1.25rem 1.5rem;">
+                                                    <span class="cs-badge"
+                                                        style="background: rgba(239, 68, 68, 0.1); color: #f87171; font-weight: 800;">
+                                                        <%= report.disaster_type %>
+                                                    </span>
+                                                </td>
+                                                <td class="addr-load" data-lat="<%= report.latitude %>"
+                                                    data-lon="<%= report.longitude %>"
+                                                    style="padding: 1.25rem 1.5rem; font-size: 0.8rem; color: var(--text-dim); max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                                    <i class="fa-solid fa-spinner fa-spin"
+                                                        style="margin-right: 0.5rem;"></i> Locating Sector...
+                                                </td>
+                                                <td style="padding: 1.25rem 1.5rem; text-align: right;">
+                                                    <span class="cs-badge"
+                                                        style="background: rgba(251, 191, 36, 0.1); color: #fbbf24; text-transform: uppercase; font-size: 0.65rem; font-weight: 800;">
+                                                        <%= report.status %>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <% }); %>
+                                                <% } else { %>
+                                                    <tr>
+                                                        <td colspan="4"
+                                                            style="text-align: center; padding: 5rem 2rem; color: var(--text-dim); font-size: 0.9rem; font-style: italic;">
+                                                            <i class="fa-solid fa-shield-halved fa-2x"
+                                                                style="display: block; margin-bottom: 1rem; opacity: 0.2;"></i>
+                                                            Adjacent sectors report zero active primary threats.
+                                                        </td>
+                                                    </tr>
+                                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                 </div>
@@ -200,44 +272,53 @@
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
-            // Use glassmorphism theme for SweetAlert
+            // Enhanced tactical theme for SweetAlert
             const GlassSwal = Swal.mixin({
+                background: 'rgba(13, 17, 23, 0.98)',
+                color: '#f3f4f6',
+                backdrop: 'rgba(0,0,0,0.7)',
                 customClass: {
-                    popup: 'glass-swal',
-                    confirmButton: 'rounded-lg px-4 py-2 font-bold uppercase tracking-widest text-xs shadow-md shadow-emerald-500/20 mx-2',
-                    cancelButton: 'rounded-lg px-4 py-2 font-bold uppercase tracking-widest text-xs mx-2',
-                    input: 'rounded-xl border border-gray-200 dark:border-gray-700 bg-white/50 dark:bg-gray-800/50 text-sm focus:ring-2 focus:ring-emerald-500/50 p-3 w-[90%] mx-auto'
+                    popup: 'cs-card',
+                    confirmButton: 'cs-btn cs-btn-accent',
+                    cancelButton: 'cs-btn cs-btn-secondary'
                 },
-                background: document.documentElement.classList.contains('dark') ? 'rgba(17, 24, 39, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#111827'
+                buttonsStyling: false
             });
 
             const incidentLat = <%= mission.incident_lat || 'null' %>;
             const incidentLng = <%= mission.incident_lng || 'null' %>;
 
             if (incidentLat !== null && incidentLng !== null) {
-                const map = L.map('missionMap', { zoomControl: false }).setView([incidentLat, incidentLng], 13);
-                L.control.zoom({ position: 'bottomright' }).addTo(map);
+                const map = L.map('missionMap', { zoomControl: false }).setView([incidentLat, incidentLng], 14);
+                L.control.zoom({ position: 'topright' }).addTo(map);
 
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                    attribution: '&copy; OpenStreetMap | Carto'
+                // Tactical Map Layer
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                    attribution: '&copy; CitySafe Tactical'
                 }).addTo(map);
 
-                const hazardIcon = L.icon({
-                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                    iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+                const hazardIcon = L.divIcon({
+                    className: 'custom-div-icon',
+                    html: '<div style="background-color: #ef4444; width: 28px; height: 28px; border: 3px solid white; border-radius: 50%; box-shadow: 0 0 20px #ef4444; display: flex; align-items: center; justify-content: center;"><i class="fa-solid fa-triangle-exclamation" style="color: white; font-size: 12px;"></i></div>',
+                    iconSize: [28, 28],
+                    iconAnchor: [14, 14]
                 });
 
                 L.marker([incidentLat, incidentLng], { icon: hazardIcon }).addTo(map)
-                    .bindPopup("<div><div>Target Objective</div><div><%= mission.disaster_type %></div></div>", { className: 'glass-popup' }).openPopup();
+                    .bindPopup(`
+                        <div class="cs-card" style="padding: 0.5rem; border: none; background: none; box-shadow: none; text-align: center;">
+                            <div style="font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; font-weight: 800; margin-bottom: 0.25rem;">TARGET OBJECTIVE</div>
+                            <div style="font-size: 1rem; font-weight: 900; color: #ef4444;"><%= mission.disaster_type %></div>
+                        </div>
+                    `, { className: 'cs-card', offset: [0, -10] }).openPopup();
 
                 fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${incidentLat}&lon=${incidentLng}`)
                     .then(res => res.json())
                     .then(data => {
                         const addrEl = document.getElementById('incident-addr');
                         if (addrEl) {
-                            addrEl.innerHTML = `<i></i> ${data.display_name || "Address not found"}`;
+                            const mainAddr = data.display_name ? data.display_name.split(',')[0] + ', ' + (data.display_name.split(',')[1] || '') : "Sector Not Listed";
+                            addrEl.innerHTML = `<i class="fa-solid fa-location-crosshairs" style="color: #ef4444; margin-top: 0.25rem;"></i> ${mainAddr}`;
                         }
                     });
 
@@ -253,21 +334,22 @@
                         });
 
                         if (!window.routingControl) {
-                            const unitIconHtml = `
-                            <div>
-                                <span></span>
-                                <span>
-                                    <i></i>
-                                </span>
-                            </div>
-                        `;
-                            const unitIcon = L.divIcon({ className: 'bg-transparent', html: unitIconHtml, iconSize: [24, 24], iconAnchor: [12, 12] });
+                            const unitIcon = L.divIcon({
+                                className: 'bg-transparent',
+                                html: `
+                                    <div style="position: relative; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                        <div style="position: absolute; width: 100%; height: 100%; background: var(--secondary); border-radius: 50%; opacity: 0.2;" class="fa-ping"></div>
+                                        <div style="position: relative; width: 14px; height: 14px; background: var(--secondary); border: 2.5px solid white; border-radius: 50%; box-shadow: 0 0 15px var(--secondary);"></div>
+                                    </div>
+                                `,
+                                iconSize: [40, 40], iconAnchor: [20, 20]
+                            });
 
                             window.routingControl = L.Routing.control({
                                 waypoints: [L.latLng(myLat, myLng), L.latLng(incidentLat, incidentLng)],
-                                lineOptions: { styles: [{ color: '#10b981', opacity: 0.8, weight: 6, className: 'animate-route dash-array' }] },
+                                lineOptions: { styles: [{ color: 'var(--secondary)', opacity: 0.8, weight: 6, className: 'animate-route dash-array' }] },
                                 createMarker: function (i, wp) {
-                                    if (i === 0) return L.marker(wp.latLng, { icon: unitIcon }).bindPopup("<b>Your Unit</b>", { className: 'glass-popup' });
+                                    if (i === 0) return L.marker(wp.latLng, { icon: unitIcon }).bindPopup("<b style='font-size: 0.75rem; letter-spacing: 0.05rem;'>UNIT BRAVO-1</b>", { className: 'cs-card' });
                                     return null;
                                 },
                                 addWaypoints: false,
@@ -276,35 +358,39 @@
                                 show: false
                             }).addTo(map);
 
+                            window.routingControl.on('routesfound', function (e) {
+                                const routes = e.routes;
+                                const summary = routes[0].summary;
+                                const time = Math.round(summary.totalTime / 60);
+                                document.getElementById('eta-display').innerText = time > 0 ? `${time} MIN ETA` : '< 1 MIN ETA';
+                            });
+
                             const style = document.createElement('style');
                             style.innerHTML = `
-                            .animate-route { stroke-dasharray: 10, 10; animation: dash 1s linear infinite; }
-                            @keyframes dash { to { stroke-dashoffset: -20; } }
-                        `;
+                                .animate-route { stroke-dasharray: 12, 12; animation: dash 0.8s linear infinite; }
+                                @keyframes dash { to { stroke-dashoffset: -24; } }
+                            `;
                             document.head.appendChild(style);
 
                         } else {
                             window.routingControl.setWaypoints([L.latLng(myLat, myLng), L.latLng(incidentLat, incidentLng)]);
                         }
-                    }, err => console.error(err), { enableHighAccuracy: true });
+                    }, err => console.error("Telemetry Error:", err), { enableHighAccuracy: true });
                 }
             }
 
             function resolveMission(id) {
                 GlassSwal.fire({
-                    title: '<span>Formally Resolve?</span>',
-                    html: '<span>Confirm operational resolution. Provide final remarks below.</span>',
-                    icon: 'question',
-                    iconColor: '#10b981',
+                    title: 'MISSION DEBRIEF',
+                    text: 'Confirm secure neutralization of sector threat. Enter any relevant operational notes below.',
                     input: 'textarea',
-                    inputPlaceholder: 'Enter resolution remarks (e.g., situation stabilized, casualty handled)...',
+                    inputPlaceholder: 'Log final remarks (e.g. Threat cleared, utilities restored)...',
                     showCancelButton: true,
-                    confirmButtonColor: '#10b981',
-                    cancelButtonColor: '#6b7280',
-                    confirmButtonText: 'CONFIRM RESOLUTION'
+                    confirmButtonText: 'SUBMIT FINAL REPORT',
+                    cancelButtonText: 'REMAIN ON-STATION'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        const remarks = result.value || "Resolved by responding unit";
+                        const remarks = result.value || "Resolution protocol complete.";
                         fetch('/api/resolve', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
@@ -315,13 +401,13 @@
                                 if (data.success) {
                                     GlassSwal.fire({
                                         icon: 'success',
-                                        title: '<span>LOGGED</span>',
-                                        html: '<span>Standing by for HQ verification.</span>',
+                                        title: 'DEBRIEF ACCEPTED',
+                                        text: 'Mission data synchronized. Standing by for redeployment.',
                                         showConfirmButton: false,
                                         timer: 2000
                                     }).then(() => location.reload());
                                 } else {
-                                    GlassSwal.fire('Error', 'Failed to update mission status', 'error');
+                                    GlassSwal.fire('COMM-LINK ERROR', 'Failed to transmit debrief data. Retrying...', 'error');
                                 }
                             });
                     }
@@ -335,7 +421,8 @@
                     fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
                         .then(res => res.json())
                         .then(data => {
-                            td.innerHTML = `<i></i> ${data.display_name || "Unknown Address"}`;
+                            const shortAddr = data.display_name ? data.display_name.split(',')[0] + ', ' + (data.display_name.split(',')[1] || '') : "Sector Unknown";
+                            td.innerHTML = `<i class="fa-solid fa-location-dot" style="font-size: 0.7rem; color: var(--warning); margin-right: 0.5rem;"></i> ${shortAddr}`;
                             td.title = data.display_name;
                         });
                 }
@@ -353,13 +440,13 @@
                         if (container) {
                             const currentBtn = container.querySelector('button');
                             if (mission.user_confirmed_at && currentBtn.disabled) {
-                                container.innerHTML = `<button onclick="resolveMission(${mission.incident_id})"><i></i> MARK AS RESOLVED</button>`;
+                                container.innerHTML = `<button onclick="resolveMission(${mission.incident_id})" class="cs-btn cs-btn-primary" style="background: var(--success); box-shadow: 0 0 20px rgba(16, 185, 129, 0.2); display: flex; align-items: center; gap: 0.75rem;"><i class="fa-solid fa-check-double"></i> FINALIZE RESOLUTION</button>`;
                             } else if (!mission.user_confirmed_at && !currentBtn.disabled) {
-                                container.innerHTML = `<button disabled><i></i> Waiting for HQ / User Conf.</button>`;
+                                container.innerHTML = `<button class="cs-btn cs-btn-secondary" style="opacity: 0.6; cursor: not-allowed; display: flex; align-items: center; gap: 0.75rem;" disabled><i class="fa-solid fa-hourglass-half fa-spin"></i> AWAITING HQ CLEARANCE</button>`;
                             }
                         }
                     })
-                    .catch(err => console.error("Polling error:", err));
+                    .catch(err => console.error("Telemetry link error:", err));
             }, 5000);
         </script>
         <%- include('../partials/footer'); %>

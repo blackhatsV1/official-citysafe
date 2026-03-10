@@ -12,124 +12,180 @@
             <%- include('../partials/visitor-navbar', { currentPage: 'contact' }); %>
         </header>
 
-        <div>
+        <div class="cs-layout-container">
             <aside>
                 <%- include('../partials/visitor-sidebar', { currentPage: 'contact' }); %>
             </aside>
 
-            <main>
-                <div>
+            <main class="cs-main-content">
+                <div class="cs-container">
 
-                    <div>
-                        <h1>
-                            Contact Us</h1>
-                        <p>Reach out for inquiries, urgent concerns, or
-                            systematic support.</p>
+                    <!-- Page Header -->
+                    <div style="margin-bottom: 4rem;">
+                        <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+                            <span class="cs-badge"
+                                style="background: var(--primary-glow); color: var(--primary); font-size: 0.7rem; font-weight: 900;">COMMUNICATION
+                                UPLINK</span>
+                            <div style="width: 40px; height: 1px; background: var(--border-glass);"></div>
+                        </div>
+                        <h1 class="cs-section-header" style="margin: 0; font-size: 2.75rem;">
+                            CONTACT <span
+                                style="background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">US</span>
+                        </h1>
+                        <p
+                            style="font-size: 1.1rem; color: var(--text-dim); line-height: 1.6; max-width: 650px; margin-top: 1rem; font-weight: 500;">
+                            Establish a direct mission-critical uplink for operational inquiries, technical support, or
+                            strategic coordination.
+                        </p>
                     </div>
 
-                    <div>
-                        <!-- Contact Form -->
-                        <div>
-                            <div>
-                            </div>
-                            <div>
-                                <div>
-                                    <i></i>
-                                </div>
-                                <h4>Send a Message</h4>
+                    <div class="cs-grid cs-grid-3" style="align-items: start; gap: 2rem;">
+
+                        <!-- Contact Form Card -->
+                        <div class="cs-card"
+                            style="grid-column: span 2; padding: 3rem; border: 1px solid var(--border-glass);">
+                            <div
+                                style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 1.25rem;">
+                                <div class="cs-badge" style="background: var(--primary-glow); color: var(--primary);"><i
+                                        class="fa-solid fa-paper-plane"></i></div>
+                                <h4
+                                    style="margin: 0; font-size: 1.25rem; font-weight: 800; color: var(--text-bright); text-transform: uppercase; letter-spacing: 0.05rem;">
+                                    Transmission Terminal</h4>
                             </div>
 
-                            <div>
-                                <form action="/send-message" method="POST" onsubmit="return showLoading()">
-                                    <div>
-                                        <label for="floatingName">Full
-                                            Name</label>
-                                        <input type="text" id="floatingName" name="name" placeholder="John Doe" required>
-                                    </div>
-                                    <div>
-                                        <label for="floatingEmail">Email
-                                            Address</label>
-                                        <input type="email" id="floatingEmail" name="email"
-                                            placeholder="john@example.com" required>
-                                        <div>
-                                            <i></i> We'll never share your email.
+                            <form action="/send-message" method="POST" onsubmit="return showLoading()"
+                                class="cs-form-stack">
+
+                                <div
+                                    style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                                    <!-- Name Field -->
+                                    <div class="cs-form-group">
+                                        <label for="floatingName" class="cs-label">OPERATIVE IDENTITY</label>
+                                        <div class="cs-input-wrapper">
+                                            <span class="cs-input-icon"><i class="fa-solid fa-user-shield"></i></span>
+                                            <input type="text" id="floatingName" name="name" class="cs-input"
+                                                placeholder="Full Legal Name" required>
                                         </div>
                                     </div>
-                                    <div>
-                                        <label for="floatingTextarea">Message
-                                            Content</label>
-                                        <textarea id="floatingTextarea" name="message"
-                                            placeholder="How can we help you?" required rows="5"></textarea>
+
+                                    <!-- Email Field -->
+                                    <div class="cs-form-group">
+                                        <label for="floatingEmail" class="cs-label">UPLINK VECTOR (EMAIL)</label>
+                                        <div class="cs-input-wrapper">
+                                            <span class="cs-input-icon"><i class="fa-solid fa-at"></i></span>
+                                            <input type="email" id="floatingEmail" name="email" class="cs-input"
+                                                placeholder="secure@vector.net" required>
+                                        </div>
                                     </div>
-                                    <button type="submit">
-                                        <i></i> TRANSMIT MESSAGE
-                                    </button>
-                                </form>
-                            </div>
+                                </div>
+
+                                <!-- Message Field -->
+                                <div class="cs-form-group" style="margin-bottom: 2.5rem;">
+                                    <label for="floatingTextarea" class="cs-label">INTELLIGENCE BRIEF / MESSAGE</label>
+                                    <div class="cs-input-wrapper">
+                                        <span class="cs-input-icon" style="top: 1.25rem;"><i
+                                                class="fa-solid fa-message-dots"></i></span>
+                                        <textarea id="floatingTextarea" name="message" class="cs-input"
+                                            placeholder="Describe the nature of your inquiry in detail..." required
+                                            rows="6" style="padding-top: 0.85rem;"></textarea>
+                                    </div>
+                                    <div
+                                        style="font-size: 0.65rem; color: var(--text-dim); margin-top: 0.75rem; display: flex; align-items: center; gap: 0.5rem; font-weight: 600;">
+                                        <i class="fa-solid fa-shield-halved" style="color: var(--secondary);"></i>
+                                        AES-256 END-TO-END TRANSMISSION ENCRYPTION ACTIVE
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="cs-btn cs-btn-primary"
+                                    style="width: 100%; justify-content: center; height: 3.5rem; font-size: 1rem;">
+                                    <i class="fa-solid fa-satellite-dish"></i> BROADCAST TRANSMISSION
+                                </button>
+                            </form>
                         </div>
 
-                        <!-- Side Info -->
-                        <div>
+                        <!-- Side Intelligence Panel -->
+                        <div style="display: flex; flex-direction: column; gap: 2rem;">
 
-                            <!-- Emergency Hotlines -->
-                            <div>
-                                <div>
+                            <!-- Tactical Hotlines -->
+                            <div class="cs-card" style="padding: 2rem; border: 1px solid var(--border-glass);">
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                                    <div class="cs-badge" style="background: var(--danger-glow); color: var(--danger);">
+                                        <i class="fa-solid fa-phone-volume"></i>
+                                    </div>
+                                    <h4
+                                        style="margin: 0; font-size: 1rem; font-weight: 800; color: var(--text-bright); text-transform: uppercase; letter-spacing: 0.05rem;">
+                                        URGENT COMMS</h4>
                                 </div>
-                                <div>
-                                    <i></i>
-                                    <h4>Emergency
-                                        Hotlines</h4>
-                                </div>
-                                <div>
-                                    <div>
-                                        <span>National
-                                            Emergency</span>
-                                        <span>911</span>
-                                    </div>
-                                    <div>
-                                        <span>Police
-                                            (PNP)</span>
-                                        <span>117</span>
-                                    </div>
-                                    <div>
-                                        <span>Fire
-                                            (BFP)</span>
-                                        <span>(02)
-                                            8426-0219</span>
-                                    </div>
-                                    <div>
-                                        <span>Red
-                                            Cross</span>
-                                        <span>143</span>
-                                    </div>
+
+                                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                    <% const hotlines=[ { label: 'National Command' , number: '911' ,
+                                        color: 'var(--danger)' , icon: 'fa-tower-broadcast' }, {
+                                        label: 'Police Intelligence' , number: '117' , color: 'var(--primary)' ,
+                                        icon: 'fa-building-shield' }, { label: 'Fire Suppression' , number: '160' ,
+                                        color: 'var(--warning)' , icon: 'fa-fire-extinguisher' }, {
+                                        label: 'Tactical Medical' , number: '143' , color: 'var(--accent)' ,
+                                        icon: 'fa-heart-pulse' } ]; %>
+                                        <% hotlines.forEach(item=> { %>
+                                            <div
+                                                style="--item-color: <%= item.color %>; display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: rgba(255,255,255,0.02); border-radius: 0.75rem; border: 1px solid var(--border-glass); transition: all 0.3s ease;">
+                                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                                    <i class="fa-solid <%= item.icon %>"
+                                                        style="color: var(--item-color); font-size: 0.8rem;"></i>
+                                                    <span
+                                                        style="font-size: 0.75rem; color: var(--text-dim); font-weight: 800; text-transform: uppercase;">
+                                                        <%= item.label %>
+                                                    </span>
+                                                </div>
+                                                <span
+                                                    style="font-size: 1.1rem; font-weight: 900; color: var(--item-color); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05rem;">
+                                                    <%= item.number %>
+                                                </span>
+                                            </div>
+                                            <% }) %>
                                 </div>
                             </div>
 
-                            <!-- Direct Contacts -->
-                            <div>
-                                <div>
+                            <!-- Admin Protocols -->
+                            <div class="cs-card" style="padding: 2rem; border: 1px solid var(--border-glass);">
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+                                    <div class="cs-badge"
+                                        style="background: var(--secondary-glow); color: var(--secondary);"><i
+                                            class="fa-solid fa-address-book"></i></div>
+                                    <h4
+                                        style="margin: 0; font-size: 1rem; font-weight: 800; color: var(--text-bright); text-transform: uppercase; letter-spacing: 0.05rem;">
+                                        ADMIN CHANNELS</h4>
                                 </div>
-                                <div>
-                                    <i></i>
-                                    <h4>Direct Contacts
-                                    </h4>
-                                </div>
-                                <div>
-                                    <div>
-                                        <span>Jayrold
-                                            Tabalina</span>
-                                        <a href="mailto:jayroldtabalina@gmail.com">jayroldtabalina@gmail.com</a>
-                                    </div>
-                                    <div>
-                                        <span>Yasmine
-                                            Talaman</span>
-                                        <a href="mailto:yama.talaman.ui@phinmaed.com">yama.talaman.ui@phinmaed.com</a>
-                                    </div>
-                                    <div>
-                                        <span>Mark
-                                            Vincent Jabao</span>
-                                        <a href="mailto:mark.jabao@gmail.com">mark.jabao@gmail.com</a>
-                                    </div>
+
+                                <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                                    <% const contacts=[ { name: 'Jayrold Tabalina' , email: 'jayroldtabalina@gmail.com'
+                                        , pos: 'SYSTEM ARCHITECT' }, { name: 'Yasmine Talaman' ,
+                                        email: 'yama.talaman.ui@phinmaed.com' , pos: 'INTEL LEAD' }, {
+                                        name: 'Mark Vincent Jabao' , email: 'mark.jabao@gmail.com' , pos: 'DESIGN OPS' }
+                                        ]; %>
+                                        <% contacts.forEach(contact=> { %>
+                                            <div
+                                                style="padding-bottom: 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.03);">
+                                                <div
+                                                    style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem;">
+                                                    <span
+                                                        style="font-size: 0.95rem; font-weight: 800; color: var(--text-bright);">
+                                                        <%= contact.name %>
+                                                    </span>
+                                                    <span
+                                                        style="font-size: 0.55rem; color: var(--primary); font-weight: 900; background: var(--primary-glow); padding: 0.1rem 0.4rem; border-radius: 0.25rem;">
+                                                        <%= contact.pos %>
+                                                    </span>
+                                                </div>
+                                                <a href="mailto:<%= contact.email %>"
+                                                    style="font-size: 0.8rem; color: var(--text-dim); text-decoration: none; display: flex; align-items: center; gap: 0.6rem; transition: color 0.2s;"
+                                                    onmouseover="this.style.color='var(--primary)'"
+                                                    onmouseout="this.style.color='var(--text-dim)'">
+                                                    <i class="fa-solid fa-envelope-open-text"
+                                                        style="color: var(--primary);"></i>
+                                                    <%= contact.email %>
+                                                </a>
+                                            </div>
+                                            <% }) %>
                                 </div>
                             </div>
 
@@ -192,7 +248,7 @@
                     }
                 });
             </script>
-            
+
             <%- include('../partials/page-end'); %>
 </body>
 

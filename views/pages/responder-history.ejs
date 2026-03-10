@@ -8,84 +8,137 @@
 <body>
     <%- include('../partials/page-start'); %>
 
-        <header>
-            <%- include('../partials/responder-navbar', { currentPage: 'responder-history' }); %>
-        </header>
-
-        <div>
+        <div class="cs-layout-container">
             <aside>
                 <%- include('../partials/responder-sidebar', { currentPage: 'responder-history' }); %>
             </aside>
 
-            <main>
-                <div>
+            <main class="cs-main-content">
+                <div class="cs-container">
 
-                    <h1>
+                    <!-- Header -->
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 1.5rem;">
                         <div>
-                            <i></i>
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                                <span class="cs-badge"
+                                    style="background: var(--primary-glow); color: var(--primary); font-size: 0.7rem; font-weight: 900;">ARCHIVE
+                                    ACCESS</span>
+                                <h1 class="cs-section-header" style="margin: 0; font-size: 2rem;">OPERATIONAL <span
+                                        style="background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">HISTORY</span>
+                                </h1>
+                            </div>
+                            <p
+                                style="color: var(--text-dim); margin: 0; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05rem;">
+                                Authenticated Mission Deployment Logs</p>
                         </div>
-                        Reaction History
-                    </h1>
 
-                    <div>
-                        <div>
-                            <h4>
-                                <i></i> Operation Logs
-                            </h4>
+                        <div class="cs-card"
+                            style="padding: 0.75rem 1.25rem; display: flex; align-items: center; gap: 1rem; background: rgba(255,255,255,0.02);">
+                            <div class="cs-badge" style="background: var(--primary-glow); color: var(--primary);"><i
+                                    class="fa-solid fa-folder-open"></i></div>
+                            <div style="text-align: right;">
+                                <div
+                                    style="font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; font-weight: 800;">
+                                    Total Deployments</div>
+                                <div style="font-size: 1.25rem; font-weight: 900; color: var(--text-bright);">
+                                    <%= reports.length %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- History Table -->
+                    <div class="cs-card" style="padding: 0; overflow: hidden; border: 1px solid var(--border-glass);">
+                        <div
+                            style="padding: 1.25rem 1.5rem; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border-glass); display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                <div class="cs-badge"
+                                    style="background: var(--secondary-glow); color: var(--secondary);"><i
+                                        class="fa-solid fa-list-check"></i></div>
+                                <h3 style="margin: 0; font-size: 1rem; font-weight: 800; color: var(--text-bright);">
+                                    DEPLOYMENT LOGS</h3>
+                            </div>
+                            <span class="cs-badge"
+                                style="background: rgba(255, 255, 255, 0.05); color: var(--text-dim); font-size: 0.65rem;">SECURE
+                                ARCHIVE</span>
                         </div>
 
-                        <div>
-                            <table>
+                        <div class="cs-table-container">
+                            <table class="cs-table">
                                 <thead>
                                     <tr>
-                                        <th>
-                                            Date/Time</th>
-                                        <th>
-                                            Resolved Time</th>
-                                        <th>
-                                            Type</th>
-                                        <th>
-                                            Location</th>
-                                        <th>
-                                            Resolved By</th>
-                                        <th>
-                                            Intelligence / Remarks</th>
+                                        <th style="padding: 1rem 1.5rem;">TIMESTAMPS</th>
+                                        <th style="padding: 1rem 1.5rem;">CLASSIFICATION</th>
+                                        <th style="padding: 1rem 1.5rem;">SECTOR / LOCATION</th>
+                                        <th style="padding: 1rem 1.5rem;">RESOLVED BY</th>
+                                        <th style="padding: 1rem 1.5rem;">OPERATIONAL INTELLIGENCE</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <% if (reports.length> 0) { %>
                                         <% reports.forEach(function(report) { %>
-                                            <tr>
-                                                <td>
-                                                    <%= new Date(report.reported_at).toLocaleString() %>
+                                            <tr
+                                                style="border-bottom: 1px solid rgba(255,255,255,0.03); transition: background 0.2s ease;">
+                                                <td style="padding: 1.25rem 1.5rem;">
+                                                    <div
+                                                        style="font-size: 0.75rem; color: var(--text-bright); font-weight: 700; margin-bottom: 0.25rem;">
+                                                        <i class="fa-solid fa-calendar-day"
+                                                            style="color: var(--primary); font-size: 0.65rem; margin-right: 0.4rem;"></i>
+                                                        <%= new Date(report.reported_at).toLocaleString() %>
+                                                    </div>
+                                                    <div
+                                                        style="font-size: 0.65rem; color: var(--text-dim); display: flex; align-items: center; gap: 0.4rem;">
+                                                        <i class="fa-solid fa-circle-check"
+                                                            style="color: var(--success); font-size: 0.6rem;"></i>
+                                                        <%= report.resolved_at ? new
+                                                            Date(report.resolved_at).toLocaleString() : 'PENDING' %>
+                                                    </div>
                                                 </td>
-                                                <td>
-                                                    <%= report.resolved_at ? new
-                                                        Date(report.resolved_at).toLocaleString() : '-' %>
-                                                </td>
-                                                <td>
-                                                    <span>
+                                                <td style="padding: 1.25rem 1.5rem;">
+                                                    <span class="cs-badge"
+                                                        style="background: rgba(239, 68, 68, 0.1); color: #f87171; font-weight: 800; text-transform: uppercase;">
                                                         <%= report.disaster_type %>
                                                     </span>
                                                 </td>
-                                                <td
-                                                    title="<%= report.location || 'Unknown Coordinates' %>">
-                                                    <i></i>
-                                                    <%= report.location || 'Unknown Coordinates' %>
+                                                <td style="padding: 1.25rem 1.5rem; max-width: 250px;">
+                                                    <div style="font-size: 0.8rem; color: var(--text-bright); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                                                        title="<%= report.location || 'Unknown Coordinates' %>">
+                                                        <i class="fa-solid fa-location-dot"
+                                                            style="color: #ef4444; margin-right: 0.5rem; font-size: 0.7rem;"></i>
+                                                        <%= report.location || 'N/A Sector' %>
+                                                    </div>
                                                 </td>
-                                                <td>
-                                                    <span>
-                                                        <%= report.resolved_by || 'Unknown' %>
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <div
-                                                        title="Unit: <%= report.responder_message || '-' %> | HQ: <%= report.user_message || '-' %>">
-                                                        <div><span>OP:</span>
-                                                            <%= report.responder_message || '-' %>
+                                                <td style="padding: 1.25rem 1.5rem;">
+                                                    <div style="display: flex; align-items: center; gap: 0.6rem;">
+                                                        <div
+                                                            style="width: 24px; height: 24px; background: var(--border-glass); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: var(--primary); font-weight: 900; border: 1px solid var(--primary);">
+                                                            <%= report.resolved_by ?
+                                                                report.resolved_by.charAt(0).toUpperCase() : '?' %>
                                                         </div>
-                                                        <div><span>HQ:</span>
-                                                            <%= report.user_message || '-' %>
+                                                        <span
+                                                            style="font-size: 0.8rem; font-weight: 700; color: var(--text-bright);">
+                                                            <%= report.resolved_by || 'Autosys' %>
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td style="padding: 1.25rem 1.5rem;">
+                                                    <div style="display: flex; flex-direction: column; gap: 0.4rem;">
+                                                        <div
+                                                            style="font-size: 0.75rem; color: var(--text-dim); line-height: 1.4; display: flex; align-items: flex-start; gap: 0.5rem;">
+                                                            <span
+                                                                style="color: var(--primary); font-weight: 900; font-size: 0.6rem; text-transform: uppercase;">FIELD:</span>
+                                                            <span>
+                                                                <%= report.responder_message || 'N/A' %>
+                                                            </span>
+                                                        </div>
+                                                        <div
+                                                            style="font-size: 0.75rem; color: var(--text-dim); line-height: 1.4; display: flex; align-items: flex-start; gap: 0.5rem; padding-top: 0.4rem; border-top: 1px solid rgba(255,255,255,0.03);">
+                                                            <span
+                                                                style="color: var(--accent); font-weight: 900; font-size: 0.6rem; text-transform: uppercase;">VERIF:</span>
+                                                            <span style="font-style: italic;">
+                                                                <%= report.user_message || 'Waiting for Command...' %>
+                                                            </span>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -93,10 +146,14 @@
                                             <% }); %>
                                                 <% } else { %>
                                                     <tr>
-                                                        <td colspan="6">
-                                                            <div><i></i></div>
-                                                            <span>No
-                                                                historical deployments found.</span>
+                                                        <td colspan="5" style="padding: 5rem 2rem; text-align: center;">
+                                                            <div style="margin-bottom: 1rem; opacity: 0.1;">
+                                                                <i class="fa-solid fa-box-archive fa-4x"></i>
+                                                            </div>
+                                                            <p
+                                                                style="color: var(--text-dim); font-size: 0.9rem; font-weight: 500;">
+                                                                Archive is currently empty. No historical deployment
+                                                                data found for this unit.</p>
                                                         </td>
                                                     </tr>
                                                     <% } %>

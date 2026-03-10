@@ -12,153 +12,200 @@
             <%- include('../partials/admin-navbar', { currentPage: 'add-citizen' }); %>
         </header>
 
-        <div>
+        <div class="cs-layout-container">
             <aside>
                 <%- include('../partials/admin-sidebar', { currentPage: 'add-citizen' }); %>
             </aside>
 
-            <main>
-                <div>
+            <main class="cs-main-content">
+                <div class="cs-container" style="max-width: 900px;">
 
-                    <div>
-                        <a href="/userslist"><i></i></a>
-                        <h1>ADD NEW CITIZEN
-                        </h1>
-                    </div>
-
-                    <div>
+                    <!-- Form Header -->
+                    <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 3rem;">
+                        <a href="/userslist" class="cs-badge"
+                            style="width: 42px; height: 42px; background: rgba(255,255,255,0.05); color: var(--text-bright); text-decoration: none; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                            <i class="fa-solid fa-arrow-left-long"></i>
+                        </a>
                         <div>
-                            <h2>
-                                Registration Form</h2>
-                        </div>
-
-                        <div>
-                            <form action="/add" method="POST">
-
-                                <!-- Personal Details -->
-                                <div>
-                                    <h3>
-                                        Personal Information</h3>
-                                    <div>
-                                        <div>
-                                            <label for="firstname">First
-                                                Name</label>
-                                            <input type="text" name="firstname" id="firstname"
-                                                required>
-                                        </div>
-                                        <div>
-                                            <label for="lastname">Last
-                                                Name</label>
-                                            <input type="text" name="lastname" id="lastname"
-                                                required>
-                                        </div>
-                                        <div>
-                                            <label for="email">Email
-                                                Address</label>
-                                            <input type="email" name="email" id="email" required>
-                                        </div>
-                                        <div>
-                                            <label for="contact_number">Contact
-                                                Number</label>
-                                            <input type="number" name="contact_number" id="contact_number" required>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <hr>
-
-                                <!-- Address Details -->
-                                <div>
-                                    <h3>
-                                        Address Details</h3>
-                                    <div>
-                                        <div>
-                                            <label for="street_address">Street
-                                                Address</label>
-                                            <input type="text" name="street_address" id="street_address" required>
-                                        </div>
-                                        <div>
-                                            <label for="barangay">Barangay</label>
-                                            <input type="text" name="barangay" id="barangay"
-                                                required>
-                                        </div>
-                                        <div>
-                                            <label for="city">City</label>
-                                            <input type="text" name="city" id="city" required>
-                                        </div>
-                                        <div>
-                                            <label for="province">Province</label>
-                                            <input type="text" name="province" id="province"
-                                                required>
-                                        </div>
-                                        <div>
-                                            <label for="postal_code">Postal
-                                                Code</label>
-                                            <input type="text" name="postal_code" id="postal_code"
-                                                required>
-                                        </div>
-                                        <div>
-                                            <label for="country">Country</label>
-                                            <input type="text" name="country" id="country" required>
-                                        </div>
-                                        <div>
-                                            <label for="landmark">Landmark</label>
-                                            <input type="text" name="landmark" id="landmark"
-                                                required>
-                                        </div>
-                                        <div>
-                                            <label for="address_type">Address
-                                                Type</label>
-                                            <input type="text" name="address_type" id="address_type"
-                                                placeholder="Home, Work, etc." required>
-                                        </div>
-                                        <div>
-                                            <label for="additional_instructions">Additional
-                                                Instructions</label>
-                                            <textarea name="additional_instructions" id="additional_instructions"
-                                                rows="3" required></textarea>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <hr>
-
-                                <!-- Authentication -->
-                                <div>
-                                    <h3>
-                                        System Identity</h3>
-                                    <div>
-                                        <div>
-                                            <label for="role">User
-                                                Role</label>
-                                            <select id="role" name="role" required>
-                                                <option value="user">User / Citizen</option>
-                                                <option value="admin">Administrator</option>
-                                            </select>
-                                        </div>
-                                        <div x-data="{ show: false }">
-                                            <label for="password">Password</label>
-                                            <div>
-                                                <input :type="show ? 'text' : 'password'" name="password" id="password" required>
-                                                <button type="button" @click="show = !show">
-                                                    <i x-show="!show"></i>
-                                                    <i x-show="show"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <button type="submit">
-                                        REGISTER ACCOUNT
-                                    </button>
-                                </div>
-
-                            </form>
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem;">
+                                <span class="cs-badge"
+                                    style="background: var(--primary-glow); color: var(--primary); font-size: 0.7rem; font-weight: 900;">NEW
+                                    ASSET</span>
+                                <h1 class="cs-section-header" style="margin: 0; font-size: 1.75rem;">ADD <span
+                                        style="background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">NEW
+                                        CITIZEN</span></h1>
+                            </div>
+                            <p style="color: var(--text-dim); font-size: 0.85rem; font-weight: 500;">Registering a new
+                                civilian node in the regional database.</p>
                         </div>
                     </div>
 
+                    <form action="/add" method="POST" style="display: flex; flex-direction: column; gap: 2.5rem;">
+
+                        <!-- Section: Personal Intelligence -->
+                        <div class="cs-card"
+                            style="padding: 0; overflow: hidden; border: 1px solid var(--border-glass);">
+                            <div
+                                style="padding: 1.25rem 2rem; border-bottom: 1px solid var(--border-glass); background: rgba(255,255,255,0.02); display: flex; align-items: center; gap: 1rem;">
+                                <div class="cs-badge" style="background: var(--primary-glow); color: var(--primary);"><i
+                                        class="fa-solid fa-id-card"></i></div>
+                                <h2 style="margin: 0; font-size: 1rem; font-weight: 800; color: var(--text-bright);">
+                                    PERSONAL INTELLIGENCE</h2>
+                            </div>
+                            <div style="padding: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                                <div>
+                                    <label for="firstname" class="cs-input-label"
+                                        style="display: block; margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">FIRST
+                                        NAME</label>
+                                    <input type="text" name="firstname" id="firstname" class="cs-input"
+                                        style="width: 100%;" placeholder="Enter first name" required>
+                                </div>
+                                <div>
+                                    <label for="lastname" class="cs-input-label"
+                                        style="display: block; margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">LAST
+                                        NAME</label>
+                                    <input type="text" name="lastname" id="lastname" class="cs-input"
+                                        style="width: 100%;" placeholder="Enter last name" required>
+                                </div>
+                                <div>
+                                    <label for="email" class="cs-input-label"
+                                        style="display: block; margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">EMAIL
+                                        ADDRESS</label>
+                                    <input type="email" name="email" id="email" class="cs-input" style="width: 100%;"
+                                        placeholder="name@example.com" required>
+                                </div>
+                                <div>
+                                    <label for="contact_number" class="cs-input-label"
+                                        style="display: block; margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">CONTACT
+                                        NUMBER</label>
+                                    <input type="number" name="contact_number" id="contact_number" class="cs-input"
+                                        style="width: 100%;" placeholder="09XXXXXXXXX" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section: Geospatial Data -->
+                        <div class="cs-card"
+                            style="padding: 0; overflow: hidden; border: 1px solid var(--border-glass);">
+                            <div
+                                style="padding: 1.25rem 2rem; border-bottom: 1px solid var(--border-glass); background: rgba(255,255,255,0.02); display: flex; align-items: center; gap: 1rem;">
+                                <div class="cs-badge" style="background: var(--accent-glow); color: var(--accent);"><i
+                                        class="fa-solid fa-map-location-dot"></i></div>
+                                <h2 style="margin: 0; font-size: 1rem; font-weight: 800; color: var(--text-bright);">
+                                    GEOSPATIAL DATA</h2>
+                            </div>
+                            <div
+                                style="padding: 2rem; display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem;">
+                                <div style="grid-column: span 2;">
+                                    <label for="street_address" class="cs-input-label"
+                                        style="display: block; margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">STREET
+                                        ADDRESS</label>
+                                    <input type="text" name="street_address" id="street_address" class="cs-input"
+                                        style="width: 100%;" placeholder="Lot, Block, Street Name" required>
+                                </div>
+                                <div>
+                                    <label for="barangay" class="cs-input-label"
+                                        style="display: block; margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">BARANGAY</label>
+                                    <input type="text" name="barangay" id="barangay" class="cs-input"
+                                        style="width: 100%;" placeholder="Barangay name" required>
+                                </div>
+                                <div>
+                                    <label for="city" class="cs-input-label"
+                                        style="display: block; margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">CITY</label>
+                                    <input type="text" name="city" id="city" class="cs-input" style="width: 100%;"
+                                        placeholder="City name" required>
+                                </div>
+                                <div>
+                                    <label for="province" class="cs-input-label"
+                                        style="display: block; margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">PROVINCE</label>
+                                    <input type="text" name="province" id="province" class="cs-input"
+                                        style="width: 100%;" placeholder="Province name" required>
+                                </div>
+                                <div>
+                                    <label for="postal_code" class="cs-input-label"
+                                        style="display: block; margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">POSTAL
+                                        CODE</label>
+                                    <input type="text" name="postal_code" id="postal_code" class="cs-input"
+                                        style="width: 100%;" placeholder="XXXX" required>
+                                </div>
+                                <div>
+                                    <label for="country" class="cs-input-label"
+                                        style="display: block; margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">COUNTRY</label>
+                                    <input type="text" name="country" id="country" class="cs-input" style="width: 100%;"
+                                        placeholder="Country" required>
+                                </div>
+                                <div>
+                                    <label for="landmark" class="cs-input-label"
+                                        style="display: block; margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">LANDMARK</label>
+                                    <input type="text" name="landmark" id="landmark" class="cs-input"
+                                        style="width: 100%;" placeholder="Nearby landmark" required>
+                                </div>
+                                <div>
+                                    <label for="address_type" class="cs-input-label"
+                                        style="display: block; margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">ADDRESS
+                                        TYPE</label>
+                                    <input type="text" name="address_type" id="address_type" class="cs-input"
+                                        style="width: 100%;" placeholder="Home, Office, etc." required>
+                                </div>
+                                <div style="grid-column: span 2;">
+                                    <label for="additional_instructions" class="cs-input-label"
+                                        style="display: block; margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">LOCATIONAL
+                                        LOGISTICS</label>
+                                    <textarea name="additional_instructions" id="additional_instructions"
+                                        class="cs-input" style="width: 100%; padding-top: 1rem;" rows="3"
+                                        placeholder="Specify building details, gate codes, or access paths..."
+                                        required></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section: System Integration -->
+                        <div class="cs-card"
+                            style="padding: 0; overflow: hidden; border: 1px solid var(--border-glass);">
+                            <div
+                                style="padding: 1.25rem 2rem; border-bottom: 1px solid var(--border-glass); background: rgba(255,255,255,0.02); display: flex; align-items: center; gap: 1rem;">
+                                <div class="cs-badge" style="background: var(--warning-glow); color: var(--warning);"><i
+                                        class="fa-solid fa-microchip"></i></div>
+                                <h2 style="margin: 0; font-size: 1rem; font-weight: 800; color: var(--text-bright);">
+                                    SYSTEM INTEGRATION</h2>
+                            </div>
+                            <div style="padding: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                                <div>
+                                    <label for="role" class="cs-input-label"
+                                        style="display: block; margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">PRIVILEGE
+                                        LEVEL</label>
+                                    <select id="role" name="role" class="cs-input" style="width: 100%; cursor: pointer;"
+                                        required>
+                                        <option value="user">User / Citizen</option>
+                                        <option value="admin">Administrator</option>
+                                    </select>
+                                </div>
+                                <div x-data="{ show: false }">
+                                    <label for="password" class="cs-input-label"
+                                        style="display: block; margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">SECURITY
+                                        CREDENTIALS</label>
+                                    <div style="position: relative;">
+                                        <input :type="show ? 'text' : 'password'" name="password" id="password"
+                                            class="cs-input" style="width: 100%; padding-right: 3.5rem;"
+                                            placeholder="Initialize secure passphrase" required>
+                                        <button type="button" @click="show = !show"
+                                            style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 1.1rem; transition: color 0.2s ease;">
+                                            <i class="fa-solid" :class="show ? 'fa-eye-slash' : 'fa-eye'"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 1.5rem; justify-content: flex-end; margin-top: 1rem;">
+                            <a href="/userslist" class="cs-btn cs-btn-secondary"
+                                style="text-decoration: none;">CANCEL</a>
+                            <button type="submit" class="cs-btn cs-btn-primary" style="padding: 1rem 3rem;">
+                                <i class="fa-solid fa-user-check" style="margin-right: 0.75rem;"></i> REGISTER ACCOUNT
+                            </button>
+                        </div>
+
+                    </form>
                 </div>
             </main>
         </div>

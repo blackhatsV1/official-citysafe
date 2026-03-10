@@ -1,58 +1,62 @@
 <!-- Glassmorphic Visitor Sidebar -->
-<div id="mobile-sidebar">
+<div id="mobile-sidebar" class="cs-sidebar">
     <!-- Close Button for Mobile -->
-    <div>
-        <button onclick="document.getElementById('mobile-sidebar').classList.add('-translate-x-full')">
-            <i></i>
+    <div class="cs-sidebar-header lg:hidden">
+        <button class="cs-nav-btn"
+            onclick="document.getElementById('mobile-sidebar').classList.add('-translate-x-full'); document.getElementById('sidebar-overlay').classList.add('hidden')">
+            <i class="fa-solid fa-xmark"></i>
         </button>
     </div>
 
-    <div>
-        <a href="/visitor">
-            <i></i>
+    <div class="cs-sidebar-header">
+        <a href="/visitor" class="cs-navbar-brand">
+            <i class="fa-solid fa-shield-halved"></i>
             <span>CITYSAFE</span>
         </a>
     </div>
 
-    <div>
-        <div>
-            <div>
-                <i></i>
-            </div>
-            <div>
-                <h6>GUEST ACCESS</h6>
-                <span>PUBLIC</span>
-            </div>
+    <div class="cs-sidebar-user">
+        <div class="cs-user-avatar">
+            <i class="fa-solid fa-user-secret"></i>
+        </div>
+        <div class="cs-user-info">
+            <h6>GUEST ACCESS</h6>
+            <span>PUBLIC UNIT</span>
         </div>
     </div>
 
-    <nav>
-        <a href="/visitor">
-            <i></i>
+    <nav class="cs-sidebar-nav">
+        <a href="/visitor"
+            class="cs-sidebar-link <%= (typeof currentPage !== 'undefined' && currentPage === 'visitor') ? 'active' : '' %>">
+            <i class="fa-solid fa-house-chimney"></i>
             <span>Portal Home</span>
         </a>
-        <a href="/services">
-            <i></i>
+        <a href="/services"
+            class="cs-sidebar-link <%= (typeof currentPage !== 'undefined' && currentPage === 'services') ? 'active' : '' %>">
+            <i class="fa-solid fa-gears"></i>
             <span>Services</span>
         </a>
-        <a href="/about">
-            <i></i>
+        <a href="/about"
+            class="cs-sidebar-link <%= (typeof currentPage !== 'undefined' && currentPage === 'about') ? 'active' : '' %>">
+            <i class="fa-solid fa-circle-info"></i>
             <span>About Us</span>
         </a>
-        <a href="/contact">
-            <i></i>
+        <a href="/contact"
+            class="cs-sidebar-link <%= (typeof currentPage !== 'undefined' && currentPage === 'contact') ? 'active' : '' %>">
+            <i class="fa-solid fa-headset"></i>
             <span>Contact</span>
         </a>
     </nav>
 
-    <div>
-        <div>
-            <a href="/login">Sign In</a>
-            <a href="/register">Register</a>
+    <div style="margin-top: auto; padding: 1.5rem;">
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <a href="/login" class="cs-btn cs-btn-primary">Sign In</a>
+            <a href="/register" class="cs-btn cs-btn-ghost">Register</a>
         </div>
     </div>
 </div>
 
 <!-- Overlay for mobile when sidebar is open -->
-<div id="sidebar-overlay"
-    onclick="document.getElementById('mobile-sidebar').classList.add('-translate-x-full'); this.classList.add('hidden')"></div>
+<div id="sidebar-overlay" class="cs-sidebar-overlay"
+    onclick="document.getElementById('mobile-sidebar').classList.add('-translate-x-full'); this.classList.remove('show')">
+</div>

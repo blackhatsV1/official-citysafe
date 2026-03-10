@@ -12,158 +12,272 @@
       <%- include('../partials/admin-navbar'); %>
     </header>
 
-    <div>
+    <div class="cs-layout-container">
       <aside>
-        <%- include('../partials/admin-sidebar'); %>
+        <%- include('../partials/admin-sidebar', { currentPage: 'reports' }); %>
       </aside>
 
-      <main>
-        <div>
+      <main class="cs-main-content">
+        <div class="cs-container">
 
-          <h1>ANALYTICS & REPORTING</h1>
+          <!-- Page Header -->
+          <div style="margin-bottom: 3rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+              <span class="cs-badge"
+                style="background: var(--primary-glow); color: var(--primary); font-size: 0.7rem; font-weight: 900;">STRATEGIC
+                INTELLIGENCE</span>
+              <h1 class="cs-section-header" style="margin: 0; font-size: 2rem;">ANALYTICS & <span
+                  style="background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">REPORTING</span>
+              </h1>
+            </div>
+            <p style="color: var(--text-dim); font-size: 0.9rem; font-weight: 500;">Aggregated regional risk data,
+              system engagement metrics, and survival readiness stratification.</p>
+          </div>
 
-          <!-- Risk Tables -->
-          <div>
+          <!-- Risk Tables Grid -->
+          <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+
             <!-- High Risk -->
-            <div>
-              <div>
-                <h2>High Risk Profiles
-                </h2>
+            <div class="cs-card" style="padding: 0; overflow: hidden; border: 1px solid rgba(239, 68, 68, 0.2);">
+              <div
+                style="padding: 1.25rem 1.5rem; background: rgba(239, 68, 68, 0.05); border-bottom: 1px solid rgba(239, 68, 68, 0.1); display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <div class="cs-badge"
+                    style="background: rgba(239, 68, 68, 0.2); color: #f87171; min-width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                  </div>
+                  <h2 style="margin: 0; font-size: 0.9rem; font-weight: 800; color: #f87171; letter-spacing: 0.05rem;">
+                    HIGH RISK PROFILES</h2>
+                </div>
+                <span class="cs-badge" style="background: rgba(239, 68, 68, 0.1); color: #f87171; font-size: 0.65rem;">
+                  <%= riskTables['High'].length %> NODES
+                </span>
               </div>
-              <div>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Fullname</th>
-                      <th>Risk Score</th>
-                      <th>Assessed At</th>
+              <div style="max-height: 300px; overflow-y: auto;" class="cs-custom-scrollbar">
+                <table style="width: 100%; border-collapse: collapse;">
+                  <thead style="position: sticky; top: 0; background: var(--bg-card); z-index: 1;">
+                    <tr style="border-bottom: 1px solid var(--border-glass);">
+                      <th
+                        style="padding: 1rem 1.5rem; text-align: left; font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase;">
+                        SUBJECT</th>
+                      <th
+                        style="padding: 1rem 1.5rem; text-align: center; font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase;">
+                        SCORE</th>
+                      <th
+                        style="padding: 1rem 1.5rem; text-align: right; font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase;">
+                        TIMESTAMP</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <% riskTables['High'].forEach(user=> { %>
+                    <% if (riskTables['High'].length===0) { %>
                       <tr>
-                        <td>
-                          <%= user.username %>
-                        </td>
-                        <td>
-                          <%= user.risk_score %>
-                        </td>
-                        <td>
-                          <%= user.assessed_at.toLocaleString() %>
-                        </td>
+                        <td colspan="3"
+                          style="padding: 3rem; text-align: center; color: var(--text-dim); font-size: 0.8rem; font-style: italic;">
+                          No high risk nodes detected</td>
                       </tr>
-                      <% }) %>
+                      <% } else { %>
+                        <% riskTables['High'].forEach(user=> { %>
+                          <tr
+                            style="border-bottom: 1px solid rgba(255,255,255,0.03); transition: background 0.2s ease;">
+                            <td
+                              style="padding: 1rem 1.5rem; font-size: 0.85rem; color: var(--text-bright); font-weight: 600;">
+                              <%= user.username %>
+                            </td>
+                            <td style="padding: 1rem 1.5rem; text-align: center;"><span class="cs-badge"
+                                style="background: rgba(239, 68, 68, 0.1); color: #f87171; font-weight: 800;">
+                                <%= user.risk_score %>
+                              </span></td>
+                            <td
+                              style="padding: 1rem 1.5rem; text-align: right; font-size: 0.75rem; color: var(--text-dim); font-family: monospace;">
+                              <%= user.assessed_at.toLocaleDateString() %>
+                            </td>
+                          </tr>
+                          <% }) %>
+                            <% } %>
                   </tbody>
                 </table>
               </div>
             </div>
 
             <!-- Moderate Risk -->
-            <div>
-              <div>
-                <h2>Moderate
-                  Risk Profiles</h2>
+            <div class="cs-card" style="padding: 0; overflow: hidden; border: 1px solid rgba(245, 158, 11, 0.2);">
+              <div
+                style="padding: 1.25rem 1.5rem; background: rgba(245, 158, 11, 0.05); border-bottom: 1px solid rgba(245, 158, 11, 0.1); display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <div class="cs-badge"
+                    style="background: rgba(245, 158, 11, 0.2); color: #fbbf24; min-width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                  </div>
+                  <h2 style="margin: 0; font-size: 0.9rem; font-weight: 800; color: #fbbf24; letter-spacing: 0.05rem;">
+                    MODERATE RISK</h2>
+                </div>
+                <span class="cs-badge" style="background: rgba(245, 158, 11, 0.1); color: #fbbf24; font-size: 0.65rem;">
+                  <%= riskTables['Moderate'].length %> NODES
+                </span>
               </div>
-              <div>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Fullname</th>
-                      <th>Risk Score</th>
-                      <th>Assessed At</th>
+              <div style="max-height: 300px; overflow-y: auto;" class="cs-custom-scrollbar">
+                <table style="width: 100%; border-collapse: collapse;">
+                  <thead style="position: sticky; top: 0; background: var(--bg-card); z-index: 1;">
+                    <tr style="border-bottom: 1px solid var(--border-glass);">
+                      <th
+                        style="padding: 1rem 1.5rem; text-align: left; font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase;">
+                        SUBJECT</th>
+                      <th
+                        style="padding: 1rem 1.5rem; text-align: center; font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase;">
+                        SCORE</th>
+                      <th
+                        style="padding: 1rem 1.5rem; text-align: right; font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase;">
+                        TIMESTAMP</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <% riskTables['Moderate'].forEach(user=> { %>
+                    <% if (riskTables['Moderate'].length===0) { %>
                       <tr>
-                        <td>
-                          <%= user.username %>
-                        </td>
-                        <td>
-                          <%= user.risk_score %>
-                        </td>
-                        <td>
-                          <%= user.assessed_at.toLocaleString() %>
-                        </td>
+                        <td colspan="3"
+                          style="padding: 3rem; text-align: center; color: var(--text-dim); font-size: 0.8rem; font-style: italic;">
+                          No moderate risk nodes detected</td>
                       </tr>
-                      <% }) %>
+                      <% } else { %>
+                        <% riskTables['Moderate'].forEach(user=> { %>
+                          <tr
+                            style="border-bottom: 1px solid rgba(255,255,255,0.03); transition: background 0.2s ease;">
+                            <td
+                              style="padding: 1rem 1.5rem; font-size: 0.85rem; color: var(--text-bright); font-weight: 600;">
+                              <%= user.username %>
+                            </td>
+                            <td style="padding: 1rem 1.5rem; text-align: center;"><span class="cs-badge"
+                                style="background: rgba(245, 158, 11, 0.1); color: #fbbf24; font-weight: 800;">
+                                <%= user.risk_score %>
+                              </span></td>
+                            <td
+                              style="padding: 1rem 1.5rem; text-align: right; font-size: 0.75rem; color: var(--text-dim); font-family: monospace;">
+                              <%= user.assessed_at.toLocaleDateString() %>
+                            </td>
+                          </tr>
+                          <% }) %>
+                            <% } %>
                   </tbody>
                 </table>
               </div>
             </div>
 
             <!-- Low Risk -->
-            <div>
-              <div>
-                <h2>Low Risk
-                  Profiles</h2>
+            <div class="cs-card" style="padding: 0; overflow: hidden; border: 1px solid rgba(16, 185, 129, 0.2);">
+              <div
+                style="padding: 1.25rem 1.5rem; background: rgba(16, 185, 129, 0.05); border-bottom: 1px solid rgba(16, 185, 129, 0.1); display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <div class="cs-badge"
+                    style="background: rgba(16, 185, 129, 0.2); color: #34d399; min-width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                    <i class="fa-solid fa-circle-check"></i>
+                  </div>
+                  <h2 style="margin: 0; font-size: 0.9rem; font-weight: 800; color: #34d399; letter-spacing: 0.05rem;">
+                    LOW RISK PROFILES</h2>
+                </div>
+                <span class="cs-badge" style="background: rgba(16, 185, 129, 0.1); color: #34d399; font-size: 0.65rem;">
+                  <%= riskTables['Low'].length %> NODES
+                </span>
               </div>
-              <div>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Fullname</th>
-                      <th>Risk Score</th>
-                      <th>Assessed At</th>
+              <div style="max-height: 300px; overflow-y: auto;" class="cs-custom-scrollbar">
+                <table style="width: 100%; border-collapse: collapse;">
+                  <thead style="position: sticky; top: 0; background: var(--bg-card); z-index: 1;">
+                    <tr style="border-bottom: 1px solid var(--border-glass);">
+                      <th
+                        style="padding: 1rem 1.5rem; text-align: left; font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase;">
+                        SUBJECT</th>
+                      <th
+                        style="padding: 1rem 1.5rem; text-align: center; font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase;">
+                        SCORE</th>
+                      <th
+                        style="padding: 1rem 1.5rem; text-align: right; font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase;">
+                        TIMESTAMP</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <% riskTables['Low'].forEach(user=> { %>
+                    <% if (riskTables['Low'].length===0) { %>
                       <tr>
-                        <td>
-                          <%= user.username %>
-                        </td>
-                        <td>
-                          <%= user.risk_score %>
-                        </td>
-                        <td>
-                          <%= user.assessed_at.toLocaleString() %>
-                        </td>
+                        <td colspan="3"
+                          style="padding: 3rem; text-align: center; color: var(--text-dim); font-size: 0.8rem; font-style: italic;">
+                          No low risk nodes detected</td>
                       </tr>
-                      <% }) %>
+                      <% } else { %>
+                        <% riskTables['Low'].forEach(user=> { %>
+                          <tr
+                            style="border-bottom: 1px solid rgba(255,255,255,0.03); transition: background 0.2s ease;">
+                            <td
+                              style="padding: 1rem 1.5rem; font-size: 0.85rem; color: var(--text-bright); font-weight: 600;">
+                              <%= user.username %>
+                            </td>
+                            <td style="padding: 1rem 1.5rem; text-align: center;"><span class="cs-badge"
+                                style="background: rgba(16, 185, 129, 0.1); color: #34d399; font-weight: 800;">
+                                <%= user.risk_score %>
+                              </span></td>
+                            <td
+                              style="padding: 1rem 1.5rem; text-align: right; font-size: 0.75rem; color: var(--text-dim); font-family: monospace;">
+                              <%= user.assessed_at.toLocaleDateString() %>
+                            </td>
+                          </tr>
+                          <% }) %>
+                            <% } %>
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
 
-          <!-- Charts Array -->
-          <div>
-            <div>
-              <h2>Checklist
-                Completion</h2>
-              <div>
+          <!-- Charts Intelligence Grid -->
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem;">
+
+            <div class="cs-card" style="padding: 1.5rem;">
+              <h2
+                style="margin: 0 0 1.5rem 0; font-size: 0.85rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem; display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fa-solid fa-list-check" style="color: var(--primary);"></i> CHECKLIST COMPLETION
+              </h2>
+              <div style="height: 250px; position: relative;">
                 <canvas id="checklistChart"></canvas>
               </div>
             </div>
-            <div>
-              <h2>System
-                Engagement (Posts)</h2>
-              <div>
+
+            <div class="cs-card" style="padding: 1.5rem;">
+              <h2
+                style="margin: 0 0 1.5rem 0; font-size: 0.85rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem; display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fa-solid fa-chart-line" style="color: #ef4444;"></i> SYSTEM ENGAGEMENT
+              </h2>
+              <div style="height: 250px; position: relative;">
                 <canvas id="userChart"></canvas>
               </div>
             </div>
-            <div>
-              <h2>Risk
-                Stratification</h2>
-              <div>
+
+            <div class="cs-card" style="padding: 1.5rem;">
+              <h2
+                style="margin: 0 0 1.5rem 0; font-size: 0.85rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem; display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fa-solid fa-chart-pie" style="color: var(--accent);"></i> RISK STRATIFICATION
+              </h2>
+              <div style="height: 250px; position: relative;">
                 <canvas id="riskLevelChart"></canvas>
               </div>
             </div>
-            <div>
-              <h2>Risk Velocity
-                Trend</h2>
-              <div>
+
+            <div class="cs-card" style="padding: 1.5rem;">
+              <h2
+                style="margin: 0 0 1.5rem 0; font-size: 0.85rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem; display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fa-solid fa-bolt" style="color: #f59e0b;"></i> RISK VELOCITY TREND
+              </h2>
+              <div style="height: 250px; position: relative;">
                 <canvas id="trendChart"></canvas>
               </div>
             </div>
-            <div>
-              <h2>Environmental
-                Hazards</h2>
-              <div>
+
+            <div class="cs-card" style="padding: 1.5rem; grid-column: span 2;">
+              <h2
+                style="margin: 0 0 1.5rem 0; font-size: 0.85rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem; display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fa-solid fa-biohazard" style="color: var(--primary);"></i> ENVIRONMENTAL HAZARDS EXPOSURE
+              </h2>
+              <div style="height: 300px; position: relative;">
                 <canvas id="hazardsChart"></canvas>
               </div>
             </div>
+
           </div>
 
         </div>

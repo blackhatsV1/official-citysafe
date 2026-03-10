@@ -12,116 +12,144 @@
             <%- include('../partials/admin-navbar', { currentPage: 'add-responder' }); %>
         </header>
 
-        <div>
+        <div class="cs-layout-container">
             <aside>
                 <%- include('../partials/admin-sidebar', { currentPage: 'add-responder' }); %>
             </aside>
 
-            <main>
-                <div>
+            <main class="cs-main-content">
+                <div class="cs-container" style="max-width: 900px;">
 
-                    <div>
-                        <a href="/userslist"><i></i></a>
-                        <h1>ENLIST RESPONDER
-                        </h1>
-                    </div>
-
-                    <div>
+                    <!-- Form Header -->
+                    <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 3rem;">
+                        <a href="/userslist" class="cs-badge"
+                            style="width: 42px; height: 42px; background: rgba(255,255,255,0.05); color: var(--text-bright); text-decoration: none; display: flex; align-items: center; justify-content: center; font-size: 1.25rem;">
+                            <i class="fa-solid fa-arrow-left-long"></i>
+                        </a>
                         <div>
-                            <h2>
-                                Personnel Enlistment Form</h2>
-                        </div>
-
-                        <div>
-                            <form action="/addresponder" method="POST" id="addResponderForm">
-
-                                <div>
-                                    <h3>
-                                        Operative Identity</h3>
-                                    <div>
-                                        <div>
-                                            <label for="firstname">First
-                                                Name</label>
-                                            <input type="text" name="firstname" id="firstname"
-                                                placeholder="Enter first name" required>
-                                        </div>
-                                        <div>
-                                            <label for="lastname">Last
-                                                Name</label>
-                                            <input type="text" name="lastname" id="lastname"
-                                                placeholder="Enter last name" required>
-                                        </div>
-                                        <div>
-                                            <label for="email">Official
-                                                Email</label>
-                                            <input type="email" name="email" id="email"
-                                                placeholder="operative.name@citysafe.gov" required>
-                                        </div>
-                                        <div>
-                                            <label for="contact_number">Contact
-                                                Number</label>
-                                            <input type="number" name="contact_number" id="contact"
-                                                placeholder="09XXXXXXXXX" required>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <hr>
-
-                                <div>
-                                    <h3>
-                                        Security & Assignment</h3>
-                                    <div>
-                                        <div x-data="{ show: false }">
-                                            <label for="password">Access
-                                                Credentials</label>
-                                            <div>
-                                                <input :type="show ? 'text' : 'password'" name="password" id="password"
-                                                    placeholder="Secure passphrase" required>
-                                                <button type="button" @click="show = !show">
-                                                    <i x-show="!show"></i>
-                                                    <i x-show="show"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label for="station">Station
-                                                Assignment</label>
-                                            <select id="station" name="station_id" required>
-                                                <option value="" disabled selected>Identify assigned operational base...
-                                                </option>
-                                                <% stations.forEach(station=> { %>
-                                                    <option value="<%= station.id %>">
-                                                        <%= station.name %> (Sector: <%= station.type %>)
-                                                    </option>
-                                                    <% }) %>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Hidden Fields -->
-                                <input type="hidden" name="role" value="responder">
-                                <input type="hidden" name="street_address" value="Station Assigned">
-                                <input type="hidden" name="barangay" value="N/A">
-                                <input type="hidden" name="city" value="Iloilo City">
-                                <input type="hidden" name="province" value="Iloilo">
-                                <input type="hidden" name="postal_code" value="5000">
-                                <input type="hidden" name="country" value="Philippines">
-                                <input type="hidden" name="landmark" value="N/A">
-                                <input type="hidden" name="address_type" value="Work">
-                                <input type="hidden" name="additional_instructions" value="N/A">
-
-                                <div>
-                                    <button type="submit">
-                                        FINALIZE ENLISTMENT
-                                    </button>
-                                </div>
-
-                            </form>
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem;">
+                                <span class="cs-badge"
+                                    style="background: var(--accent-glow); color: var(--accent); font-size: 0.7rem; font-weight: 900;">SECURITY
+                                    CLEARANCE L2</span>
+                                <h1 class="cs-section-header" style="margin: 0; font-size: 1.75rem;">ENLIST <span
+                                        style="background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">OPERATIVE</span>
+                                </h1>
+                            </div>
+                            <p style="color: var(--text-dim); font-size: 0.85rem; font-weight: 500;">Onboarding new
+                                tactical personnel into regional response clusters.</p>
                         </div>
                     </div>
 
+                    <form action="/addresponder" method="POST" id="addResponderForm"
+                        style="display: flex; flex-direction: column; gap: 2.5rem;">
+
+                        <!-- Section: Operative Identity -->
+                        <div class="cs-card"
+                            style="padding: 0; overflow: hidden; border: 1px solid var(--border-glass);">
+                            <div
+                                style="padding: 1.25rem 2rem; border-bottom: 1px solid var(--border-glass); background: rgba(255,255,255,0.02); display: flex; align-items: center; gap: 1rem;">
+                                <div class="cs-badge" style="background: var(--accent-glow); color: var(--accent);"><i
+                                        class="fa-solid fa-user-ninja"></i></div>
+                                <h2 style="margin: 0; font-size: 1rem; font-weight: 800; color: var(--text-bright);">
+                                    OPERATIVE IDENTITY</h2>
+                            </div>
+                            <div style="padding: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                                <div>
+                                    <label for="firstname" class="cs-input-label"
+                                        style="display: block; margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">FIRST
+                                        NAME</label>
+                                    <input type="text" name="firstname" id="firstname" class="cs-input"
+                                        style="width: 100%;" placeholder="Enter first name" required>
+                                </div>
+                                <div>
+                                    <label for="lastname" class="cs-input-label"
+                                        style="display: block; margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">LAST
+                                        NAME</label>
+                                    <input type="text" name="lastname" id="lastname" class="cs-input"
+                                        style="width: 100%;" placeholder="Enter last name" required>
+                                </div>
+                                <div>
+                                    <label for="email" class="cs-input-label"
+                                        style="display: block; margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">OFFICIAL
+                                        COMMS</label>
+                                    <input type="email" name="email" id="email" class="cs-input" style="width: 100%;"
+                                        placeholder="operative.name@citysafe.gov" required>
+                                </div>
+                                <div>
+                                    <label for="contact_number" class="cs-input-label"
+                                        style="display: block; margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">CONTACT
+                                        LINE</label>
+                                    <input type="number" name="contact_number" id="contact" class="cs-input"
+                                        style="width: 100%;" placeholder="09XXXXXXXXX" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section: Security & Assignment -->
+                        <div class="cs-card"
+                            style="padding: 0; overflow: hidden; border: 1px solid var(--border-glass);">
+                            <div
+                                style="padding: 1.25rem 2rem; border-bottom: 1px solid var(--border-glass); background: rgba(255,255,255,0.02); display: flex; align-items: center; gap: 1rem;">
+                                <div class="cs-badge" style="background: var(--primary-glow); color: var(--primary);"><i
+                                        class="fa-solid fa-shield-halved"></i></div>
+                                <h2 style="margin: 0; font-size: 1rem; font-weight: 800; color: var(--text-bright);">
+                                    SECURITY & ASSIGNMENT</h2>
+                            </div>
+                            <div style="padding: 2rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                                <div x-data="{ show: false }">
+                                    <label for="password" class="cs-input-label"
+                                        style="display: block; margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">ACCESS
+                                        CREDENTIALS</label>
+                                    <div style="position: relative;">
+                                        <input :type="show ? 'text' : 'password'" name="password" id="password"
+                                            class="cs-input" style="width: 100%; padding-right: 3.5rem;"
+                                            placeholder="Initialize secure passphrase" required>
+                                        <button type="button" @click="show = !show"
+                                            style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 1.1rem;">
+                                            <i class="fa-solid" :class="show ? 'fa-eye-slash' : 'fa-eye'"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="station" class="cs-input-label"
+                                        style="display: block; margin-bottom: 0.75rem; font-size: 0.7rem; font-weight: 800; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">BASE
+                                        ASSIGNMENT</label>
+                                    <select id="station" name="station_id" class="cs-input"
+                                        style="width: 100%; cursor: pointer;" required>
+                                        <option value="" disabled selected>Identify assigned operational base...
+                                        </option>
+                                        <% stations.forEach(station=> { %>
+                                            <option value="<%= station.id %>">
+                                                <%= station.name %> (Sector: <%= station.type %>)
+                                            </option>
+                                            <% }) %>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Internal Registry Data (Hidden) -->
+                        <input type="hidden" name="role" value="responder">
+                        <input type="hidden" name="street_address" value="Station Assigned">
+                        <input type="hidden" name="barangay" value="N/A">
+                        <input type="hidden" name="city" value="Iloilo City">
+                        <input type="hidden" name="province" value="Iloilo">
+                        <input type="hidden" name="postal_code" value="5000">
+                        <input type="hidden" name="country" value="Philippines">
+                        <input type="hidden" name="landmark" value="N/A">
+                        <input type="hidden" name="address_type" value="Work">
+                        <input type="hidden" name="additional_instructions" value="N/A">
+
+                        <div style="display: flex; gap: 1.5rem; justify-content: flex-end; margin-top: 1rem;">
+                            <a href="/userslist" class="cs-btn cs-btn-secondary"
+                                style="text-decoration: none;">CANCEL</a>
+                            <button type="submit" class="cs-btn cs-btn-accent" style="padding: 1rem 3rem;">
+                                <i class="fa-solid fa-user-shield" style="margin-right: 0.75rem;"></i> FINALIZE
+                                ENLISTMENT
+                            </button>
+                        </div>
+
+                    </form>
                 </div>
             </main>
         </div>

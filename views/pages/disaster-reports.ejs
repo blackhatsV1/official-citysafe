@@ -12,189 +12,253 @@
             <%- include('../partials/admin-navbar', { currentPage: 'disaster-reports' }); %>
         </header>
 
-        <div>
+        <div class="cs-layout-container">
             <aside>
                 <%- include('../partials/admin-sidebar', { currentPage: 'disaster-reports' }); %>
             </aside>
 
-            <main>
+            <main class="cs-main-content">
+                <div class="cs-container">
 
-                <div>
-
-                    <div>
-                        <h1>
-                            Incident Management Ledger</h1>
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 2rem;">
                         <div>
-                            <span>
-                                <span></span>
-                                REAL-TIME SYNC
-                            </span>
-                            <div></div>
+                            <h1 class="cs-section-header" style="margin: 0; font-size: 2.5rem;">
+                                INCIDENT <span
+                                    style="background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">LEDGER</span>
+                            </h1>
+                            <p style="color: var(--text-dim); margin-top: 0.5rem; font-size: 1.1rem;">Comprehensive
+                                mission control for active and historical disaster protocols.</p>
+                        </div>
+                        <div class="cs-card"
+                            style="padding: 0.75rem 1.5rem; display: flex; align-items: center; gap: 1rem; background: rgba(0,0,0,0.2);">
+                            <div
+                                style="width: 10px; height: 10px; background: #10b981; border-radius: 50%; box-shadow: 0 0 10px #10b981; animation: pulse 2s infinite;">
+                            </div>
                             <span
-                                id="sync-timer">Last update: just now</span>
+                                style="font-size: 0.75rem; font-weight: 800; color: var(--text-bright); letter-spacing: 0.1rem;">REAL-TIME
+                                SYNC ACTIVE</span>
+                            <div style="width: 1px; height: 20px; background: var(--border-glass);"></div>
+                            <span id="sync-timer"
+                                style="font-size: 0.75rem; color: var(--text-dim); font-family: 'JetBrains Mono', monospace;">LAST
+                                SYNC: JUST NOW</span>
                         </div>
                     </div>
 
-                    <div>
-                        <div>
-                            <h2>Live
-                                Operations Feed</h2>
+                    <div class="cs-card" style="padding: 0; overflow: hidden; border: 1px solid var(--border-glass);">
+                        <div
+                            style="padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-glass); background: rgba(255,255,255,0.02); display: flex; align-items: center; gap: 1rem;">
+                            <div class="cs-badge" style="background: var(--primary-glow); color: var(--primary);"><i
+                                    class="fa-solid fa-list-check"></i></div>
+                            <h2 style="margin: 0; font-size: 1.1rem; font-weight: 700; color: var(--text-bright);">LIVE
+                                OPERATIONS FEED</h2>
                         </div>
 
-                        <div>
-                            <table>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; text-align: left;">
                                 <thead>
-                                    <tr>
-                                        <th>Mission Control</th>
-                                        <th>Personnel / Sender</th>
-                                        <th>Classification</th>
-                                        <th>Sector / Location</th>
-                                        <th>Comms Feed</th>
-                                        <th>Resolution</th>
-                                        <th>Timestamp</th>
+                                    <tr style="background: rgba(0,0,0,0.3);">
+                                        <th
+                                            style="padding: 1.25rem 2rem; font-size: 0.75rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05rem;">
+                                            MISSION CONTROL</th>
+                                        <th
+                                            style="padding: 1.25rem; font-size: 0.75rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05rem;">
+                                            PERSONNEL / SENDER</th>
+                                        <th
+                                            style="padding: 1.25rem; font-size: 0.75rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05rem;">
+                                            CLASSIFICATION</th>
+                                        <th
+                                            style="padding: 1.25rem; font-size: 0.75rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05rem;">
+                                            SECTOR / LOCATION</th>
+                                        <th
+                                            style="padding: 1.25rem; font-size: 0.75rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05rem;">
+                                            COMMS FEED</th>
+                                        <th
+                                            style="padding: 1.25rem; font-size: 0.75rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05rem;">
+                                            RESOLUTION</th>
+                                        <th
+                                            style="padding: 1.25rem 2rem; font-size: 0.75rem; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.05rem;">
+                                            TIMESTAMP</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <% reports.forEach(report=> { %>
-                                        <tr>
-                                            <td>
+                                        <tr style="border-bottom: 1px solid var(--border-glass); transition: background 0.2s ease;"
+                                            onmouseover="this.style.background='rgba(255,255,255,0.02)'"
+                                            onmouseout="this.style.background='transparent'">
+                                            <td style="padding: 1.5rem 2rem;">
                                                 <% if (report.status==='responding' ) { %>
-                                                    <div>
-                                                        <span>
-                                                            IN PROGRESS
+                                                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                                        <span
+                                                            style="font-size: 0.7rem; font-weight: 900; color: var(--warning); background: var(--warning-glow); padding: 0.4rem 0.8rem; border-radius: 2rem; display: flex; align-items: center; gap: 0.5rem; border: 1px solid var(--warning);">
+                                                            <i class="fa-solid fa-spinner fa-spin"></i> IN PROGRESS
                                                         </span>
                                                         <button onclick="cancelReportAdmin('<%= report.id %>')"
+                                                            style="background: none; border: 1px solid var(--danger); color: var(--danger); width: 28px; height: 28px; border-radius: 0.5rem; cursor: pointer; transition: all 0.2s ease;"
+                                                            onmouseover="this.style.background='var(--danger)'; this.style.color='white'"
+                                                            onmouseout="this.style.background='none'; this.style.color='var(--danger)'"
                                                             title="Abort Mission">
-                                                            <i></i>
+                                                            <i class="fa-solid fa-xmark"></i>
                                                         </button>
                                                     </div>
                                                     <% } else if (report.status==='resolved' ) { %>
-                                                        <span>
+                                                        <span
+                                                            style="font-size: 0.7rem; font-weight: 900; color: #10b981; background: rgba(16, 185, 129, 0.1); padding: 0.4rem 0.8rem; border-radius: 2rem; border: 1px solid #10b981;">
                                                             RESOLVED
                                                         </span>
                                                         <% } else if (report.status.includes('cancelled')) { %>
-                                                            <span>
+                                                            <span
+                                                                style="font-size: 0.7rem; font-weight: 900; color: var(--text-dim); background: rgba(255,255,255,0.05); padding: 0.4rem 0.8rem; border-radius: 2rem; border: 1px solid var(--border-glass);">
                                                                 CANCELLED
                                                             </span>
                                                             <% } else { %>
-                                                                <div>
+                                                                <div style="display: flex; gap: 0.5rem;">
                                                                     <button onclick="initiateDeploy(this)"
                                                                         data-id="<%= report.id %>"
                                                                         data-location="<%= report.location %>"
                                                                         data-lat="<%= report.latitude %>"
                                                                         data-lon="<%= report.longitude %>"
                                                                         data-type="<%= report.disaster_type %>"
-                                                                        data-date="<%= new Date(report.reported_at).toLocaleString() %>">
+                                                                        data-date="<%= new Date(report.reported_at).toLocaleString() %>"
+                                                                        style="background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 800; cursor: pointer; transition: transform 0.2s ease; box-shadow: 0 4px 12px var(--primary-glow);"
+                                                                        onmouseover="this.style.transform='scale(1.05)'"
+                                                                        onmouseout="this.style.transform='scale(1)'">
                                                                         DEPLOY
                                                                     </button>
                                                                     <button
-                                                                        onclick="cancelReportAdmin('<%= report.id %>')">
-                                                                        CANCEL
+                                                                        onclick="cancelReportAdmin('<%= report.id %>')"
+                                                                        style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-glass); color: var(--text-bright); padding: 0.5rem; border-radius: 0.5rem; cursor: pointer;"
+                                                                        onmouseover="this.style.background='rgba(239, 68, 68, 0.1)'; this.style.borderColor='var(--danger)'"
+                                                                        onmouseout="this.style.background='rgba(255,255,255,0.05)'; this.style.borderColor='var(--border-glass)'">
+                                                                        <i class="fa-solid fa-trash-can"></i>
                                                                     </button>
                                                                 </div>
                                                                 <% } %>
                                             </td>
 
-                                            <td>
-                                                <div>
-                                                    <span>
+                                            <td style="padding: 1.5rem 1.25rem;">
+                                                <div style="display: flex; flex-direction: column; gap: 0.25rem;">
+                                                    <span
+                                                        style="font-weight: 700; color: var(--text-bright); font-size: 0.9rem;">
                                                         <%= report.sender %>
                                                     </span>
-                                                    <% if (report.responder_name) { %>
-                                                        <span>
-                                                            <i></i>
+                                                    <span
+                                                        style="font-size: 0.75rem; color: var(--primary); display: flex; align-items: center; gap: 0.4rem;">
+                                                        <% if (report.responder_name) { %>
+                                                            <i class="fa-solid fa-user-shield"></i>
                                                             <%= report.responder_name %>
-                                                        </span>
-                                                        <% } else { %>
-                                                            <span>Unassigned</span>
-                                                            <% } %>
+                                                                <% } else { %>
+                                                                    <span
+                                                                        style="color: var(--text-dim);">Unassigned</span>
+                                                                    <% } %>
+                                                    </span>
                                                 </div>
                                             </td>
 
-                                            <td>
-                                                <% let
-                                                    badgeColors='bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
-                                                    ; let icon='fa-exclamation-circle' ; if
-                                                    (report.disaster_type==='Fire' ) {
-                                                    badgeColors='bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400'
-                                                    ; icon='fa-fire' ; } else if (report.disaster_type==='Flood' ) {
-                                                    badgeColors='bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400'
-                                                    ; icon='fa-water' ; } else if (report.disaster_type==='Earthquake' )
-                                                    {
-                                                    badgeColors='bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-400'
-                                                    ; icon='fa-house-crack' ; } else if
-                                                    (report.disaster_type==='Landslide' ) {
-                                                    badgeColors='bg-stone-100 text-stone-700 dark:bg-stone-900/40 dark:text-stone-400'
-                                                    ; icon='fa-mountain' ; } %>
-                                                    <span>
-                                                        <i></i>
-                                                        <%= report.disaster_type %>
-                                                    </span>
+                                            <td style="padding: 1.5rem 1.25rem;">
+                                                <% let color='var(--text-dim)' ; let bg='rgba(255,255,255,0.05)' ; let
+                                                    icon='fa-circle-exclamation' ; if (report.disaster_type==='Fire' ) {
+                                                    color='var(--danger)' ; bg='var(--danger-glow)' ; icon='fa-fire' ; }
+                                                    else if (report.disaster_type==='Flood' ) { color='var(--info)' ;
+                                                    bg='var(--info-glow)' ; icon='fa-droplet' ; } else if
+                                                    (report.disaster_type==='Earthquake' ) { color='var(--warning)' ;
+                                                    bg='var(--warning-glow)' ; icon='fa-house-crack' ; } else if
+                                                    (report.disaster_type==='Landslide' ) { color='var(--accent)' ;
+                                                    bg='var(--accent-glow)' ; icon='fa-mountain' ; } %>
+                                                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                                        <div class="cs-badge"
+                                                            style="width: 32px; height: 32px; font-size: 0.8rem; background: <%= bg %>; color: <%= color %>; border: 1px solid <%= color %>30;">
+                                                            <i class="fa-solid <%= icon %>"></i>
+                                                        </div>
+                                                        <span
+                                                            style="font-size: 0.85rem; font-weight: 700; color: var(--text-bright);">
+                                                            <%= report.disaster_type %>
+                                                        </span>
+                                                    </div>
                                             </td>
 
-                                            <td>
-                                                <div>
-                                                    <span
-                                                        id="loc-display-<%= report.id %>">
+                                            <td style="padding: 1.5rem 1.25rem;">
+                                                <div style="max-width: 200px;">
+                                                    <div id="loc-display-<%= report.id %>"
+                                                        style="font-size: 0.8rem; color: var(--text-dim); line-height: 1.4; word-break: break-word;">
                                                         <%= (report.latitude && report.longitude) ?
                                                             `${report.latitude.toFixed(4)},
                                                             ${report.longitude.toFixed(4)}` : (report.location || "N/A"
                                                             ) %>
-                                                    </span>
+                                                    </div>
                                                     <% if (report.latitude && report.longitude) { %>
                                                         <button
-                                                            onclick="fetchFormattedAddress(this, <%= report.latitude %>, <%= report.longitude %>, 'loc-display-<%= report.id %>'); return false;">
-                                                            Show Address
+                                                            onclick="fetchFormattedAddress(this, <%= report.latitude %>, <%= report.longitude %>, 'loc-display-<%= report.id %>'); return false;"
+                                                            style="background: none; border: none; color: var(--primary); font-size: 0.7rem; font-weight: 800; cursor: pointer; padding: 0.25rem 0; text-decoration: underline;">
+                                                            QUERY ADDRESS
                                                         </button>
                                                         <% } %>
                                                 </div>
                                             </td>
 
-                                            <td>
-                                                <div>
-                                                    <div>
-                                                        "<%= report.user_message || 'No civilian intel' %>"
+                                            <td style="padding: 1.5rem 1.25rem;">
+                                                <div
+                                                    style="display: flex; flex-direction: column; gap: 0.75rem; max-width: 250px;">
+                                                    <div
+                                                        style="background: rgba(255,255,250,0.03); border-left: 2px solid var(--primary); padding: 0.5rem 0.75rem; border-radius: 0 0.5rem 0.5rem 0;">
+                                                        <div
+                                                            style="font-size: 0.65rem; color: var(--primary); font-weight: 800; margin-bottom: 0.25rem;">
+                                                            CITIZEN INTEL</div>
+                                                        <div
+                                                            style="font-size: 0.8rem; color: var(--text-bright); font-style: italic;">
+                                                            "<%= report.user_message || 'N/A' %>"</div>
                                                     </div>
                                                     <% if(report.responder_name) { %>
-                                                        <div>
-                                                            "<%= report.responder_message || 'Awaiting update' %>"
+                                                        <div
+                                                            style="background: rgba(255,255,250,0.03); border-left: 2px solid var(--accent); padding: 0.5rem 0.75rem; border-radius: 0 0.5rem 0.5rem 0;">
+                                                            <div
+                                                                style="font-size: 0.65rem; color: var(--accent); font-weight: 800; margin-bottom: 0.25rem;">
+                                                                FIELD UPDATE</div>
+                                                            <div
+                                                                style="font-size: 0.8rem; color: var(--text-bright); font-style: italic;">
+                                                                "<%= report.responder_message || 'Awaiting update' %>"
+                                                            </div>
                                                         </div>
                                                         <% } %>
                                                 </div>
                                             </td>
 
-                                            <td>
+                                            <td style="padding: 1.5rem 1.25rem;">
                                                 <% if (report.status==='resolved' ) { %>
-                                                    <div>
-                                                        <% if (report.user_confirmed_at) { %>
-                                                            <div
-                                                                title="User Confirmed">
-                                                                <i></i>
+                                                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                                        <div style="display: flex; gap: 0.4rem;">
+                                                            <div class="cs-badge"
+                                                                style="width: 20px; height: 20px; font-size: 0.6rem; background: <%= report.user_confirmed_at ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255,255,255,0.05)' %>; color: <%= report.user_confirmed_at ? '#10b981' : 'var(--text-dim)' %>;"
+                                                                title="User Confirmation">
+                                                                <i class="fa-solid fa-user-check"></i>
                                                             </div>
-                                                            <% } %>
-                                                                <% if (report.responder_confirmed_at) { %>
-                                                                    <div
-                                                                        title="Responder Confirmed">
-                                                                        <i></i>
-                                                                    </div>
-                                                                    <% } %>
+                                                            <div class="cs-badge"
+                                                                style="width: 20px; height: 20px; font-size: 0.6rem; background: <%= report.responder_confirmed_at ? 'rgba(16, 185, 129, 0.2)' : 'rgba(255,255,255,0.05)' %>; color: <%= report.responder_confirmed_at ? '#10b981' : 'var(--text-dim)' %>;"
+                                                                title="Responder Confirmation">
+                                                                <i class="fa-solid fa-shield-check"></i>
+                                                            </div>
+                                                        </div>
+                                                        <span
+                                                            style="font-size: 0.8rem; color: var(--text-dim); line-height: 1.4;">
+                                                            <%= report.resolution_remarks || 'System Resolved' %>
+                                                        </span>
                                                     </div>
-                                                    <span>
-                                                        <%= report.resolution_remarks || 'System Resolved' %>
-                                                    </span>
                                                     <% } else { %>
-                                                        <span>Awaiting
-                                                            Resolution</span>
+                                                        <span
+                                                            style="font-size: 0.8rem; color: var(--text-dim); opacity: 0.6;">AWAITING
+                                                            DATA</span>
                                                         <% } %>
                                             </td>
 
-                                            <td>
-                                                <div>
-                                                    <span>
+                                            <td style="padding: 1.5rem 2rem;">
+                                                <div
+                                                    style="display: flex; flex-direction: column; gap: 0.25rem; font-family: 'JetBrains Mono', monospace;">
+                                                    <span
+                                                        style="font-size: 0.85rem; font-weight: 700; color: var(--text-bright);">
                                                         <%= new Date(report.reported_at).toLocaleTimeString([],
                                                             {hour: '2-digit' , minute:'2-digit'}) %>
                                                     </span>
-                                                    <span>
+                                                    <span style="font-size: 0.7rem; color: var(--text-dim);">
                                                         <%= new Date(report.reported_at).toLocaleDateString() %>
                                                     </span>
                                                 </div>
@@ -205,20 +269,25 @@
                             </table>
 
                             <% if(reports.length===0) { %>
-                                <div>
-                                    <div>
-                                        <i></i>
+                                <div style="padding: 5rem 2rem; text-align: center; color: var(--text-dim);">
+                                    <div class="cs-badge"
+                                        style="width: 64px; height: 64px; font-size: 2rem; margin: 0 auto 1.5rem; background: rgba(255,255,255,0.02); color: var(--text-dim); border-style: dashed;">
+                                        <i class="fa-solid fa-box-open"></i>
                                     </div>
-                                    <h3>No Active Incidents
-                                    </h3>
-                                    <p>There are no reports in the
-                                        ledger currently.</p>
+                                    <h3
+                                        style="margin: 0; font-size: 1.25rem; font-weight: 700; color: var(--text-bright);">
+                                        NO ACTIVE INCIDENTS</h3>
+                                    <p style="margin-top: 0.5rem;">There are no reports in the ledger currently. All
+                                        sectors clear.</p>
                                 </div>
                                 <% } %>
                         </div>
                     </div>
+
                 </div>
             </main>
+        </div>
+        </main>
         </div>
 
         <%- include('../partials/footer'); %>

@@ -3,98 +3,167 @@
 
 <head>
     <%- include('../partials/head'); %>
-        
+
         <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.min.js"></script>
-        
+
 </head>
 
 <body>
     <%- include('../partials/page-start'); %>
 
-        <header>
-            <%- include('../partials/responder-navbar', { currentPage: 'responder' }); %>
-        </header>
-
-        <div>
+        <div class="cs-layout-container">
             <aside>
                 <%- include('../partials/responder-sidebar', { currentPage: 'responder' }); %>
             </aside>
 
-            <main>
-                <div>
+            <main class="cs-main-content">
+                <div class="cs-container">
 
-                    <div>
-                        <h1>
-                            <div>
-                                <i></i>
-                            </div>
-                            Field Operations
-                        </h1>
+                    <!-- Operational Header -->
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 1.5rem;">
                         <div>
-                            <div></div> LIVE SYSTEM ACTIVE
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                                <span class="cs-badge"
+                                    style="background: var(--primary-glow); color: var(--primary); font-size: 0.7rem; font-weight: 900;">UNIT
+                                    STATUS: READY</span>
+                                <h1 class="cs-section-header" style="margin: 0; font-size: 2rem;">FIELD <span
+                                        style="background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">OPERATIONS</span>
+                                </h1>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 1rem;">
+                                <span class="cs-badge"
+                                    style="background: rgba(16, 185, 129, 0.1); color: #34d399; font-weight: 800; display: flex; align-items: center; gap: 0.5rem;">
+                                    <span style="width: 8px; height: 8px; background: #34d399; border-radius: 50%;"
+                                        class="fa-fade"></span>
+                                    G-GRID SYNC ACTIVE
+                                </span>
+                                <span
+                                    style="color: var(--text-dim); font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05rem;">Sector
+                                    7 Intelligence Feed</span>
+                            </div>
+                        </div>
+
+                        <div class="cs-card"
+                            style="padding: 1rem 1.5rem; border-left: 4px solid var(--accent); display: flex; align-items: center; gap: 1.5rem;">
+                            <div>
+                                <div
+                                    style="font-size: 0.65rem; color: var(--text-dim); font-weight: 800; text-transform: uppercase; margin-bottom: 0.5rem;">
+                                    Network Sat-Link</div>
+                                <div style="display: flex; gap: 3px; align-items: flex-end; height: 18px;">
+                                    <div
+                                        style="height: 40%; width: 4px; background: var(--accent); border-radius: 2px;">
+                                    </div>
+                                    <div
+                                        style="height: 60%; width: 4px; background: var(--accent); border-radius: 2px;">
+                                    </div>
+                                    <div
+                                        style="height: 80%; width: 4px; background: var(--accent); border-radius: 2px;">
+                                    </div>
+                                    <div
+                                        style="height: 100%; width: 4px; background: var(--accent); border-radius: 2px; box-shadow: 0 0 10px var(--accent);">
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="width: 1px; height: 30px; background: var(--border-glass);"></div>
+                            <div style="text-align: right;">
+                                <div
+                                    style="font-size: 0.65rem; color: var(--text-dim); font-weight: 800; text-transform: uppercase;">
+                                    Response Radius</div>
+                                <div style="font-size: 1.1rem; font-weight: 900; color: var(--text-bright);">2.0 <span
+                                        style="font-size: 0.7rem; color: var(--text-dim);">KM</span></div>
+                            </div>
                         </div>
                     </div>
 
-                    <div>
+                    <!-- Intelligence Grid -->
+                    <div style="display: grid; grid-template-columns: 1.6fr 1fr; gap: 2rem; align-items: start;">
 
-                        <!-- Map Component -->
-                        <div>
-                            <div>
-                                <h4>
-                                    <i></i> Operations Grid
-                                </h4>
-                            </div>
-                            <div>
-                                <div id="map">
+                        <!-- Map Asset -->
+                        <div class="cs-card"
+                            style="padding: 0; overflow: hidden; border: 1px solid var(--border-glass);">
+                            <div
+                                style="padding: 1rem 1.5rem; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border-glass); display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <div class="cs-badge"
+                                        style="background: var(--primary-glow); color: var(--primary);"><i
+                                            class="fa-solid fa-map-location-dot"></i></div>
+                                    <h2
+                                        style="margin: 0; font-size: 0.9rem; font-weight: 800; color: var(--text-bright); letter-spacing: 0.05rem;">
+                                        GEOSPATIAL COMMAND</h2>
                                 </div>
+                                <div id="locationStatus"
+                                    style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--primary); font-weight: 700;">
+                                    INITIALIZING SAT-COMMS...</div>
+                            </div>
+                            <div style="position: relative; height: 600px;">
+                                <div id="map" style="height: 100%; z-index: 1;"></div>
 
-                                <!-- GPS Status Overlay -->
-                                <div>
-                                    <div>
-                                        <i></i>
-                                        <span id="locationStatus">Initializing
-                                            GPS...</span>
-                                    </div>
-                                    <div>
-                                        <div></div>
+                                <!-- Map UI Overlays -->
+                                <div
+                                    style="position: absolute; bottom: 20px; left: 20px; z-index: 1000; pointer-events: none;">
+                                    <div class="cs-card"
+                                        style="padding: 0.75rem 1.25rem; background: rgba(13, 17, 23, 0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 1rem;">
+                                        <div style="position: relative; width: 12px; height: 12px;">
+                                            <div style="position: absolute; width:100%; height:100%; background: var(--secondary); border-radius:50%; opacity: 0.3;"
+                                                class="fa-ping"></div>
+                                            <div
+                                                style="position: absolute; width:100%; height:100%; background: var(--secondary); border-radius:50%; box-shadow: 0 0 10px var(--secondary);">
+                                            </div>
+                                        </div>
+                                        <span
+                                            style="font-size: 0.75rem; font-weight: 800; color: var(--text-bright); text-transform: uppercase;">Unit
+                                            Position Beacon</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Local Deployments Table -->
-                        <div
-                            id="nearby-reports">
-                            <div>
-                                <h4>
-                                    <i></i> Local Deployments
-                                </h4>
-                                <div>
-                                    2KM Radius Active
+                        <!-- Operations Feed -->
+                        <div class="cs-card"
+                            style="padding: 0; overflow: hidden; border: 1px solid var(--border-glass); display: flex; flex-direction: column;">
+                            <div
+                                style="padding: 1rem 1.5rem; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border-glass); display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <div class="cs-badge" style="background: var(--accent-glow); color: var(--accent);">
+                                        <i class="fa-solid fa-radar"></i></div>
+                                    <h2
+                                        style="margin: 0; font-size: 0.9rem; font-weight: 800; color: var(--text-bright); letter-spacing: 0.05rem;">
+                                        LOCAL DEPLOYMENTS</h2>
                                 </div>
+                                <span class="cs-badge"
+                                    style="background: rgba(255,255,255,0.05); color: var(--text-dim); font-size: 0.65rem;">REAL-TIME
+                                    SYNC</span>
                             </div>
-                            <div>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>
-                                                Timestamp</th>
-                                            <th>
-                                                Reported By</th>
-                                            <th>
-                                                Classification</th>
-                                            <th>
-                                                Operational Address</th>
-                                            <th>
-                                                Action</th>
+
+                            <div class="cs-custom-scrollbar" style="max-height: 550px; overflow-y: auto;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <thead style="position: sticky; top: 0; background: var(--bg-card); z-index: 2;">
+                                        <tr style="border-bottom: 1px solid var(--border-glass);">
+                                            <th
+                                                style="padding: 1rem; text-align: left; font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">
+                                                INCIDENT / REPORTER</th>
+                                            <th
+                                                style="padding: 1rem; text-align: center; font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">
+                                                SECTOR</th>
+                                            <th
+                                                style="padding: 1rem; text-align: right; font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.05rem;">
+                                                ACTION</th>
                                         </tr>
                                     </thead>
                                     <tbody id="reportsTableBody">
                                         <tr>
-                                            <td colspan="5">
-                                                <i></i>
-                                                <p>Scanning
-                                                    operational sectors for reported incidents...</p>
+                                            <td colspan="3" style="padding: 5rem 2rem; text-align: center;">
+                                                <div
+                                                    style="position: relative; display: inline-block; margin-bottom: 1.5rem;">
+                                                    <div style="position: absolute; width: 60px; height: 60px; border: 2px solid var(--accent); border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.2;"
+                                                        class="fa-pulse"></div>
+                                                    <i class="fa-solid fa-satellite-dish fa-3x"
+                                                        style="color: var(--text-dim); position: relative; z-index: 1;"></i>
+                                                </div>
+                                                <p
+                                                    style="color: var(--text-dim); font-size: 0.85rem; font-weight: 500;">
+                                                    Scanning local frequencies for active distress signals...</p>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -110,22 +179,25 @@
 
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <script>
-            // Use glassmorphism theme for SweetAlert
+            // Enhanced glassmorphism theme for SweetAlert
             const GlassSwal = Swal.mixin({
+                background: 'rgba(13, 17, 23, 0.95)',
+                color: '#f3f4f6',
+                backdrop: 'rgba(0,0,0,0.6)',
                 customClass: {
-                    popup: 'glass-swal',
-                    confirmButton: 'rounded-lg px-4 py-2 font-bold uppercase tracking-widest text-xs shadow-md shadow-emerald-500/20',
-                    cancelButton: 'rounded-lg px-4 py-2 font-bold uppercase tracking-widest text-xs'
+                    popup: 'cs-card',
+                    confirmButton: 'cs-btn cs-btn-accent',
+                    cancelButton: 'cs-btn cs-btn-secondary'
                 },
-                background: document.documentElement.classList.contains('dark') ? 'rgba(17, 24, 39, 0.9)' : 'rgba(255, 255, 255, 0.9)',
-                color: document.documentElement.classList.contains('dark') ? '#f3f4f6' : '#111827'
+                buttonsStyling: false
             });
 
             const map = L.map('map', { zoomControl: false }).setView([10.7202, 122.5621], 13);
-            L.control.zoom({ position: 'bottomright' }).addTo(map);
+            L.control.zoom({ position: 'topright' }).addTo(map);
 
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                attribution: '&copy; OpenStreetMap | Carto'
+            // Tactical Map Tile Layer
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; CitySafe Command'
             }).addTo(map);
 
             let userLocation = null;
@@ -135,10 +207,11 @@
             const addressCache = {};
 
             const icons = {
-                'default': L.icon({
-                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                    iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+                'default': L.divIcon({
+                    className: 'custom-div-icon',
+                    html: '<div style="background-color: #ef4444; width: 12px; height: 12px; border: 2px solid white; border-radius: 50%; box-shadow: 0 0 10px #ef4444;"></div>',
+                    iconSize: [12, 12],
+                    iconAnchor: [6, 6]
                 })
             };
 
@@ -151,27 +224,21 @@
 
                 const date = new Date(report.reported_at).toLocaleString();
                 const popupContent = `
-                <div>
-                    <div>
-                        ${report.disaster_type}
-                    </div>
-                    <p>
-                        <span>Status:</span> <span>${report.status.toUpperCase()}</span>
-                    </p>
-                    <p>
-                        <span>Logged:</span> <span>${date}</span>
-                    </p>
-                    
-                    <div id="addr-${report.id}">
-                        <i></i> Resolving address...
-                    </div>
-                    
-                    <button onclick="respondToReport(${report.id}, '${report.disaster_type}')">
-                        DEPLOY NOW
-                    </button>
-                </div>
-            `;
-                marker.bindPopup(popupContent, { className: 'glass-popup' });
+          <div class="cs-card" style="min-width: 220px; padding: 1rem; border: none; background: none; box-shadow: none;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
+               <div class="cs-badge" style="background: rgba(239, 68, 68, 0.2); color: #f87171;"><i class="fa-solid fa-triangle-exclamation"></i></div>
+               <h3 style="margin: 0; font-size: 0.9rem; font-weight: 800; color: #f87171;">${report.disaster_type.toUpperCase()}</h3>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem;">
+               <div style="font-size: 0.65rem; color: var(--text-dim);">STATUS: <span style="color: var(--warning); font-weight: 800;">PENDING RESPONSE</span></div>
+               <div style="font-size: 0.65rem; color: var(--text-dim);">SECTOR: <span id="addr-${report.id}" style="color: var(--text-bright); font-weight: 600;">Resolving...</span></div>
+            </div>
+            <button onclick="respondToReport(${report.id}, '${report.disaster_type}')" class="cs-btn cs-btn-primary" style="width: 100%; font-size: 0.7rem; padding: 0.75rem;">
+               ESTABLISH DEPLOYMENT
+            </button>
+          </div>
+        `;
+                marker.bindPopup(popupContent, { className: 'cs-card', maxWidth: 300 });
 
                 marker.on('popupopen', () => {
                     const el = document.getElementById(`addr-${report.id}`);
@@ -183,7 +250,7 @@
                         fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${report.latitude}&lon=${report.longitude}`)
                             .then(r => r.json())
                             .then(d => {
-                                const addr = d.display_name || "Unknown Coordinates";
+                                const addr = d.display_name ? d.display_name.split(',')[0] + ', ' + (d.display_name.split(',')[1] || '') : "Sector Unknown";
                                 addressCache[report.id] = addr;
                                 if (el) el.innerText = addr;
                                 const tableAddr = document.getElementById(`table-addr-${report.id}`);
@@ -204,14 +271,12 @@
 
             window.respondToReport = function (id, type) {
                 GlassSwal.fire({
-                    title: '<span>Deploy Mission?</span>',
-                    html: `<span>Confirm operational deployment to recorded <b>${type}</b> incident?</span>`,
-                    icon: 'warning',
-                    iconColor: '#10b981',
+                    title: 'DEPLOY MISSION',
+                    text: `Are you ready to initiate tactical response for ${type}?`,
+                    icon: 'shield',
                     showCancelButton: true,
-                    confirmButtonColor: '#10b981',
-                    cancelButtonColor: '#6b7280',
-                    confirmButtonText: 'CONFIRM DEPLOY'
+                    confirmButtonText: 'ENGAGE DEPLOYMENT',
+                    cancelButtonText: 'STAND DOWN'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         fetch('/api/respond', {
@@ -224,12 +289,13 @@
                                 if (data.success) {
                                     GlassSwal.fire({
                                         icon: 'success',
-                                        title: '<span>ACCEPTED</span>',
+                                        title: 'DEPLOYMENT CONFIRMED',
+                                        text: 'Routing payload established.',
                                         showConfirmButton: false,
                                         timer: 1500
                                     }).then(() => window.location.href = '/responding');
                                 } else {
-                                    GlassSwal.fire('Error', data.message || data.error, 'error');
+                                    GlassSwal.fire('COMMAND ERROR', data.message || data.error, 'error');
                                 }
                             });
                     }
@@ -250,7 +316,7 @@
                         });
                         updateNearbyTable(newReports);
                     })
-                    .catch(err => console.error("Polling error:", err));
+                    .catch(err => console.error("Sat-Link error:", err));
             }
 
             function updateNearbyTable(reportsList) {
@@ -259,49 +325,39 @@
                 let rows = '';
                 let hasNearby = false;
 
-                reportsList.forEach(report => {
+                reportsList.sort((a, b) => new Date(b.reported_at) - new Date(a.reported_at)).forEach(report => {
                     if (!report.latitude || !report.longitude) return;
                     const dist = getDistanceFromLatLonInKm(userLocation.lat, userLocation.lon, report.latitude, report.longitude);
 
                     if (dist <= 2) {
                         hasNearby = true;
-                        const dateStr = new Date(report.reported_at).toLocaleString();
-                        const reporterName = (report.firstname && report.lastname) ? `${report.firstname} ${report.lastname}` : 'Anonymous Citizen';
-                        const addr = addressCache[report.id] || "Pending Geocode...";
+                        const reporterName = (report.firstname && report.lastname) ? `${report.firstname} ${report.lastname}` : 'Anonymous Node';
+                        const addr = addressCache[report.id] || "Calculating...";
 
                         rows += `
-                    <tr>
-                        <td>${dateStr}</td>
-                        <td>
-                            <div>
-                                <div>
-                                    <i></i>
-                                </div>
-                                <span>${reporterName}</span>
-                            </div>
-                        </td>
-                        <td>
-                            <span>
-                                ${report.disaster_type}
-                            </span>
-                        </td>
-                        <td>
-                            <span id="table-addr-${report.id}">
-                                ${addr}
-                            </span>
-                        </td>
-                        <td>
-                            <button onclick="respondToReport(${report.id}, '${report.disaster_type}')">
-                                DEPLOY
-                            </button>
-                        </td>
-                    </tr>
-                `;
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.03); transition: background 0.2s ease;">
+                <td style="padding: 1.25rem 1rem;">
+                  <div style="font-size: 0.9rem; font-weight: 800; color: #f87171; margin-bottom: 0.25rem;">${report.disaster_type}</div>
+                  <div style="font-size: 0.75rem; color: var(--text-dim); display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fa-solid fa-user" style="font-size: 0.6rem;"></i> ${reporterName}
+                  </div>
+                </td>
+                <td style="padding: 1.25rem 1rem; text-align: center;">
+                  <div id="table-addr-${report.id}" style="font-size: 0.75rem; color: var(--text-bright); font-weight: 600;">${addr}</div>
+                  <div style="font-size: 0.65rem; color: var(--text-dim); font-family: monospace; margin-top: 0.25rem;">DIST: ${dist.toFixed(2)}KM</div>
+                </td>
+                <td style="padding: 1.25rem 1rem; text-align: right;">
+                  <button onclick="respondToReport(${report.id}, '${report.disaster_type}')" class="cs-btn cs-btn-accent" style="font-size: 0.7rem; padding: 0.5rem 1.25rem;">
+                    RESPOND
+                  </button>
+                </td>
+              </tr>
+            `;
                     }
                 });
 
                 if (!hasNearby) {
-                    rows = '<tr><td colspan="5">No active incidents detected in your immediate sector.</td></tr>';
+                    rows = '<tr><td colspan="3" style="padding: 5rem 2rem; text-align: center; color: var(--text-dim); font-size: 0.85rem; font-style: italic;">No active localized threats detected.</td></tr>';
                 }
                 tbody.innerHTML = rows;
             }
@@ -309,18 +365,16 @@
             if (navigator.geolocation) {
                 navigator.geolocation.watchPosition(pos => {
                     userLocation = { lat: pos.coords.latitude, lon: pos.coords.longitude };
-                    document.getElementById('locationStatus').innerText = `LAT: ${userLocation.lat.toFixed(4)} | LNG: ${userLocation.lon.toFixed(4)}`;
+                    document.getElementById('locationStatus').innerText = `SAT: ${userLocation.lat.toFixed(4)}, ${userLocation.lon.toFixed(4)}`;
 
                     const responderIcon = L.divIcon({
                         className: 'bg-transparent',
                         html: `
-                        <div>
-                            <span></span>
-                            <span>
-                                <i></i>
-                            </span>
-                        </div>
-                    `,
+              <div style="position: relative; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                <div style="position: absolute; width: 100%; height: 100%; background: var(--secondary); border-radius: 50%; opacity: 0.2;" class="fa-ping"></div>
+                <div style="position: relative; width: 12px; height: 12px; background: var(--secondary); border: 2px solid white; border-radius: 50%; box-shadow: 0 0 15px var(--secondary);"></div>
+              </div>
+            `,
                         iconSize: [32, 32], iconAnchor: [16, 16]
                     });
 
@@ -328,9 +382,9 @@
                         userMarker.setLatLng([userLocation.lat, userLocation.lon]);
                         userCircle.setLatLng([userLocation.lat, userLocation.lon]);
                     } else {
-                        userMarker = L.marker([userLocation.lat, userLocation.lon], { icon: responderIcon }).addTo(map).bindPopup("<b>Your Unit Position</b>", { className: 'glass-popup' }).openPopup();
+                        userMarker = L.marker([userLocation.lat, userLocation.lon], { icon: responderIcon }).addTo(map).bindPopup("<b>Unit Position Verified</b>", { className: 'cs-card' });
                         userCircle = L.circle([userLocation.lat, userLocation.lon], {
-                            color: '#3b82f6', weight: 1, fillColor: '#3b82f6', fillOpacity: 0.05, radius: 2000
+                            color: 'var(--secondary)', weight: 1, fillColor: 'var(--secondary)', fillOpacity: 0.05, radius: 2000
                         }).addTo(map);
                     }
 

@@ -12,185 +12,166 @@
             <%- include('../partials/user-navbar', { currentPage: 'help' }); %>
         </header>
 
-        <div>
+        <div class="cs-layout-container">
             <aside>
                 <%- include('../partials/user-sidebar', { currentPage: 'help' }); %>
             </aside>
 
-            <main>
-                <div>
+            <main class="cs-main-content">
+                <div class="cs-container" style="max-width: 1000px;">
 
-                    <div>
-                        <div>
-                            <i></i>
+                    <!-- Header -->
+                    <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 3.5rem;">
+                        <div class="cs-badge"
+                            style="width: 60px; height: 60px; font-size: 1.5rem; background: var(--accent-glow); color: var(--accent); border: 1px solid var(--accent-glow); box-shadow: 0 0 20px var(--accent-glow);">
+                            <i class="fa-solid fa-hands-helping"></i>
                         </div>
-                        <h1>Help &
-                            Support</h1>
+                        <div>
+                            <span class="cs-badge"
+                                style="background: var(--accent-glow); color: var(--accent); font-size: 0.7rem; font-weight: 900; margin-bottom: 0.5rem;">SUPPORT
+                                PROTOCOL</span>
+                            <h1 class="cs-section-header" style="margin: 0; font-size: 2.5rem;">HELP & <span
+                                    style="background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">SUPPORT</span>
+                            </h1>
+                        </div>
                     </div>
 
-                    <div>
+                    <div class="cs-grid cs-grid-3" style="align-items: start; gap: 2rem;">
 
                         <!-- FAQ Section -->
-                        <div>
-                            <div>
-                                <!-- Background abstract shape -->
-                                <div>
-                                </div>
+                        <div class="cs-card"
+                            style="grid-column: span 2; padding: 2.5rem; border: 1px solid var(--border-glass);">
+                            <div
+                                style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 1.25rem;">
+                                <div class="cs-badge" style="background: var(--primary-glow); color: var(--primary);"><i
+                                        class="fa-solid fa-clipboard-question"></i></div>
+                                <h4
+                                    style="margin: 0; font-size: 1rem; font-weight: 800; color: var(--text-bright); text-transform: uppercase; letter-spacing: 0.05rem;">
+                                    Frequency Asked Intelligence</h4>
+                            </div>
 
-                                <div>
-                                    <p>
-                                        If you are experiencing any issues or have any questions, we are here to help!
-                                        Below are some commonly asked questions and their comprehensive answers.
-                                    </p>
+                            <div x-data="{ activeAccordion: 0 }">
+                                <% const faqs=[ { q: "How do I initiate a priority SOS?" ,
+                                    a: "Execute the 'Direct Uplink' or 'One-Tap SOS' button from your terminal dashboard. This broadcasts an encrypted distress signal to all active response units within your sector immediately."
+                                    }, { q: "Can I monitor response unit trajectory?" ,
+                                    a: "Yes. Once a responder accepts your uplink, a live tactical map will initialize showing their current GPS coordinates and estimated time of arrival (ETA) at your location."
+                                    }, { q: "How are Safe Zones identified?" ,
+                                    a: "Consult the 'Grid Infrastructure' map. Designated safe zones, medical stations, and police precincts are highlighted with priority markers and real-time status indicators."
+                                    }, { q: "What is the Resilience Matrix?" ,
+                                    a: "The Resilience Matrix (Community Risk Assessment) uses historical and real-time data to calculate potential hazard levels in your sector, providing preemptive survival guidance."
+                                    } ]; %>
 
-                                    <div x-data="{ activeAccordion: null }">
-                                        <% const faqs=[ { q: "How do I report an emergency?" ,
-                                            a: "Use the 'One-Tap SOS Reporting' feature to quickly send a distress signal to our team. We will respond as soon as possible to assist you."
-                                            }, { q: "How can I track my report status?" ,
-                                            a: "Go to 'My Reports' to view the status of your reported incidents and see if a responder has been assigned to your location."
-                                            }, { q: "How do I find nearby safe zones?" ,
-                                            a: "Visit the 'Nearby Stations' page to view a map of police stations, fire stations, and hospitals near you for quick navigation."
-                                            }, { q: "How do I check the weather?" ,
-                                            a: "The 'Weather' page provides real-time updates on local weather conditions to help you stay prepared for any potential hazards."
-                                            }, { q: "What is the Community Risk Assessment Tool?" ,
-                                            a: "This tool helps assess disaster risks in your area, providing important data on natural disasters and preparedness."
-                                            } ]; %>
+                                    <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                        <% faqs.forEach((faq, index)=> { %>
+                                            <div
+                                                style="border: 1px solid var(--border-glass); border-radius: 0.75rem; overflow: hidden; background: rgba(255,255,255,0.01); transition: all 0.3s ease;">
+                                                <button
+                                                    @click="activeAccordion = activeAccordion === <%= index %> ? null : <%= index %>"
+                                                    style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; background: none; border: none; cursor: pointer; color: var(--text-bright); text-align: left;">
+                                                    <span
+                                                        style="font-size: 0.95rem; font-weight: 700; line-height: 1.4;">
+                                                        <%= faq.q %>
+                                                    </span>
+                                                    <i class="fa-solid fa-chevron-down"
+                                                        :style="{ transform: activeAccordion === <%= index %> ? 'rotate(180deg)' : 'rotate(0)' }"
+                                                        style="font-size: 0.8rem; color: var(--primary); transition: transform 0.3s ease;"></i>
+                                                </button>
 
-                                            <% faqs.forEach((faq, index)=> { %>
-                                                <div
-                                                    :>
-                                                    <button
-                                                        @click="activeAccordion = activeAccordion === <%= index %> ? null : <%= index %>">
-                                                        <h3>
-                                                            <%= faq.q %>
-                                                        </h3>
-                                                        <div
-                                                            :>
-                                                            <i></i>
-                                                        </div>
-                                                    </button>
-                                                    <div x-show="activeAccordion === <%= index %>" x-collapse x-cloak>
-                                                        <div>
-                                                            <%= faq.a %>
-                                                        </div>
+                                                <div x-show="activeAccordion === <%= index %>" x-collapse x-cloak>
+                                                    <div
+                                                        style="padding: 0 1.5rem 1.5rem; color: var(--text-dim); font-size: 0.9rem; line-height: 1.6; border-top: 1px solid rgba(255,255,255,0.03); padding-top: 1rem;">
+                                                        <%= faq.a %>
                                                     </div>
                                                 </div>
-                                                <% }) %>
+                                            </div>
+                                            <% }) %>
+                                    </div>
+                            </div>
+                        </div>
+
+                        <!-- Support Panel -->
+                        <div style="display: flex; flex-direction: column; gap: 2rem;">
+
+                            <!-- Direct Uplinks -->
+                            <div class="cs-card" style="padding: 2rem; border: 1px solid var(--border-glass);">
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                                    <div class="cs-badge"
+                                        style="background: var(--secondary-glow); color: var(--secondary);"><i
+                                            class="fa-solid fa-headset"></i></div>
+                                    <h4
+                                        style="margin: 0; font-size: 0.9rem; font-weight: 800; color: var(--text-bright); text-transform: uppercase;">
+                                        Direct Channels</h4>
+                                </div>
+
+                                <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                        <div class="cs-badge"
+                                            style="width: 36px; height: 36px; background: rgba(255,255,255,0.03); color: var(--primary); font-size: 0.9rem;">
+                                            <i class="fa-solid fa-envelope-open-text"></i>
+                                        </div>
+                                        <div>
+                                            <p
+                                                style="font-size: 0.65rem; color: var(--text-dim); font-weight: 800; text-transform: uppercase; margin-bottom: 0.1rem;">
+                                                Email Relay</p>
+                                            <a href="mailto:support@citysafe.net"
+                                                style="font-size: 0.85rem; color: var(--text-bright); text-decoration: none; font-weight: 600;">support@citysafe.net</a>
+                                        </div>
+                                    </div>
+
+                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                        <div class="cs-badge"
+                                            style="width: 36px; height: 36px; background: rgba(255,255,255,0.03); color: var(--secondary); font-size: 0.9rem;">
+                                            <i class="fa-solid fa-phone-tower"></i>
+                                        </div>
+                                        <div>
+                                            <p
+                                                style="font-size: 0.65rem; color: var(--text-dim); font-weight: 800; text-transform: uppercase; margin-bottom: 0.1rem;">
+                                                Secure Line</p>
+                                            <p
+                                                style="font-size: 0.85rem; color: var(--text-bright); font-weight: 600; margin: 0;">
+                                                (+63) 993 978 4619</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Contact & Hotlines Section -->
-                        <div>
+                            <!-- High-Alert Hotlines -->
+                            <div class="cs-card"
+                                style="padding: 2.25rem 2rem; border: 1px solid var(--border-glass); border-left: 3px solid var(--danger);">
+                                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.75rem;">
+                                    <div class="cs-badge" style="background: var(--danger-glow); color: var(--danger);">
+                                        <i class="fa-solid fa-phone-flip"></i>
+                                    </div>
+                                    <h4
+                                        style="margin: 0; font-size: 0.9rem; font-weight: 800; color: var(--text-bright); text-transform: uppercase;">
+                                        TACTICAL HOTLINES</h4>
+                                </div>
 
-                            <!-- Contact Us -->
-                            <div>
-                                <div>
-                                    <h4>
-                                        <i></i> Contact Us
-                                    </h4>
+                                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                                    <% const hotlines=[ { label: "National Command" , num: "911" ,
+                                        color: "var(--danger)" }, { label: "PNP Operations" , num: "117" ,
+                                        color: "var(--primary)" }, { label: "BFP Fire Comms" , num: "160" ,
+                                        color: "var(--warning)" }, { label: "Red Cross Rescue" , num: "143" ,
+                                        color: "var(--accent)" }, { label: "MMDA Command" , num: "136" ,
+                                        color: "var(--secondary)" } ]; %>
+                                        <% hotlines.forEach(item=> { %>
+                                            <div
+                                                style="--item-color: <%= item.color %>; display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: rgba(0,0,0,0.2); border-radius: 0.5rem; border: 1px solid rgba(255,255,255,0.05);">
+                                                <span
+                                                    style="font-size: 0.7rem; color: var(--text-dim); font-weight: 700; text-transform: uppercase;">
+                                                    <%= item.label %>
+                                                </span>
+                                                <span
+                                                    style="font-size: 1rem; font-weight: 900; color: var(--item-color); font-family: 'JetBrains Mono', monospace;">
+                                                    <%= item.num %>
+                                                </span>
+                                            </div>
+                                            <% }) %>
                                 </div>
-                                <div>
-                                    <p>Direct
-                                        Communication Lines</p>
 
-                                    <ul>
-                                        <li>
-                                            <div>
-                                                <i></i>
-                                            </div>
-                                            <div>
-                                                <div>
-                                                    Email Relay</div>
-                                                <div>
-                                                    jayr.tabalina.ui@phinmaed.com</div>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div>
-                                                <i></i>
-                                            </div>
-                                            <div>
-                                                <div>
-                                                    Secure Line</div>
-                                                <div>(+63)
-                                                    993 978 4619</div>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div>
-                                                <i></i>
-                                            </div>
-                                            <div>
-                                                <div>
-                                                    Public Feeds</div>
-                                                <div>
-                                                    @CitySafeOfficial</div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                            <!-- Full Hotlines List for User -->
-                            <div>
-                                <div>
-                                    <h4>
-                                        <i></i> Emergency Hotlines
-                                    </h4>
-                                </div>
-                                <div>
-                                    <ul>
-                                        <li>
-                                            <div>
-                                                <span>National
-                                                    Hotline</span>
-                                            </div>
-                                            <span>911</span>
-                                        </li>
-                                        <li>
-                                            <div>
-                                                <span>PNP
-                                                    (Police)</span>
-                                                <span>(02)
-                                                    8722-0650</span>
-                                            </div>
-                                            <span>117</span>
-                                        </li>
-                                        <li>
-                                            <div>
-                                                <span>BFP
-                                                    (Fire)</span>
-                                            </div>
-                                            <span>(02)
-                                                8426</span>
-                                        </li>
-                                        <li>
-                                            <div>
-                                                <span>Red
-                                                    Cross</span>
-                                                <span>(02)
-                                                    8790-2300</span>
-                                            </div>
-                                            <span>143</span>
-                                        </li>
-                                        <li>
-                                            <div>
-                                                <span>MMDA</span>
-                                            </div>
-                                            <span>136</span>
-                                        </li>
-                                        <li>
-                                            <div>
-                                                <span>NDRRMC
-                                                    Opcen</span>
-                                            </div>
-                                            <span>(02)
-                                                8911</span>
-                                        </li>
-                                    </ul>
-                                </div>
+                                <p
+                                    style="font-size: 0.6rem; color: var(--text-dim); margin-top: 1.5rem; text-align: center; font-style: italic;">
+                                    Uplink response times may vary based on sector congestion.</p>
                             </div>
 
                         </div>

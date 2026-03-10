@@ -1,18 +1,36 @@
-<div id="spinner">
-    <div>
-        <div role="status" aria-hidden="true"></div>
-        <div>Loading CitySafe Hub...</div>
+<!-- Glassmorphic Preloader -->
+<div id="spinner" class="cs-spinner-wrapper">
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 1.5rem;">
+        <div class="cs-spinner"></div>
+        <div style="text-align: center;">
+            <div
+                style="color: var(--primary); font-weight: 700; letter-spacing: 0.2rem; font-size: 1.1rem; margin-bottom: 0.25rem; display: flex; align-items: center; gap: 0.5rem; justify-content: center;">
+                <i class="fa-solid fa-shield-halved fa-beat-fade"></i> CITYSAFE
+            </div>
+            <div style="color: var(--text-dim); font-size: 0.75rem; text-transform: uppercase; font-weight: 500;">
+                Establishing Secure Link...</div>
+        </div>
     </div>
 </div>
 
 <script>
-    // Remove spinner shortly after load or after a failsafe timeout
+    // System Loader Logic
     window.addEventListener('load', () => {
         const spinner = document.getElementById('spinner');
-        if (spinner) { spinner.classList.add('fade'); setTimeout(() => spinner.remove(), 300); }
+        if (spinner) {
+            // Smooth fade out
+            spinner.style.backdropFilter = 'blur(0px)';
+            spinner.style.opacity = '0';
+            setTimeout(() => spinner.remove(), 600);
+        }
     });
+
+    // Failsafe
     setTimeout(() => {
         const spinner = document.getElementById('spinner');
-        if (spinner) { spinner.remove(); console.warn('System: Spinner forced hidden by failsafe.'); }
-    }, 3000);
+        if (spinner) {
+            spinner.remove();
+            console.warn('CitySafe: Loader forced termination.');
+        }
+    }, 4000);
 </script>

@@ -1,62 +1,63 @@
 <!-- Glassmorphic Responder Sidebar -->
-<div id="mobile-sidebar">
+<div id="mobile-sidebar" class="cs-sidebar">
     <!-- Close Button for Mobile -->
-    <div>
-        <button
+    <div class="cs-sidebar-header lg:hidden">
+        <button class="cs-nav-btn"
             onclick="document.getElementById('mobile-sidebar').classList.add('-translate-x-full'); document.getElementById('sidebar-overlay').classList.add('hidden')">
-            <i></i>
+            <i class="fa-solid fa-xmark"></i>
         </button>
     </div>
 
-    <div>
-        <a href="/responder">
-            <i></i>
+    <div class="cs-sidebar-header">
+        <a href="/responder" class="cs-navbar-brand">
+            <i class="fa-solid fa-shield-halved"></i>
             <span>CITYSAFE</span>
         </a>
     </div>
 
-    <div>
-        <div>
-            <div>
-                <i></i>
+    <% const _cp=(typeof currentPage !=='undefined' ) ? currentPage : (typeof locals !=='undefined' && typeof
+        locals.currentPage !=='undefined' ? locals.currentPage : '' ); %>
+
+        <div class="cs-sidebar-user">
+            <div class="cs-user-avatar" style="background: var(--secondary); color: white;">
+                <i class="fa-solid fa-user-shield"></i>
             </div>
-            <div>
+            <div class="cs-user-info">
                 <h6>
                     <%= typeof username !=='undefined' ? username : 'Responder' %>
                 </h6>
-                <span>FIELD
-                    UNIT</span>
+                <span>FIELD UNIT</span>
             </div>
         </div>
-    </div>
 
-    <nav>
-        <a href="/responder">
-            <i></i>
-            <span>Mission Control</span>
-        </a>
-        <a href="/responder#nearby-reports">
-            <i></i>
-            <span>Nearby Ops</span>
-        </a>
-        <a href="/responder-history">
-            <i></i>
-            <span>History</span>
-        </a>
-        <a href="/aboutresponder">
-            <i></i>
-            <span>Station Info</span>
-        </a>
-    </nav>
+        <nav class="cs-sidebar-nav">
+            <a href="/responder" class="cs-sidebar-link <%= _cp === 'responder' ? 'active' : '' %>">
+                <i class="fa-solid fa-satellite-dish"></i>
+                <span>Mission Control</span>
+            </a>
+            <a href="/responder#nearby-reports" class="cs-sidebar-link">
+                <i class="fa-solid fa-map-location-dot"></i>
+                <span>Nearby Ops</span>
+            </a>
+            <a href="/responder-history" class="cs-sidebar-link <%= _cp === 'history' ? 'active' : '' %>">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span>History</span>
+            </a>
+            <a href="/aboutresponder" class="cs-sidebar-link <%= _cp === 'station' ? 'active' : '' %>">
+                <i class="fa-solid fa-house-chimney-medical"></i>
+                <span>Station Info</span>
+            </a>
+        </nav>
 
-    <div>
-        <a href="/logout">
-            <i></i>
-            <span>Sign Off</span>
-        </a>
-    </div>
+        <div style="margin-top: auto; padding: 1rem;">
+            <a href="/logout" class="cs-sidebar-link" style="color: var(--danger);">
+                <i class="fa-solid fa-power-off"></i>
+                <span>Sign Off</span>
+            </a>
+        </div>
 </div>
 
 <!-- Overlay for mobile when sidebar is open -->
-<div id="sidebar-overlay"
-    onclick="document.getElementById('mobile-sidebar').classList.add('-translate-x-full'); this.classList.add('hidden')"></div>
+<div id="sidebar-overlay" class="cs-sidebar-overlay"
+    onclick="document.getElementById('mobile-sidebar').classList.add('-translate-x-full'); this.classList.remove('show')">
+</div>

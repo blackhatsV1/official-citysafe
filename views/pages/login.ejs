@@ -6,105 +6,115 @@
 </head>
 
 <body>
-    <div>
+    <div class="cs-auth-wrapper">
         <!-- Auth Form Column -->
-        <div>
-            <div>
+        <div class="cs-auth-form-column">
+            <div class="cs-auth-card" style="width: 100%; max-width: 440px;">
                 <!-- Branding -->
-                <div>
-                    <a href="/visitor">
-                        <div>
-                            <i></i>
-                        </div>
-                        <span>CitySafe</span>
+                <div style="margin-bottom: 2.5rem; text-align: center;">
+                    <a href="/visitor" class="cs-navbar-brand justify-center" style="font-size: 1.5rem;">
+                        <i class="fa-solid fa-shield-halved"></i>
+                        <span>CITYSAFE</span>
                     </a>
                 </div>
 
                 <!-- Intro -->
-                <div>
-                    <h2>Welcome Back</h2>
-                    <p>Enter your secure credentials to access the
+                <div style="margin-bottom: 2rem;">
+                    <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-bright);">
+                        Welcome Back</h2>
+                    <p style="color: var(--text-dim); font-size: 0.95rem;">Enter your secure credentials to access the
                         command center operations.</p>
                 </div>
 
                 <!-- Form -->
-                <form method="POST" action="/login">
-                    <div>
-                        <label for="signin-email">Identifier</label>
-                        <div>
-                            <i></i>
-                            <input id="signin-email" name="identifier" type="text"
+                <form method="POST" action="/login" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                    <div class="cs-form-group">
+                        <label for="signin-email" class="cs-label">Identifier</label>
+                        <div class="cs-input-wrapper">
+                            <i class="fa-solid fa-user-shield cs-input-icon"></i>
+                            <input id="signin-email" name="identifier" type="text" class="cs-input"
                                 placeholder="Email or Username" required>
                         </div>
                     </div>
 
-                    <div>
-                        <label for="signin-password">Passcode</label>
-                        <div>
-                            <i></i>
-                            <input id="signin-password" name="password" type="password"
+                    <div class="cs-form-group">
+                        <label for="signin-password" class="cs-label">Passcode</label>
+                        <div class="cs-input-wrapper">
+                            <i class="fa-solid fa-lock cs-input-icon"></i>
+                            <input id="signin-password" name="password" type="password" class="cs-input"
                                 placeholder="••••••••" required>
-                            <button type="button" id="toggleLoginPass">
-                                <i></i>
+                            <button type="button" id="toggleLoginPass"
+                                style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-dim); cursor: pointer; transition: color 0.2s;">
+                                <i class="fa-solid fa-eye-slash"></i>
                             </button>
                         </div>
                     </div>
 
-                    <div>
-                        <label>
-                            <input type="checkbox">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                        <label
+                            style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.875rem; color: var(--text-dim);">
+                            <input type="checkbox" style="accent-color: var(--primary);">
                             <span>Remember me</span>
                         </label>
-                        <a href="#">Forgot
-                            passcode?</a>
+                        <a href="#" class="cs-text-link" style="font-size: 0.875rem;">Forgot passcode?</a>
                     </div>
 
-                    <button type="submit">
-                        SIGN IN TO TERMINAL <i></i>
+                    <button type="submit" class="cs-btn cs-btn-primary cs-auth-btn">
+                        SIGN IN TO TERMINAL <i class="fa-solid fa-right-to-bracket" style="margin-left: 0.5rem;"></i>
                     </button>
                 </form>
 
                 <!-- Footer text -->
-                <div>
-                    <p>
-                        Awaiting access credentials? <a href="/register">Request
-                            Authorization</a>
+                <div style="margin-top: 2rem; text-align: center;">
+                    <p style="color: var(--text-dim); font-size: 0.9rem;">
+                        Awaiting access credentials? <a href="/register" class="cs-text-link">Request Authorization</a>
                     </p>
                 </div>
 
-                <div>
+                <div
+                    style="margin-top: 3rem; text-align: center; font-size: 0.75rem; color: var(--text-dim); opacity: 0.6;">
                     <p>
-                        Designed with <i></i> by tracking project CitySafe
+                        Designed with <i class="fa-solid fa-heart" style="color: var(--danger);"></i> by CitySafe
+                        Project
                     </p>
                 </div>
             </div>
         </div>
 
         <!-- Visual Hero Column -->
-        <div>
-            <!-- Huge abstract graphic background -->
-            <div>
-                <div></div>
-                <div></div>
-
-                <!-- Grid pattern overlay -->
-                <div>
-                </div>
+        <div class="cs-auth-hero-column">
+            <!-- Grid pattern overlay -->
+            <div
+                style="position: absolute; inset: 0; background-image: radial-gradient(var(--border-glass) 1px, transparent 1px); background-size: 30px 30px; opacity: 0.3;">
             </div>
 
             <!-- Content -->
-            <div>
+            <div class="cs-auth-hero-content">
                 <div>
-                    <h2>
-                        Redefining<br><span>Urban Safety</span></h2>
-                    <p>
+                    <h2
+                        style="font-size: 3.5rem; line-height: 1.1; margin-bottom: 1.5rem; font-weight: 800; color: white;">
+                        Redefining<br><span
+                            style="background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Urban
+                            Safety</span></h2>
+                    <p
+                        style="font-size: 1.1rem; line-height: 1.6; color: rgba(255,255,255,0.8); margin-bottom: 2rem; max-width: 500px;">
                         CitySafe provides real-time atmospheric command, operational deployment mapping, and emergency
                         response coordination for modern urban environments.
                     </p>
-                    <div>
-                        <span>Reliable</span>
-                        <span>Resilient</span>
-                        <span>Responsive</span>
+                    <div style="display: flex; gap: 1.5rem;">
+                        <span
+                            style="display: flex; align-items: center; gap: 0.5rem; color: white; font-weight: 600; font-size: 0.9rem;">
+                            <i class="fa-solid fa-circle-check" style="color: var(--success);"></i> Reliable
+                        </span>
+                        <span
+                            style="display: flex; align-items: center; gap: 0.5rem; color: white; font-weight: 600; font-size: 0.9rem;">
+                            <i class="fa-solid fa-circle-check" style="color: var(--success);"></i> Resilient
+                        </span>
+                        <span
+                            style="display: flex; align-items: center; gap: 0.5rem; color: white; font-weight: 600; font-size: 0.9rem;">
+                            <i class="fa-solid fa-circle-check" style="color: var(--success);"></i> Responsive
+                        </span>
                     </div>
                 </div>
             </div>
