@@ -32,22 +32,11 @@ async function subscribeUser() {
 
     // 2. Immediate Permission Request
     if (Notification.permission === 'denied') {
-        showPlatformInstructions();
-        throw new Error('Notifications are currently blocked.');
+        throw new Error('Notifications are currently blocked by your browser or system settings.');
     }
 
     const permission = await Notification.requestPermission();
     if (permission !== 'granted') {
-        if (permission === 'denied') {
-            showPlatformInstructions();
-        } else {
-            Swal.fire({
-                icon: 'info',
-                title: 'Permission Needed',
-                text: 'We need your permission to send weather alerts. Please click "Allow" on the browser prompt.',
-                confirmButtonText: 'Try Again'
-            });
-        }
         throw new Error('Notification permission was not granted.');
     }
 
@@ -118,12 +107,6 @@ async function subscribeUser() {
             // Optional: Redirect to login
             setTimeout(() => window.location.href = '/login', 2000);
         }
-
-        Swal.fire({
-            icon: 'error',
-            title: 'Subscription Failed',
-            text: msg
-        });
 
         throw new Error(msg); // Re-throw to stop chain
     }
@@ -212,11 +195,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateSubscriptionBtn();
             } catch (error) {
                 console.error('Subscription error:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Subscription Failed',
-                    text: error.message || 'Could not subscribe to notifications.'
-                });
+                
+                const isBlocked = Notification.permission === 'denied';
+
+                if (isBlocked) {
+                    // If blocked, we likely already showed instructions via subscribeUser check,
+                    // but let's ensure they have a clear path forward here too.
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Notifications Blocked',
+                        html: `
+                            <p>To receive alerts, you need to allow notifications in your browser and system settings.</p>
+                            <p class="small text-muted">Click the button below for a step-by-step guide.</p>
+                        `,
+                        showCancelButton: true,
+                        cancelButtonText: 'Close',
+                        confirmButtonText: 'Show Guide',
+                        confirmButtonColor: '#007bff',
+                        background: '#191c24',
+                        color: '#fff'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            showPlatformInstructions();
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Subscription Failed',
+                        text: error.message || 'Could not subscribe to notifications.',
+                        confirmButtonText: 'Try Again',
+                        confirmButtonColor: '#007bff',
+                        background: '#191c24',
+                        color: '#fff'
+                    });
+                }
             }
         });
     } else {
