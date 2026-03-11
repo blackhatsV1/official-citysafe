@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         Toast.fire({
             icon: 'warning',
-            title: 'Notifications were blocked',
+            title: 'Notice from CitySafe: Notifications Blocked',
             text: 'You may miss critical weather alerts.'
         }).then((result) => {
             if (result.isConfirmed) {
@@ -203,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // but let's ensure they have a clear path forward here too.
                     Swal.fire({
                         icon: 'warning',
-                        title: 'Notifications Blocked',
+                        title: 'CitySafe: Notifications Blocked',
                         html: `
                             <p>To receive alerts, you need to allow notifications in your browser and system settings.</p>
                             <p class="small text-muted">Click the button below for a step-by-step guide.</p>

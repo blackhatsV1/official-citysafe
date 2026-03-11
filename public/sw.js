@@ -65,7 +65,7 @@ self.addEventListener('fetch', event => {
 
 self.addEventListener('push', function (event) {
     console.log('[SW] Push Received');
-    let data = { title: 'CitySafe Alert', body: 'New notification received.' };
+    let data = { title: 'Update from CitySafe', body: 'New notification received.' };
 
     try {
         if (event.data) {

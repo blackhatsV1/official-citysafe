@@ -15,7 +15,7 @@ async function checkStatus() {
             if (user.role === 'responder') {
                 if (lastStatus && lastStatus !== 'deployed' && user.status === 'deployed') {
                     Swal.fire({
-                        title: 'DEPLOYMENT ALERT!',
+                        title: 'DEPLOYMENT ALERT from CitySafe!',
                         text: 'You have been deployed to an incident! Check your map.',
                         icon: 'warning',
                         confirmButtonText: 'Go to Map'

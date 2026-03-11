@@ -317,9 +317,9 @@ function interpretWeather(data) {
 
 
   if (hazard) {
-    showWeatherNotification("Weather Alert!", hazardText, true);
+    showWeatherNotification("Weather Alert from CitySafe!", hazardText, true);
   } else {
-    showWeatherNotification("Current Weather", `Temp: ${temp}°C, ${description}. ${shortDesc}`, false);
+    showWeatherNotification("Current Weather from CitySafe", `Temp: ${temp}°C, ${description}. ${shortDesc}`, false);
   }
 
 }

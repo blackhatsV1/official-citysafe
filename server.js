@@ -305,7 +305,7 @@ async function checkWeatherAlerts(userId, lat, lon, endpoint, keys) {
     if (alertMsg) {
       console.log(`[WEATHER ALERT] Sending to User ${userId}: ${alertMsg}`);
       const subscription = { endpoint, keys: { p256dh: keys.p256dh, auth: keys.auth } };
-      const payload = { title: 'Weather Alert', body: alertMsg, url: '/weather' };
+      const payload = { title: 'Weather Alert from CitySafe', body: alertMsg, url: '/weather' };
       sendNotificationObj(subscription, payload);
     }
   } catch (err) {
@@ -513,7 +513,7 @@ app.post('/report', async (req, res) => {
             if (!err && subs.length > 0) {
               subs.forEach(sub => {
                 const subscription = { endpoint: sub.endpoint, keys: { p256dh: sub.keys_p256dh, auth: sub.keys_auth } };
-                const payload = { title: 'New SOS Alert!', body: `${disasterTypeToStore} reported at ${locationToStore}`, url: '/adminpage' };
+                const payload = { title: 'New SOS Alert from CitySafe!', body: `${disasterTypeToStore} reported at ${locationToStore}`, url: '/adminpage' };
                 sendNotificationObj(subscription, payload);
               });
             }
@@ -529,7 +529,7 @@ app.post('/report', async (req, res) => {
               const dist = calculateDistance(finalLat, finalLon, r.latitude, r.longitude);
               if (dist <= 5) {
                 const subscription = { endpoint: r.endpoint, keys: { p256dh: r.keys_p256dh, auth: r.keys_auth } };
-                const payload = { title: 'Nearby Incident!', body: `${disasterTypeToStore} reported ${dist.toFixed(1)}km away.`, url: '/responder' };
+                const payload = { title: 'Nearby Incident from CitySafe!', body: `${disasterTypeToStore} reported ${dist.toFixed(1)}km away.`, url: '/responder' };
                 sendNotificationObj(subscription, payload);
               }
             });
@@ -545,7 +545,7 @@ app.post('/report', async (req, res) => {
                 const dist = calculateDistance(finalLat, finalLon, u.latitude, u.longitude);
                 if (dist <= 3) {
                   const subscription = { endpoint: u.endpoint, keys: { p256dh: u.keys_p256dh, auth: u.keys_auth } };
-                  const payload = { title: 'Danger Nearby!', body: `${disasterTypeToStore} reported ${dist.toFixed(1)}km away. Stay safe!`, url: '/' };
+                  const payload = { title: 'Danger Nearby from CitySafe!', body: `${disasterTypeToStore} reported ${dist.toFixed(1)}km away. Stay safe!`, url: '/' };
                   sendNotificationObj(subscription, payload);
                 }
               }
@@ -1230,7 +1230,7 @@ app.post('/api/deploy', (req, res) => {
                             keys: { p256dh: sub.keys_p256dh, auth: sub.keys_auth }
                           };
                           const payload = {
-                            title: 'DEPLOYMENT ALERT',
+                            title: 'DEPLOYMENT ALERT from CitySafe',
                             body: `You have been deployed to a ${type || 'mission'}. Check your app immediately.`,
                             url: '/responding'
                           };
@@ -1249,7 +1249,7 @@ app.post('/api/deploy', (req, res) => {
                               keys: { p256dh: sub.keys_p256dh, auth: sub.keys_auth }
                             };
                             const payload = {
-                              title: 'Help is on the way!',
+                              title: 'Help is on the way from CitySafe!',
                               body: `A responder has been assigned and is heading to your location.`,
                               url: '/my-reports'
                             };
@@ -1372,7 +1372,7 @@ app.post('/api/respond', (req, res) => {
                               keys: { p256dh: sub.keys_p256dh, auth: sub.keys_auth }
                             };
                             const payload = {
-                              title: 'Responder Assigned!',
+                              title: 'Responder Assigned from CitySafe!',
                               body: `A nearby responder has claimed your SOS and is coming to help.`,
                               url: '/my-reports'
                             };
