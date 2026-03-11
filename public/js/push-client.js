@@ -169,6 +169,34 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateSubscriptionBtn();
 
+    // Proactive check if notifications are blocked
+    if (Notification.permission === 'denied') {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: true,
+            confirmButtonText: 'How to fix?',
+            timer: 10000,
+            timerProgressBar: true,
+            background: '#191c24',
+            color: '#fff',
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+
+        Toast.fire({
+            icon: 'warning',
+            title: 'Notifications were blocked',
+            text: 'You may miss critical weather alerts.'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                showPlatformInstructions();
+            }
+        });
+    }
+
     const btn = document.getElementById('enableNotifications');
     if (btn) {
         console.log('Button found, attaching listener');
