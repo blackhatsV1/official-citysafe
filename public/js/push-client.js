@@ -32,23 +32,22 @@ async function subscribeUser() {
 
     // 2. Immediate Permission Request
     if (Notification.permission === 'denied') {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Notifications Blocked',
-            html: 'You have blocked notifications.<br>Click the <b>Lock Icon</b> 🔒 in the URL bar to Reset Permissions.',
-            confirmButtonText: 'Got it'
-        });
+        showPlatformInstructions();
         throw new Error('Notifications are currently blocked.');
     }
 
     const permission = await Notification.requestPermission();
     if (permission !== 'granted') {
-        Swal.fire({
-            icon: 'info',
-            title: 'Permission Needed',
-            text: 'We need your permission to send weather alerts. Please click "Allow" on the browser prompt.',
-            confirmButtonText: 'Try Again'
-        });
+        if (permission === 'denied') {
+            showPlatformInstructions();
+        } else {
+            Swal.fire({
+                icon: 'info',
+                title: 'Permission Needed',
+                text: 'We need your permission to send weather alerts. Please click "Allow" on the browser prompt.',
+                confirmButtonText: 'Try Again'
+            });
+        }
         throw new Error('Notification permission was not granted.');
     }
 
@@ -196,3 +195,105 @@ document.addEventListener('DOMContentLoaded', () => {
         // console.warn('Enable Notifications button MISSING on load (might be granted already)');
     }
 });
+
+/**
+ * Show platform-specific instructions to enable notifications
+ */
+function showPlatformInstructions() {
+    const userAgent = window.navigator.userAgent;
+    const platform = window.navigator.platform;
+    const macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'];
+    const windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'];
+    let os = 'Unknown';
+
+    if (macosPlatforms.indexOf(platform) !== -1) {
+        os = 'macOS';
+    } else if (windowsPlatforms.indexOf(platform) !== -1) {
+        os = 'Windows';
+    } else if (/Android/.test(userAgent)) {
+        os = 'Android';
+    } else if (/Linux/.test(platform)) {
+        os = 'Linux';
+    }
+
+    const instructions = {
+        'Android': {
+            icon: 'fa-android',
+            color: '#3DDC84',
+            steps: [
+                'Open <b>Settings</b> on your phone.',
+                'Go to <b>Apps</b> or <b>Application Manager</b>.',
+                'Find and tap on <b>Chrome</b> (or your browser).',
+                'Tap on <b>Notifications</b>.',
+                'Ensure <b>Show notifications</b> is turned ON.'
+            ]
+        },
+        'macOS': {
+            icon: 'fa-apple',
+            color: '#A2AAAD',
+            steps: [
+                'Click the <b>Apple Menu</b> () and choose <b>System Settings</b>.',
+                'Click <b>Notifications</b> in the sidebar.',
+                'Find <b>Chrome</b> (or your browser) in the list.',
+                'Toggle <b>Allow Notifications</b> to ON.'
+            ]
+        },
+        'Windows': {
+            icon: 'fa-windows',
+            color: '#0078D6',
+            steps: [
+                'Open the <b>Start Menu</b> and go to <b>Settings</b>.',
+                'Go to <b>System</b> > <b>Notifications & actions</b>.',
+                'Find <b>Chrome</b> (or your browser) in the list.',
+                'Set the toggle to <b>On</b>.'
+            ]
+        },
+        'Linux': {
+            icon: 'fa-linux',
+            color: '#FCC624',
+            steps: [
+                'Open your <b>System Settings</b>.',
+                'Navigate to <b>Notifications</b>.',
+                'Find your browser in the application list.',
+                'Ensure notifications are enabled.'
+            ]
+        },
+        'Unknown': {
+            icon: 'fa-globe',
+            color: '#6c757d',
+            steps: [
+                'Check your Browser Settings for notification permissions.',
+                'Check your System Settings for notification alerts.'
+            ]
+        }
+    };
+
+    const current = instructions[os] || instructions['Unknown'];
+    
+    let stepsHtml = `<ol style="text-align: left; margin-bottom: 20px; color: #fff;">`;
+    current.steps.forEach(step => {
+        stepsHtml += `<li style="margin-bottom: 8px;">${step}</li>`;
+    });
+    stepsHtml += `</ol>`;
+
+    Swal.fire({
+        title: `<i class="fab ${current.icon}" style="color: ${current.color}"></i> Enable Notifications on ${os}`,
+        html: `
+            <div class="p-3">
+                <p class="mb-3 text-white">Notifications are blocked. Please follow these steps to enable them in your <b>System Settings</b>:</p>
+                ${stepsHtml}
+                <hr style="border-top: 1px solid rgba(255,255,255,0.1)">
+                <p class="small text-muted">
+                    <i class="fa fa-lock me-1"></i> <b>Pro Tip:</b> You can also click the <b>Lock Icon</b> in the browser address bar to <b>Reset Permission</b>.
+                </p>
+            </div>
+        `,
+        confirmButtonText: 'I understand',
+        confirmButtonColor: '#007bff',
+        background: '#191c24', // Match theme-dark bg
+        color: '#fff',
+        customClass: {
+            popup: 'animated fadeInDown'
+        }
+    });
+}
