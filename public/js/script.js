@@ -265,6 +265,7 @@ function interpretWeather(data) {
   const hackerStyle = 'color: #00FF00; font-family: "Roboto", sans-serif; text-shadow: 0 0 5px rgba(0, 255, 0, 0.3);';
 
   let message = `<div style="${hackerStyle}">`;
+  message += `<h5 style="color: #00FF00; margin-bottom: 10px; border-bottom: 1px solid rgba(0, 255, 0, 0.2); padding-bottom: 5px;"><i class="bi bi-cloud-sun me-2"></i>Current Weather from CitySafe</h5>`;
   message += `<strong><i class="bi bi-thermometer-half"></i> Temp:</strong> ${temp}°C (Feels like ${feelsLike}°C)<br>`;
   message += `<strong><i class="bi bi-cloud"></i> Weather:</strong> ${description}<br>`;
   message += `<strong><i class="bi bi-droplet"></i> Humidity:</strong> ${humidity}%<br>`;
