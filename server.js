@@ -18,7 +18,7 @@ const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const cron = require('node-cron');
 
-// Email Transporter Configuration
+
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -27,31 +27,31 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-// [SECURITY] Trust Proxy (Required for Railway/Load Balancers)
+
 app.set('trust proxy', 1);
 
-// [OPTIMIZATION] Gzip Compression
+
 const compression = require('compression');
 app.use(compression());
 
-// [OPTIMIZATION] Cache Static Assets (1 day)
+
 app.use(express.static(path.join(__dirname, "public"), {
   maxAge: '1d'
 }));
 
-// [SECURITY] Helmet - Secure HTTP Headers
+
 app.use(helmet({
-  contentSecurityPolicy: false, // Disabled to allow inline scripts (fixes spinner)
+  contentSecurityPolicy: false, 
 }));
 
-// [SECURITY] Global Rate Limiter
+
 const globalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5000, // Increased to 5000 to accommodate polling (1s intervals)
+  windowMs: 15 * 60 * 1000, 
+  max: 5000, 
   standardHeaders: true,
   legacyHeaders: false,
 });
-// Rate Limiter Definition (Applied later)
+
 
 
 const knex = require('knex')({
@@ -81,16 +81,16 @@ app.use(express.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// [SECURITY] Global Rate Limiter (Applied AFTER static files to save quota)
+
 app.use(globalLimiter);
 
 app.set('views', './views');
 
 
-// [NEW] Web Push Setup
+
 const webpush = require('web-push');
 
-// Load VAPID Keys from Env or use placeholders
+
 const publicVapidKey = process.env.VAPID_PUBLIC_KEY;
 const privateVapidKey = process.env.VAPID_PRIVATE_KEY;
 
@@ -109,16 +109,15 @@ app.get('/api/vapid-public-key', (req, res) => {
 app.post('/api/subscribe', (req, res) => {
   const subscription = req.body;
   const userId = req.session.userId;
-  const role = req.session.role; // 'user' or 'responder'
+  const role = req.session.role; 
 
   if (!userId) return res.status(401).json({ error: 'Unauthorized' });
 
-  // Store/Update subscription in DB
+  
   const table = 'push_subscriptions';
   const idToSet = role === 'responder' ? 'responder_id' : 'user_id';
   const idToClear = role === 'responder' ? 'user_id' : 'responder_id';
 
-  // [FIX] UPSERT Logic: Update if endpoint already exists, otherwise Insert
   db.query(`SELECT id FROM ${table} WHERE endpoint = ?`, [subscription.endpoint], (err, exists) => {
     if (err) {
       console.error('Sub Check Error:', err);
@@ -126,13 +125,13 @@ app.post('/api/subscribe', (req, res) => {
     }
 
     if (exists.length > 0) {
-      // Update existing record: set current role ID, clear the other, update keys
+      
       const sql = `UPDATE ${table} SET ${idToSet} = ?, ${idToClear} = NULL, keys_p256dh = ?, keys_auth = ? WHERE endpoint = ?`;
       db.query(sql, [userId, subscription.keys.p256dh, subscription.keys.auth, subscription.endpoint], (err) => {
         if (err) console.error('Sub Update Error:', err);
       });
     } else {
-      // Insert new record
+      
       const sql = `INSERT INTO ${table} (${idToSet}, endpoint, keys_p256dh, keys_auth) VALUES (?, ?, ?, ?)`;
       db.query(sql, [userId, subscription.endpoint, subscription.keys.p256dh, subscription.keys.auth], (err) => {
         if (err) console.error('Sub Insert Error:', err);
@@ -143,17 +142,17 @@ app.post('/api/subscribe', (req, res) => {
   res.status(201).json({ success: true });
 });
 
-// Helper to send notification
+
 const sendNotificationObj = (subscription, payload) => {
   webpush.sendNotification(subscription, JSON.stringify(payload)).catch(err => {
     console.error('Push Error:', err);
-    // TODO: cleanup invalid subscriptions
+    
   });
 };
 
-// [NEW] Database Setup Route (Run once)
+
 app.get('/clean_whitespace', (req, res) => {
-  // One-time cleanup script to TRIM all identifying fields in users and responders
+  
   const queries = [
     "UPDATE users SET firstname = TRIM(firstname), lastname = TRIM(lastname), email = TRIM(email), contact_number = TRIM(contact_number)",
     "UPDATE responders SET firstname = TRIM(firstname), lastname = TRIM(lastname), email = TRIM(email), contact_number = TRIM(contact_number)"
@@ -180,9 +179,9 @@ app.get('/clean_whitespace', (req, res) => {
   runNext();
 });
 
-// [HELPER] Haversine Distance Calculation (Km)
+
 function calculateDistance(lat1, lon1, lat2, lon2) {
-  const R = 6371; // Radius of the earth in km
+  const R = 6371; 
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
   const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
@@ -192,7 +191,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
-// [SETUP] One-time route to cleanup whitespace in responders tabledmin
+
 app.get('/setup-admin', async (req, res) => {
   const secretKey = req.query.key;
   if (secretKey !== process.env.SESSION_SECRET) {
@@ -201,7 +200,7 @@ app.get('/setup-admin', async (req, res) => {
 
   try {
     const hashedPassword = await bcrypt.hash("admin123", 10);
-    // Check if admin already exists to prevent duplicates
+    
     db.query('SELECT * FROM users WHERE role="admin"', (err, results) => {
       if (results.length > 0) return res.send("Admin already exists.");
 
@@ -250,10 +249,10 @@ app.get('/setup_db', (req, res) => {
             FOREIGN KEY (incident_id) REFERENCES disaster_reports(id),
             FOREIGN KEY (user_id) REFERENCES users(id)
         )`,
-    // Separate ALTERs and remove IF NOT EXISTS to be safe, relying on error suppression
+    
     `ALTER TABLE disaster_reports ADD COLUMN responder_confirmed_at TIMESTAMP NULL`,
     `ALTER TABLE disaster_reports ADD COLUMN user_confirmed_at TIMESTAMP NULL`
-    // ACTION COLUMN ADDED VIA MIGRATION SCRIPT
+    
   ];
 
   let logs = [];
@@ -266,7 +265,7 @@ app.get('/setup_db', (req, res) => {
 
     db.query(queries[queryIndex], (err) => {
       if (err) {
-        // Ignore duplicate column errors (Code 1060)
+        
         if (err.code === 'ER_DUP_FIELDNAME' || err.message.includes("Duplicate column")) {
           logs.push(`[SKIP] Query ${queryIndex + 1}: Column already exists.`);
         } else {
@@ -284,7 +283,7 @@ app.get('/setup_db', (req, res) => {
 
 
 
-// [HELPER] Check Weather and Send Alert
+
 async function checkWeatherAlerts(userId, lat, lon, endpoint, keys) {
   if (!lat || !lon) return;
   try {
@@ -294,7 +293,7 @@ async function checkWeatherAlerts(userId, lat, lon, endpoint, keys) {
     const weather = response.data.weather[0];
     const main = response.data.main;
 
-    // Alert Conditions: Rain, Thunderstorm, or Extreme Heat (>35C) or High Wind (>20m/s)
+    
     let alertMsg = null;
 
     if (weather.main === 'Thunderstorm') alertMsg = `Storm Warning: ${weather.description} detected in your area.`;
@@ -313,7 +312,6 @@ async function checkWeatherAlerts(userId, lat, lon, endpoint, keys) {
   }
 }
 
-// [CRON] Schedule Daily Weather Check (7:00 AM)
 cron.schedule('0 7 * * *', () => {
   console.log('[CRON] Running Daily Weather Check...');
   db.query("SELECT u.id, u.latitude, u.longitude, ps.endpoint, ps.keys_p256dh, ps.keys_auth FROM users u JOIN push_subscriptions ps ON u.id = ps.user_id", (err, users) => {
@@ -323,7 +321,7 @@ cron.schedule('0 7 * * *', () => {
   });
 });
 
-// [API] Manual Weather Check Trigger
+
 app.get('/api/check-weather-manual', (req, res) => {
   if (req.session.loggedin && req.session.role === 'user') {
     const userId = req.session.userId;
@@ -361,7 +359,6 @@ app.get("/api/weather", async (req, res) => {
 
 
 
-// Redirect legacy weather route to main dashboard
 app.get('/weather', (req, res) => {
   res.redirect('/');
 });
@@ -426,20 +423,16 @@ app.get('/send-sos', (req, res) => {
 app.post('/report', async (req, res) => {
   if (req.session.loggedin && req.session.role === 'user') {
     const userId = req.session.userId;
-    // Renamed disaster_type to type_of_disaster to fix autofill bug
-    // We explicitly destructure disaster_type too, to use as a fallback but prioritize type_of_disaster
+    
     let { type_of_disaster, disaster_type, location, lat, lon } = req.body;
 
-    // Priority: New Input -> Old Input -> Default
+    
     let finalDisaster = type_of_disaster;
 
-    // [FIX] Handle Edge Case where disaster_type comes as array (The "Fire" Bug)
+    
     if (!finalDisaster && disaster_type) {
       if (Array.isArray(disaster_type)) {
-        // If we have an array (e.g. ['Fire', 'Flood'...]), it means the Ghost Inputs are present.
-        // We can't trust the array index 0 (Fire).
-        // But we have no choice if type_of_disaster is missing.
-        // Log this critical failure state.
+        
         console.warn("WARNING: Received disaster_type array but no type_of_disaster. Defaulting to first element (Fire).");
         finalDisaster = disaster_type[0];
       } else {
@@ -447,9 +440,9 @@ app.post('/report', async (req, res) => {
       }
     }
 
-    // Safety check to prevent NULL crash
+    
     if (!finalDisaster) {
-      finalDisaster = "General"; // Ultimate fallback
+      finalDisaster = "General"; 
     }
 
     let disasterTypeToStore = finalDisaster;
@@ -458,7 +451,7 @@ app.post('/report', async (req, res) => {
     let finalLon = lon;
     let locationToStore = location || "";
 
-    // 1. If Text Location provided but No Coords -> Geocode (Address to Lat/Lon)
+    
     if ((!finalLat || !finalLon) && location) {
       try {
         const response = await axios.get("https://nominatim.openstreetmap.org/search", {
@@ -474,11 +467,7 @@ app.post('/report', async (req, res) => {
       }
     }
 
-    // 2. If Coords provided (or found) -> Reverse Geocode (Lat/Lon to Address)
-    // This overrides the text location to be precise, or fills it if empty.
-    // 2. If Coords provided but NO Text Location -> Reverse Geocode (Lat/Lon to Address)
-    // [OPTIMIZATION] Only call API if we don't have a text location yet. 
-    // This reduces external API calls and speeds up submission.
+    
     if (finalLat && finalLon && !locationToStore) {
       try {
         const revRes = await axios.get(`https://nominatim.openstreetmap.org/reverse`, {
@@ -505,7 +494,7 @@ app.post('/report', async (req, res) => {
     db.query(sql, [userId, disasterTypeToStore, locationToStore, finalLat, finalLon], (err, result) => {
       if (err) throw err;
 
-      // [NOTIFICATION] Notify All Admins
+      
       db.query("SELECT id FROM users WHERE role = 'admin'", (err, admins) => {
         if (!err && admins.length > 0) {
           const adminIds = admins.map(a => a.id);
@@ -521,7 +510,7 @@ app.post('/report', async (req, res) => {
         }
       });
 
-      // [NOTIFICATION] Notify Nearby Responders (< 5km)
+      
       if (finalLat && finalLon) {
         db.query("SELECT r.id, r.latitude, r.longitude, ps.endpoint, ps.keys_p256dh, ps.keys_auth FROM responders r JOIN push_subscriptions ps ON r.id = ps.responder_id WHERE r.status != 'offline'", (err, responders) => {
           if (!err) {
@@ -536,11 +525,11 @@ app.post('/report', async (req, res) => {
           }
         });
 
-        // [NOTIFICATION] Notify Nearby Users (< 3km)
+        
         db.query("SELECT u.id, u.latitude, u.longitude, ps.endpoint, ps.keys_p256dh, ps.keys_auth FROM users u JOIN push_subscriptions ps ON u.id = ps.user_id WHERE u.id != ?", [userId], (err, users) => {
           if (!err) {
             users.forEach(u => {
-              // Use saved user location (if available) - Assuming user.latitude is updated
+              
               if (u.latitude && u.longitude) {
                 const dist = calculateDistance(finalLat, finalLon, u.latitude, u.longitude);
                 if (dist <= 3) {
@@ -561,9 +550,6 @@ app.post('/report', async (req, res) => {
   }
 });
 
-// Removed /sos-otw route as per request (replaced by my-reports)
-
-// [NEW] API to track responder location
 app.get('/api/responder-track/:id', (req, res) => {
   if (req.session.loggedin && req.session.role === 'user') {
     const responderId = req.params.id;
@@ -576,11 +562,11 @@ app.get('/api/responder-track/:id', (req, res) => {
   }
 });
 
-// [NEW] API for User Polling (Auto-refresh & Data)
+
 app.get('/api/user/active-report', (req, res) => {
   if (req.session.loggedin && req.session.role === 'user') {
     const userId = req.session.userId;
-    // Get the most recent active report with FULL details
+    
     const sql = `
       SELECT dr.*, 
              u.firstname as reporter_first, u.lastname as reporter_last,
