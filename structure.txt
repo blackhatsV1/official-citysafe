@@ -1,6 +1,5 @@
 Folder PATH listing
-Volume serial number is 68D2-E0EE
-C:.
+
 |   .env
 |   db.js
 |   myapp.sql

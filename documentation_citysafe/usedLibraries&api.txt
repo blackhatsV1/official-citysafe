@@ -1,0 +1,41 @@
+# CitySafe Project: APIs, Libraries 
+
+## 1. Core Libraries (Backend)
+These are primary dependencies initialized in server.js and db.js.
+
+*   Express (express): The core web framework used for routing and server logic.
+*   Knex.js (knex) & MySQL2 (mysql2): Database query building and stable connection management.
+*   Axios (axios): HTTP client for fetching data from external APIs (OpenWeatherMap, OpenStreetMap).
+*   Web-Push (web-push): Handles encryption and delivery of browser push notifications.
+*   Nodemailer (nodemailer): Facilitates sending automated emails via Gmail.
+*   Bcrypt (bcrypt): Secure password hashing and verification.
+*   Node-Cron (node-cron): Schedules automated tasks (e.g., daily weather checks).
+*   Dotenv (dotenv): Environment variable management.
+*   Middleware: 
+    *   Helmet: Security headers.
+    *   CORS: Cross-Origin Resource Sharing.
+    *   Compression: Response compression.
+    *   Express-Session & Connect-Session-Knex: Session management and persistence.
+
+## 2. External APIs
+Third-party services integrated into the backend or frontend.
+
+*   OpenWeatherMap API: Fetches real-time weather conditions for alerts.
+    - Used in: server.js
+*   OpenStreetMap (Nominatim): Provides Geocoding and Reverse Geocoding.
+    - Used in: server.js, nearby-stations.ejs
+*   Gmail SMTP: System email delivery via Nodemailer.
+    - Used in: server.js
+*   Web Push Notification API: Standard browser API for delivery of real-time alerts.
+    - Used in: server.js
+
+## 3. Frontend Libraries
+Found in the .ejs files within the views/ directory.
+
+*   Leaflet.js: Interactive map rendering and interactivity.
+*   Leaflet Routing Machine: Calculates and displays routes on maps.
+*   Bootstrap: UI styling and responsive design components (partials/head.ejs).
+*   EJS (Embedded JavaScript): Server-side templating engine.
+
+---
+Generated on: 2026-04-14
