@@ -33,7 +33,9 @@
             } catch (err) { console.error("Weather Map Error:", err); }
         }
 
-        fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`, {
+            headers: { 'User-Agent': 'CitySafeApp/1.0' }
+        })
             .then(res => res.json())
             .then(data => {
                 if (data && data.address) {

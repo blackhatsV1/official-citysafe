@@ -188,7 +188,9 @@
                     try {
                         Swal.fire({ title: 'Resolving Location...', didOpen: () => Swal.showLoading() });
                         const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationStr)}`;
-                        const res = await fetch(url);
+                        const res = await fetch(url, {
+                            headers: { 'User-Agent': 'CitySafeApp/1.0' }
+                        });
                         const geoData = await res.json();
                          if (geoData && geoData.length > 0) {
                             incLat = parseFloat(geoData[0].lat);
@@ -264,7 +266,9 @@
             linkEl.style.color = "grey";
 
             try {
-                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
+                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`, {
+                    headers: { 'User-Agent': 'CitySafeApp/1.0' }
+                });
                 const data = await res.json();
                 if (data.display_name) {
                     targetEl.innerText = data.display_name;

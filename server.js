@@ -34,19 +34,18 @@ app.set('trust proxy', 1);
 const compression = require('compression');
 app.use(compression());
 
-
 app.use(express.static(path.join(__dirname, "public"), {
   maxAge: '1d'
 }));
 
-
 app.use(helmet({
-  contentSecurityPolicy: false, 
+  contentSecurityPolicy: false,
+  crossOriginResourcePolicy: false,
+  crossOriginEmbedderPolicy: false,
+  referrerPolicy: { policy: "strict-origin-when-cross-origin" },
 }));
 
-
 const globalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, 
   max: 5000, 
   standardHeaders: true,
   legacyHeaders: false,

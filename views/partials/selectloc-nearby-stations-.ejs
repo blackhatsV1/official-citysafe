@@ -34,7 +34,9 @@
 
       document.getElementById("coords").textContent = `Lat: ${lat}, Lng: ${lng}`;
 
-      fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`, {
+        headers: { 'User-Agent': 'CitySafeApp/1.0' }
+      })
         .then(res => res.json())
         .then(data => {
           document.getElementById("address").innerHTML = `<b>${data.display_name}</b>`;
