@@ -448,7 +448,9 @@ var trendChart = new Chart(ctx4, {
            try {
                const query = encodeURIComponent(incident.location);
                const url = `https://nominatim.openstreetmap.org/search?format=json&q=${query}`;
-               const res = await fetch(url);
+               const res = await fetch(url, {
+                   headers: { 'User-Agent': 'CitySafeApp/1.0' }
+               });
                const data = await res.json();
                
                if(data && data.length > 0) {
@@ -528,7 +530,9 @@ var trendChart = new Chart(ctx4, {
     window.fetchAddress = async function(el, lat, lon) {
         el.innerText = "Loading address...";
         try {
-            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
+            const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`, {
+                headers: { 'User-Agent': 'CitySafeApp/1.0' }
+            });
             const data = await res.json();
             if(data.display_name) {
                 el.innerText = data.display_name;

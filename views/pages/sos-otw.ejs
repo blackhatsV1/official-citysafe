@@ -87,7 +87,9 @@
 
                                                     document.getElementById("coords").textContent = `Lat: ${lat}, Lng: ${lng}`;
 
-                                                    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+                                                    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`, {
+                                                        headers: { 'User-Agent': 'CitySafeApp/1.0' }
+                                                    })
                                                         .then(res => res.json())
                                                         .then(data => {
                                                             document.getElementById("address").innerHTML = `<b>${data.display_name}</b>`;
@@ -111,21 +113,23 @@
                                                         });
 
                                                         // Draw route only to the nearest station (first one in the list)
-                                                        const nearest = data[0];
-                                                        L.Routing.control({
-                                                            waypoints: [
-                                                                L.latLng(lat, lng),
-                                                                L.latLng(nearest.latitude, nearest.longitude)
-                                                            ],
-                                                            lineOptions: {
-                                                                styles: [{ color: 'blue', weight: 5 }]
-                                                            },
-                                                            routeWhileDragging: false,
-                                                            showAlternatives: false,
-                                                            addWaypoints: false,
-                                                            draggableWaypoints: true,
-                                                            fitSelectedRoutes: true
-                                                        }).addTo(map);
+                                                        if (data && data.length > 0) {
+                                                            const nearest = data[0];
+                                                            L.Routing.control({
+                                                                waypoints: [
+                                                                    L.latLng(lat, lng),
+                                                                    L.latLng(nearest.latitude, nearest.longitude)
+                                                                ],
+                                                                lineOptions: {
+                                                                    styles: [{ color: 'blue', weight: 5 }]
+                                                                },
+                                                                routeWhileDragging: false,
+                                                                showAlternatives: false,
+                                                                addWaypoints: false,
+                                                                draggableWaypoints: true,
+                                                                fitSelectedRoutes: true
+                                                            }).addTo(map);
+                                                        }
                                                     })
                                                     .catch(error => {
                                                         console.error('Error fetching nearby stations:', error);
@@ -177,5 +181,3 @@
 </body>
 
 </html>
-
-

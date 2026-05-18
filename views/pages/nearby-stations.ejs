@@ -69,7 +69,6 @@
             }
             .leaflet-routing-container::-webkit-scrollbar-thumb {
                 background: var(--primary); 
-                border-radius: 4px;
             }
             .leaflet-routing-container::-webkit-scrollbar-track {
                 background: var(--bg-dark); 
@@ -174,10 +173,16 @@
 
                                                     document.getElementById("coords").textContent = `Latitude: ${lat.toFixed(5)}, Longitude: ${lng.toFixed(5)}`;
 
-                                                    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`)
+                                                    fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`, {
+                                                        headers: { 'User-Agent': 'CitySafeApp/1.0' }
+                                                    })
                                                         .then(res => res.json())
                                                         .then(data => {
                                                             document.getElementById("address").innerHTML = `<b>${data.display_name}</b>`;
+                                                        })
+                                                        .catch(err => {
+                                                            console.error("Nominatim Error:", err);
+                                                            document.getElementById("address").innerHTML = "<b>Address unavailable</b>";
                                                         });
 
                                                     if(!hasScanned) {
@@ -287,12 +292,3 @@
 </body>
 
 </html>
-
-<!-- <h1><i class="bi bi-cloud-sun"></i>CitySafe Weather View</h1>
-<hr class="grey-line">
-<h4 class="mb-5">Please <a href="/login">Login</a> to experience full feature!</h4>
-<p id="address"></p>
-<p id="coords"></p>
-<div class="rounded p-3" id="weather-info">Loading weather data...</div>
-<div id="weather-map"></div>
-<p><%- include('../partials/selectloc-visitor'); %></p> -->

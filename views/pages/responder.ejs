@@ -170,7 +170,9 @@
                   if (addrElem && addrElem.innerText.includes('Loading')) {
                       try {
                           // Using Nominatim for Reverse Geocoding
-                          const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${report.latitude}&lon=${report.longitude}`);
+                          const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${report.latitude}&lon=${report.longitude}`, {
+                              headers: { 'User-Agent': 'CitySafeApp/1.0' }
+                          });
                           const data = await response.json();
                           
                           if (data && data.display_name) {
@@ -301,14 +303,22 @@
 
                       // Fetch Address for Table
                       setTimeout(() => {
-                          fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${report.latitude}&lon=${report.longitude}`)
+                          if (addressCache[report.id]) {
+                             const cell = document.getElementById(`table-addr-${report.id}`);
+                             if(cell) cell.innerText = addressCache[report.id];
+                             return;
+                          }
+                          fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${report.latitude}&lon=${report.longitude}`, {
+                              headers: { 'User-Agent': 'CitySafeApp/1.0' }
+                          })
                             .then(res => res.json())
                             .then(data => {
                                 const cell = document.getElementById(`table-addr-${report.id}`);
                                 if(data && data.display_name) {
-                                    cell.innerText = data.display_name;
+                                    addressCache[report.id] = data.display_name;
+                                    if(cell) cell.innerText = data.display_name;
                                 } else {
-                                    cell.innerText = "Address not found";
+                                    if(cell) cell.innerText = "Address not found";
                                 }
                             })
                             .catch(err => {
@@ -415,7 +425,9 @@
                   if (addressCache[report.id]) {
                       el.innerHTML = `<strong>Address:</strong><br>${addressCache[report.id]}`;
                   } else {
-                      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${report.latitude}&lon=${report.longitude}`)
+                      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${report.latitude}&lon=${report.longitude}`, {
+                          headers: { 'User-Agent': 'CitySafeApp/1.0' }
+                      })
                       .then(r=>r.json()).then(d => { 
                           const addr = d.display_name || "Address not found";
                           addressCache[report.id] = addr; // Save to cache
@@ -486,7 +498,9 @@
                   } else {
                       // Fetch only if not already cached/fetching
                       // We can assume if it's here it needs fetch or is fetching.
-                      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+                      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`, {
+                          headers: { 'User-Agent': 'CitySafeApp/1.0' }
+                      })
                         .then(r=>r.json()).then(d => {
                             const addr = d.display_name || "Address not found";
                             addressCache[id] = addr; // Store permanently

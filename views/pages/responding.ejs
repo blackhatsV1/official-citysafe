@@ -146,7 +146,9 @@
             .bindPopup("<b>INCIDENT LOCATION</b><br><%= mission.disaster_type %>").openPopup();
 
           // Reverse Geocode Incident Address
-          fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${incidentLat}&lon=${incidentLng}`)
+          fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${incidentLat}&lon=${incidentLng}`, {
+              headers: { 'User-Agent': 'CitySafeApp/1.0' }
+          })
              .then(res => res.json())
              .then(data => {
                  const addrEl = document.getElementById('incident-addr');
@@ -233,7 +235,9 @@
           const lat = td.getAttribute('data-lat');
           const lon = td.getAttribute('data-lon');
           if(lat && lon){
-             fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+             fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`, {
+                 headers: { 'User-Agent': 'CitySafeApp/1.0' }
+             })
                 .then(res => res.json())
                 .then(data => {
                     td.innerText = data.display_name || "Unknown Address";
