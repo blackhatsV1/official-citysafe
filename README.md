@@ -13,14 +13,14 @@ Username: brime lasting
 Password: 123
 ```
 
-## Responder Account Credentials for Live Demo
+## Admin Account Credentials for Live Demo
 
 ```
 Username: system admin
 Password: 123
 ```
 
-## Admin Account Credentials for Live Demo
+## Responder Account Credentials for Live Demo
 
 ```
 Username: john doe
